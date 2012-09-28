@@ -21,6 +21,8 @@ import org.openrdf.rio.RDFHandlerException;
  */
 public class RunLoader {
 
+    private static final String DROPBOX_PATH = "C:/Dropbox/linksets/";
+    
     private static void loadFile (String fileName) 
             throws IDMapperException, BridgeDbSqlException, IDMapperLinksetException, FileNotFoundException{
         Reporter.report(fileName);
@@ -59,9 +61,9 @@ public class RunLoader {
     public static void main(String[] args) 
             throws IDMapperException, IOException, RDFHandlerException  {
 
-        String[] args1 = {"originals/ConceptWiki-Chembl2Targets.ttl", "new"};
+        String[] args1 = {DROPBOX_PATH + "cw-cs_linkset.ttl", "new"};
         LinksetLoader.main (args1);
-        loadFile ("originals/ConceptWiki-ChemSpider.ttl");
+ /*       loadFile ("originals/ConceptWiki-ChemSpider.ttl");
         loadFile ("originals/ConceptWiki-DrugbankTargets.ttl");
         loadFile ("originals/ConceptWiki-GO.ttl");
         loadFile ("originals/ConceptWiki-MSH.ttl");
@@ -79,6 +81,8 @@ public class RunLoader {
         transtitive2(15,24,"transitive/ConceptWiki-Chembl13Targets-via-Swissprot.ttl");
         transtitive(3,25,"transitive/ConceptWiki-Chembl2Compounds-via-ChemSpider.ttl");
         transtitive(3,27,"transitive/ConceptWiki-DrugBankDrugs-via-ChemSpider.ttl");
+*/    
+    System.out.println("done");
     }
 
 }

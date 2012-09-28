@@ -70,17 +70,22 @@ public class RDFValidator implements RdfLoader{
     @Override
     public void processFirstNoneHeader(Statement firstMap) {//throws RDFHandlerException{
     	//TODO: Rename method to validateHeader?
-        Reporter.report("Validating linkset VoID header");
-        validateVoidDescription();
+        Reporter.report("Validating linkset VoID header!");
+        //validateVoidDescription();
         linksetResource = findTheSingletonSubject(RdfConstants.TYPE_URI, VoidConstants.LINKSET);
+        System.out.println("found resource");
         linksetPredicate = findTheSingletonObject (linksetResource, VoidConstants.LINK_PREDICATE);
+        System.out.println("found predicate");
         //Provide details of the license under which the dataset is published using the dcterms:license property.
-        checkObject(linksetResource, DctermsConstants.LICENSE);
+      //  checkObject(linksetResource, DctermsConstants.LICENSE);
         //The linkset authorship, i.e. the agent that generated the intellectual knowledge
-        validateLinksetProvenance();
+       // validateLinksetProvenance();
+        System.out.println("here");
         subjectURISpace = validateDataSetAndExtractUriSpace(firstMap.getSubject(), VoidConstants.SUBJECTSTARGET);
         targetURISpace = validateDataSetAndExtractUriSpace(firstMap.getObject(), VoidConstants.OBJECTSTARGET);
+        System.out.println("got uri spaces");
         isTransative = checkIsTransative();
+        System.out.println("isTransative");
         if (headerError) {
         	
         } else {
@@ -150,13 +155,13 @@ public class RDFValidator implements RdfLoader{
         //Declare that we have a dataset using void:dataset.
         checkStatementExists(dataSetId, RdfConstants.TYPE_URI, VoidConstants.DATASET);
         //Dataset title
-        checkObject(dataSetId, DctermsConstants.TITLE);
+//        checkObject(dataSetId, DctermsConstants.TITLE);
         //Provide details of the licence under which the dataset is published using the dcterms:license property.
-        checkObject(dataSetId, DctermsConstants.LICENSE);
+//        checkObject(dataSetId, DctermsConstants.LICENSE);
         //There must be a version or a Date
-        checkHasVersionOrDate(dataSetId);
+//        checkHasVersionOrDate(dataSetId);
         //The type of the resource being linked is declared with the dcterm:subject predicate.
-        checkObject(dataSetId, DctermsConstants.SUBJECT);      
+//        checkObject(dataSetId, DctermsConstants.SUBJECT);      
         //The URI namespace for the resources being linked is declared using the void:uriSpace property
         Value uriValue = findTheSingletonObject(dataSetId, VoidConstants.URI_SPACE);
         String uriSpace = null;
