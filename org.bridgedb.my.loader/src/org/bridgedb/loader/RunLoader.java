@@ -61,7 +61,7 @@ public class RunLoader {
     public static void main(String[] args) 
             throws IDMapperException, IOException, RDFHandlerException  {
 
-        String[] args1 = {DROPBOX_PATH + "cw-cs_linkset.ttl", "new"};
+        String[] args1 = {DROPBOX_PATH, "new"};
         LinksetLoader.main (args1);
  /*       loadFile ("originals/ConceptWiki-ChemSpider.ttl");
         loadFile ("originals/ConceptWiki-DrugbankTargets.ttl");

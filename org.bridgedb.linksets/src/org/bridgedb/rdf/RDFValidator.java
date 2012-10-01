@@ -68,24 +68,33 @@ public class RDFValidator implements RdfLoader{
     }
     
     @Override
-    public void processFirstNoneHeader(Statement firstMap) {//throws RDFHandlerException{
+    public void processFirstNoneHeader(Statement firstMap) throws RDFHandlerException{
     	//TODO: Rename method to validateHeader?
         Reporter.report("Validating linkset VoID header!");
         //validateVoidDescription();
         linksetResource = findTheSingletonSubject(RdfConstants.TYPE_URI, VoidConstants.LINKSET);
-        System.out.println("found resource");
+        if (linksetResource.equals(UNDEFINED)){
+            throw new RDFHandlerException("No linksetResource found");
+        }
+        //ystem.out.println("found resource " + linksetResource);
         linksetPredicate = findTheSingletonObject (linksetResource, VoidConstants.LINK_PREDICATE);
-        System.out.println("found predicate");
+        //ystem.out.println("found predicate " + linksetPredicate);
         //Provide details of the license under which the dataset is published using the dcterms:license property.
       //  checkObject(linksetResource, DctermsConstants.LICENSE);
         //The linkset authorship, i.e. the agent that generated the intellectual knowledge
        // validateLinksetProvenance();
-        System.out.println("here");
         subjectURISpace = validateDataSetAndExtractUriSpace(firstMap.getSubject(), VoidConstants.SUBJECTSTARGET);
+        if (subjectURISpace.equals(UNSPECIFIED.stringValue())){
+            throw new RDFHandlerException ("No subjectURISpace found");
+        }
+        //ystem.out.println(subjectURISpace);
         targetURISpace = validateDataSetAndExtractUriSpace(firstMap.getObject(), VoidConstants.OBJECTSTARGET);
-        System.out.println("got uri spaces");
+        if (targetURISpace.equals(UNSPECIFIED.stringValue())){
+            throw new RDFHandlerException ("No targetURISpace found");
+        }
+        //ystem.out.println(targetURISpace);
         isTransative = checkIsTransative();
-        System.out.println("isTransative");
+        //ystem.out.println("isTransative");
         if (headerError) {
         	
         } else {
@@ -401,34 +410,43 @@ public class RDFValidator implements RdfLoader{
     public void insertURLMapping(Statement st) {
         String sourceURL = st.getSubject().stringValue();
         if (!sourceURL.startsWith(subjectURISpace)){
-            linkError = true;
-        	Reporter.report("Subject " + sourceURL + 
-            		" does not begin with the declared uriSpace " 
-                    + subjectURISpace);
+            if (!linkError){
+                linkError = true;
+            	Reporter.report("Subject " + sourceURL + 
+                		" does not begin with the declared uriSpace " 
+                        + subjectURISpace);
+            }
         }
         Value predicate = st.getPredicate();
         if (!predicate.equals(linksetPredicate)){
-        	linkError = true;
-            Reporter.report("Predicate " + predicate + 
-            		" does not begin with the declared predicate " 
-                    + linksetPredicate);            
+            if (!linkError){
+            	linkError = true;
+                Reporter.report("Predicate " + predicate + 
+                		" does not begin with the declared predicate " 
+                        + linksetPredicate);            
+            }
         }
         String targetURL = st.getObject().stringValue();
         if (!targetURL.startsWith(targetURISpace)){
-        	linkError = true;
-            Reporter.report("Target " + targetURL + 
-            		" does not begin with the declared uriSpace " 
-                    + targetURISpace);
+            if (!linkError){
+            	linkError = true;
+                Reporter.report("Target " + targetURL + 
+                		" does not begin with the declared uriSpace " 
+                        + targetURISpace);
+            }
         }
     }
 
     @Override
     public void closeInput() throws IDMapperException {
-    	if (headerError || linkError) {
-    		Reporter.report("Linkset not valid");
-    		throw new IDMapperException("Linkset not valid!");
+    	if (headerError) {
+    		Reporter.report("Void not valid");
+    		throw new IDMapperException("Void not valid!");
     	}
-    	if (!linkError) {
+    	if (linkError) {
+    		Reporter.report("Links not valid");
+    		throw new IDMapperException("Links not valid!");
+        } else {
     		Reporter.report("\tLinkset links are valid");
     	}
         //do nothing
