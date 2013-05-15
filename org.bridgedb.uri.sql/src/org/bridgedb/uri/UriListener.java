@@ -79,7 +79,7 @@ public interface UriListener {
      * @throws BridgeDBException Thrown if either UriSpace has not previously been registered using registerUriSpace
      */
    public int registerMappingSet(UriPattern sourceUriPattern, String predicate, String justification, 
-           UriPattern targetUriPattern, boolean symetric, Set<String> viaLabels, Set<Integer> chainedLinkSets) 
+           UriPattern targetUriPattern, String mappingSource, boolean symetric, Set<String> viaLabels, Set<Integer> chainedLinkSets) 
            throws  BridgeDBException;
 
     /**

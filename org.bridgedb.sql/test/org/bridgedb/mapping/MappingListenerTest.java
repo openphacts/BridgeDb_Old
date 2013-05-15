@@ -49,21 +49,21 @@ public abstract class MappingListenerTest extends IDMapperTest{
      */
     public static void loadData() throws BridgeDBException{
         int mappingSet = listener.registerMappingSet(DataSource1, TEST_PREDICATE, TEST_JUSTIFICATION1, DataSource2, 
-                SYMETRIC, NO_VIA, NO_CHAIN);
+                "MappingListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
         listener.insertLink(map1xref1.getId(), map1xref2.getId(), mappingSet, SYMETRIC);
         listener.insertLink(map2xref1.getId(), map2xref2.getId(), mappingSet, SYMETRIC);
         listener.insertLink(map3xref1.getId(), map3xref2.getId(), mappingSet, SYMETRIC);
         HashSet<String> via = new HashSet<String>();
         HashSet<Integer> chain = new HashSet<Integer>();
         mappingSet = listener.registerMappingSet(DataSource2, TEST_PREDICATE, TEST_JUSTIFICATION2, DataSource3, 
-                SYMETRIC, via, chain);
+                "MappingListenerTest.loadData()", SYMETRIC, via, chain);
         listener.insertLink(map1xref2.getId(), map1xref3.getId(), mappingSet, SYMETRIC);
         listener.insertLink(map2xref2.getId(), map2xref3.getId(), mappingSet, SYMETRIC);
         listener.insertLink(map3xref2.getId(), map3xref3.getId(), mappingSet, SYMETRIC);
         via.add("test via");
         chain.add(1);
         mappingSet = listener.registerMappingSet(DataSource1, TEST_PREDICATE, TEST_JUSTIFICATION2, DataSource3, 
-                SYMETRIC, via, chain);
+                "MappingListenerTest.loadData()", SYMETRIC, via, chain);
         listener.insertLink(map1xref1.getId(), map1xref3.getId(), mappingSet, SYMETRIC);
         listener.insertLink(map2xref1.getId(), map2xref3.getId(), mappingSet, SYMETRIC);
         listener.insertLink(map3xref1.getId(), map3xref3.getId(), mappingSet, SYMETRIC);

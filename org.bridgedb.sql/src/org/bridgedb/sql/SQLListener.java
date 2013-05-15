@@ -44,7 +44,7 @@ import org.bridgedb.utils.StoreType;
 public class SQLListener extends SQLBase implements MappingListener{
 
     //Numbering should not clash with any GDB_COMPAT_VERSION;
-	public static final int SQL_COMPAT_VERSION = 22;
+	public static final int SQL_COMPAT_VERSION = 23;
   
     //Maximumn size in database
     protected static final int SYSCODE_LENGTH = 100;
@@ -59,6 +59,7 @@ public class SQLListener extends SQLBase implements MappingListener{
     private static final int KEY_LENGTH= 100; 
     private static final int PROPERTY_LENGTH = 100;
     private static final int MAX_BLOCK_SIZE = 1000;
+    private static final int MAPPING_SOURCE_LENGTH = 100;
     
     //static final String DATASOURCE_TABLE_NAME = "DataSource";
     public static final String CHAIN_TABLE_NAME = "chain";
@@ -78,6 +79,7 @@ public class SQLListener extends SQLBase implements MappingListener{
     static final String KEY_COLUMN_NAME = "theKey";
     //static final String MAIN_URL_COLUMN_NAME = "mainUrl";
     static final String MAPPING_COUNT_COLUMN_NAME = "mappingCount";
+    static final String MAPPING_SOURCE_COLUMN_NAME = "mappingSource";
     public static final String MAPPING_SET_ID_COLUMN_NAME = "mappingSetId";
     static final String MAPPING_SET_DOT_ID_COLUMN_NAME = MAPPING_SET_TABLE_NAME + "." + ID_COLUMN_NAME;
     static final String PREDICATE_COLUMN_NAME = "predicate";
@@ -133,15 +135,16 @@ public class SQLListener extends SQLBase implements MappingListener{
     }
         
     @Override
-    public synchronized int registerMappingSet(DataSource source, String predicate, String justification, DataSource target, 
-            boolean symetric, Set<String> viaLabels, Set<Integer> chainedLinkSets) throws BridgeDBException {
+    public synchronized int registerMappingSet(DataSource source, String predicate, String justification, 
+            DataSource target, String mappingSource, boolean symetric, Set<String> viaLabels, 
+            Set<Integer> chainedLinkSets) throws BridgeDBException {
         //checkDataSourceInDatabase(source);
         //checkDataSourceInDatabase(target);
-        int forwardId = registerMappingSet(source, target, predicate, justification, 0);
+        int forwardId = registerMappingSet(source, target, predicate, justification, mappingSource, 0);
         registerVia(forwardId, viaLabels);
         registerChain(forwardId, chainedLinkSets);
         if (symetric){
-            int symetricId = registerMappingSet(target, source, predicate, justification, forwardId);
+            int symetricId = registerMappingSet(target, source, predicate, justification, mappingSource, forwardId);
             registerVia(symetricId, viaLabels);
             registerChain(symetricId, chainedLinkSets);
         }
@@ -171,18 +174,20 @@ public class SQLListener extends SQLBase implements MappingListener{
      * 
      */
     private int registerMappingSet(DataSource source, DataSource target, String predicate, String justification, 
-            int symmetric) throws BridgeDBException {
+            String mappingSource, int symmetric) throws BridgeDBException {
         String query = "INSERT INTO " + MAPPING_SET_TABLE_NAME
                 + " (" + SOURCE_DATASOURCE_COLUMN_NAME + ", " 
                     + PREDICATE_COLUMN_NAME + ", " 
                     + JUSTIFICATION_COLUMN_NAME + ", "
                     + TARGET_DATASOURCE_COLUMN_NAME + ", "
+                    + MAPPING_SOURCE_COLUMN_NAME + ", "
                     + SYMMETRIC_COLUMN_NAME + ") " 
                 + " VALUES (" 
                 + "'" + getDataSourceKey(source) + "', " 
                 + "'" + predicate + "', " 
                 + "'" + justification + "', "
                 + "'" + getDataSourceKey(target) + "', "
+                + "'" + mappingSource + "', "
                 + symmetric + ")";
         Statement statement = createStatement();
         try {
@@ -454,6 +459,7 @@ public class SQLListener extends SQLBase implements MappingListener{
                         + PREDICATE_COLUMN_NAME         + " VARCHAR(" + PREDICATE_LENGTH + ") NOT NULL, "
                         + JUSTIFICATION_COLUMN_NAME     + " VARCHAR(" + PREDICATE_LENGTH + ") NOT NULL, "
                         + TARGET_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ")  NOT NULL, "
+                        + MAPPING_SOURCE_COLUMN_NAME  + " VARCHAR(" + MAPPING_SOURCE_LENGTH + ")  NOT NULL, "
                         + SYMMETRIC_COLUMN_NAME + " INT, "
                         + MAPPING_COUNT_COLUMN_NAME     + " INT "
 					+ " ) "; 
