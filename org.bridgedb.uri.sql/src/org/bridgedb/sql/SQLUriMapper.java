@@ -1401,7 +1401,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 DataSetInfo sourceInfo = findDataSetInfo(rs.getString(SOURCE_DATASOURCE_COLUMN_NAME));
                 DataSetInfo targetInfo = findDataSetInfo(rs.getString(TARGET_DATASOURCE_COLUMN_NAME));
                 results.add(new MappingSetInfo(id, sourceInfo, rs.getString(PREDICATE_COLUMN_NAME), targetInfo, 
-                        rs.getString(JUSTIFICATION_COLUMN_NAME), rs.getInt(SYMMETRIC_COLUMN_NAME), 
+                        rs.getString(JUSTIFICATION_COLUMN_NAME), rs.getString(MAPPING_SOURCE_COLUMN_NAME), 
+                        rs.getInt(SYMMETRIC_COLUMN_NAME), 
                         viaSysCodes, chainIds, count));
             }
         } catch (SQLException ex) {

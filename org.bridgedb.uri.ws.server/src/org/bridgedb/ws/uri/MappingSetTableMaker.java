@@ -91,7 +91,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             + "\t\t<th>Source Data Source</th>\n"
             + "\t\t<th>Targets</th>\n"
             + "\t\t<th>Sum of Mappings</th>\n"
-            + "\t\t<th colspan=\"2\"> Id</th>\n"
+            + "\t\t<th colspan=\"2\"> Mapping Set</th>\n"
             + "\t\t<th>Predicate</th>\n"
             + "\t\t<th>Justification</th>\n"
             + "\t\t<th colspan=\"2\"> Transative</th>\n"
@@ -103,10 +103,10 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             + "\t\t<th></th>\n" //Targets
             + "\t\t<th></th>\n" //Sum of Mappings
             + "\t\t<th>Summary</th>\n"
-            + "\t\t<th>Rdf</th>\n"
+            + "\t\t<th>Source</th>\n"
             + "\t\t<th></th>\n" //Predicate
             + "\t\t<th></th>\n" //Justification
-            + "\t\t<th>SysCodes</th>\n"
+            + "\t\t<th>Data Source(s)</th>\n"
             + "\t\t<th>Ids</th>\n"
             + "\t</tr>\n";
 
@@ -242,7 +242,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         addDataSourceCell(sb, infos[i].getSource());
         addDataSourceCell(sb, infos[i].getTarget());
         addNumberOfLinksCell(sb, infos[i].getNumberOfLinks());
-        addMappingSetCells(sb, infos[i].getStringId());
+        addMappingSetCells(sb, i);
         addPredicateCell(sb, i);
         addJustificationCell(sb,i);
         addTransatives(sb, i);
@@ -390,22 +390,21 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         sb.append("</a>");
    }
 
-    private void addMappingSetCells(StringBuilder sb, String id) throws BridgeDBException {
+    private void addMappingSetCells(StringBuilder sb, int i) throws BridgeDBException {
         sb.append("\t\t<td>");
-        addMappingInfoLink(sb, id);
+        addMappingInfoLink(sb, i);
         sb.append("</td>\n");        
-        String rdfUri = httpServletRequest.getContextPath() + "/mappingSet/" + id;
-        sb.append("\t\t<td><a href=\"");
-            sb.append(rdfUri);
-            sb.append("\">RDF</a></td>\n");
+        sb.append("\t\t<td>");
+            sb.append(infos[i].getMappingSource());
+            sb.append("</td>\n");
     }
 
-    private void addMappingInfoLink(StringBuilder sb, String id) throws BridgeDBException{
-        String summaryUri = httpServletRequest.getContextPath() + "/getMappingInfo/" + id;
+    private void addMappingInfoLink(StringBuilder sb, int i) throws BridgeDBException{
+        String summaryUri = httpServletRequest.getContextPath() + "/getMappingInfo/" + infos[i].getStringId();
         sb.append("<a href=\"");
             sb.append(summaryUri);
             sb.append("\">");
-            sb.append(id);
+            sb.append(infos[i].getStringId());
             sb.append("</a>");        
     }
     
@@ -459,7 +458,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         size = chainSet.size();
         count = 0;
         for (Integer chain:chainSet){
-            addMappingInfoLink(sb, chain.toString());
+            addMappingInfoLink(sb, chain);
             count++;
             if (count < size){
                 sb.append(", ");

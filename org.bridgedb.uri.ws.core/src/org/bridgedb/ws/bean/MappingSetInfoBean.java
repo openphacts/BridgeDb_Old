@@ -34,6 +34,7 @@ public class MappingSetInfoBean {
     private String predicate;
     private DataSetInfoBean target;
     private String justification;
+    private String mappingSource;
     private Integer symmetric;
     private Integer numberOfLinks;
     private Set<DataSetInfoBean> viaDataSets;
@@ -47,8 +48,9 @@ public class MappingSetInfoBean {
     
     public static MappingSetInfo asMappingSetInfo(MappingSetInfoBean bean){
        return new MappingSetInfo(bean.getId(), DataSetInfoBean.asDataSetInfo(bean.getSource()), bean.getPredicate(), 
-               DataSetInfoBean.asDataSetInfo(bean.getTarget()), bean.getJustification(), bean.getSymmetric(), 
-               DataSetInfoBean.asDataSetInfos(bean.getViaDataSets()), bean.getChainId(), bean.getNumberOfLinks());
+               DataSetInfoBean.asDataSetInfo(bean.getTarget()), bean.getJustification(), bean.getMappingSource(),
+               bean.getSymmetric(), DataSetInfoBean.asDataSetInfos(bean.getViaDataSets()), bean.getChainId(), 
+               bean.getNumberOfLinks());
     }
 
     public static MappingSetInfoBean asBean(MappingSetInfo info) {
@@ -58,6 +60,7 @@ public class MappingSetInfoBean {
         bean.predicate = info.getPredicate();
         bean.target = DataSetInfoBean.asBean(info.getTarget());
         bean.justification = info.getJustification();
+        bean.mappingSource = info.getMappingSource();
         bean.symmetric = info.getSymmetric();
         bean.numberOfLinks = info.getNumberOfLinks();
         bean.viaDataSets = DataSetInfoBean.asBeans(info.getViaDataSets());
@@ -190,6 +193,20 @@ public class MappingSetInfoBean {
      */
     public void setViaDataSets(Set<DataSetInfoBean> viaDataSets) {
         this.viaDataSets = viaDataSets;
+    }
+
+    /**
+     * @return the mappingSource
+     */
+    public String getMappingSource() {
+        return mappingSource;
+    }
+
+    /**
+     * @param mappingSource the mappingSource to set
+     */
+    public void setMappingSource(String mappingSource) {
+        this.mappingSource = mappingSource;
     }
     
 }

@@ -35,19 +35,21 @@ public class MappingSetInfo {
     private final String predicate;
     private final DataSetInfo target;
     private final String justification;
+    private final String mappingSource;
     private final int symmetric;
     private Set<DataSetInfo> viaDataSets;
     private Set<Integer> chainIds;
     private Integer numberOfLinks;
 
     public MappingSetInfo(int id, DataSetInfo source, String predicate, DataSetInfo target, String justification,
-            int symmetric, Set<DataSetInfo> viaDataSets,  Set<Integer> chainIds, Integer numberOfLinks){
+            String mappingSource, int symmetric, Set<DataSetInfo> viaDataSets,  Set<Integer> chainIds, Integer numberOfLinks){
         intId = id;
         stringId = null;
         this.predicate = predicate;
         this.source = source;
         this.target = target;
         this.justification = justification;
+        this.mappingSource = mappingSource;
         this.symmetric = symmetric;
         setViaDataSets(viaDataSets);
         setChainIds(chainIds);
@@ -181,6 +183,13 @@ public class MappingSetInfo {
 
     public boolean isTransitive() {
         return (viaDataSets != null && !viaDataSets.isEmpty());
+    }
+
+    /**
+     * @return the mappingSource
+     */
+    public String getMappingSource() {
+        return mappingSource;
     }
 
   }
