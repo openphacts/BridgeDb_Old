@@ -23,7 +23,7 @@
 	<dependencies>
  		<dependency>
 			<groupId>org.bridgedb</groupId>
-			<artifactId>org.bridgedb.linksets</artifactId>
+			<artifactId>org.bridgedb.uri.sql</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>

@@ -18,8 +18,8 @@
 //
 package org.bridgedb.linkset.transative;
 
-import org.bridgedb.metadata.constants.ChemInf;
-import org.bridgedb.metadata.constants.OboConstants;
+import org.bridgedb.linkset.ChemInf;
+import org.bridgedb.linkset.OboConstants;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFHandlerException;

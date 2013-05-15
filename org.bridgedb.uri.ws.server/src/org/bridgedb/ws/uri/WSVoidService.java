@@ -33,7 +33,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
-import org.bridgedb.linkset.rdf.RdfReader;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.LensInfo;
 import org.bridgedb.statistics.MappingSetInfo;
@@ -147,71 +146,6 @@ public class WSVoidService extends WSFame{
         }
         sb.append("}"); 
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
-    }
-
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/mappingSet")
-    public String mappingSet() throws BridgeDBException {
-        throw new BridgeDBException("Parameter id is missing");
-    }
-
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/mappingSet/{id}")
-    public String mappingSet(@PathParam("id") String idString) throws BridgeDBException {
-        if (idString == null || idString.isEmpty()){
-            throw new BridgeDBException("Parameter id is missing!");
-        }
-        Integer id = Integer.parseInt(idString);
-        return new RdfReader(StoreType.LIVE).getLinksetRDF(id);
-    }
-
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/linkset")
-    public String linkset() throws BridgeDBException {
-        throw new BridgeDBException("Parameter id is missing");
-    }
-
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/linkset/{id}")
-    public String linksetSet(@PathParam("id") String idString) throws BridgeDBException {
-        if (idString == null || idString.isEmpty()){
-            throw new BridgeDBException("Parameter id is missing!");
-        }
-        Integer id = Integer.parseInt(idString);
-        return new RdfReader(StoreType.LIVE).getLinksetRDF(id);
-    }
-    
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/linkset/{id}/{resource}")
-    public String linksetSet(@PathParam("id") String idString, @PathParam("resource") String resource) throws BridgeDBException {
-        if (idString == null || idString.isEmpty()){
-            throw new BridgeDBException("Parameter id is missing!");
-        }
-        Integer id = Integer.parseInt(idString);
-        return new RdfReader(StoreType.LIVE).getLinksetRDF(id);
-    }
-
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/void")
-    public String voidInfo() throws BridgeDBException {
-        throw new BridgeDBException("Parameter id is missing");
-    }
-
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/void/{id}")
-    public String voidInfo(@PathParam("id") String idString) throws BridgeDBException {
-        if (idString == null || idString.isEmpty()){
-            throw new BridgeDBException("Parameter id is missing");
-        }
-        Integer id = Integer.parseInt(idString);
-        return new RdfReader(StoreType.LIVE).getVoidRDF(id);
     }
 
 }

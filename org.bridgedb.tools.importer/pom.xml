@@ -36,13 +36,7 @@
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
- 		<dependency>
-			<groupId>org.bridgedb</groupId>
-			<artifactId>org.bridgedb.linksets</artifactId>
-			<version>${project.version}</version>
-			<scope>compile</scope>
-		</dependency>
- 		<dependency>
+  		<dependency>
 			<groupId>org.bridgedb</groupId>
 			<artifactId>org.bridgedb.uri.sql</artifactId>
 			<version>${project.version}</version>
@@ -62,20 +56,6 @@
             <type>test-jar</type>
 			<scope>test</scope>
  		</dependency>
- 		<dependency>
-			<groupId>org.bridgedb</groupId>
-			<artifactId>org.bridgedb.linksets</artifactId>
-			<version>${project.version}</version>
-            <type>test-jar</type>
-			<scope>test</scope>
-		</dependency>
- 		<dependency>
-			<groupId>org.bridgedb</groupId>
-			<artifactId>org.bridgedb.tools.transitive</artifactId>
-			<version>${project.version}</version>
-            <type>test-jar</type>
-			<scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>uk.ac.ebi.miriam</groupId>
             <artifactId>miriam-lib</artifactId>

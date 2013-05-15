@@ -33,15 +33,11 @@ import javax.ws.rs.core.MediaType;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
-import org.bridgedb.linkset.LinksetInterfaceMinimal;
-import org.bridgedb.linkset.LinksetLoader;
 import org.bridgedb.rdf.UriPattern;
-import org.bridgedb.rdf.reader.StatementReader;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
 import org.bridgedb.statistics.LensInfo;
-import org.bridgedb.tools.metadata.validator.ValidationType;
 import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.UriMapper;
@@ -60,13 +56,12 @@ import org.bridgedb.ws.bean.UriExistsBean;
 import org.bridgedb.ws.bean.UriMappings;
 import org.bridgedb.ws.bean.UriSearchBean;
 import org.bridgedb.ws.bean.XrefBean;
-import org.openrdf.rio.RDFFormat;
 
 @Path("/")
 public class WSUriInterfaceService extends WSCoreService implements WSUriInterface {
 
     protected UriMapper uriMapper;
-    protected LinksetInterfaceMinimal linksetInterface;
+//    protected LinksetInterfaceMinimal linksetInterface;
 //    private String validationTypeString;
     public final String MIME_TYPE = "mimeType";
     public final String STORE_TYPE = "storeType";
@@ -84,7 +79,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
      */
     protected WSUriInterfaceService() throws BridgeDBException {
         super();
-        this.linksetInterface = new LinksetLoader();
+//        this.linksetInterface = new LinksetLoader();
         uriMapper = SQLUriMapper.factory(false, StoreType.LIVE);
         idMapper = uriMapper;
     }
@@ -92,7 +87,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     public WSUriInterfaceService(UriMapper uriMapper) throws BridgeDBException {
         super(uriMapper);
         this.uriMapper = uriMapper;
-        this.linksetInterface = new LinksetLoader();
+///        this.linksetInterface = new LinksetLoader();
         logger.info("WS Service running using supplied uriMapper");
     }
 
@@ -486,18 +481,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         return result.trim();
     }
     
-    protected final RDFFormat getRDFFormatByMimeType(String mimeType) throws BridgeDBException{
-        if (mimeType == null){
-            throw new BridgeDBException (MIME_TYPE + " parameter may not be null");
-        }
-        mimeType = trim(mimeType);
-        if (mimeType.isEmpty()){
-            throw new BridgeDBException (MIME_TYPE + " parameter may not be empty");
-        }
-        return StatementReader.getRDFFormatByMimeType(mimeType);
-    }
-    
-    protected final StoreType parseStoreType(String storeTypeString) throws BridgeDBException{
+     protected final StoreType parseStoreType(String storeTypeString) throws BridgeDBException{
         if (storeTypeString == null){
             throw new BridgeDBException (STORE_TYPE + " parameter may not be null");
         }
@@ -508,17 +492,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         return StoreType.parseString(storeTypeString);
     }
 
-    protected final ValidationType parseValidationType(String validationTypeString) throws BridgeDBException{
-        if (validationTypeString == null){
-            throw new BridgeDBException (VALIDATION_TYPE + " parameter may not be null");
-        }
-        if (validationTypeString.trim().isEmpty()){
-            throw new BridgeDBException (VALIDATION_TYPE + " parameter may not be empty");
-        }
-        return ValidationType.parseString(validationTypeString);
-    }
-    
-    protected final void validateInfo(String info) throws BridgeDBException{
+   protected final void validateInfo(String info) throws BridgeDBException{
         if (info == null){
             throw new BridgeDBException (INFO + " parameter may not be null");
         }
@@ -533,545 +507,6 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         }
     }
 
-    /*@GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/validateString")
-    public ValidationBean getValidateString(@QueryParam(INFO)String info, 
-            @QueryParam(MIME_TYPE)String mimeType, 
-            @QueryParam(STORE_TYPE)String storeTypeString, 
-            @QueryParam(VALIDATION_TYPE)String validationTypeString, 
-            @QueryParam("includeWarnings")String includeWarningsString) throws BridgeDBException {
-                if (logger.isDebugEnabled()){
-                    logger.debug("getValidateString called!");
-                    if (info == null){
-                        logger.debug("NO Info");
-                    } else {
-                        logger.debug("info length = " + info.length());
-                    }
-                    if (storeTypeString == null){
-                        logger.debug("NO storeTypeString");
-                    } else {
-                        logger.debug("storeTypeString = " + storeTypeString);
-                    }
-                    if (includeWarningsString == null){
-                        logger.debug("NO svalidationTypeString");
-                    } else {
-                        logger.debug("validationTypeString = " + includeWarningsString);
-                    }
-                    if (includeWarningsString == null){
-                        logger.debug("NO includeWarningsStringg");
-                    } else {
-                        logger.debug("includeWarningsString = " + includeWarningsString);
-                    }
-                }
-        ValidationBean result = validateString(info, mimeType, storeTypeString, validationTypeString, includeWarningsString);
-        return result;
-    }
 
-    /*@Override
-    @POST
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/validateString")
-    public ValidationBean validateString(@FormParam(INFO)String info, 
-            @FormParam(MIME_TYPE)String mimeType, 
-            @FormParam(STORE_TYPE)String storeTypeString, 
-            @FormParam(VALIDATION_TYPE)String validationTypeString, 
-            @FormParam("includeWarnings")String includeWarningsString) throws BridgeDBException {
-                if (logger.isDebugEnabled()){
-                    logger.debug("validateString called!");
-                    if (info == null){
-                        logger.debug("NO Info");
-                    } else {
-                        logger.debug("info length = " + info.length());
-                    }
-                    if (storeTypeString == null){
-                        logger.debug("NO storeTypeString");
-                    } else {
-                        logger.debug("storeTypeString = " + storeTypeString);
-                    }
-                    if (includeWarningsString == null){
-                        logger.debug("NO svalidationTypeString");
-                    } else {
-                        logger.debug("validationTypeString = " + includeWarningsString);
-                    }
-                    if (includeWarningsString == null){
-                        logger.debug("NO includeWarningsStringg");
-                    } else {
-                        logger.debug("includeWarningsString = " + includeWarningsString);
-                    }
-                }
-        String report = NO_RESULT;
-        String exception = null;
-        try{
-            validateInfo(info);
-            RDFFormat format = getRDFFormatByMimeType(mimeType);
-            StoreType storeType = parseStoreType(storeTypeString);
-            ValidationType validationType = parseValidationType(validationTypeString);
-            boolean includeWarnings = Boolean.parseBoolean(includeWarningsString);
-            report = linksetInterface.validateString("Webservice Call", info, format, storeType, validationType, includeWarnings);
-            return new ValidationBean(report, info, mimeType, storeTypeString, validationTypeString, 
-                    includeWarnings, exception);
-        } catch (Exception e){
-            exception = e.toString();
-            return new ValidationBean(report, info, mimeType, storeTypeString, validationTypeString, 
-                    includeWarningsString, exception);
-        }
-    }
-
-    @Override
-    @POST
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Path("/validateString")
-    public ValidationBean validateInputStream(@FormDataParam("file") InputStream uploadedInputStream, 
-            @FormParam(MIME_TYPE)String mimeType, 
-            @FormParam(STORE_TYPE)String storeTypeString, 
-            @FormParam(VALIDATION_TYPE)String validationTypeString, 
-            @FormParam("includeWarnings")String includeWarningsString) throws BridgeDBException {
-                if (logger.isDebugEnabled()){
-                    logger.debug("validateInputStream called!");
-                    if (uploadedInputStream == null){
-                        logger.debug("NO uploadedInputStream");
-                    } else {
-                        try {
-                            logger.debug("uploadedInputStream.available = " + uploadedInputStream.available());
-                        } catch (IOException ex) {
-                            logger.error("unable to get inputStream.available:", ex);
-                        }
-                    }
-                    if (storeTypeString == null){
-                        logger.debug("NO storeTypeString");
-                    } else {
-                        logger.debug("storeTypeString = " + storeTypeString);
-                    }
-                    if (validationTypeString == null){
-                        logger.debug("NO svalidationTypeString");
-                    } else {
-                        logger.debug("validationTypeString = " + validationTypeString);
-                    }
-                    if (includeWarningsString == null){
-                        logger.debug("NO includeWarningsStringg");
-                    } else {
-                        logger.debug("includeWarningsString = " + includeWarningsString);
-                    }
-                }
-        String report = NO_RESULT;
-        String exception = null;
-        try{
-            validateInputStream(uploadedInputStream);
-            RDFFormat format = getRDFFormatByMimeType(mimeType);
-            StoreType storeType = parseStoreType(storeTypeString);
-            ValidationType validationType = parseValidationType(validationTypeString);
-            boolean includeWarnings = Boolean.parseBoolean(includeWarningsString);
-            report = linksetInterface.validateInputStream("Webservice Call", uploadedInputStream, format, storeType, validationType, includeWarnings);
-            return new ValidationBean(report, "data read directly from the Stream", mimeType, storeTypeString, validationTypeString, 
-                    includeWarnings, exception);
-        } catch (Exception e){
-            exception = e.toString();
-            return new ValidationBean(report, "data read directly from the Stream", mimeType, storeTypeString, validationTypeString, 
-                    includeWarningsString, exception);
-        }
-    }
-
-    @POST
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Consumes(MediaType.APPLICATION_XML)
-    @Path("/validateStringXML")
-    public ValidationBean validateString(JAXBElement<ValidationBean> input) throws BridgeDBException {
-                if (logger.isDebugEnabled()){
-                    logger.debug("validateString(JAXBElement<ValidationBean> input)!");
-                    if (input == null){
-                        logger.debug("NO input");
-                    } else {
-                        logger.debug("input = " + input);
-                    }
-                }
-        String report = NO_RESULT;
-        String info = null;
-        String mimeType = null;
-        String storeType = null;
-        String validationType = null;
-        Boolean includeWarnings = null;
-        String exception = null;       
-        try{
-            ValidationBean bean = input.getValue();
-            info = bean.getInfo();
-            mimeType = bean.getMimeType();
-            storeType = bean.getStoreType();
-            validationType = bean.getValidationType();
-            includeWarnings = bean.getIncludeWarnings();
-        } catch (Exception e){
-            exception = e.toString();
-            return new ValidationBean(report, info, mimeType, storeType, validationType, includeWarnings, exception);
-        }
-        if (includeWarnings){
-            return validateString(info, mimeType, storeType, validationType, "true");
-        } else {
-            return validateString(info, mimeType, storeType, validationType, "false");
-        }     
-    }
-
-    @POST
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/validateStringAsVoid")
-    public ValidationBean validateStringAsVoid(@FormParam(INFO)String info, 
-            @FormParam(MIME_TYPE)String mimeType) throws BridgeDBException {
-                if (logger.isDebugEnabled()){
-                    logger.debug("validateStringAsVoid called!");
-                    if (info == null){
-                        logger.debug("NO Info");
-                    } else {
-                        logger.debug("info length = " + info.length());
-                    }
-                    if (mimeType == null){
-                        logger.debug("NO mimeType");
-                    } else {
-                        logger.debug("mimeType = " + mimeType);
-                    }
-                }
-        String report = NO_RESULT;
-        String exception = null;
-        try{
-            validateInfo(info);
-            RDFFormat format = getRDFFormatByMimeType(mimeType);
-            report =  linksetInterface.validateString("Webservice Call", info, format, StoreType.TEST, 
-                    ValidationType.VOID, true);
-        } catch (Exception e){
-            exception = e.toString();
-        }
-        return new ValidationBean(report, info, mimeType, StoreType.LIVE, ValidationType.VOID, true, exception);
-    }
-
-    @POST
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/validateInputStreamAsVoid")
-    public ValidationBean validateInputStreamAsVoid(@FormDataParam("file") InputStream uploadedInputStream, 
-            @FormDataParam(MIME_TYPE)String mimeType) throws BridgeDBException {
-                if (logger.isDebugEnabled()){
-                    logger.debug("validateInputStreamAsVoid called!");
-                    if (uploadedInputStream == null){
-                        logger.debug("NO uploadedInputStream");
-                    } else {
-                        try {
-                            logger.debug("uploadedInputStream.available = " + uploadedInputStream.available());
-                        } catch (IOException ex) {
-                            logger.error("unable to get inputStream.available:", ex);
-                        }
-                    }
-                    if (mimeType == null){
-                        logger.debug("NO mimeType");
-                    } else {
-                        logger.debug("mimeType = " + mimeType);
-                    }
-                }
-        String report = NO_RESULT;
-        String exception = null;
-        try{
-            validateInputStream(uploadedInputStream);
-            RDFFormat format = getRDFFormatByMimeType(mimeType);
-            report =  linksetInterface.validateInputStream("Webservice Call", uploadedInputStream,  format, 
-                    StoreType.TEST, ValidationType.VOID, true);
-        } catch (Exception e){
-            exception = e.toString();
-        }
-        return new ValidationBean(report, "data read directly from the Stream", mimeType, StoreType.LIVE, 
-                ValidationType.LINKS, true,exception);
-    }
-
-    @POST
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/validateStringAsVoidXML")
-    public ValidationBean validateStringAsVoidXML(@FormParam(INFO)String info, 
-            @FormParam(MIME_TYPE)String mimeType) throws BridgeDBException {
-                if (logger.isDebugEnabled()){
-                    logger.debug("validateStringAsVoidXML called!");
-                    if (info == null){
-                        logger.debug("NO Info");
-                    } else {
-                        logger.debug("info length = " + info.length());
-                    }
-                    if (mimeType == null){
-                        logger.debug("NO mimeType");
-                    } else {
-                        logger.debug("mimeType = " + mimeType);
-                    }
-                }
-        return validateStringAsVoid(info, mimeType);
-    }
-
-    @POST
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/validateStringAsLinkSet")
-    public ValidationBean validateInputStreamAsLinkSet(@FormDataParam("file") InputStream uploadedInputStream, 
-            @FormDataParam(MIME_TYPE)String mimeType) throws BridgeDBException {
-                if (logger.isDebugEnabled()){
-                    logger.debug("validateInputStreamAsLinkSet called!");
-                    if (uploadedInputStream == null){
-                        logger.debug("NO uploadedInputStream");
-                    } else {
-                        try {
-                            logger.debug("uploadedInputStream.available = " + uploadedInputStream.available());
-                        } catch (IOException ex) {
-                            logger.error("unable to get inputStream.available:", ex);
-                        }
-                    }
-                    if (mimeType == null){
-                        logger.debug("NO mimeType");
-                    } else {
-                        logger.debug("mimeType = " + mimeType);
-                    }
-                }
-        String report = NO_RESULT;
-        String exception = null;
-        try{
-            validateInputStream(uploadedInputStream);
-            RDFFormat format = getRDFFormatByMimeType(mimeType);
-            report =  linksetInterface.validateInputStream("Webservice Call", uploadedInputStream, format, 
-                    StoreType.TEST, ValidationType.LINKS, true);
-        } catch (Exception e){
-            exception = e.toString();
-        }
-        return new ValidationBean(report, "data read directly from the Stream", mimeType, StoreType.LIVE, 
-                ValidationType.LINKS, true,exception);
-    }
-
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/validateStringAsVoid")
-    public ValidationBean getValidateStringAsVoid(@QueryParam(INFO)String info, 
-            @QueryParam(MIME_TYPE)String mimeType) throws BridgeDBException {
-                if (logger.isDebugEnabled()){
-                    logger.debug("getValidateStringAsVoid called!");
-                    if (info == null){
-                        logger.debug("NO Info");
-                    } else {
-                        logger.debug("info length = " + info.length());
-                    }
-                    if (mimeType == null){
-                        logger.debug("NO mimeType");
-                    } else {
-                        logger.debug("mimeType = " + mimeType);
-                    }
-                }
-        return validateStringAsVoid(info, mimeType);
-    }
-
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/validateStringAsVoidXML")
-    public ValidationBean getValidateStringAsVoidXML(@QueryParam(INFO)String info, 
-            @QueryParam(MIME_TYPE)String mimeType) throws BridgeDBException {
-                if (logger.isDebugEnabled()){
-                    logger.debug("getValidateStringAsVoidXML called!");
-                    if (info == null){
-                        logger.debug("NO Info");
-                    } else {
-                        logger.debug("info length = " + info.length());
-                    }
-                    if (mimeType == null){
-                        logger.debug("NO mimeType");
-                    } else {
-                        logger.debug("mimeType = " + mimeType);
-                    }
-                }
-        return validateStringAsVoid(info, mimeType);
-    }
-
-    /*@Override
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/validateStringAsLinksetVoid")
-    public ValidationBean validateStringAsLinksetVoid(@QueryParam(INFO)String info, 
-            @QueryParam(MIME_TYPE)String mimeType) throws BridgeDBException {
-        String report = NO_RESULT;
-        String exception = NO_EXCEPTION;
-        try{
-            validateInfo(info);
-            RDFFormat format = getRDFFormatByMimeType(mimeType);
-            report =  linksetInterface.validateStringAsLinksetVoid(info, mimeType);
-        } catch (Exception e){
-            exception = e.toString();
-        }
-        return new ValidationBean(report, info, mimeType, StoreType.LIVE, ValidationType.LINKSETVOID, true, exception);
-    }
-
-    @POST
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/validateStringAsLinkSet")
-    public ValidationBean validateStringAsLinkSet(@FormParam(INFO)String info, 
-            @FormParam(MIME_TYPE)String mimeType) throws BridgeDBException {
-                if (logger.isDebugEnabled()){
-                    logger.debug("validateStringAsLinkSet called!");
-                    if (info == null){
-                        logger.debug("NO Info");
-                    } else {
-                        logger.debug("info length = " + info.length());
-                    }
-                    if (mimeType == null){
-                        logger.debug("NO mimeType");
-                    } else {
-                        logger.debug("mimeType = " + mimeType);
-                    }
-                }
-        String report = NO_RESULT;
-        String exception = null;
-        try{
-            validateInfo(info);
-            RDFFormat format = getRDFFormatByMimeType(mimeType);
-            report =  linksetInterface.validateString("Webservice Call", info, format, StoreType.TEST, 
-                    ValidationType.LINKS,true);
-        } catch (Exception e){
-            exception = e.toString();
-        }
-        return new ValidationBean(report, info, mimeType, StoreType.LIVE, ValidationType.LINKS, true,exception);
-    }
-
-    @POST
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/validateStringAsLinkSetXML")
-    public ValidationBean validateStringAsLinkSetXML(@FormParam(INFO)String info, 
-            @FormParam(MIME_TYPE)String mimeType) throws BridgeDBException {
-                if (logger.isDebugEnabled()){
-                    logger.debug("validateStringAsLinkSetXML called!");
-                    if (info == null){
-                        logger.debug("NO Info");
-                    } else {
-                        logger.debug("info length = " + info.length());
-                    }
-                    if (mimeType == null){
-                        logger.debug("NO mimeType");
-                    } else {
-                        logger.debug("mimeType = " + mimeType);
-                    }
-                }
-        String report = NO_RESULT;
-        String exception = null;
-        try{
-            validateInfo(info);
-            RDFFormat format = getRDFFormatByMimeType(mimeType);
-            report =  linksetInterface.validateString("Webservice Call", info, format, StoreType.TEST, 
-                    ValidationType.LINKS,true);
-        } catch (Exception e){
-            exception = e.toString();
-        }
-        return validateStringAsLinkSet(info, mimeType);
-    }
-
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/validateStringAsLinkSet")
-    public ValidationBean getValidateStringAsLinkSet(@QueryParam(INFO)String info, 
-            @QueryParam(MIME_TYPE)String mimeType) throws BridgeDBException {
-                if (logger.isDebugEnabled()){
-                    logger.debug("getValidateStringAsLinkSet called!");
-                    if (info == null){
-                        logger.debug("NO Info");
-                    } else {
-                        logger.debug("info length = " + info.length());
-                    }
-                    if (mimeType == null){
-                        logger.debug("NO mimeType");
-                    } else {
-                        logger.debug("mimeType = " + mimeType);
-                    }
-                }
-        return validateStringAsLinkSet(info, mimeType);
-    }
-
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/validateStringAsLinkSetXML")
-    public ValidationBean getValidateStringAsLinkSetXML(@QueryParam(INFO)String info, 
-            @QueryParam(MIME_TYPE)String mimeType) throws BridgeDBException {
-                if (logger.isDebugEnabled()){
-                    logger.debug("getValidateStringAsLinkSetXML called!");
-                    if (info == null){
-                        logger.debug("NO Info");
-                    } else {
-                        logger.debug("info length = " + info.length());
-                    }
-                    if (mimeType == null){
-                        logger.debug("NO mimeType");
-                    } else {
-                        logger.debug("mimeType = " + mimeType);
-                    }
-                }
-        return validateStringAsLinkSet(info, mimeType);
-    }
-
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/loadString")
-    public String loadString(@Context HttpServletRequest hsr,
-            @QueryParam(INFO)String info, 
-            @QueryParam(MIME_TYPE)String mimeType, 
-            @QueryParam(STORE_TYPE)String storeTypeString, 
-            @QueryParam(VALIDATION_TYPE)String validationTypeString) 
-            throws BridgeDBException {
-                if (logger.isDebugEnabled()){
-                    logger.debug("getValidateString called!");
-                    if (info == null){
-                        logger.debug("NO Info");
-                    } else {
-                        logger.debug("info length = " + info.length());
-                    }
-                    if (storeTypeString == null){
-                        logger.debug("NO storeTypeString");
-                    } else {
-                        logger.debug("storeTypeString = " + storeTypeString);
-                    }
-                    if (validationTypeString == null){
-                        logger.debug("NO svalidationTypeString");
-                    } else {
-                        logger.debug("validationTypeString = " + validationTypeString);
-                    }
-                }
-        validateInfo(info);
-        RDFFormat format = getRDFFormatByMimeType(mimeType);
-        StoreType storeType = parseStoreType(storeTypeString);
-        ValidationType validationType = parseValidationType(validationTypeString);
-        String owner = IpConfig.checkIPAddress(hsr.getRemoteAddr());
-        if (owner == null){
-            return linksetInterface.saveString("Webservice Call", info, format, storeType, validationType);
-        } else {
-            return linksetInterface.loadString("Webservice Call", info, format, storeType, validationType);
-        }
-    }
-
-    @Override
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/checkStringValid")
-    public String checkStringValid(@QueryParam(INFO)String info, 
-            @QueryParam(MIME_TYPE)String mimeType, 
-            @QueryParam(STORE_TYPE)String storeTypeString, 
-            @QueryParam(VALIDATION_TYPE)String validationTypeString) 
-            throws BridgeDBException {
-                if (logger.isDebugEnabled()){
-                    logger.debug("checkStringValid called!");
-                    if (info == null){
-                        logger.debug("NO Info");
-                    } else {
-                        logger.debug("info length = " + info.length());
-                    }
-                    if (storeTypeString == null){
-                        logger.debug("NO storeTypeString");
-                    } else {
-                        logger.debug("storeTypeString = " + storeTypeString);
-                    }
-                    if (validationTypeString == null){
-                        logger.debug("NO svalidationTypeString");
-                    } else {
-                        logger.debug("validationTypeString = " + validationTypeString);
-                    }
-                }
-        validateInfo(info);
-        RDFFormat format = getRDFFormatByMimeType(mimeType);
-        StoreType storeType = parseStoreType(storeTypeString);
-        ValidationType validationType = parseValidationType(validationTypeString);
-        linksetInterface.checkStringValid("Webservice Call", info, format, storeType, validationType);
-        return "OK";
-    }*/
 
 }

@@ -21,7 +21,6 @@ package org.bridgedb.ws.uri;
 
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -30,8 +29,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
-import org.bridgedb.statistics.OverallStatistics;
-import org.bridgedb.statistics.LensInfo;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WsUriConstants;
 
@@ -39,7 +36,7 @@ import org.bridgedb.ws.WsUriConstants;
  *
  * @author Christian
  */
-public class WSOpsServer extends WSLinksetService{
+public class WSOpsServer extends WSVoidService{
     
     static final Logger logger = Logger.getLogger(WSUriInterfaceService.class);
 

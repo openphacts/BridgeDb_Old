@@ -21,10 +21,7 @@ package org.bridgedb.loader;
 
 import java.io.File;
 import java.io.IOException;
-import org.bridgedb.linkset.LinksetLoader;
-import org.bridgedb.linkset.transative.TransativeCreator;
 import org.bridgedb.linkset.transative.TransativeFinder;
-import org.bridgedb.tools.metadata.validator.ValidationType;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.utils.StoreType;

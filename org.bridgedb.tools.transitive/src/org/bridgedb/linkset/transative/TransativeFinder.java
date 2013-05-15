@@ -14,12 +14,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import org.bridgedb.linkset.LinksetLoader;
 import org.bridgedb.sql.SQLBase;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
-import org.bridgedb.tools.metadata.validator.ValidationType;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.Reporter;
 import org.bridgedb.utils.StoreType;
@@ -32,7 +30,6 @@ import org.openrdf.rio.RDFHandlerException;
 public class TransativeFinder extends SQLBase{
     private SQLUriMapper mapper;
     private final StoreType storeType;
-    private final LinksetLoader linksetLoader;
    
     private final static String LAST_TRANSATIVEL_LOADED_KEY = "LastMappingLoadedTransatively";
     
@@ -40,7 +37,6 @@ public class TransativeFinder extends SQLBase{
         super(storeType);
         this.storeType = storeType;
         mapper = SQLUriMapper.factory(false, storeType);  
-        linksetLoader = new LinksetLoader();
     }
     
     public void UpdateTransative() throws BridgeDBException, RDFHandlerException, IOException{
@@ -277,7 +273,7 @@ public class TransativeFinder extends SQLBase{
             return -1;
         } else {
             Reporter.println("Created " + fileName);
-            int dataSet =  linksetLoader.loadLinkset(fileName.getAbsolutePath(), storeType, ValidationType.LINKSMINIMAL, chainIds);
+            int dataSet =  linksetLoader.loadLinkset(fileName.getAbsolutePath(), storeType, chainIds);
             System.out.println("Loaded " + dataSet);
             return dataSet;
         }

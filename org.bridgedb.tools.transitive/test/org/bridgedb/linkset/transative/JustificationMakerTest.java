@@ -1,9 +1,9 @@
 package org.bridgedb.linkset.transative;
 
+import org.bridgedb.linkset.ChemInf;
+import org.bridgedb.linkset.OboConstants;
 import static org.junit.Assert.*;
 
-import org.bridgedb.metadata.constants.ChemInf;
-import org.bridgedb.metadata.constants.OboConstants;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.model.URI;

@@ -22,15 +22,11 @@ package org.bridgedb.linkset.transative;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.bridgedb.DataSource;
-import org.bridgedb.linkset.LinksetLoader;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.sql.TestSqlFactory;
-import org.bridgedb.statistics.OverallStatistics;
-import org.bridgedb.tools.metadata.validator.ValidationType;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.StoreType;
 import org.bridgedb.utils.TestUtils;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -45,15 +41,15 @@ import org.openrdf.rio.RDFHandlerException;
 public class TransativeFinder1Test extends TestUtils  {
  
     SQLUriMapper mapper;
-    LinksetLoader linksetLoader;
+    //LinksetLoader linksetLoader;
  
     @Before
     public void testLoader() throws BridgeDBException, IOException, OpenRDFException, FileNotFoundException {
         //Check database is running and settup correctly or kill the test. 
         TestSqlFactory.checkSQLAccess();
         mapper = SQLUriMapper.factory(false, StoreType.TEST);
-        linksetLoader = new LinksetLoader();
-        linksetLoader.clearExistingData( StoreType.TEST);  
+//        linksetLoader = new LinksetLoader();
+//        linksetLoader.clearExistingData( StoreType.TEST);  
         DataSource transativeTestA = DataSource.register("TransativeTestA", "TransativeTestA").asDataSource();
         mapper.registerUriPattern(transativeTestA, "http://www.example.com/DS_A/$id");
         DataSource transativeTestB = DataSource.register("TransativeTestB", "TransativeTestB").asDataSource();

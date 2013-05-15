@@ -35,11 +35,9 @@ import org.bridgedb.IDMapperException;
 import org.bridgedb.Xref;
 import org.bridgedb.XrefIterator;
 import org.bridgedb.bio.BioDataSource;
-import org.bridgedb.linkset.LinksetLoader;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.rdf.DataSourceUris;
 import org.bridgedb.rdf.UriPattern;
-import org.bridgedb.tools.metadata.validator.ValidationType;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.utils.Reporter;
@@ -139,8 +137,8 @@ public class LinksetExporter {
         }
         if (fileValid){
             logger.info("Exported to " + linksetFile.getAbsolutePath());
-            LinksetLoader loader = new LinksetLoader();
-            logger.info(loader.validityFile(linksetFile, StoreType.TEST, ValidationType.LINKSMINIMAL, false));
+//            LinksetLoader loader = new LinksetLoader();
+//            logger.info(loader.validityFile(linksetFile, StoreType.TEST, ValidationType.LINKSMINIMAL, false));
         } else {
             logger.info("No link found for " + linksetFile.getAbsolutePath());
             linksetFile.delete();

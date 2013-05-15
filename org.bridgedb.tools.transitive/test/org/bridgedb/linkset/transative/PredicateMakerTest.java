@@ -20,9 +20,9 @@
 package org.bridgedb.linkset.transative;
 
 import java.util.ArrayList;
-import org.bridgedb.metadata.constants.OboConstants;
-import org.bridgedb.tools.metadata.constants.OwlConstants;
-import org.bridgedb.tools.metadata.constants.SkosConstants;
+import org.bridgedb.linkset.OboConstants;
+import org.bridgedb.linkset.OwlConstants;
+import org.bridgedb.linkset.SkosConstants;
 import org.bridgedb.utils.TestUtils;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
