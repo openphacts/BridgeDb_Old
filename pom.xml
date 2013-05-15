@@ -50,9 +50,6 @@
   	<module>org.bridgedb.webservice.synergizer</module>
   	<module>examples</module>
     <module>org.bridgedb.server</module-->
-    <!-- war creation moved low down to make sure jars have registered -->
-  	<module>org.bridgedb.ws.war</module>
-    <module>org.bridgedb.uri.ws.war</module>
  </modules>
   
   	<build>
