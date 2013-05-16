@@ -19,6 +19,7 @@
 //
 package org.bridgedb.ws.uri;
 
+import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -26,6 +27,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.bridgedb.rdf.UriPattern;
@@ -393,10 +395,33 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
     private void addMappingSetCells(StringBuilder sb, int i) throws BridgeDBException {
         sb.append("\t\t<td>");
         addMappingInfoLink(sb, i);
-        sb.append("</td>\n");        
+        sb.append("</td>\n");  
         sb.append("\t\t<td>");
-            sb.append(infos[i].getMappingSource());
-            sb.append("</td>\n");
+        String mappingSource = infos[i].getMappingSource();
+        String shortSource = null;
+        java.net.URI uri = null;
+        try {
+            uri = new java.net.URI(mappingSource);
+            int index = mappingSource.lastIndexOf("/");
+            if (index > 0){
+                shortSource = mappingSource.substring(index + 1, mappingSource.length());
+             }
+        } catch (URISyntaxException ex) {
+            //do nothing as not a uri
+        }
+        if (shortSource == null || shortSource.isEmpty()){ 
+            sb.append(mappingSource);
+        } else if (mappingSource.trim().toLowerCase().startsWith("file")){
+            //Dont expose full file path
+            sb.append(shortSource);
+        } else {
+            sb.append("<a href=\"");
+                sb.append(uri.toASCIIString());
+            sb.append("\">");
+            sb.append(shortSource);
+            sb.append("</a>");                    
+        }
+        sb.append("</td>\n");
     }
 
     private void addMappingInfoLink(StringBuilder sb, int i) throws BridgeDBException{
@@ -417,7 +442,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
     private void addLinkCell(StringBuilder sb, String uri) throws BridgeDBException {
         sb.append("\t\t<td><a href=\"");
         sb.append(uri);
-        sb.append("\"</a>");
+        sb.append("\"");
         if (uri == null){
             sb.append("null"); 
         } else {
