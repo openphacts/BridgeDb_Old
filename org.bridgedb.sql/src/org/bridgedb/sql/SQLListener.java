@@ -59,7 +59,7 @@ public class SQLListener extends SQLBase implements MappingListener{
     private static final int KEY_LENGTH= 100; 
     private static final int PROPERTY_LENGTH = 100;
     private static final int MAX_BLOCK_SIZE = 1000;
-    private static final int MAPPING_SOURCE_LENGTH = 100;
+    private static final int MAPPING_SOURCE_LENGTH = 200;
     
     //static final String DATASOURCE_TABLE_NAME = "DataSource";
     public static final String CHAIN_TABLE_NAME = "chain";
@@ -889,7 +889,7 @@ public class SQLListener extends SQLBase implements MappingListener{
                 try {
                     int updateCount = updateStatement.executeUpdate(update);
                     if (updateCount != 1){
-                        throw new BridgeDBException("Updated rows <> ! when running " + update);
+                        throw new BridgeDBException("Updated rows " + updateCount + " <> 1 when running " + update);
                     }
                 } catch (SQLException ex) {
                      throw new BridgeDBException("Unable to run update. " + update, ex);
