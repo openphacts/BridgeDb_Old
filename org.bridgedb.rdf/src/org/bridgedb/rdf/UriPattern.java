@@ -362,7 +362,8 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
     
     public static UriPattern readUriPattern(RepositoryConnection repositoryConnection, Resource uriPatternId) 
             throws BridgeDBException, RepositoryException{
-        checkStatements(repositoryConnection, uriPatternId);
+        //TODO handle the extra statements
+        //checkStatements(repositoryConnection, uriPatternId);
         UriPattern pattern;      
         String prefix = getPossibleSingletonString(repositoryConnection, uriPatternId, BridgeDBConstants.HAS_PREFIX_URI);
         if (prefix == null){
@@ -392,7 +393,8 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
 */        return pattern;
     }
 
-    private final static void checkStatements(RepositoryConnection repositoryConnection, Resource dataSourceId) 
+        //TODO handle the statements
+/*    private final static void checkStatements(RepositoryConnection repositoryConnection, Resource dataSourceId) 
             throws BridgeDBException, RepositoryException{
         RepositoryResult<Statement> statements = 
                 repositoryConnection.getStatements(dataSourceId, null, null, true);
@@ -407,7 +409,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
             }
         }
     }
-    
+*/    
     @Override
     public String toString(){
         return getUriPattern();      
@@ -432,7 +434,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
                 if (parent == null){
                     parent = dsu.getUriParent();
                 } else {
-                    System.out.println(this + " has two primary DataSources " + parent + " and " + dsu 
+                    System.err.println(this + " has two primary DataSources " + parent + " and " + dsu 
                             + " please delcare one formally");
                 }
             }
