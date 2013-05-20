@@ -43,14 +43,7 @@ import org.apache.log4j.SimpleLayout;
  */
 public class ConfigReader {
     
-    /** 
-     * Sets the build into sandbox mode.
-     * Warning in SANDBOX mode the system will not build without builder provided config files.
-     * If SANDBOX is true in the MASTER branch this is an ERROR. Please fix and contact developer team ASAP!
-     */
-    public static boolean SANDBOX = true;
     public static final String CONFIG_FILE_NAME = "Config.txt";
-    public static final String SANDBOX_CONFIG_FILE_NAME = "SandboxConfig.txt";
 
     public static final String VOID_OWL_FILE = "VoidInfo.owl";
     
@@ -73,11 +66,7 @@ public class ConfigReader {
     
     public static Properties getProperties() throws BridgeDBException{
         if (propertyReader == null){
-            if (SANDBOX){
-                propertyReader = new ConfigReader(SANDBOX_CONFIG_FILE_NAME);
-            } else {
-                propertyReader = new ConfigReader(CONFIG_FILE_NAME);            
-            }
+            propertyReader = new ConfigReader(CONFIG_FILE_NAME);            
             configureLogger();
         }
         return propertyReader.readProperties();
@@ -92,24 +81,12 @@ public class ConfigReader {
     public static synchronized void configureLogger() throws BridgeDBException{
         if (!loggerSetup){
             ConfigReader finder;
-            if (SANDBOX){
-                finder = new ConfigReader(LOG_PROPERTIES_FILE);
-            } else { 
-                finder = new ConfigReader(SANDBOX_LOG_PROPERTIES_FILE);
-            }
+            finder = new ConfigReader(LOG_PROPERTIES_FILE);
             Properties props = finder.readProperties();
             PropertyConfigurator.configure(props);
             logger.info("Logger configured from " + finder.foundAt + " by " + finder.findMethod);
             loggerSetup = true;
-            if (SANDBOX){
-                logger.warn("WARNING SANDBOX MODE ACTIVE!");
-                logger.warn("SANDBOX requires config files not in the normal build");
-                logger.warn("To deactivate sandbox change the flag in the class ConfigReader in the package BridgeDB Utils");
-                System.err.println("WARNING SANDBOX MODE ACTIVE!");
-                System.err.println("SANDBOX requires config files not in the normal build");
-                System.err.println("To deactivate sandbox change the flag in the class ConfigReader in the package BridgeDB Utils");            
-            }
-        }
+         }
     }
      
     public static void logToConsole() throws BridgeDBException{

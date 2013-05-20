@@ -39,11 +39,7 @@ public class WsUriClientFactory extends org.bridgedb.utils.IDMapperTestBase{
         }
         //ystem.out.println("in WSCoreInterface 1");
         WSUriInterface webService;
-        if (ConfigReader.SANDBOX){
-            webService = new WSUriClient("http://localhost:8080/OPS-IMS-TEST");
-        } else {
-            webService = new WSUriClient("http://localhost:8080/OPS-IMS");
-        }
+        webService = new WSUriClient("http://localhost:8080/OPS-IMS");
         //ystem.out.println("in WSCoreInterface 2");
         try { 
             webService.isFreeSearchSupported();
