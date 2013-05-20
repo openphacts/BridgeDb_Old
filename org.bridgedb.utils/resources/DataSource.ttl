@@ -661,6 +661,7 @@ bridgeDB:DataSource_Chembl_Id a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "unknown" ;
 	bridgeDB:hasUrlPattern <http://data.kasabi.com/dataset/chembl-rdf/chemblid/$id> ;
+    bridgeDB:hasUriPattern <http://linkedchemistry.info/chembl/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://data.kasabi.com/dataset/chembl-rdf/chemblid/$id> .
 
 bridgeDB:DataSource_Chembl_Molecule a bridgeDB:DataSource ;
@@ -671,7 +672,7 @@ bridgeDB:DataSource_Chembl_Molecule a bridgeDB:DataSource ;
 	bridgeDB:type "unknown" ;
 	bridgeDB:hasUrlPattern <http://data.kasabi.com/dataset/chembl-rdf/molecule/m$id> ;
 	bridgeDB:hasUriPattern <http://chem2bio2rdf.org/chembl/resource/chembl_compounds/$id> ;
-	bridgeDB:hasWikiPathwaysPattern <http://data.kasabi.com/dataset/chembl-rdf/molecule/m$id> ;
+	bridgeDB:hasWikiPathwaysPattern <http://data.kasabi.com/dataset/chembl-http://data.kasabi.com/dataset/chembl-rdf/molecule/m$id> ;
 	bridgeDB:hasUriPattern <http://linkedchemistry.info/chembl/molecule/m$id> .
 
 bridgeDB:DataSource_Chembl_Target a bridgeDB:DataSource ;
@@ -6673,6 +6674,10 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://linkedchemistry.info/chembl/molecule/m$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://linkedchemistry.info/chembl/molecule/m" ;
 	bridgeDB:isUriPatternOf bridgeDB:DataSource_Chembl_Molecule .
+
+<http://linkedchemistry.info/chembl/chemblid/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://linkedchemistry.info/chembl/chemblid/" ;
+	bridgeDB:isUriPatternOf bridgeDB:DataSource_Chembl_Id .
 
 <http://linkedchemistry.info/chembl/target/t$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://linkedchemistry.info/chembl/target/t" ;
