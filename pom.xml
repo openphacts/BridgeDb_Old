@@ -24,8 +24,8 @@
   	<module>org.bridgedb.utils</module>
   	<module>org.bridgedb.rdf</module>
   	<module>org.bridgedb.sql</module>
-  	<module>org.bridgedb.uri.sql</module>
   	<module>org.bridgedb.tools.metadata</module>
+  	<module>org.bridgedb.uri.sql</module>
    	<module>org.bridgedb.bio</module>
   	<module>org.bridgedb.linksets</module>
   	<module>org.bridgedb.ws.core</module>
