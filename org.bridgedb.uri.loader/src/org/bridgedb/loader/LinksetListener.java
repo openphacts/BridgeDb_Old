@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.bridgedb.uri.UriListener;
 import org.bridgedb.utils.BridgeDBException;
 import org.openrdf.model.URI;
+import org.openrdf.rio.RDFHandler;
 
 public class LinksetListener {
     
@@ -39,22 +40,26 @@ public class LinksetListener {
     
     public int parse(File file, String mappingSource, URI linkPredicate, String justification) throws BridgeDBException{
         LinksetHandler handler = new LinksetHandler(uriListener, linkPredicate, justification, mappingSource, true);
-        RdfParser parser = new RdfParser(handler);
+        RdfParser parser = getParser(handler);
         parser.parse(file);
         return handler.getMappingsetId();
     }
     
     public int parse(String uri, String mappingSource, URI linkPredicate, String justification) throws BridgeDBException{
         LinksetHandler handler = new LinksetHandler(uriListener, linkPredicate, justification, mappingSource, true);
-        RdfParser parser = new RdfParser(handler);
+        RdfParser parser = getParser(handler);
         parser.parse(uri);
         return handler.getMappingsetId();
     }
 
      public int parse(InputStream stream, String mappingSource, URI linkPredicate, String justification) throws BridgeDBException{
         LinksetHandler handler = new LinksetHandler(uriListener, linkPredicate, justification, mappingSource, true);
-        RdfParser parser = new RdfParser(handler);
+        RdfParser parser = getParser(handler);
         parser.parse(stream, mappingSource);
         return handler.getMappingsetId();
+    }
+     
+    protected RdfParser getParser(RDFHandler handler){
+       return new RdfParser(handler);
     }
  }
