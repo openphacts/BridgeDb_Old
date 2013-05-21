@@ -53,6 +53,7 @@ import org.openrdf.sail.memory.MemoryStore;
  */
 public class BridgeDBRdfHandler {
    
+    static boolean initialized = false;
     static final Logger logger = Logger.getLogger(BridgeDBRdfHandler.class);
     public static String DEFAULT_BASE_URI = "http://no/BaseURI/Set/";
     public static RDFFormat DEFAULT_FILE_FORMAT = RDFFormat.TURTLE;
@@ -83,7 +84,6 @@ public class BridgeDBRdfHandler {
     }
     
     static void parseRdfInputStream(InputStream stream) throws BridgeDBException {
-        Reporter.println("Parsing Rdf Input Stream.");
         Repository repository = null;
         RepositoryConnection repositoryConnection = null;
         try {
@@ -106,8 +106,13 @@ public class BridgeDBRdfHandler {
     }
     
     public static void init() throws BridgeDBException{
+        if (initialized){
+            return;
+        }
         InputStream stream = ConfigReader.getInputStream(CONFIG_FILE_NAME);
         parseRdfInputStream(stream);
+        initialized = true;
+        Reporter.println("BridgeDBRdfHandler initialized");
     }
     
     public static void writeRdfToFile(File file) throws BridgeDBException{
