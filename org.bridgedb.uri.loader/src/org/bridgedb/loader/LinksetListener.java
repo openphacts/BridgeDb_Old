@@ -20,10 +20,41 @@
 package org.bridgedb.loader;
 
 import java.io.File;
+import java.io.InputStream;
+import org.apache.log4j.Logger;
+import org.bridgedb.uri.UriListener;
 import org.bridgedb.utils.BridgeDBException;
 import org.openrdf.model.URI;
 
-public interface LinksetListener {
+public class LinksetListener {
     
-    public int parse(File file, URI linkPredicate, String justification) throws BridgeDBException;
+    private final UriListener uriListener;
+    private boolean SYMETRIC = true; 
+    
+    public LinksetListener(UriListener uriListener){
+        this.uriListener = uriListener;
+    }
+    
+    static final Logger logger = Logger.getLogger(LinksetListener.class);
+    
+    public int parse(File file, String mappingSource, URI linkPredicate, String justification) throws BridgeDBException{
+        LinksetHandler handler = new LinksetHandler(uriListener, linkPredicate, justification, mappingSource, true);
+        RdfParser parser = new RdfParser(handler);
+        parser.parse(file);
+        return handler.getMappingsetId();
+    }
+    
+    public int parse(String uri, String mappingSource, URI linkPredicate, String justification) throws BridgeDBException{
+        LinksetHandler handler = new LinksetHandler(uriListener, linkPredicate, justification, mappingSource, true);
+        RdfParser parser = new RdfParser(handler);
+        parser.parse(uri);
+        return handler.getMappingsetId();
+    }
+
+     public int parse(InputStream stream, String mappingSource, URI linkPredicate, String justification) throws BridgeDBException{
+        LinksetHandler handler = new LinksetHandler(uriListener, linkPredicate, justification, mappingSource, true);
+        RdfParser parser = new RdfParser(handler);
+        parser.parse(stream, mappingSource);
+        return handler.getMappingsetId();
+    }
  }

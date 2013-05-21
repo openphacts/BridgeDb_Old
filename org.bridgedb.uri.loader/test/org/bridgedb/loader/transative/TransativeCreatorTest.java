@@ -6,7 +6,8 @@ package org.bridgedb.loader.transative;
 
 import java.io.File;
 import org.bridgedb.loader.LinksetListener;
-import org.bridgedb.loader.LinksetListenerImpl;
+import org.bridgedb.loader.LinksetListener;
+import org.bridgedb.loader.RdfParser;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.utils.BridgeDBException;
@@ -42,7 +43,7 @@ public class TransativeCreatorTest {
     public static void setUpClass() throws BridgeDBException {
         DirectoriesConfig.useTestDirectory();
         uriListener = SQLUriMapper.factory(true, StoreType.TEST);
-        instance = new LinksetListenerImpl(uriListener);
+        instance = new LinksetListener(uriListener);
     }
     
     @AfterClass
@@ -64,11 +65,11 @@ public class TransativeCreatorTest {
     
     private void loadFile(File file, String justification) throws BridgeDBException{
         Reporter.println("parsing " + file.getAbsolutePath());
-        int mappingSetId = instance.parse(file, linkPredicate, justification);
+        String source = RdfParser.fileToURI(file);
+        int mappingSetId = instance.parse(file, source, linkPredicate, justification);
         MappingSetInfo mapping = uriListener.getMappingSetInfo(mappingSetId);
         int numberOfLinks = mapping.getNumberOfLinks();
-        assertThat(numberOfLinks, greaterThanOrEqualTo(3));
-        
+        assertThat(numberOfLinks, greaterThanOrEqualTo(3));      
     }
     /**
      * Test of parse method, of class LinksetListener.

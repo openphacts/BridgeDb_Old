@@ -98,7 +98,13 @@ public class LinksetHandler extends RDFHandlerBase{
                     throw new RDFHandlerException ("None URI object in " + st);
                 }
                 UriPattern sourcePattern = UriPattern.existingByUri(subject.stringValue());
+                if (sourcePattern == null){
+                     throw new RDFHandlerException("Unable to get a pattern for " + subject.stringValue());
+                }
                 UriPattern targetPattern = UriPattern.existingByUri(object.stringValue());
+                if (targetPattern == null){
+                    throw new RDFHandlerException("Unable to get a pattern for " + object.stringValue());
+                }
                 mappingSet = uriListener.registerMappingSet(sourcePattern, linkPredicate.stringValue(), justification, targetPattern, 
                         mappingSource, symetric, null, null);
             } catch (BridgeDBException ex) {

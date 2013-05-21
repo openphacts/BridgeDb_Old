@@ -26,13 +26,14 @@ public class SetupWithTestData {
 
     public SetupWithTestData() throws BridgeDBException {
         uriListener = SQLUriMapper.factory(true, StoreType.LOAD);
-        instance = new LinksetListenerImpl(uriListener);
+        instance = new LinksetListener(uriListener);
     }
     
     private void loadFile(String fileName, String justification) throws BridgeDBException{
         Reporter.println("parsing " + fileName);
         File file = new File(fileName);
-        int mappingSetId = instance.parse(file, linkPredicate, justification);
+        String source = RdfParser.fileToURI(file);
+        int mappingSetId = instance.parse(file, source, linkPredicate, justification);
         Reporter.println("       Loaded as mappingSet " + mappingSetId);
      }
     /**

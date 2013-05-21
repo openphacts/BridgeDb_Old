@@ -38,7 +38,7 @@ public class LinksetListenerTest {
     @BeforeClass
     public static void setUpClass() throws BridgeDBException {
         uriListener = SQLUriMapper.factory(true, StoreType.TEST);
-        instance = new LinksetListenerImpl(uriListener);
+        instance = new LinksetListener(uriListener);
     }
     
     @AfterClass
@@ -56,7 +56,8 @@ public class LinksetListenerTest {
     private void loadFile(String fileName, String justification) throws BridgeDBException{
         Reporter.println("parsing " + fileName);
         File file = new File(fileName);
-        int mappingSetId = instance.parse(file, linkPredicate, justification);
+        String source = RdfParser.fileToURI(file);
+        int mappingSetId = instance.parse(file, source, linkPredicate, justification);
         MappingSetInfo mapping = uriListener.getMappingSetInfo(mappingSetId);
         int numberOfLinks = mapping.getNumberOfLinks();
         assertThat(numberOfLinks, greaterThanOrEqualTo(3));
