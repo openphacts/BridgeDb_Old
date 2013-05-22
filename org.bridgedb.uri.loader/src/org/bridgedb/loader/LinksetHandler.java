@@ -50,7 +50,7 @@ public class LinksetHandler extends RDFHandlerBase{
     private int mappingSet;
     private int noneLinkStatements;
     
-    LinksetHandler(UriListener uriListener, URI linkPredicate, String justification, String mappingSource, 
+    public LinksetHandler(UriListener uriListener, URI linkPredicate, String justification, String mappingSource, 
             boolean symetric){
         this.uriListener = uriListener;
         this.linkPredicate = linkPredicate;
@@ -152,7 +152,7 @@ public class LinksetHandler extends RDFHandlerBase{
         }
     }
 
-    int getMappingsetId() {
+    public int getMappingsetId() {
         return mappingSet;
     }
 
