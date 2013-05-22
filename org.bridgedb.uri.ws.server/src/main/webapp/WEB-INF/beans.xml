@@ -11,12 +11,12 @@
             
     <import resource="classpath:META-INF/cxf/cxf.xml" />
     
-    <jaxrs:server id="imsServer" address="/">
+    <jaxrs:server id="uriServer" address="/">
         <jaxrs:serviceBeans>
-            <ref bean="imsImpl" />
+            <ref bean="uriImpl" />
         </jaxrs:serviceBeans>
     </jaxrs:server>
     
-    <bean id="imsImpl" class="org.bridgedb.ws.uri.WSOpsServer" />
+    <bean id="uriImpl" class="org.bridgedb.ws.uri.WSUriServer" />
 
 </beans>

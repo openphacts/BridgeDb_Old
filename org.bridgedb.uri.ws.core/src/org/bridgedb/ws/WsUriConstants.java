@@ -28,6 +28,8 @@ import org.bridgedb.uri.Lens;
 public class WsUriConstants extends WsConstants{
     
     
+    public static final String BRIDGEDB_API = "BridgeDbApi";
+    public static final String BRIDGEDB_HOME = "BridgeDb";
     public static final String DATA_SOURCE = "dataSource";
     public static final String GET_MAPPING_INFO = "getMappingInfo";
     public static final String GET_OVERALL_STATISTICS = "getOverallStatistics";
