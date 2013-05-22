@@ -20,7 +20,6 @@
 package org.bridgedb.loader;
 
 import java.io.File;
-import java.io.InputStream;
 import org.apache.log4j.Logger;
 import org.bridgedb.uri.UriListener;
 import org.bridgedb.utils.BridgeDBException;
@@ -52,13 +51,6 @@ public class LinksetListener {
         return handler.getMappingsetId();
     }
 
-     public int parse(InputStream stream, String mappingSource, URI linkPredicate, String justification) throws BridgeDBException{
-        LinksetHandler handler = new LinksetHandler(uriListener, linkPredicate, justification, mappingSource, true);
-        RdfParser parser = getParser(handler);
-        parser.parse(stream, mappingSource);
-        return handler.getMappingsetId();
-    }
-     
     protected RdfParser getParser(RDFHandler handler){
        return new RdfParser(handler);
     }

@@ -19,6 +19,7 @@
 //
 package org.bridgedb.loader;
 
+import info.aduna.lang.FileFormat;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,22 +29,30 @@ import java.net.URL;
 import org.apache.log4j.Logger;
 import org.bridgedb.utils.BridgeDBException;
 import org.openrdf.OpenRDFException;
+import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFParser;
+import org.openrdf.rio.RDFParserFactory;
+import org.openrdf.rio.RDFParserRegistry;
 import org.openrdf.rio.turtle.TurtleParser;
 
 public class RdfParser {
     
     private final RDFHandler handler;
+    public static RDFParser DEFAULT_PARSER = new TurtleParser();
+    private static final String GET_FORMAT_FROM_ADDRESS = null;
     
     public RdfParser(RDFHandler handler){
         this.handler = handler;
     }
     
     static final Logger logger = Logger.getLogger(RdfParser.class);
-    
      
     public void parse(File file) throws BridgeDBException{
+        parse(file, GET_FORMAT_FROM_ADDRESS);
+    }
+    
+    public void parse(File file, String rdfFormatName) throws BridgeDBException{
         String uri = fileToURI(file);
         InputStream inputStream;
         try {
@@ -51,18 +60,22 @@ public class RdfParser {
         } catch (IOException ex) {
             throw new BridgeDBException("Unable to open File as a stream.",ex);
         }
-        parse(inputStream, uri);
+        parse(inputStream, uri, rdfFormatName);
     }
     
     public void parse(String uri) throws BridgeDBException {
+        parse(uri, GET_FORMAT_FROM_ADDRESS);        
+    }
+    
+    public void parse(String uri, String rdfFormatName) throws BridgeDBException {
         InputStream stream = getInputStream(uri);
-        parse(stream, uri);
+        parse(stream, uri, rdfFormatName);
     }
 
-    public void parse(InputStream stream, String mappingSource) throws BridgeDBException {
+    public void parse(InputStream stream, String mappingSource, String rdfFormatName) throws BridgeDBException {
         logger.info("Parsing: " + mappingSource);
         try {
-            RDFParser parser = new TurtleParser();
+            RDFParser parser = getParser(mappingSource, rdfFormatName);
             parser.setRDFHandler(handler);
             parser.setParseErrorListener(new LinksetParserErrorListener());
             parser.setVerifyData(true);
@@ -102,6 +115,38 @@ public class RdfParser {
         } catch (MalformedURLException ex) {
             throw new BridgeDBException("Unable to convert file to URI", ex);
         }
+    }
+
+    public static RDFParser getParser(String address, String rdfFormatName) throws BridgeDBException{
+        RDFParserRegistry reg = RDFParserRegistry.getInstance();
+        RDFFormat format = null;
+        if (rdfFormatName == null || rdfFormatName.isEmpty()){
+            if (address.endsWith(".gz")){
+                address = address.substring(0, address.length()-3);
+            }
+            if (address.endsWith(".n3")){
+                address = "try.ttl";
+            }
+            FileFormat fileFormat = reg.getFileFormatForFileName(address);
+            if (fileFormat == null || !(fileFormat instanceof RDFFormat)){
+                //added bridgeDB/OPS specific extension here if required.           
+                logger.warn("OpenRDF does not know the RDF Format for " + address);
+                logger.warn("Using the default format " + DEFAULT_PARSER);
+                return DEFAULT_PARSER;
+            }
+            format = (RDFFormat)fileFormat;
+        } else {
+            for (RDFFormat rdfFormat:RDFFormat.values()){
+                if (rdfFormat.getName().equalsIgnoreCase(rdfFormatName)){
+                    format = rdfFormat;
+                }
+                if (format == null){
+                    throw new BridgeDBException("No RdfFormat with name " + rdfFormatName + " known");
+                }
+            }
+        }
+        RDFParserFactory factory = reg.get(format);
+        return factory.getParser();
     }
 
  }
