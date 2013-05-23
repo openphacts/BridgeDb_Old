@@ -24,6 +24,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.bridgedb.statistics.OverallStatistics;
@@ -57,7 +58,8 @@ public class WSFrame extends WSUriInterfaceService {
     protected String serviceName(){
         return "BridgeDb ";
     }
-    protected StringBuilder topAndSide1(String header, HttpServletRequest httpServletRequest) throws BridgeDBException{
+    
+    public StringBuilder topAndSide(String header, HttpServletRequest httpServletRequest) {
         String title = serviceName() + header;
         StringBuilder sb = header(serviceName() + title);
         top(sb, title);      
@@ -66,7 +68,7 @@ public class WSFrame extends WSUriInterfaceService {
         return sb;
     }
     
-    protected StringBuilder header(String title) throws BridgeDBException{
+    protected StringBuilder header(String title) {
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\"?>");
         sb.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" ");
@@ -83,7 +85,7 @@ public class WSFrame extends WSUriInterfaceService {
         return sb;
     }
 
-    protected void style(StringBuilder sb) throws BridgeDBException{
+    protected void style(StringBuilder sb) {
         sb.append("<style>\n");
         sb.append("#container { width: 100%; margin: 10px auto; background-color: #fff; color: #333; border: ");
             sb.append("1px solid gray; line-height: 130%; font-family: perpetua, garamond, serif; font-size: 110%; ");
@@ -106,7 +108,7 @@ public class WSFrame extends WSUriInterfaceService {
         sb.append("	</style>\n");            
     }
 
-    protected void toggler(StringBuilder sb) throws BridgeDBException{
+    protected void toggler(StringBuilder sb) {
         sb.append("<script language=\"javascript\">\n");
         sb.append("		function getObj(id) {\n");
         sb.append("			return document.getElementById(id)\n");
@@ -149,7 +151,7 @@ public class WSFrame extends WSUriInterfaceService {
         sb.append("</script>\n");
     }
 
-     protected void top(StringBuilder sb, String title) throws BridgeDBException{
+     protected void top(StringBuilder sb, String title) {
         sb.append("<div id=\"container\">");
         sb.append("<div id=\"top\">");
         sb.append("<h1>");
@@ -158,7 +160,7 @@ public class WSFrame extends WSUriInterfaceService {
         sb.append("</div>");   
     }
     
-    protected void sideBar(StringBuilder sb, HttpServletRequest httpServletRequest) throws BridgeDBException{
+    protected void sideBar(StringBuilder sb, HttpServletRequest httpServletRequest) {
         sb.append("<div id=\"navBar\">");
         addSideBarMiddle(sb, httpServletRequest);
         addSideBarStatisitics(sb, httpServletRequest);
@@ -168,21 +170,29 @@ public class WSFrame extends WSUriInterfaceService {
     /**
      * Allows Super classes to add to the side bar
      */
-    public void addSideBarMiddle(StringBuilder sb, HttpServletRequest httpServletRequest) throws BridgeDBException{
+    public void addSideBarMiddle(StringBuilder sb, HttpServletRequest httpServletRequest){
         addSideBarBridgeDb(sb, httpServletRequest);
     }
     
     /**
      * Allows Super classes to add to the side bar
      */
-    protected void addSideBarBridgeDb(StringBuilder sb, HttpServletRequest httpServletRequest) throws BridgeDBException{
+    protected void addSideBarBridgeDb(StringBuilder sb, HttpServletRequest httpServletRequest) {
         sb.append("<div class=\"menugroup\">BridgeDb Service</div>");
         addSideBarItem(sb, WsUriConstants.BRIDGEDB_HOME, "Home", httpServletRequest);
-        String allMappingInfo = WsUriConstants.GET_MAPPING_INFO + "?" + WsUriConstants.LENS_URI + "=" + Lens.getAllLens();
-        addSideBarItem(sb, allMappingInfo,"All Mappings Summary", httpServletRequest);
+        try {
+            String allMappingInfo = WsUriConstants.GET_MAPPING_INFO + "?" + WsUriConstants.LENS_URI + "=" + Lens.getAllLens();
+            addSideBarItem(sb, allMappingInfo,"All Mappings Summary", httpServletRequest);
+        } catch (BridgeDBException ex) {
+            logger.error("Error getting getAllLens", ex);
+        }
         addSideBarItem(sb,  WsUriConstants.GET_MAPPING_INFO, "Default Mappings Summary", httpServletRequest);
-        String allGraphwiz = WsUriConstants.GRAPHVIZ + "?" + WsUriConstants.LENS_URI + "=" + Lens.getAllLens();
-        addSideBarItem(sb, allGraphwiz, "All Mappings Graphviz",  httpServletRequest);
+        try {
+            String allGraphwiz = WsUriConstants.GRAPHVIZ + "?" + WsUriConstants.LENS_URI + "=" + Lens.getAllLens();
+            addSideBarItem(sb, allGraphwiz, "All Mappings Graphviz",  httpServletRequest);
+        } catch (BridgeDBException ex) {
+            logger.error("Error getting getAllLens", ex);
+        }
         addSideBarItem(sb, WsUriConstants.GRAPHVIZ, "Default Mappings Graphviz",  httpServletRequest);
         addSideBarItem(sb, WsUriConstants.LENS, WsUriConstants.LENS,  httpServletRequest);
         addSideBarItem(sb, WsUriConstants.BRIDGEDB_API, "Api", httpServletRequest);
@@ -191,28 +201,33 @@ public class WSFrame extends WSUriInterfaceService {
     /**
      * Allows Super classes to add to the side bar
      */
-    protected void addSideBarStatisitics(StringBuilder sb, HttpServletRequest httpServletRequest) throws BridgeDBException{
-        OverallStatistics statistics = uriMapper.getOverallStatistics(Lens.getDefaultLens());
-        //sb.append("\n<div class=\"menugroup\">Default Statisitics</div>");
-        //addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfMappings()) + " Mappings", httpServletRequest);
-        //addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfMappingSets()) + " Mapping Sets", httpServletRequest);
-        //addSideBarItem(sb, "getSupportedSrcDataSources", formatter.format(statistics.getNumberOfSourceDataSources()) 
-        //        + " Source Data Sources", httpServletRequest);
-        //addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfPredicates()) + " Predicates", httpServletRequest);
-        //addSideBarItem(sb, "getSupportedTgtDataSources", formatter.format(statistics.getNumberOfTargetDataSources()) 
-         //       + " Target Data Sources ", httpServletRequest);
-        statistics = uriMapper.getOverallStatistics(Lens.getAllLens());
-        //sb.append("\n<div class=\"menugroup\">All Statisitics</div>");
-        sb.append("\n<div class=\"menugroup\">Statisitics</div>");
-        addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfMappings()) + " Mappings", httpServletRequest);
-        addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfMappingSets()) + " Mapping Sets", httpServletRequest);
-        addSideBarItem(sb, "getSupportedSrcDataSources", formatter.format(statistics.getNumberOfSourceDataSources()) 
-                + " Source Data Sources", httpServletRequest);
-        addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfPredicates()) + " Predicates", httpServletRequest);
-        addSideBarItem(sb, "getSupportedTgtDataSources", formatter.format(statistics.getNumberOfTargetDataSources()) 
-                + " Target Data Sources ", httpServletRequest);
-        addSideBarItem(sb, WsUriConstants.LENS, formatter.format(statistics.getNumberOfLenses()) 
-                + " Lenses ", httpServletRequest);
+    protected void addSideBarStatisitics(StringBuilder sb, HttpServletRequest httpServletRequest) {
+        try {
+            OverallStatistics statistics = uriMapper.getOverallStatistics(Lens.getDefaultLens());
+            //sb.append("\n<div class=\"menugroup\">Default Statisitics</div>");
+            //addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfMappings()) + " Mappings", httpServletRequest);
+            //addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfMappingSets()) + " Mapping Sets", httpServletRequest);
+            //addSideBarItem(sb, "getSupportedSrcDataSources", formatter.format(statistics.getNumberOfSourceDataSources()) 
+            //        + " Source Data Sources", httpServletRequest);
+            //addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfPredicates()) + " Predicates", httpServletRequest);
+            //addSideBarItem(sb, "getSupportedTgtDataSources", formatter.format(statistics.getNumberOfTargetDataSources()) 
+             //       + " Target Data Sources ", httpServletRequest);
+            statistics = uriMapper.getOverallStatistics(Lens.getAllLens());
+            //sb.append("\n<div class=\"menugroup\">All Statisitics</div>");
+            sb.append("\n<div class=\"menugroup\">Statisitics</div>");
+            addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfMappings()) + " Mappings", httpServletRequest);
+            addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfMappingSets()) + " Mapping Sets", httpServletRequest);
+            addSideBarItem(sb, "getSupportedSrcDataSources", formatter.format(statistics.getNumberOfSourceDataSources()) 
+                    + " Source Data Sources", httpServletRequest);
+            addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfPredicates()) + " Predicates", httpServletRequest);
+            addSideBarItem(sb, "getSupportedTgtDataSources", formatter.format(statistics.getNumberOfTargetDataSources()) 
+                    + " Target Data Sources ", httpServletRequest);
+            addSideBarItem(sb, WsUriConstants.LENS, formatter.format(statistics.getNumberOfLenses())
+                    + " Lenses ", httpServletRequest);
+        } catch (BridgeDBException ex) {
+            sb.append("\nStatisitics currenlty unavailable.");
+            logger.error("Error getting statistics.", ex);
+        }
     }
     
     /**

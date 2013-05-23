@@ -109,7 +109,7 @@ public class WSUriServer extends WSApiShower{
         if (logger.isDebugEnabled()){
             logger.debug("bridgeDbHome called");
         }
-        StringBuilder sb = topAndSide1 ("Identity Mapping Service", httpServletRequest);
+        StringBuilder sb = topAndSide ("Identity Mapping Service", httpServletRequest);
         
         sb.append("<p>Welcome to the Identity Mapping Service. </p>");        
                 
@@ -176,7 +176,7 @@ public class WSUriServer extends WSApiShower{
         } else {
             lensName = "Default";
         }
-        StringBuilder sb = topAndSide1("Mapping Summary for " + lensName + " Lens",  httpServletRequest);
+        StringBuilder sb = topAndSide("Mapping Summary for " + lensName + " Lens",  httpServletRequest);
         if (mappingSetInfos.isEmpty()){
             sb.append("\n<h1> No mapping found between ");
             MappingSetTableMaker.addDataSourceLink(sb, new DataSetInfo(scrCode,scrCode), httpServletRequest);
@@ -200,7 +200,7 @@ public class WSUriServer extends WSApiShower{
     @Path("/" + WsUriConstants.LENS) 
 	public Response getLenses(@Context HttpServletRequest httpServletRequest) throws BridgeDBException {
 		List<LensInfo> lenses = uriMapper.getLens();
-        StringBuilder sb = topAndSide1("Lens Summary",  httpServletRequest);
+        StringBuilder sb = topAndSide("Lens Summary",  httpServletRequest);
         sb.append("<table border=\"1\">");
         sb.append("<tr>");
         sb.append("<th>Name</th>");

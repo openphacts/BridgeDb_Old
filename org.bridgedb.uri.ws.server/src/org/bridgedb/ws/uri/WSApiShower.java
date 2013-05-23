@@ -90,7 +90,7 @@ public class WSApiShower extends WSFrame {
             sb.append("</body></html>");
             apiString = sb.toString();
         }
-        StringBuilder sb = topAndSide1("Api",  httpServletRequest);
+        StringBuilder sb = topAndSide("Api",  httpServletRequest);
         return Response.ok(sb.toString() + apiString, MediaType.TEXT_HTML).build();
     }
     
