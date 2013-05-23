@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.sql.SQLAccess;
@@ -32,7 +33,7 @@ import org.openrdf.model.URI;
  */
 class TransativeCreator {
 
-    private final SQLAccess sqlAccess;
+    private static SQLAccess sqlAccess = null;
     private final UriMapper mapper;
     private final StoreType storeType;
     private final MappingSetInfo leftInfo;
@@ -43,20 +44,24 @@ class TransativeCreator {
     private final File outputFile;
     private final UriPattern sourceUriPattern;
     private final UriPattern targetUriPattern;
-
+    private final boolean reflexive;
+    
     private static URI GENERATE_PREDICATE = null;
 
     static final Logger logger = Logger.getLogger(TransativeCreator.class);
     
     private TransativeCreator(MappingSetInfo left, MappingSetInfo right, StoreType storeType) 
             throws BridgeDBException, IOException{
-        sqlAccess = SqlFactory.createTheSQLAccess(storeType);
+        if (sqlAccess == null){
+            sqlAccess = SqlFactory.createTheSQLAccess(storeType);
+        }
         mapper = SQLUriMapper.factory(false, storeType);
         this.storeType = storeType;
         leftInfo = left;
         rightInfo = right;
         predicate = PredicateMaker.combine(left.getPredicate(), right.getPredicate());
         justification = JustificationMaker.combine(left.getJustification(), right.getJustification());
+        reflexive = left.getSource().getSysCode().equals(right.getTarget().getSysCode());
         sourceUriPattern = getUriPattern(left.getSource());
         targetUriPattern = getUriPattern(right.getTarget());
         checkTransativeLegal(left, right);
@@ -114,7 +119,9 @@ class TransativeCreator {
             while (rs.next()){
                 String sourceId = rs.getString("mapping1.sourceId");
                 String targetId = rs.getString("mapping2.targetId");
-                if (!sourceId.equals(targetId)){
+                if (reflexive && sourceId.equals(targetId)){
+                    //do nothing as same uri;
+                } else {
                     String sourceUri = sourceUriPattern.getPrefix() + sourceId + sourceUriPattern.getPostfix();
                     String targetUri = targetUriPattern.getPrefix() + targetId + targetUriPattern.getPostfix();
                     found = true;
@@ -134,6 +141,11 @@ class TransativeCreator {
         }
         buffer.flush();
         buffer.close();
+        try {
+            connection.close();
+        } catch (SQLException ex) {
+            throw new BridgeDBException("Error closing MYSQL connection", ex);
+        }
         return found;
     }
     

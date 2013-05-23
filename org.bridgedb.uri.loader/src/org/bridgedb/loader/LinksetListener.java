@@ -20,6 +20,7 @@
 package org.bridgedb.loader;
 
 import java.io.File;
+import java.util.Set;
 import org.apache.log4j.Logger;
 import org.bridgedb.uri.UriListener;
 import org.bridgedb.utils.BridgeDBException;
@@ -39,11 +40,13 @@ public class LinksetListener {
     
     public int parse(File file, URI linkPredicate, String justification) throws BridgeDBException{
         String source = RdfParser.fileToURI(file);
-        return parse(file, source, linkPredicate, justification);
+        return parse(file, source, linkPredicate, justification, null, null);
     }
     
-    public int parse(File file, String mappingSource, URI linkPredicate, String justification) throws BridgeDBException{
-        LinksetHandler handler = new LinksetHandler(uriListener, linkPredicate, justification, mappingSource, true);
+    public int parse(File file, String mappingSource, URI linkPredicate, String justification, 
+            Set<String> viaLabels, Set<Integer> chainedLinkSets) throws BridgeDBException{
+        LinksetHandler handler = new LinksetHandler(uriListener, linkPredicate, justification, mappingSource, true, 
+                viaLabels, chainedLinkSets);
         RdfParser parser = getParser(handler);
         parser.parse(file);
         return handler.getMappingsetId();

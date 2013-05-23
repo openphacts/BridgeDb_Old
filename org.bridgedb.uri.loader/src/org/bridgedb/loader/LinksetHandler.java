@@ -19,6 +19,7 @@
 //
 package org.bridgedb.loader;
 
+import java.util.Set;
 import org.apache.log4j.Logger;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.uri.UriListener;
@@ -47,8 +48,22 @@ public class LinksetHandler extends RDFHandlerBase{
     private final String mappingSource;
     private final boolean symetric;
     private final UriListener uriListener;
+    private final Set<String> viaLabels;
+    private final Set<Integer> chainedLinkSets;
+
     private int mappingSet;
     private int noneLinkStatements;
+    
+    public LinksetHandler(UriListener uriListener, URI linkPredicate, String justification, String mappingSource, 
+            boolean symetric, Set<String> viaLabels, Set<Integer> chainedLinkSets){
+        this.uriListener = uriListener;
+        this.linkPredicate = linkPredicate;
+        this.justification = justification;
+        this.mappingSource = mappingSource;
+        this.symetric = symetric;
+        this.viaLabels = viaLabels;
+        this.chainedLinkSets = chainedLinkSets;
+    }
     
     public LinksetHandler(UriListener uriListener, URI linkPredicate, String justification, String mappingSource, 
             boolean symetric){
@@ -57,8 +72,10 @@ public class LinksetHandler extends RDFHandlerBase{
         this.justification = justification;
         this.mappingSource = mappingSource;
         this.symetric = symetric;
+        this.viaLabels = null;
+        this.chainedLinkSets = null;
     }
-    
+
     static final Logger logger = Logger.getLogger(LinksetHandler.class);
         
     @Override
@@ -106,7 +123,7 @@ public class LinksetHandler extends RDFHandlerBase{
                     throw new RDFHandlerException("Unable to get a pattern for " + object.stringValue());
                 }
                 mappingSet = uriListener.registerMappingSet(sourcePattern, linkPredicate.stringValue(), justification, targetPattern, 
-                        mappingSource, symetric, null, null);
+                        mappingSource, symetric, this.viaLabels, this.chainedLinkSets);
             } catch (BridgeDBException ex) {
                 throw new RDFHandlerException("Error registering mappingset from " + st, ex);
             }

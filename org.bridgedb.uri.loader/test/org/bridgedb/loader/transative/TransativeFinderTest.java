@@ -46,7 +46,6 @@ import org.openrdf.rio.RDFHandlerException;
  *
  * @author Christian
  */
-@Ignore
 public class TransativeFinderTest {
  
     SQLUriMapper mapper;
@@ -83,7 +82,7 @@ public class TransativeFinderTest {
     
     @Test
 	public void testFinder1() throws BridgeDBException, RDFHandlerException, IOException {	
-        Reporter.println("testFinder");
+        Reporter.println("testFinder1");
         load("../org.bridgedb.uri.loader/test-data/sampleAToB.ttl");
         load("../org.bridgedb.uri.loader/test-data/sampleEToD.ttl");
         load("../org.bridgedb.uri.loader/test-data/sampleAToC.ttl");

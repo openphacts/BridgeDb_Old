@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import org.bridgedb.DataSource;
 import org.bridgedb.loader.LinksetListener;
 import org.bridgedb.loader.RdfParser;
 import org.bridgedb.sql.SQLBase;
@@ -272,6 +273,15 @@ public class TransativeFinder extends SQLBase{
         System.out.println(left);
         System.out.println(right);
         System.out.println(chainIds);
+        Set<String> viaLabels = new HashSet<String>();
+        for (DataSetInfo info:left.getViaDataSets()){
+            viaLabels.add(info.getSysCode());
+        }
+        for (DataSetInfo info:right.getViaDataSets()){
+            viaLabels.add(info.getSysCode());
+        }
+        viaLabels.add(left.getTarget().getSysCode());
+        System.out.println(viaLabels);
         String predicate = PredicateMaker.combine(left.getPredicate(), right.getPredicate());
         String justification = JustificationMaker.combine(left.getJustification(), right.getJustification());
 
@@ -281,7 +291,7 @@ public class TransativeFinder extends SQLBase{
             return -1;
         } else {
             Reporter.println("Created " + fileName);
-            int dataSet =  loadLinkset(fileName.getAbsolutePath(), predicate, justification, chainIds);
+            int dataSet =  loadLinkset(fileName.getAbsolutePath(), predicate, justification, viaLabels, chainIds);
             System.out.println("Loaded " + dataSet);
             return dataSet;
         }
@@ -394,14 +404,15 @@ public class TransativeFinder extends SQLBase{
         return true;
     }
 
-    protected int loadLinkset(String absolutePath, String predicate, String justification, HashSet<Integer> chainIds) throws BridgeDBException {
+    protected int loadLinkset(String absolutePath, String predicate, String justification, Set<String> viaLabels, 
+            HashSet<Integer> chainIds) throws BridgeDBException {
         UriListener uriListener = SQLUriMapper.factory(false, storeType);
         LinksetListener loader = new LinksetListener(uriListener);
         //(File file, String mappingSource, URI linkPredicate, String justification)
         File file = new File(absolutePath);
         String mappingSource = RdfParser.fileToURI(file);
         URI linkPredicate = new URIImpl(predicate);
-        return loader.parse(file, mappingSource, linkPredicate, justification);
+        return loader.parse(file, mappingSource, linkPredicate, justification, viaLabels, chainIds);
     }
 
 }

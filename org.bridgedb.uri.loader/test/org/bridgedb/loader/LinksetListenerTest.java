@@ -56,8 +56,7 @@ public class LinksetListenerTest {
     private void loadFile(String fileName, String justification) throws BridgeDBException{
         Reporter.println("parsing " + fileName);
         File file = new File(fileName);
-        String source = RdfParser.fileToURI(file);
-        int mappingSetId = instance.parse(file, source, linkPredicate, justification);
+        int mappingSetId = instance.parse(file, linkPredicate, justification);
         MappingSetInfo mapping = uriListener.getMappingSetInfo(mappingSetId);
         int numberOfLinks = mapping.getNumberOfLinks();
         assertThat(numberOfLinks, greaterThanOrEqualTo(3));
