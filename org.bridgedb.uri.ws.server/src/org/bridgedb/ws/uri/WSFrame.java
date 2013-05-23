@@ -161,15 +161,15 @@ public class WSFrame extends WSUriInterfaceService {
     protected void sideBar(StringBuilder sb, HttpServletRequest httpServletRequest) throws BridgeDBException{
         sb.append("<div id=\"navBar\">");
         addSideBarMiddle(sb, httpServletRequest);
+        addSideBarStatisitics(sb, httpServletRequest);
         sb.append("</div>\n");        
     }
     
     /**
      * Allows Super classes to add to the side bar
      */
-    protected void addSideBarMiddle(StringBuilder sb, HttpServletRequest httpServletRequest) throws BridgeDBException{
+    public void addSideBarMiddle(StringBuilder sb, HttpServletRequest httpServletRequest) throws BridgeDBException{
         addSideBarBridgeDb(sb, httpServletRequest);
-        addSideBarStatisitics(sb, httpServletRequest);
     }
     
     /**
@@ -218,7 +218,7 @@ public class WSFrame extends WSUriInterfaceService {
     /**
      * Adds an item to the SideBar for this service
      */
-    protected void addSideBarItem(StringBuilder sb, String page, String name, HttpServletRequest httpServletRequest) throws BridgeDBException{
+    public void addSideBarItem(StringBuilder sb, String page, String name, HttpServletRequest httpServletRequest) {
         sb.append("\n<div id=\"menu");
         sb.append(page);
         sb.append("_text\" class=\"texthotlink\" ");
