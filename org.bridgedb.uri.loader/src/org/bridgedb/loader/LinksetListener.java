@@ -37,6 +37,11 @@ public class LinksetListener {
     
     static final Logger logger = Logger.getLogger(LinksetListener.class);
     
+    public int parse(File file, URI linkPredicate, String justification) throws BridgeDBException{
+        String source = RdfParser.fileToURI(file);
+        return parse(file, source, linkPredicate, justification);
+    }
+    
     public int parse(File file, String mappingSource, URI linkPredicate, String justification) throws BridgeDBException{
         LinksetHandler handler = new LinksetHandler(uriListener, linkPredicate, justification, mappingSource, true);
         RdfParser parser = getParser(handler);

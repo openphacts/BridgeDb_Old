@@ -29,6 +29,14 @@ import org.bridgedb.utils.BridgeDBException;
 public class JustificationMaker {
 
     public static String combine(String left, String right) throws BridgeDBException{
+        String result = possibleCombine(left, right);
+        if (result != null){
+            return result;
+        }
+        throw new BridgeDBException("unable to combine " + left + " with " + right);
+    }
+    
+    public static String possibleCombine(String left, String right) {
         if (left.equals(right)){
             return left;
         }
@@ -39,6 +47,6 @@ public class JustificationMaker {
          	if (right.equals(ChemInf.INCHI_KEY)) return left;
             if (right.startsWith(OboConstants.PREFIX)) return OboConstants.PREFIX + "combined";
         }
-        throw new BridgeDBException("unable to combine " + left + " with " + right);
+        return null;
     }
 }
