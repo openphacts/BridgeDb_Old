@@ -31,17 +31,15 @@ import org.openrdf.model.URI;
  *
  * @author Christian
  */
-class TransativeCreator {
+public class TransativeCreator {
 
     private static SQLAccess sqlAccess = null;
     private final UriMapper mapper;
-    private final StoreType storeType;
+    protected final StoreType storeType;
     private final MappingSetInfo leftInfo;
     private final MappingSetInfo rightInfo;
-    private final BufferedWriter buffer;
     private final String predicate;
     private final String justification;
-    private final File outputFile;
     private final UriPattern sourceUriPattern;
     private final UriPattern targetUriPattern;
     private final boolean reflexive;
@@ -50,7 +48,20 @@ class TransativeCreator {
 
     static final Logger logger = Logger.getLogger(TransativeCreator.class);
     
-    private TransativeCreator(MappingSetInfo left, MappingSetInfo right, StoreType storeType) 
+   public static File doTransativeIfPossible(MappingSetInfo left, MappingSetInfo right, StoreType storeType) throws BridgeDBException, IOException {
+        TransativeCreator creator = new TransativeCreator(left, right, storeType);
+        return creator.generateOutputFileIfPossible();
+    }
+
+    public static File doTransativeIfPossible(int leftId, int rightId, StoreType storeType) 
+            throws BridgeDBException, IOException {
+        SQLUriMapper mapper = SQLUriMapper.factory(false, storeType);
+        MappingSetInfo left = mapper.getMappingSetInfo(leftId);
+        MappingSetInfo right = mapper.getMappingSetInfo(rightId);
+        return doTransativeIfPossible(left, right, storeType);
+    }
+    
+    protected TransativeCreator(MappingSetInfo left, MappingSetInfo right, StoreType storeType) 
             throws BridgeDBException, IOException{
         if (sqlAccess == null){
             sqlAccess = SqlFactory.createTheSQLAccess(storeType);
@@ -65,33 +76,26 @@ class TransativeCreator {
         sourceUriPattern = getUriPattern(left.getSource());
         targetUriPattern = getUriPattern(right.getTarget());
         checkTransativeLegal(left, right);
-        File parent = DirectoriesConfig.getTransativeDirectory();
-        outputFile = new File(parent, "TransativeLinkset" + left.getStringId() + "and" + right.getStringId() + ".ttl");
-        Reporter.println("Writing transative to " + outputFile.getAbsolutePath());
-        FileWriter writer = new FileWriter(outputFile);
-        buffer = new BufferedWriter(writer);
-        buffer.flush();
     }
     
-    public static File doTransativeIfPossible(MappingSetInfo left, MappingSetInfo right, StoreType storeType) throws BridgeDBException, IOException {
-        TransativeCreator creator = new TransativeCreator(left, right, storeType);
-        boolean result = creator.getSQL();
+    private File generateOutputFileIfPossible() throws BridgeDBException, IOException{
+        File parent = DirectoriesConfig.getTransativeDirectory();
+        File outputFile = new File(parent, "TransativeLinkset" + leftInfo.getStringId() + "and" + rightInfo.getStringId() + ".ttl");
+        Reporter.println("Writing transative to " + outputFile.getAbsolutePath());
+        FileWriter writer = new FileWriter(outputFile);
+        BufferedWriter buffer = buffer = new BufferedWriter(writer);
+        writeHeader(buffer);
+        boolean result = getSQL(buffer);
+        buffer.flush();
+        buffer.close();
         if (result){
-            return creator.getOutputFile();
+            return outputFile;
         } else {
             return null;
         }
     }
-
-    public static File doTransativeIfPossible(int leftId, int rightId, StoreType storeType) 
-            throws BridgeDBException, IOException {
-        SQLUriMapper mapper = SQLUriMapper.factory(false, storeType);
-        MappingSetInfo left = mapper.getMappingSetInfo(leftId);
-        MappingSetInfo right = mapper.getMappingSetInfo(rightId);
-        return doTransativeIfPossible(left, right, storeType);
-    }
     
-    private boolean getSQL() throws BridgeDBException, IOException {
+     private boolean getSQL(BufferedWriter buffer) throws BridgeDBException, IOException {
         boolean found = false;
         buffer.newLine();
         StringBuilder query = new StringBuilder(
@@ -139,8 +143,6 @@ class TransativeCreator {
             ex.printStackTrace();
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }
-        buffer.flush();
-        buffer.close();
         try {
             connection.close();
         } catch (SQLException ex) {
@@ -149,10 +151,6 @@ class TransativeCreator {
         return found;
     }
     
-    private File getOutputFile() {
-        return outputFile;
-    }
-
     private UriPattern getUriPattern(DataSetInfo info) throws BridgeDBException {
         Set<String> patterns = mapper.getUriPatterns(info.getSysCode());
         if (patterns.isEmpty()){
@@ -166,6 +164,14 @@ class TransativeCreator {
         if (!left.getTarget().equals(right.getSource())){
             throw new BridgeDBException("Left target " + left.getTarget() + " does not match right source " + right.getSource());
         }
+    }
+
+    /**
+     * Empty method to allow subclasses to write headers
+     * @param buffer 
+     */
+    protected void writeHeader(BufferedWriter buffer) {
+        //Do nothing here
     }
 
     

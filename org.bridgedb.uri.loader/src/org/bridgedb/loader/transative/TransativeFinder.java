@@ -35,7 +35,7 @@ import org.openrdf.rio.RDFHandlerException;
  */
 public class TransativeFinder extends SQLBase{
     private SQLUriMapper mapper;
-    private final StoreType storeType;
+    protected final StoreType storeType;
   
     private final static String LAST_TRANSATIVEL_LOADED_KEY = "LastMappingLoadedTransatively";
     
@@ -285,7 +285,7 @@ public class TransativeFinder extends SQLBase{
         String predicate = PredicateMaker.combine(left.getPredicate(), right.getPredicate());
         String justification = JustificationMaker.combine(left.getJustification(), right.getJustification());
 
-        File fileName = TransativeCreator.doTransativeIfPossible(left, right, storeType);
+        File fileName = doTransativeIfPossible(left, right);
         if (fileName == null){
             Reporter.println ("No transative links found");
             return -1;
@@ -297,6 +297,11 @@ public class TransativeFinder extends SQLBase{
         }
     }
 
+    //allows sub classes to call a subclass of TransativeCreator
+    protected File doTransativeIfPossible(MappingSetInfo left, MappingSetInfo right) throws BridgeDBException, IOException{
+        return TransativeCreator.doTransativeIfPossible(left, right, storeType);
+    }
+    
     public static HashSet<Integer> getChain(MappingSetInfo left, MappingSetInfo right){
         HashSet<Integer> chainIds = getChain(left);
         for (Integer id:getChain(right)){
