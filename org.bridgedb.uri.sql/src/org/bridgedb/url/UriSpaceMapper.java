@@ -44,6 +44,7 @@ public class UriSpaceMapper {
                .urlPattern("http://data.kasabi.com/dataset/chembl-rdf/chemblid/$id")
                 .idExample("CHEMBL6329").asDataSource();
        map.put("http://data.kasabi.com/dataset/chembl-rdf/chemblid/", dataSource);
+       map.put("http://linkedchemistry.info/chembl/chemblid/", dataSource);
        dataSource = DataSource.register("Chembl 2 Target", "Chembl 2 Target")
                .urlPattern("http://chem2bio2rdf.org/chembl/resource/chembl_targets/$id")
                 .idExample("698788").asDataSource();
