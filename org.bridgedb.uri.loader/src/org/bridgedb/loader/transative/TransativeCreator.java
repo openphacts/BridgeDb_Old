@@ -25,7 +25,13 @@ import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.DirectoriesConfig;
 import org.bridgedb.utils.Reporter;
 import org.bridgedb.utils.StoreType;
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.StatementImpl;
+import org.openrdf.model.impl.URIImpl;
+import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.turtle.TurtleWriter;
 
 /**
  *
@@ -36,9 +42,9 @@ public class TransativeCreator {
     private static SQLAccess sqlAccess = null;
     private final UriMapper mapper;
     protected final StoreType storeType;
-    private final MappingSetInfo leftInfo;
-    private final MappingSetInfo rightInfo;
-    private final String predicate;
+    protected final MappingSetInfo leftInfo;
+    protected final MappingSetInfo rightInfo;
+    private final URI predicate;
     private final String justification;
     private final UriPattern sourceUriPattern;
     private final UriPattern targetUriPattern;
@@ -70,7 +76,7 @@ public class TransativeCreator {
         this.storeType = storeType;
         leftInfo = left;
         rightInfo = right;
-        predicate = PredicateMaker.combine(left.getPredicate(), right.getPredicate());
+        predicate = new URIImpl(PredicateMaker.combine(left.getPredicate(), right.getPredicate()));
         justification = JustificationMaker.combine(left.getJustification(), right.getJustification());
         reflexive = left.getSource().getSysCode().equals(right.getTarget().getSysCode());
         sourceUriPattern = getUriPattern(left.getSource());
@@ -79,26 +85,31 @@ public class TransativeCreator {
     }
     
     private File generateOutputFileIfPossible() throws BridgeDBException, IOException{
-        File parent = DirectoriesConfig.getTransativeDirectory();
-        File outputFile = new File(parent, "TransativeLinkset" + leftInfo.getStringId() + "and" + rightInfo.getStringId() + ".ttl");
-        Reporter.println("Writing transative to " + outputFile.getAbsolutePath());
-        FileWriter writer = new FileWriter(outputFile);
-        BufferedWriter buffer = buffer = new BufferedWriter(writer);
-        writeHeader(buffer);
-        boolean result = getSQL(buffer);
-        buffer.flush();
-        buffer.close();
-        if (result){
-            return outputFile;
-        } else {
-            return null;
+        try {
+            File parent = DirectoriesConfig.getTransativeDirectory();
+            File outputFile = new File(parent, "TransativeLinkset" + leftInfo.getStringId() + "and" + rightInfo.getStringId() + ".ttl");
+            Reporter.println("Writing transative to " + outputFile.getAbsolutePath());
+            FileWriter writer = new FileWriter(outputFile);
+            RDFWriter rdfWriter = new TurtleWriter(writer);
+            rdfWriter.startRDF();
+            writeHeader(rdfWriter);
+            boolean result = getSQL(rdfWriter);
+            rdfWriter.endRDF();
+            writer.flush();
+            writer.close();
+            if (result){
+                return outputFile;
+            } else {
+                return null;
+            }
+        } catch (RDFHandlerException ex) {
+            throw new BridgeDBException("Error writing to RDF ", ex);
         }
     }
     
-     private boolean getSQL(BufferedWriter buffer) throws BridgeDBException, IOException {
+     private boolean getSQL(RDFWriter rdfwriter) throws BridgeDBException, IOException, RDFHandlerException {
         boolean found = false;
-        buffer.newLine();
-        StringBuilder query = new StringBuilder(
+         StringBuilder query = new StringBuilder(
                 "SELECT mapping1.sourceId, mapping2.targetId ");
         query.append("FROM mapping as mapping1, mapping as mapping2 ");
         query.append("WHERE mapping1.targetId = mapping2.sourceId ");
@@ -127,16 +138,12 @@ public class TransativeCreator {
                     //do nothing as same uri;
                 } else {
                     String sourceUri = sourceUriPattern.getPrefix() + sourceId + sourceUriPattern.getPostfix();
+                    URI sourceURI = new URIImpl(sourceUri);
                     String targetUri = targetUriPattern.getPrefix() + targetId + targetUriPattern.getPostfix();
+                    URI targetURI = new URIImpl(targetUri);
+                    Statement statment = new StatementImpl(sourceURI, predicate, targetURI);
+                    rdfwriter.handleStatement(statment);
                     found = true;
-                    buffer.write("<");
-                        buffer.write(sourceUri);
-                    buffer.write("> <");
-                        buffer.write(predicate);
-                    buffer.write( "> <");
-                        buffer.write(targetUri);
-                    buffer.write("> . "); 
-                    buffer.newLine();
                 }
             }
         } catch (SQLException ex) {
@@ -170,7 +177,7 @@ public class TransativeCreator {
      * Empty method to allow subclasses to write headers
      * @param buffer 
      */
-    protected void writeHeader(BufferedWriter buffer) {
+    protected void writeHeader(RDFWriter writer) throws BridgeDBException {
         //Do nothing here
     }
 
