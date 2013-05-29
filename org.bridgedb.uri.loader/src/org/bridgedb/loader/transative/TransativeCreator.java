@@ -44,8 +44,8 @@ public class TransativeCreator {
     protected final StoreType storeType;
     protected final MappingSetInfo leftInfo;
     protected final MappingSetInfo rightInfo;
-    private final URI predicate;
-    private final String justification;
+    protected final URI predicate;
+    protected final String justification;
     private final UriPattern sourceUriPattern;
     private final UriPattern targetUriPattern;
     private final boolean reflexive;
@@ -177,7 +177,7 @@ public class TransativeCreator {
      * Empty method to allow subclasses to write headers
      * @param buffer 
      */
-    protected void writeHeader(RDFWriter writer) throws BridgeDBException {
+    protected void writeHeader(RDFWriter writer) throws BridgeDBException, RDFHandlerException {
         //Do nothing here
     }
 
