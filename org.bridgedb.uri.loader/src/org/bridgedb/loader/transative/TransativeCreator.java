@@ -84,7 +84,7 @@ public class TransativeCreator {
         checkTransativeLegal(left, right);
     }
     
-    private File generateOutputFileIfPossible() throws BridgeDBException, IOException{
+    public File generateOutputFileIfPossible() throws BridgeDBException, IOException{
         try {
             File parent = DirectoriesConfig.getTransativeDirectory();
             File outputFile = new File(parent, "TransativeLinkset" + leftInfo.getStringId() + "and" + rightInfo.getStringId() + ".ttl");

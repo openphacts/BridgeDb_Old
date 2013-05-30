@@ -44,7 +44,7 @@ import org.openrdf.model.impl.URIImpl;
  */
 public class TransativeCreatorTest {
     
-    static final String MAIN_JUSTIFCATION = "http://www.w3.org/2000/01/rdf-schema#isDefinedBy";
+    protected static final String MAIN_JUSTIFCATION = "http://www.w3.org/2000/01/rdf-schema#isDefinedBy";
     static final String LENS_JUSTIFCATION = "http://www.bridgedb.org/test#testJustification";
     static final URI linkPredicate = new URIImpl("http://www.w3.org/2004/02/skos/core#exactMatch");
     static SQLUriMapper uriListener;
@@ -72,18 +72,19 @@ public class TransativeCreatorTest {
     public void tearDown() {
     }
 
-    private void loadFile(String fileName, String justification) throws BridgeDBException{
+    protected void loadFile(String fileName, String justification) throws BridgeDBException{
         File file = new File(fileName);
         loadFile(file, justification);
     }
     
-    private void loadFile(File file, String justification) throws BridgeDBException{
+    protected void loadFile(File file, String justification) throws BridgeDBException{
         Reporter.println("parsing " + file.getAbsolutePath());
         int mappingSetId = instance.parse(file, linkPredicate, justification);
         MappingSetInfo mapping = uriListener.getMappingSetInfo(mappingSetId);
         int numberOfLinks = mapping.getNumberOfLinks();
         assertThat(numberOfLinks, greaterThanOrEqualTo(3));      
     }
+    
     /**
      * Test of parse method, of class LinksetListener.
      */
