@@ -114,7 +114,8 @@ public class MappingSetInfo {
                 + "\n\tsymetric: " + this.symmetric
                 + "\n\tviaDataSets: " + this.getViaDataSets()
                 + "\n\tchainIds: " + this.chainIds
-                + "\n\tnumberOfLinks: " + this.numberOfLinks + "\n";
+                + "\n\tnumberOfLinks: " + this.numberOfLinks
+                + "\n\tmappingSource: " + this.mappingSource + "\n";
     }
 
     /**
