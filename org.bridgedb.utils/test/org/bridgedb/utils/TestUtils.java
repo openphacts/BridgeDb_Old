@@ -33,7 +33,7 @@ public abstract class TestUtils {
     @BeforeClass
     public static void setup() throws BridgeDBException{
         ConfigReader.configureLogger();
-        DirectoriesConfig.useTestDirectory();
+//        DirectoriesConfig.useTestDirectory();
     }
     
     public void report(String message){

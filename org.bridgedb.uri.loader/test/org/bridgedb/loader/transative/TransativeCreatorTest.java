@@ -25,7 +25,7 @@ import org.bridgedb.loader.RdfParser;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.DirectoriesConfig;
+import org.bridgedb.utils.TransitiveConfig;
 import org.bridgedb.utils.Reporter;
 import org.bridgedb.utils.StoreType;
 import static org.hamcrest.Matchers.*;
@@ -55,7 +55,7 @@ public class TransativeCreatorTest {
     
     @BeforeClass
     public static void setUpClass() throws BridgeDBException {
-        DirectoriesConfig.useTestDirectory();
+        TransitiveConfig.useTestDirectory();
         uriListener = SQLUriMapper.factory(true, StoreType.TEST);
         instance = new LinksetListener(uriListener);
     }

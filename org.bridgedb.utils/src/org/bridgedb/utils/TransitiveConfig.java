@@ -26,46 +26,27 @@ import org.apache.log4j.Logger;
  *
  * @author Christian
  */
-public class DirectoriesConfig {
-    public static final String VOID_DIRECTORY_PROPERTY = "VoidDirectory";
-    public static final String LINKSET_DIRECTORY_PROPERTY = "LinksetDirectory";
-    public static final String TRANSATIVE_DIRECTORY_PROPERTY = "TransativeDirectory";
-    public static final String EXPORT_DIRECTORY_PROPERTY = "ExportDirectory";
+public class TransitiveConfig {
+    public static final String TRANSATIVE_DIRECTORY_PROPERTY = "TransitiveDirectory";
+    public static final String TRANSATIVE_BASE_URI = "TransitiveBaseUri";
     public static final String TEST_DIRECTORY_PROPERTY = "TestDirectory";
 
     private static boolean useTest = false;
     private static Properties properties;
-
-    static final Logger logger = Logger.getLogger(DirectoriesConfig.class);
-
-    public static File getVoidDirectory() throws BridgeDBException {
-        if (useTest){
-            return getTestDirectory();
-        }
-        return getDirectory(VOID_DIRECTORY_PROPERTY, "Void");
-    }
     
-    public static File getLinksetDirectory() throws BridgeDBException {
-        if (useTest){
-            return getTestDirectory();
-        }
-        return getDirectory(LINKSET_DIRECTORY_PROPERTY, "Linkset");
-    }
-    
+    static final Logger logger = Logger.getLogger(TransitiveConfig.class);
+
     public static File getTransativeDirectory() throws BridgeDBException {
         if (useTest){
             return getTestDirectory();
         }
         return getDirectory(TRANSATIVE_DIRECTORY_PROPERTY, "Transative");
     }
-    
-    public static File getExportDirectory() throws BridgeDBException {
-        if (useTest){
-            return getTestDirectory();
-        }
-        return getDirectory(EXPORT_DIRECTORY_PROPERTY, "Export");
+
+    public static String getTransitiveBaseUri() throws BridgeDBException{
+        return getProperties().getProperty(TRANSATIVE_BASE_URI);
     }
-    
+
     public static File getTestDirectory() throws BridgeDBException {
         return getDirectory(TEST_DIRECTORY_PROPERTY, "TestDirectory");
     }
@@ -80,8 +61,8 @@ public class DirectoriesConfig {
             System.out.println(testDir);
             deleteChildren(testDir);
         }        
-    }
-
+    } 
+    
     private static File getDirectory(String property, String type) throws BridgeDBException {
         String fileName = getProperties().getProperty(property);
         if (fileName == null || fileName.isEmpty()){

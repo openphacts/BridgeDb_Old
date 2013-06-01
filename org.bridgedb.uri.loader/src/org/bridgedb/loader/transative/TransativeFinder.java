@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import org.bridgedb.DataSource;
 import org.bridgedb.loader.LinksetListener;
 import org.bridgedb.loader.RdfParser;
 import org.bridgedb.sql.SQLBase;
@@ -25,6 +24,7 @@ import org.bridgedb.uri.UriListener;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.Reporter;
 import org.bridgedb.utils.StoreType;
+import org.bridgedb.utils.TransitiveConfig;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFHandlerException;
@@ -415,7 +415,7 @@ public class TransativeFinder extends SQLBase{
         LinksetListener loader = new LinksetListener(uriListener);
         //(File file, String mappingSource, URI linkPredicate, String justification)
         File file = new File(absolutePath);
-        String mappingSource = RdfParser.fileToURI(file);
+        String mappingSource = RdfParser.fileToURL(file);
         URI linkPredicate = new URIImpl(predicate);
         return loader.parse(file, mappingSource, linkPredicate, justification, viaLabels, chainIds);
     }

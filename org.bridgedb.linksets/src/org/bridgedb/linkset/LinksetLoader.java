@@ -37,7 +37,7 @@ import org.bridgedb.tools.metadata.validator.Validator;
 import org.bridgedb.uri.UriListener;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
-import org.bridgedb.utils.DirectoriesConfig;
+import org.bridgedb.utils.TransitiveConfig;
 import org.bridgedb.utils.Reporter;
 import org.bridgedb.utils.StoreType;
 import org.openrdf.model.URI;
@@ -315,9 +315,9 @@ public class LinksetLoader implements LinksetInterface{
 
     public static File getDirectory(ValidationType validationType) throws BridgeDBException{
         if (validationType.isLinkset()){
-            return DirectoriesConfig.getLinksetDirectory();
+            return TransitiveConfig.getLinksetDirectory();
         } else {
-            return DirectoriesConfig.getVoidDirectory();
+            return TransitiveConfig.getVoidDirectory();
         }
     }
     

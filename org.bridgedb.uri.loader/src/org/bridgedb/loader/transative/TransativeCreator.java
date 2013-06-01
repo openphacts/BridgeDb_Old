@@ -22,7 +22,7 @@ import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.DirectoriesConfig;
+import org.bridgedb.utils.TransitiveConfig;
 import org.bridgedb.utils.Reporter;
 import org.bridgedb.utils.StoreType;
 import org.openrdf.model.Statement;
@@ -86,7 +86,7 @@ public class TransativeCreator {
     
     public File generateOutputFileIfPossible() throws BridgeDBException, IOException{
         try {
-            File parent = DirectoriesConfig.getTransativeDirectory();
+            File parent = TransitiveConfig.getTransativeDirectory();
             File outputFile = new File(parent, "TransativeLinkset" + leftInfo.getStringId() + "and" + rightInfo.getStringId() + ".ttl");
             Reporter.println("Writing transative to " + outputFile.getAbsolutePath());
             FileWriter writer = new FileWriter(outputFile);

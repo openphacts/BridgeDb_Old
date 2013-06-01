@@ -26,27 +26,9 @@ import org.junit.Test;
  *
  * @author Christian
  */
-public class DirectoriesConfigTest extends TestUtils {
+public class TrasnitiveConfigTest extends TestUtils {
     
-    public DirectoriesConfigTest() {
-    }
-
-   /**
-     * Test of getVoidDirectory method, of class DirectoriesConfig.
-     */
-    @Test
-    public void testGetVoidDirectory() throws Exception {
-        report("getVoidDirectory");
-        File result = DirectoriesConfig.getVoidDirectory();
-    }
-
-    /**
-     * Test of getLinksetDirectory method, of class DirectoriesConfig.
-     */
-    @Test
-    public void testGetLinksetDirectory() throws Exception {
-        report("getLinksetDirectory");
-        File result = DirectoriesConfig.getLinksetDirectory();
+    public TrasnitiveConfigTest() {
     }
 
     /**
@@ -55,15 +37,7 @@ public class DirectoriesConfigTest extends TestUtils {
     @Test
     public void testGetTransativeDirectory() throws Exception {
         report("getTransativeDirectory");
-        File result = DirectoriesConfig.getTransativeDirectory();
+        File result = TransitiveConfig.getTransativeDirectory();
     }
 
-    /**
-     * Test of getExportDirectory method, of class DirectoriesConfig.
-     */
-    @Test
-    public void testGetExportDirectory() throws Exception {
-        report("getExportDirectory");
-        File result = DirectoriesConfig.getExportDirectory();
-    }
 }
