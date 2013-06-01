@@ -51,6 +51,7 @@ public class TransativeCreator {
     private final boolean reflexive;
     
     private static URI GENERATE_PREDICATE = null;
+    public static final String VERSION = "1.2";
 
     static final Logger logger = Logger.getLogger(TransativeCreator.class);
     
@@ -87,7 +88,7 @@ public class TransativeCreator {
     public File generateOutputFileIfPossible() throws BridgeDBException, IOException{
         try {
             File parent = TransitiveConfig.getTransativeDirectory();
-            File outputFile = new File(parent, "TransativeLinkset" + leftInfo.getStringId() + "and" + rightInfo.getStringId() + ".ttl");
+            File outputFile = new File(parent, getid());
             Reporter.println("Writing transative to " + outputFile.getAbsolutePath());
             FileWriter writer = new FileWriter(outputFile);
             RDFWriter rdfWriter = new TurtleWriter(writer);
@@ -106,8 +107,12 @@ public class TransativeCreator {
             throw new BridgeDBException("Error writing to RDF ", ex);
         }
     }
+
+    protected String getid(){
+        return "Version " + VERSION + "Transitive" + leftInfo.getStringId() + "and" + rightInfo.getStringId() + ".ttl";
+    }
     
-     private boolean getSQL(RDFWriter rdfwriter) throws BridgeDBException, IOException, RDFHandlerException {
+    private boolean getSQL(RDFWriter rdfwriter) throws BridgeDBException, IOException, RDFHandlerException {
         boolean found = false;
          StringBuilder query = new StringBuilder(
                 "SELECT mapping1.sourceId, mapping2.targetId ");
