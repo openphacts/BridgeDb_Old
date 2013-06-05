@@ -65,6 +65,7 @@ TransitiveDirectory     ../Transitive
 #This allows a normal (http..) URI rather than a "file.." URI to be used as the source 
 #This allows webservice clients to access the files.
 #If TransitiveBaseUri is not set a "file.. " URI is used 
+
 TransitiveBaseUri       http://localhost:8080/Transitive/
 
 #Directory where all junit tests will write to 
@@ -73,12 +74,14 @@ TransitiveBaseUri       http://localhost:8080/Transitive/
 TestDirectory           ../TestDirectory
 
 ######## IP Address configuration ########
+#Not used in OpenPhacts version 1.2
 #Local Host always OK
 127.0.0.1   LocalHost
 
 ####### Accounts ###########
 #Use this file to add logins and passwords to read uris.
 #For example to read uris from remote sites.
+#Note: the standard data loading for OpenPhacts 1.2 does not use any password protected sites.
 
 #This information is exposed through the AccountsReader.java which returns an AccountsInfo object
 

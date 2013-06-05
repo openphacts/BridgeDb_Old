@@ -22,6 +22,10 @@ You must either edit the configuration files to match your local setup or setup
 your data stores to use the defaults. If you edit the files to your configuration
 we recommend copying the file to the tomcat configuration folder.
 
+Note: Packages that extend BridgeDB including OPS-IMS, and OPS-QueryExpander 
+   as well as ones that sit next to BridgeDB such as Ops-Validator
+   Should ideally use the same config.txt file.
+
 Database Dependency
 -------------------
 MySQL version 5 or above must be installed and running
@@ -44,7 +48,7 @@ RDF Repository Dependency
 WARNING: All directories MUST exists and the (linux) user running tomcat MUST have REEAD/WRITE permission set!
 Some of the OpenRDF error message are unclear if this is not the case.
 
-See: rdfConfig.txt
+See: Config.txt 
 SailNativeStore(s) will be created automatically as long as loader can 
 create/find the directory,
 
@@ -52,16 +56,13 @@ We recommend changing the relative directories to absolute directories.
 Please ensure the parent directories exist and have the correct permissions. 
 
 The settings for testing (and therefor compilation) can be left as is.
+As long as the testing user would have permission to create and delete files there.
 
-The BaseURI variable in the RDF configuration file should be the base of the 
-Webserver you will drop the web service into.
+The BaseURI variable is no longer used as the file path or Uri are now used as the base uri.
 
-IP_Register
+IP_Address configuration
 --------------
-If you plan on using the WS to allow uploading of voids and linksets 
-The sending machines will have to be added to this list.
-The Sending machine can be added at runtime without the need to restart the service.
-Note: Should not be required for OpenPhacts 1.1
+This part is not used in this version.
 
 Accounts
 ------------
@@ -69,15 +70,12 @@ List a number of Uris http or ftp
 For which a user name and password are required.
 If you wish to read from any of these sites you will have to copy and edit this file.
 Otherwise you will not be able to read from these Uris.
-Note: Should not be required for OpenPhacts 1.1
+Note: Should not be required for OpenPhacts 1.2
 
 --------------------------------------------------------------------------
 SANDBOX:
 -------
-ConfigReader.java in the Utils package includes a SANDBOX option.
-This is only required if you want to run two versions of the system on the same machine.
-This will read the SandboxConfig.txt file which contains some different settings.
-Should you see unexpected SANDBOX message set SANDBOX to false as the files it expects are not included! 
+Sandbox no longer supported.
 
 --------------------------------------------------------------------------
 Other Configuration files
@@ -101,22 +99,15 @@ LinkSet,owl
 Ontology used by the Validator.
 Changes to this file will affect the Validator.
 
+mediaTypes.ttl BioDataSource.ttl PrimaryDataSource.ttl
+Not currently used and subject to removal at anytime
+
 ------------------------------------------------------------------------------
 Data Loading
 
-Current Data loading is still a hack.
+OpenPhacts style data loading is no longer supported directly from BridgeDB.
 
-1. Create an empty folder (optional but cleaner) 
-2. go to drop
-https://www.dropbox.com/sh/mlbzsgqd9n8a8bc/VeBTGKlC3W
-3. Copy in the whole originals folder
-4. Create the transitive folder
-    No Need to copy in the files as they are recreated.
-5. Drop into the parent folder of original and transitive the org.bridgedb.hack.loader-2.0.0.one-jar.jar
-6. Copy any config file(s) you changed above into the same folder.
-7. java -jar org.bridgedb.hack.loader-2.0.0.one-jar.jar
-
-** Development version can read directly from URIs but not this version sorry.
+Please use the IMS bundle instead.
 
 -------------------------------------------------------------------------------
 
@@ -131,34 +122,31 @@ able to compile with a simple:
 Note that for the maven build to run all tests 
 1) The MySQL database must be running and configured as above.
 2) http://localhost:8080/OPS-IMS to be running and include the test data
+   This can be either org.bridgedb.uri.ws.server-*.war 
+   or something that extends the the bridgeDB's uri.ws.server.war such as the the IMS's ws.server-*.war
 3) http://localhost:8080/BridgeDb to be running and include the test data
   3 is optional as all Core client tests are repeated in OPS Client
+  Maven will skip the client tests if the localhost server is not found.
 
 Note: There is an ant build but it may not work in the OpenPhacts branch(es)
+      As of writing the ant build is broken in most OpenPhacts branch(es)
 	
-
 OPS Webservice Setup.
 --------------------
 
 Make sure config files, SQL database and rdf parent directory are setup (and accessible) as above.
 
-Deploy $BridgeDb/org.bridgedb.uri.ws.service/target/OPS-IMS.war to something like tomcat/webapps
-To setup databases and add test data run org.bridgedb.linkset.SetupLoaderWithTestData
+Deploy $BridgeDb/org.bridgedb.uri.ws.service/target/org.bridgedb.uri.ws.server-*.war to something like tomcat/webapps
+ To setup databases and add test data run org.bridgedb.uri.loader.SetupLoaderWithTestData
 (Optional) Depoly $BridgeDb/org.bridgedb.ws.service/target/BridgeDb.war
    Both wars share the same SQL data.
 
-Note: If Installing the OpenPhacts QueryExpander the OPS-IMS.war is not required and QueryExpander extends OPS-OMS.war
-
-OPS Load Linksets
------------------
-Make sure config files, SQL database and rdf parent directory are setup (and accessible) as above.
-
-To load a linksets:
-Run $BridgeDb\org.bridgedb.hack.loader\target\org.bridgedb.hack.loader-2.0.0-SNAPSHOT.one-jar
+Note: If Installing the OpenPhacts IMS and or the OpenPhacts QueryExpander the org.bridgedb.uri.ws.server-*.war is not required 
+  as both the IMS and the QueryExpander extends org.bridgedb.uri.ws.server-*.war
 
 Library dependencies 
 --------------------
-Note: For OpenPhacts Ops-IMS.war none of the below as required!
+Note: For org.bridgedb.uri.ws.server-*.war none of the below as required!
 
 If you don't use all mappers, you do not need to include all
 libraries in the dist directory in your project.
@@ -184,7 +172,7 @@ respective mappers to find clues which libraries are needed by which service.
 Contact
 -------
 
-For OpenPhacts specific please contact Christian and ue the OPS Jira.
+For OpenPhacts specific please contact Christian and use the OPS Jira.
 
 For geneneral BridgeDB:
 Website, wiki and bug tracker: http://www.bridgedb.org
