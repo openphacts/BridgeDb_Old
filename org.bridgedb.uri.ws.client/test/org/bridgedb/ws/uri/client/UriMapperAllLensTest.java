@@ -33,12 +33,13 @@ import org.junit.Ignore;
  * @author Christian
  */
 //@Ignore
-public class UriMapperTestProfileTest extends org.bridgedb.uri.UriMapperTestLensTest {
+public class UriMapperAllLensTest extends org.bridgedb.uri.UriMapperAllLensTest {
 
     @BeforeClass
     public static void setupIDMapper() throws BridgeDBException{
         WSUriInterface webService = WsUriClientFactory.createTestWSClient();
         uriMapper = new WSUriMapper(webService);
+        org.junit.Assume.assumeTrue(WsUriClientFactory.LENS_DATA_LOADED);
     }
       
 }

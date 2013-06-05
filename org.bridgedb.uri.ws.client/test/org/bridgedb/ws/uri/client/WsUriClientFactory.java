@@ -31,6 +31,8 @@ import org.bridgedb.ws.WSUriInterface;
  */
 public class WsUriClientFactory extends org.bridgedb.utils.IDMapperTestBase{
     
+    public static boolean LENS_DATA_LOADED = false;
+    
     public static WSUriInterface createTestWSClient() throws BridgeDBException{
         try {
             setupXref();
@@ -60,4 +62,5 @@ public class WsUriClientFactory extends org.bridgedb.utils.IDMapperTestBase{
         //ystem.out.println("in WSCoreInterface 5b");
         return webService;
     }
+    
 }

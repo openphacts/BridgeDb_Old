@@ -19,26 +19,23 @@
 //
 package org.bridgedb.ws.uri.client;
 
-import java.util.Date;
-import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.StoreType;
 import org.bridgedb.ws.WSUriInterface;
 import org.bridgedb.ws.WSUriMapper;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 
 /**
  * 
  * @author Christian
  */
 //@Ignore
-public class UriMapperNullProfileTest extends org.bridgedb.uri.UriMapperNullLensTest {
+public class UriMapperNullLensTest extends org.bridgedb.uri.UriMapperNullLensTest {
 
     @BeforeClass
     public static void setupIDMapper() throws BridgeDBException{
         WSUriInterface webService = WsUriClientFactory.createTestWSClient();
         uriMapper = new WSUriMapper(webService);
+        org.junit.Assume.assumeTrue(WsUriClientFactory.LENS_DATA_LOADED);
     }
       
 }
