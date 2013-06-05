@@ -1,4 +1,0 @@
-Bundle-Name: org.bridgedb.tools.metadata
-Bundle-Version: 1.1.0
-Bundle-SymbolicName: org.bridgedb.tools.metadata
-Export-Package: * 
