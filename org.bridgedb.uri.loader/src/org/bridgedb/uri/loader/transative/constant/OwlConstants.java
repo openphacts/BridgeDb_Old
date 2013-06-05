@@ -17,20 +17,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.loader.transative.constant;
+package org.bridgedb.uri.loader.transative.constant;
 
 /**
  *
  */
-public class SkosConstants {
+public class OwlConstants {
 
-    private static final String PREFIX = "http://www.w3.org/2004/02/skos/core#";
+    private static final String PREFIX = "http://www.w3.org/2002/07/owl#";
     
-    public static final String BROAD_MATCH = PREFIX + "broadMatch";
-    public static final String CLOSE_MATCH = PREFIX + "closeMatch";
-    public static final String EXACT_MATCH = PREFIX + "exactMatch";
-    public static final String MAPPING_RELATION = PREFIX + "mappingRelation";
-    public static final String NARROW_MATCH = PREFIX + "narrowMatch";
-    public static final String RELATED_MATCH = PREFIX + "relatedMatch";
+    public static final String EQUIVALENT_CLASS = PREFIX + "equivalentClass";
+    public static final String SAME_AS = PREFIX + "sameAs";
+    public static final String THING = "owl:Thing";
 
 }

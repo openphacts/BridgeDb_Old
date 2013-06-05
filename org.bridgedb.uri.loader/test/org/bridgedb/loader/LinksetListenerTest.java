@@ -4,6 +4,7 @@
  */
 package org.bridgedb.loader;
 
+import org.bridgedb.uri.loader.LinksetListener;
 import java.io.File;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.statistics.MappingSetInfo;

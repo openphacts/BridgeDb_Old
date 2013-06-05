@@ -17,8 +17,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.loader;
+package org.bridgedb.uri.loader;
 
+import org.bridgedb.uri.loader.LinksetHandler;
 import java.io.File;
 import java.util.Set;
 import org.apache.log4j.Logger;

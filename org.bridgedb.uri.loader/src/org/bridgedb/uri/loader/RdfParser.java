@@ -17,8 +17,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.loader;
+package org.bridgedb.uri.loader;
 
+import org.bridgedb.uri.loader.LinksetParserErrorListener;
 import info.aduna.lang.FileFormat;
 import java.io.File;
 import java.io.FileInputStream;

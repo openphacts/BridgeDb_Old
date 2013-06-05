@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.bridgedb.loader.transative;
+package org.bridgedb.uri.loader.transative;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,8 +14,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import org.bridgedb.loader.LinksetListener;
-import org.bridgedb.loader.RdfParser;
+import org.bridgedb.uri.loader.LinksetListener;
+import org.bridgedb.uri.loader.RdfParser;
 import org.bridgedb.sql.SQLBase;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.statistics.DataSetInfo;

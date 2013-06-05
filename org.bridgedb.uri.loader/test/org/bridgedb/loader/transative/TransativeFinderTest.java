@@ -19,11 +19,12 @@
 //
 package org.bridgedb.loader.transative;
 
+import org.bridgedb.uri.loader.transative.TransativeFinder;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.bridgedb.DataSource;
-import org.bridgedb.loader.LinksetListener;
+import org.bridgedb.uri.loader.LinksetListener;
 import org.bridgedb.rdf.DataSourceUris;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.sql.SQLUriMapper;

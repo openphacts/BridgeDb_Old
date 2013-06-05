@@ -1,4 +1,4 @@
-package org.bridgedb.loader.transative.constant;
+package org.bridgedb.uri.loader.transative.constant;
 
 public class ChemInf {
 

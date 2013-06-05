@@ -19,9 +19,10 @@
 //
 package org.bridgedb.loader.transative;
 
-import org.bridgedb.loader.transative.constant.SkosConstants;
-import org.bridgedb.loader.transative.constant.OwlConstants;
-import org.bridgedb.loader.transative.constant.OboConstants;
+import org.bridgedb.uri.loader.transative.PredicateMaker;
+import org.bridgedb.uri.loader.transative.constant.SkosConstants;
+import org.bridgedb.uri.loader.transative.constant.OwlConstants;
+import org.bridgedb.uri.loader.transative.constant.OboConstants;
 import java.util.ArrayList;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.Reporter;

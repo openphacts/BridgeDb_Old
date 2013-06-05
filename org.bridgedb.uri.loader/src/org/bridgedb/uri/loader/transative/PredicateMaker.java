@@ -17,11 +17,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.loader.transative;
+package org.bridgedb.uri.loader.transative;
 
-import org.bridgedb.loader.transative.constant.SkosConstants;
-import org.bridgedb.loader.transative.constant.OwlConstants;
-import org.bridgedb.loader.transative.constant.OboConstants;
+import org.bridgedb.uri.loader.transative.constant.SkosConstants;
+import org.bridgedb.uri.loader.transative.constant.OwlConstants;
+import org.bridgedb.uri.loader.transative.constant.OboConstants;
 import org.bridgedb.utils.BridgeDBException;
 
 /**

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.bridgedb.loader;
+package org.bridgedb.uri.loader;
 
 import java.io.File;
 import org.bridgedb.sql.SQLUriMapper;
