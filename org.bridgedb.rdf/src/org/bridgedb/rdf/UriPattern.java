@@ -228,7 +228,6 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
     */ 
     public final static UriPattern existingByUri(String uri){
         String nameSpace = getNameSpace(uri);
-        System.out.println(nameSpace);
         return byPrefixOrNameSpaceOnly.get(nameSpace);
     }
 
