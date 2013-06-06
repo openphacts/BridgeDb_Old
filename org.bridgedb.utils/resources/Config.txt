@@ -53,6 +53,8 @@ LoadSailNativeStore     ../rdf/linksets
 TestSailNativeStore     ../rdf/testLinksets
 
 ##### Transitive ############
+#This section is only used IMS that extends this code.
+
 #This section is used to save transitive files automatically created.
 #Location where transitive files will be written to
 #It is highly recommended to replace the relative link with an absolute one
