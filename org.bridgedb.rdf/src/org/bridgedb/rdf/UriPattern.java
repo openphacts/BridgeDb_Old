@@ -118,9 +118,12 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         } else {
             return new UriPattern(start);            
         }
-   }
+    }
     
-    private static UriPattern byPrefixAndPostfix(String nameSpace, String postfix) {
+    public static UriPattern byPrefixAndPostfix(String nameSpace, String postfix) {
+        if (postfix == null || postfix.isEmpty()){
+            return byPrefixOrNameSpace(nameSpace);
+        }
         HashMap<String,UriPattern> postFixMap = byPrefixAndPostFix.get(nameSpace);
         if (postFixMap == null){
             return new UriPattern(nameSpace, postfix);
@@ -378,19 +381,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         }
         //Constructor registers with standard recource this register with used resource
         register.put((URI)uriPatternId, pattern);
-/*        Resource dataSourceID = getPossibleSingletonResource(repositoryConnection, uriPatternId, BridgeDBConstants.HAS_DATA_SOURCE);
-        System.out.println(dataSourceID);
-        if (dataSourceID != null){
-            DataSourceUris dsu = DataSourceUris.readDataSourceUris(repositoryConnection, dataSourceID);
-            pattern.setParentDataSource(dsu);
-        }
-        Set<Resource> resources = getAllResources(repositoryConnection, uriPatternId, BridgeDBConstants.IS_URI_PATTERN_OF);
-        for (Resource dataSource:resources){
-            System.out.println(dataSourceID);
-            DataSourceUris dsu = DataSourceUris.readDataSourceUris(repositoryConnection, dataSource);
-            pattern.setNonParentDataSource(dsu);           
-        }
-*/        return pattern;
+        return pattern;
     }
 
         //TODO handle the statements

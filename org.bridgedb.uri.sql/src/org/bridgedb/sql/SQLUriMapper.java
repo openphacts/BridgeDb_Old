@@ -672,43 +672,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             return new Xref(id, dataSource);
         }
         return toXrefUsingLike(uri);
-        
-/*        StringBuilder query = new StringBuilder();
-        query.append("SELECT ");
-        query.append(DATASOURCE_COLUMN_NAME);
-        query.append(" FROM ");
-        query.append(Uri_TABLE_NAME);
-        query.append(" WHERE '");
-        query.append(insertEscpaeCharacters(prefix));
-        query.append("' = ");
-        query.append(PREFIX_COLUMN_NAME);
-        query.append(" AND '");
-        query.append(POSTFIX_COLUMN_NAME);
-        query.append("' = ''");
-                 
-        Statement statement = this.createStatement();
-        ResultSet rs;    
-        try {
-            rs = statement.executeQuery(query.toString());
-        } catch (SQLException ex) {
-            throw new BridgeDBException("Unable to run query. " + query, ex);
-        }    
-        try {
-            if (rs.next()){
-                String sysCode = rs.getString(DATASOURCE_COLUMN_NAME);
-                DataSource dataSource = DataSource.getBySystemCode(sysCode);
-                if (rs.next()){
-                    //more than one option use like method
-                    return toXrefUsingLike(uri);
-                }
-                return new Xref(id, dataSource);
-            } else {
-                //Nothing found so use the longer like method
-                return toXrefUsingLike(uri);
-            }
-        } catch (SQLException ex) {
-            throw new BridgeDBException("Unable to get uriSpace. " + query, ex);
-        }  */      
     }
    
     private Xref toXrefUsingLike(String uri) throws BridgeDBException {
@@ -754,6 +717,68 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 DataSource dataSource = findDataSource(sysCode);
                 String id = uri.substring(prefix.length(), uri.length()-postfix.length());
                 Xref result =  new Xref(id, dataSource);
+                if (logger.isDebugEnabled()){
+                    logger.debug(uri + " toXref " + result);
+                }
+                return result;
+            }
+            return null;
+        } catch (SQLException ex) {
+            throw new BridgeDBException("Unable to get uriSpace. " + query, ex);
+        }    
+    }
+
+    @Override
+    public UriPattern toUriPattern(String uri) throws BridgeDBException {
+        if (uri == null || uri.isEmpty()){
+            return null;
+        }
+        //First try splitting the uri follwoing normal rules
+        //This avoids the more expensive like
+        UriPattern pattern = UriPattern.existingByUri(uri);
+        if (pattern != null){
+            return pattern;
+        }
+        return toUriPatternUsingLike(uri);
+    }
+    
+    private UriPattern toUriPatternUsingLike(String uri) throws BridgeDBException {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT ");
+        query.append(PREFIX_COLUMN_NAME);
+        query.append(", ");
+        query.append(POSTFIX_COLUMN_NAME);
+        query.append(" FROM ");
+        query.append(URI_TABLE_NAME);
+        query.append(" WHERE '");
+        query.append(insertEscpaeCharacters(uri));
+        query.append("' LIKE CONCAT(");
+        query.append(PREFIX_COLUMN_NAME);
+        query.append(",'%',");
+        query.append(POSTFIX_COLUMN_NAME);
+        query.append(")");
+        
+        Statement statement = this.createStatement();
+        ResultSet rs;
+        try {
+            rs = statement.executeQuery(query.toString());
+        } catch (SQLException ex) {
+            throw new BridgeDBException("Unable to run query. " + query, ex);
+        }    
+        try {
+            if (rs.next()){
+                String prefix = rs.getString(PREFIX_COLUMN_NAME);
+                String postfix = rs.getString(POSTFIX_COLUMN_NAME);
+                while(rs.next()){
+                    String newPrefix = rs.getString(PREFIX_COLUMN_NAME);
+                    String newPostfix = rs.getString(POSTFIX_COLUMN_NAME);
+                    //If there is more than one result take the most specific.
+                    if (newPrefix.length() > prefix.length() || newPostfix.length() > postfix.length()){
+                        prefix = newPrefix;
+                        postfix = newPostfix;
+                    }
+                }
+                UriPattern result = UriPattern.byPrefixAndPostfix(prefix, postfix);
                 if (logger.isDebugEnabled()){
                     logger.debug(uri + " toXref " + result);
                 }

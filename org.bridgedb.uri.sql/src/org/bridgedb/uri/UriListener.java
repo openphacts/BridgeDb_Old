@@ -23,6 +23,7 @@ import java.util.Set;
 import org.bridgedb.DataSource;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.utils.BridgeDBException;
+import org.openrdf.model.URI;
 
 /**
  * Import Interface that supports the adding of Uris.
@@ -82,6 +83,8 @@ public interface UriListener {
            UriPattern targetUriPattern, String mappingSource, boolean symetric, Set<String> viaLabels, Set<Integer> chainedLinkSets) 
            throws  BridgeDBException;
 
+   public UriPattern toUriPattern(String uri) throws BridgeDBException;
+            
     /**
      * Inserts a mapping into the system.
      * <p>
