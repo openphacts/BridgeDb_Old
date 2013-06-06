@@ -114,11 +114,11 @@ public class LinksetHandler extends RDFHandlerBase{
                 if (!(object instanceof URI)){
                     throw new RDFHandlerException ("None URI object in " + st);
                 }
-                UriPattern sourcePattern = UriPattern.existingByUri(subject.stringValue());
+                UriPattern sourcePattern = uriListener.toUriPattern(subject.stringValue());
                 if (sourcePattern == null){
                      throw new RDFHandlerException("Unable to get a pattern for " + subject.stringValue());
                 }
-                UriPattern targetPattern = UriPattern.existingByUri(object.stringValue());
+                UriPattern targetPattern = uriListener.toUriPattern(object.stringValue());
                 if (targetPattern == null){
                     throw new RDFHandlerException("Unable to get a pattern for " + object.stringValue());
                 }
