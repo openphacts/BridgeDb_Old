@@ -4271,6 +4271,7 @@ bridgeDB:DataSource_Uniprot_TrEMBL a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/uniprot/$id> ;
 	bridgeDB:hasSourceRdfPattern <http://purl.uniprot.org/uniprot/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://purl.uniprot.org/uniprot/$id> ;
+    bridgeDB:hasUriPattern <http://bio2rdf.org/uniprot:$id> ;
 	bridgeDB:hasUriPattern <http://www.uniprot.org/uniprot/$id> .
 
 bridgeDB:DataSource_UNIPROT_ID a bridgeDB:DataSource ;
@@ -4906,6 +4907,10 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://bio2rdf.org/rn:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://bio2rdf.org/rn:" ;
 	bridgeDB:isUriPatternOf bridgeDB:DataSource_KEGG_Reaction .
+
+<http://bio2rdf.org/uniprot:$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://bio2rdf.org/uniprot:" ;
+	bridgeDB:isUriPatternOf bridgeDB:DataSource_Uniprot_TrEMBL .
 
 <http://biocyc.org/getid?id=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://biocyc.org/getid?id=" ;
