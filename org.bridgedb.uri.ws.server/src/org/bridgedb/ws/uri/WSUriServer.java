@@ -32,8 +32,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.bridgedb.statistics.DataSetInfo;
-import org.bridgedb.statistics.LensInfo;
 import org.bridgedb.statistics.MappingSetInfo;
+import org.bridgedb.uri.Lens;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WsUriConstants;
 
@@ -66,7 +66,7 @@ public class WSUriServer extends WSApiShower{
     	sb.append("\" name=\"");
     	sb.append(WsUriConstants.URI);
     	sb.append("\" style=\"width:80%\"/></p>");
-    	generateLensSelector(sb);
+    	generateLensSelector(sb, httpServletRequest);
     	sb.append("<p><input type=\"submit\" value=\"Submit\"/></p>");
     	sb.append("<p>Note: If the new page does not open click on the address bar and press enter</p>");
     	sb.append("</fieldset></form>\n");
@@ -171,7 +171,7 @@ public class WSUriServer extends WSApiShower{
         List<MappingSetInfo> mappingSetInfos = uriMapper.getMappingSetInfos(scrCode, targetCode, lensUri);
         String lensName;
         if (lensUri != null && !lensUri.isEmpty()){
-            LensInfo lensInfo = uriMapper.getLens(lensUri);
+            Lens lensInfo = Lens.byId(lensUri);
             lensName = lensInfo.getName();
         } else {
             lensName = "Default";
@@ -198,20 +198,21 @@ public class WSUriServer extends WSApiShower{
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/" + WsUriConstants.LENS) 
-	public Response getLenses(@Context HttpServletRequest httpServletRequest) throws BridgeDBException {
-		List<LensInfo> lenses = uriMapper.getLens();
+	public Response getLensesHtml(@Context HttpServletRequest httpServletRequest) throws BridgeDBException {
+		List<Lens> lenses = Lens.getLens();
         StringBuilder sb = topAndSide("Lens Summary",  httpServletRequest);
         sb.append("<table border=\"1\">");
         sb.append("<tr>");
         sb.append("<th>Name</th>");
         sb.append("<th>URI</th>");
-		for (LensInfo lens:lenses) {
+		for (Lens lens:lenses) {
+            String uri = httpServletRequest.getContextPath() + Lens.URI_PREFIX + lens.getId();
             sb.append("<tr><td>");
             sb.append(lens.getName());
             sb.append("</td><td><a href=\"");
-            sb.append(lens.getUri());
+            sb.append(uri);
             sb.append("\">");
-            sb.append(lens.getUri());
+            sb.append(uri);
             sb.append("</a></td>");        
 		}
         sb.append("</tr></table>");

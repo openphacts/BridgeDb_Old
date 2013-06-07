@@ -29,7 +29,6 @@ import org.bridgedb.Xref;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
-import org.bridgedb.statistics.LensInfo;
 import org.bridgedb.utils.BridgeDBException;
 
 /**
@@ -468,23 +467,6 @@ public interface UriMapper extends IDMapper{
      * @throws BridgeDBException 
      */
     public Set<String> getUriPatterns(String dataSource) throws BridgeDBException;
-
-	/**
-	 * Obtains the Set of Lenses currently registered.
-	 * @See {@link LensInfo} for details of exactly what is returned
-	 * @return Information for each Lens
-	 * @throws BridgeDbSqlException 
-	 */
-	public List<LensInfo> getLens() throws BridgeDBException;
-
-	/**
-	 * Obtains the information about a specific Lens.
-	 * @see {@link LensInfo} for details of exactly what is returned.
-	 * @param LensURI The URI of the Lens to look up
-	 * @return Information about the specified Lens
-	 * @throws BridgeDbSqlException
-	 */
-	public LensInfo getLens(String LensURI) throws BridgeDBException;
 
     /**
      * Returns the SQL_COMPAT_VERSION.

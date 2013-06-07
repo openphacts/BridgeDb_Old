@@ -48,15 +48,4 @@ public class LensTest extends org.bridgedb.uri.UriListenerTest {
         uriMapper = sqlUriMapper;;
     }
             
-    @Test
-    public void testRegisterLens() throws Exception {
-        report("RegisterLens");
-        String name = "LensTest1";
-        URI createdBy = new URIImpl("http://example.com/LensTest");
-        URI[] justificationUris = new URI[2];
-        justificationUris[0] = new URIImpl("http://example.com/Justifictaion1"); 
-        justificationUris[1] = new URIImpl("http://example.com/Justifictaion2"); 
-        String uri = sqlUriMapper.registerLens(name, createdBy,justificationUris);
-    }
-
 }

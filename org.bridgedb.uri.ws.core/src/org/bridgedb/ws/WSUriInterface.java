@@ -58,10 +58,6 @@ public interface WSUriInterface extends WSCoreInterface{
 
     public DataSourceUriPatternBean getDataSource(String dataSource) throws BridgeDBException;
     
-    public List<LensBean> getLenses() throws BridgeDBException;
-    
-    public LensBean getLens(String id) throws BridgeDBException;
-    
     //public ValidationBean validateString(String info, String mimeTypee, String storeType, String validationType, 
     //        String includeWarnings) throws BridgeDBException;
 

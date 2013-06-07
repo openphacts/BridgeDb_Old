@@ -235,7 +235,7 @@ public abstract class UriListenerTest extends IDMapperTestBase{
         chain.add(1);
         chain.add(2);
         mappingSet = listener.registerMappingSet(uriPattern1, TEST_PREDICATE, 
-        		Lens.getTestLens(), uriPattern3, "UriListenerTest.loadData()", SYMETRIC, via, chain);
+        		Lens.getTestJustifictaion(), uriPattern3, "UriListenerTest.loadData()", SYMETRIC, via, chain);
         listener.insertUriMapping(map1Uri1, map1AUri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map2Uri1, map2AUri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map3Uri1, map3AUri3, mappingSet, SYMETRIC);
@@ -252,7 +252,7 @@ public abstract class UriListenerTest extends IDMapperTestBase{
         assertFalse(results.contains(map2Axref3));        
     }
 
-    protected void checkForNoOtherLensUri(Set results){
+    protected void checkForNoOtherlensId(Set results){
         assertFalse(results.contains(map3AUri1));
         assertFalse(results.contains(map3AUri2));
         assertFalse(results.contains(map3AUri2a));

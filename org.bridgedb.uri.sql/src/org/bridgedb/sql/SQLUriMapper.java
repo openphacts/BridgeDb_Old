@@ -20,14 +20,11 @@
 package org.bridgedb.sql;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -37,22 +34,17 @@ import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
-import org.bridgedb.rdf.DataSourceUris;
-import org.bridgedb.rdf.RdfConfig;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
-import org.bridgedb.statistics.LensInfo;
-import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.Lens;
+import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.UriListener;
 import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.utils.StoreType;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFHandlerException;
 
 /**
@@ -66,21 +58,21 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 
     private static final int PREFIX_LENGTH = 400;
     private static final int POSTFIX_LENGTH = 100;
-    private static final int LENS_URI_LENGTH = 100;
+//    private static final int LENS_URI_LENGTH = 100;
     private static final int MIMETYPE_LENGTH = 50;
     private static final int CREATED_BY_LENGTH = 150;
     
     private static final String URI_TABLE_NAME = "uri";
     private static final String MIMETYPE_TABLE_NAME = "mimeType";
-    private static final String LENS_JUSTIFICATIONS_TABLE_NAME = "lensJustifications";
-    private static final String LENS_TABLE_NAME = "lens";
+//    private static final String LENS_JUSTIFICATIONS_TABLE_NAME = "lensJustifications";
+//    private static final String LENS_TABLE_NAME = "lens";
     
     private static final String CREATED_BY_COLUMN_NAME = "createdBy";
     private static final String CREATED_ON_COLUMN_NAME = "createdOn";
     private static final String DATASOURCE_COLUMN_NAME = "dataSource";
     private static final String PREFIX_COLUMN_NAME = "prefix";
-    private static final String LENS_ID_COLUMN_NAME = "lensId";
-    private static final String LENS_URI_COLUMN_NAME = "lensUri";
+ //   private static final String LENS_ID_COLUMN_NAME = "lensId";
+//    private static final String LENS_URI_COLUMN_NAME = "lensUri";
     private static final String POSTFIX_COLUMN_NAME = "postfix";
     private static final String MIMETYPE_COLUMN_NAME = "mimetype";
     private static final String NAME_COLUMN_NAME = "name";
@@ -125,15 +117,13 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
      */
      private SQLUriMapper(boolean dropTables, StoreType storeType) throws BridgeDBException{
         super(dropTables, storeType);
-        if (dropTables){
-            createDefaultLenses();
-        }
         clearUriPatterns();
         Collection<UriPattern> patterns = UriPattern.getUriPatterns();
         for (UriPattern pattern:patterns){
             this.registerUriPattern(pattern);
         }
         checkDataSources();
+        Lens.init();
         subjectUriPatterns = new HashMap<Integer,UriPattern>();
         targetUriPatterns = new HashMap<Integer,UriPattern>();
     }   
@@ -144,8 +134,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         super.dropSQLTables();
  		dropTable(URI_TABLE_NAME);
  		dropTable(MIMETYPE_TABLE_NAME);
- 		dropTable(LENS_TABLE_NAME);
- 		dropTable(LENS_JUSTIFICATIONS_TABLE_NAME);
+// 		dropTable(LENS_TABLE_NAME);
+// 		dropTable(LENS_JUSTIFICATIONS_TABLE_NAME);
     }
  
     @Override
@@ -165,7 +155,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                     + "     " + POSTFIX_COLUMN_NAME + " VARCHAR(" + POSTFIX_LENGTH + ") NOT NULL, "
                     + "     mimeType VARCHAR(" + MIMETYPE_LENGTH + ") NOT NULL "
                     + "  ) ");
-            sh.execute("CREATE TABLE " + LENS_TABLE_NAME + " ( " 
+/*            sh.execute("CREATE TABLE " + LENS_TABLE_NAME + " ( " 
             		+ LENS_ID_COLUMN_NAME + " INT " + autoIncrement + " PRIMARY KEY, " 
                     + LENS_URI_COLUMN_NAME + " VARCHAR(" + LENS_URI_LENGTH + "), "
             		+ NAME_COLUMN_NAME + " VARCHAR(" + FULLNAME_LENGTH + ") NOT NULL, " 
@@ -176,6 +166,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                     + LENS_URI_COLUMN_NAME + " VARCHAR(" + LENS_URI_LENGTH + ") NOT NULL, "
             		+ JUSTIFICATION_COLUMN_NAME + " VARCHAR(" + PREDICATE_LENGTH + ") NOT NULL " 
             		+ ")");
+*/
             sh.close();
 		} catch (SQLException e)
 		{
@@ -580,49 +571,23 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
      * @param lensUri Uri of the lens to use
      * @throws BridgeDbSqlException if the lens does not exist
      */
-    private void appendLensClause(StringBuilder query, String lensUri, boolean whereAdded) throws BridgeDBException {
-        lensUri = scrubUri(lensUri);
-        if (lensUri == null){
-            lensUri = Lens.getDefaultLens();
+    private void appendLensClause(StringBuilder query, String lensId, boolean whereAdded) throws BridgeDBException {
+        if (lensId == null){
+            lensId = Lens.getDefaultLens();
         }
-        if (!lensUri.equals(Lens.getAllLens())) {
-            String lensJustificationQuery = "SELECT " + JUSTIFICATION_COLUMN_NAME
-                    + " FROM " + LENS_JUSTIFICATIONS_TABLE_NAME 
-                    + " WHERE " + LENS_URI_COLUMN_NAME + " = ";
-            try {
-        		Statement statement = this.createStatement();    		
-        		ResultSet rs = statement.executeQuery(lensJustificationQuery + "'" + lensUri + "'");
-        		if (!rs.next()) {
-                    throw new BridgeDBException("Unknown lens identifier " + lensUri);
-                }
-                if (whereAdded){
-                  query.append(" AND");  
-                } else {
-                  query.append(" WHERE");                      
-                }
-        		query.append(" mappingSet.justification IN (");
-        		do {
-        			query.append("'").append(rs.getString(JUSTIFICATION_COLUMN_NAME)).append("'");
-        			if (!rs.isLast()) query.append(", ");
-        		} while (rs.next());
-        		query.append(")");
-        	} catch (SQLException ex) {
-        		throw new BridgeDBException("Error retrieving lens justifications for lensId " + lensUri, ex);
-        	}
+        if (!lensId.equals(Lens.getAllLens())) {
+            List<String> justifications = Lens.getJustificationsbyId(lensId);
+            if (whereAdded){
+                query.append(" AND");  
+            } else {
+                query.append(" WHERE");                      
+            }
+            query.append(" mappingSet.justification IN (");
+            for (int i = 0; i < justifications.size() - 1; i++){
+                query.append("'").append(justifications.get(i)).append("', ");
+            }
+            query.append("'").append(justifications.get(justifications.size()-1)).append("')");
         }
-	}
-
-	private int extractIDFromURI(String lens) throws BridgeDBException {
-		try {
-			URI lensUri = new URIImpl(lens);
-			if (!lensUri.getNamespace().equals(Lens.getLensBaseURI())) {
- 				throw new BridgeDBException("Invalid namespace for lens URI: " + lensUri);
-			}
-			int lensID = Integer.parseInt(lensUri.getLocalName());
-			return lensID;
-		} catch (IllegalArgumentException e) {
-			throw new BridgeDBException("Invalid URI form for a lensUri: " + lens);
-		}
 	}
 
     @Override
@@ -868,10 +833,10 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public OverallStatistics getOverallStatistics(String lensUri) throws BridgeDBException {
+    public OverallStatistics getOverallStatistics(String lensId) throws BridgeDBException {
         int numberOfLenses;
-        if (Lens.getAllLens().equals(lensUri)){
-            numberOfLenses = getNumberOfLenses();
+        if (Lens.getAllLens().equals(lensId)){
+            numberOfLenses = Lens.getNumberOfLenses();
         } else {
             numberOfLenses = 1;
         }
@@ -892,7 +857,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         query.append(") as numberOfMappings ");
         query.append("FROM ");
         query.append(MAPPING_SET_TABLE_NAME);
-        this.appendLensClause(query, lensUri, false);
+        this.appendLensClause(query, lensId, false);
         Statement statement = this.createStatement();
         try {
             ResultSet rs = statement.executeQuery(query.toString());
@@ -915,25 +880,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         }
     }
 
-    private int getNumberOfLenses() throws BridgeDBException {
-    	String lensCountQuery = "SELECT count(*) as number " +
-    			"FROM " + LENS_TABLE_NAME;
-    	Statement statement = this.createStatement();
-    	try {
-    		ResultSet rs = statement.executeQuery(lensCountQuery);
-    		if (rs.next()) {
-    			return rs.getInt("number") + 1;
-    		} else {
-    			System.err.println(lensCountQuery);
-                throw new BridgeDBException("No Results for query. " + lensCountQuery);
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new BridgeDBException("Unable to run query. " + lensCountQuery, ex);
-        }      
-	}
-
-    /*private int getMappingsCount() throws BridgeDBException{
+     /*private int getMappingsCount() throws BridgeDBException{
         String linkQuery = "SELECT count(*) as numberOfMappings "
                 + "FROM " + MAPPING_TABLE_NAME;
         Statement statement = this.createStatement();
@@ -1004,48 +951,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     @Override
-    public List<LensInfo> getLens() throws BridgeDBException {
-    	String query = ("SELECT * " 
-    			+ " FROM " + LENS_TABLE_NAME);
-    	Statement statement = this.createStatement();
-    	List<LensInfo> lenses = new ArrayList<LensInfo>();
-        ResultSet rs;
-    	try {
-			rs = statement.executeQuery(query);
-		} catch (SQLException e) {
-			throw new BridgeDBException("Unable to retrieve lenses.", e);
-		}
-        List<LensInfo> results = resultSetToLensInfos(rs);
-        results.add(getAllLenses());
-        return results;
-    }
-    
-    @Override
-    public LensInfo getLens(String lensUri) throws BridgeDBException {
-        lensUri = scrubUri(lensUri);
-        if (lensUri.equals(Lens.getAllLens())){
-            return getAllLenses();
-        }
-    	String query = ("SELECT * " +
-    			"FROM " + LENS_TABLE_NAME + " WHERE " + LENS_URI_COLUMN_NAME + " = \"" + lensUri + "\"");
-    	Statement statement = this.createStatement();
-        ResultSet rs;
-		try {
-			rs = statement.executeQuery(query);
-		} catch (SQLException e) {
-			throw new BridgeDBException("Unable to retrieve lens.", e);
-		}
-        List<LensInfo> lens = resultSetToLensInfos(rs);
-        if (lens.isEmpty()) {
-            throw new BridgeDBException("No lens with the URI " + lensUri);
-        }
-        if (lens.isEmpty()) {
-            throw new BridgeDBException("More than one lens found with the URI " + lensUri);
-        }
-    	return lens.get(0);
-    }
-
-    @Override
     public int getSqlCompatVersion() throws BridgeDBException {
         String query = ("select " + SCHEMA_VERSION_COLUMN_NAME + " from " + INFO_TABLE_NAME);
         Statement statement = this.createStatement();
@@ -1063,41 +968,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 
     // **** UriListener Methods
     
-    private Set<String> getJustificationsForLens(String lensUri) throws BridgeDBException {
-    	String query = ("SELECT " + JUSTIFICATION_COLUMN_NAME 
-    			+ " FROM " + LENS_JUSTIFICATIONS_TABLE_NAME
-    			+ " WHERE " + LENS_URI_COLUMN_NAME + " = \"" + lensUri + "\"");
-    	Statement statement = this.createStatement();
-    	Set<String> justifications = new HashSet<String>();
-    	try {
-			ResultSet rs = statement.executeQuery(query);
-			while (rs.next()) {
-				String justification = rs.getString(JUSTIFICATION_COLUMN_NAME);
-				justifications.add(justification);
-			}
-		} catch (SQLException e) {
-			throw new BridgeDBException("Unable to retrieve lens justifications. " + query, e);
-		}
-    	return justifications;
-	}
-
-    private Set<String> getAllJustifications() throws BridgeDBException {
-    	String query = ("SELECT " + JUSTIFICATION_COLUMN_NAME 
-    			+ " FROM " + MAPPING_SET_TABLE_NAME);
-    	Statement statement = this.createStatement();
-    	Set<String> justifications = new HashSet<String>();
-    	try {
-			ResultSet rs = statement.executeQuery(query);
-			while (rs.next()) {
-				String justification = rs.getString(JUSTIFICATION_COLUMN_NAME);
-				justifications.add(justification);
-			}
-		} catch (SQLException e) {
-			throw new BridgeDBException("Unable to retrieve lens justifications. " + query, e);
-		}
-    	return justifications;
-	}
-
     @Override
     public void registerUriPattern(DataSource source, String uriPattern) throws BridgeDBException {
         //checkDataSourceInDatabase(source);
@@ -1436,33 +1306,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return results;
     }
 
-    private List<LensInfo> resultSetToLensInfos(ResultSet rs ) throws BridgeDBException{
-     	List<LensInfo> lenses = new ArrayList<LensInfo>();
-    	try {
-			while (rs.next()) {
-				int lensId = rs.getInt(LENS_ID_COLUMN_NAME);
-				String name = rs.getString(NAME_COLUMN_NAME);
-				String createdOn = rs.getString(CREATED_ON_COLUMN_NAME);
-				String createdBy = rs.getString(CREATED_BY_COLUMN_NAME);
-				String lensUri = rs.getString(LENS_URI_COLUMN_NAME);
-				Set<String> justifications = getJustificationsForLens(lensUri);
-				lenses.add(new LensInfo(lensUri, name, createdOn, createdBy, justifications));
-			}
-		} catch (SQLException e) {
-			throw new BridgeDBException("Unable to retrieve lenses.", e);
-		}
-    	return lenses;
-    }
-
-    private LensInfo getAllLenses() throws BridgeDBException{
-        String name = LensInfo.ALL_LENS_NAME;
-        String createdOn = getProperty(LAST_UDPATES);
-        String createdBy = this.getClass().getName();
-        String lensUri = Lens.getAllLens();
-        Set<String> justifications = getAllJustifications();
-		return new LensInfo(lensUri, name, createdOn, createdBy, justifications);
-        
-    }
     /**
      * Finds the SysCode of the DataSource which includes this prefix and postfix
      *
@@ -1548,105 +1391,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             throw new BridgeDBException("Unable to parse results.", ex);
        }
     }
-
-    public String registerLens(String name, URI createdBy, URI... justificationUris) 
-            throws BridgeDBException {
-        return registerLens(name, new Date(), createdBy, justificationUris); 
-    }
-    
-    private void createDefaultLenses() throws BridgeDBException {
-        String name = LensInfo.DEFAULT_LENS_NAME;
-        URI createdBy = new URIImpl("https://github.com/openphacts/BridgeDb/blob/master/org.bridgedb.uri.sql/src/org/bridgedb/sql/SQLUrlMapper.java");
-        URI[] justifications = Lens.getDefaultJustifictaions();
-        
-        String uri = registerLens(name, createdBy, justifications);
-        if (!uri.equals(Lens.getDefaultLens())){
-            throw new BridgeDBException("Incorrect Default Lens URI created. Created " + uri + " but should have been "
-                    + Lens.getDefaultLens());
-        }
-        name = LensInfo.TEST_LENS_NAME;
-        URI justification = new URIImpl(Lens.getTestJustifictaion());
-        uri = registerLens(name, createdBy, justification);
-        if (!uri.equals(Lens.getTestLens())){
-            throw new BridgeDBException("Incorrect Test Lens URI created. Created " + uri + " but should have been "
-                    + Lens.getDefaultLens());
-        }
-    }
-
-    public String registerLens(String name, Date createdOn, URI createdBy, URI... justificationUris) 
-            throws BridgeDBException {
-    	startTransaction();
-    	String lensUri = createLens(name, createdOn, createdBy);
-    	insertJustifications(lensUri, justificationUris);
-    	commitTransaction();
-    	return lensUri;
-    }
-
-	private String createLens(String name, Date createdOn, URI createdBy)
-			throws BridgeDBException {
-        Timestamp timestamp = new Timestamp(createdOn.getTime());
-		String insertStatement = "INSERT INTO " + LENS_TABLE_NAME
-                    + "(" + NAME_COLUMN_NAME + ", " + CREATED_ON_COLUMN_NAME + ", " + CREATED_BY_COLUMN_NAME + ") " 
-                    + "VALUES (" 
-                    + "'" + name + "', "
-                    + "'" + timestamp + "', " 
-                    + "'" + createdBy + "')";
-		int lensId = 0;
-        try {
-        	Statement statement = createStatement();
-            statement.executeUpdate(insertStatement, Statement.RETURN_GENERATED_KEYS);
-            ResultSet rs = statement.getGeneratedKeys();
-            if (rs.next())
-            {
-            	lensId = rs.getInt(1);
-            } else {
-            	rollbackTransaction();
-            	throw new BridgeDBException ("No result registering new lens " + insertStatement);
-            }            
-        } catch (BridgeDBException ex) {
-        	rollbackTransaction();
-        	throw ex;
-        } catch (SQLException ex) {
-        	rollbackTransaction();
-            throw new BridgeDBException ("Error registering new lens " + insertStatement, ex);
-        }
-        return createLensUri(lensId);
-	}
-	
-	private String createLensUri(int lensId) throws BridgeDBException {
-        String uri = Lens .getLensURI(lensId);
-		String updateStatement = "UPDATE " + LENS_TABLE_NAME
-                + " SET " + LENS_URI_COLUMN_NAME + "=\"" + uri + "\" "
-                + " WHERE " + LENS_ID_COLUMN_NAME + " = " + lensId;
-        try {
-        	Statement statement = createStatement();
-            int updates = statement.executeUpdate(updateStatement);
-            if (updates != 1){
-                throw new BridgeDBException ("Unexpected " + updates + " number of lens updated.");
-            }
-        } catch (SQLException ex) {
-        	rollbackTransaction();
-            throw new BridgeDBException ("Error adding lens uri " + updateStatement, ex);
-        }
-        return uri;
-	}
-
-    private void insertJustifications(String lensUri, URI... justificationUris) throws BridgeDBException {
-		String sql = "INSERT INTO " + LENS_JUSTIFICATIONS_TABLE_NAME  +
-                                                       
-				"( " + LENS_URI_COLUMN_NAME + ", " + JUSTIFICATION_COLUMN_NAME + ") " +
-				"VALUES ( \"" + lensUri + "\", " + "?)";
-        PreparedStatement statement = createPreparedStatement(sql);
-        for (URI uri : justificationUris) {
-            try {
-				statement.setString(1, uri.stringValue());
-				statement.execute();
-            } catch (SQLException ex) {
-            	rollbackTransaction();
-                throw new BridgeDBException("Error inserting justification." + sql + " with " + uri, ex);
-            }
-        }
-	}
 
     private boolean appendSystemCodes(StringBuilder query, String sourceSysCode, String targetSysCode) {
         boolean whereAdded = false;

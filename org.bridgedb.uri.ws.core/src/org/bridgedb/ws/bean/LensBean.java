@@ -19,9 +19,10 @@
 //
 package org.bridgedb.ws.bean;
 
+import java.util.HashSet;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.bridgedb.statistics.LensInfo;
+import org.bridgedb.uri.Lens;
 
 /**
  *
@@ -40,18 +41,19 @@ public class LensBean {
     public LensBean(){
     }
 
-    public static LensInfo asLensInfo(LensBean bean){
-        return new LensInfo(bean.getUri(), bean.getName(), bean.getCreatedOn(), 
+    public static Lens asLensInfo(LensBean bean){
+        String id = bean.getUri().substring(bean.getUri().indexOf("/"));
+        return new Lens(id, bean.getName(), bean.getCreatedOn(), 
         		bean.getCreatedBy(), bean.getJustification());
     }
 
-    public static LensBean asBean(LensInfo info) {
+    public static LensBean asBean(Lens info, String ContextPath) {
         LensBean bean = new LensBean();
-    	bean.uri = info.getUri();
+    	bean.uri = ContextPath + Lens.URI_PREFIX + info.getId();
         bean.name = info.getName();
         bean.createdBy = info.getCreatedBy();
         bean.createdOn = info.getCreatedOn();
-        bean.justification = info.getJustification();
+        bean.justification = new HashSet<String>(info.getJustification());
         return bean;
     }
     

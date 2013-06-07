@@ -28,7 +28,6 @@ import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.bridgedb.statistics.OverallStatistics;
-import org.bridgedb.statistics.LensInfo;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WsUriConstants;
@@ -257,16 +256,18 @@ public class WSFrame extends WSUriInterfaceService {
         sb.append("\n<div></body></html>");
     }
 
-	public void generateLensSelector(StringBuilder sb) throws BridgeDBException {
-		List<LensInfo> lenses = uriMapper.getLens();
+	public void generateLensSelector(StringBuilder sb, HttpServletRequest httpServletRequest) throws BridgeDBException {
+		List<Lens> lenses = Lens.getLens();
         sb.append("<p>");
     	sb.append(WsUriConstants.LENS_URI);
         sb.append("<select name=\"");
     	sb.append(WsUriConstants.LENS_URI);
     	sb.append("\">");
-		for (LensInfo lens : lenses) {
+		for (Lens lens : lenses) {
 			sb.append("<option value=\"");
-			sb.append(lens.getUri());
+            sb.append(httpServletRequest.getContextPath());
+            sb.append(Lens.URI_PREFIX);
+ 			sb.append(lens.getId());
 			sb.append("\">");
 			sb.append(lens.getName());
 			sb.append("</option>");

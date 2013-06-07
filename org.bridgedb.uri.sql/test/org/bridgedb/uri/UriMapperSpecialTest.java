@@ -19,7 +19,6 @@
 //
 package org.bridgedb.uri;
 
-import org.bridgedb.uri.Mapping;
 import java.util.List;
 import java.util.Set;
 import org.bridgedb.DataSource;

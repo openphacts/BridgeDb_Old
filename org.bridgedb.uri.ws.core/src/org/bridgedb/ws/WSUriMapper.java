@@ -29,7 +29,7 @@ import org.bridgedb.Xref;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
-import org.bridgedb.statistics.LensInfo;
+import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
@@ -353,25 +353,7 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
             return bean.getUriPattern();
         }
     }
-
-	@Override
-	public List<LensInfo> getLens() throws BridgeDBException {
-		List<LensBean> beans = uriService.getLenses();
-		List<LensInfo> results = new ArrayList<LensInfo>();
-		for (LensBean bean:beans) {
-			results.add(LensBean.asLensInfo(bean));
-		}
-		return results;
-	}
-
-	@Override
-	public LensInfo getLens(String lensUri)
-			throws BridgeDBException {
-		LensBean lens = uriService.getLens(lensUri);
-		LensInfo result = LensBean.asLensInfo(lens);
-		return result;
-	}
-    
+  
     @Override
     public int getSqlCompatVersion() throws BridgeDBException {
         return Integer.parseInt(uriService.getSqlCompatVersion());

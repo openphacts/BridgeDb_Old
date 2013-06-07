@@ -21,7 +21,6 @@ package org.bridgedb.ws.uri;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -33,8 +32,6 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.bridgedb.Xref;
 import org.bridgedb.rdf.RdfConfig;
-import org.bridgedb.statistics.OverallStatistics;
-import org.bridgedb.statistics.LensInfo;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.Mapping;
 import org.bridgedb.utils.BridgeDBException;

@@ -19,8 +19,6 @@
 //
 package org.bridgedb.ws;
 
-import org.bridgedb.uri.Lens;
-
 /**
  *
  * @author Christian
