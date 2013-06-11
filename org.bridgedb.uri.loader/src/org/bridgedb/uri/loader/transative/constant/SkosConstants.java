@@ -27,10 +27,13 @@ public class SkosConstants {
     private static final String PREFIX = "http://www.w3.org/2004/02/skos/core#";
     
     public static final String BROAD_MATCH = PREFIX + "broadMatch";
+    public static final String BROADER = PREFIX + "broader";
     public static final String CLOSE_MATCH = PREFIX + "closeMatch";
     public static final String EXACT_MATCH = PREFIX + "exactMatch";
     public static final String MAPPING_RELATION = PREFIX + "mappingRelation";
     public static final String NARROW_MATCH = PREFIX + "narrowMatch";
+    public static final String NARROWER = PREFIX + "narrower";
     public static final String RELATED_MATCH = PREFIX + "relatedMatch";
+    public static final String RELATED = PREFIX + "related"; //Ugly but used.
 
 }
