@@ -112,6 +112,13 @@ bridgeDB:DataSource_Aclame a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/aclame/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://aclame.ulb.ac.be/perl/Aclame/Genomes/mge_view.cgi?view=info&id=$id> .
 
+bridgeDB:bridgeDB:DataSource_AERS a bridgeDB:DataSource ;
+	bridgeDB:fullName "AERS" ;
+	bridgeDB:systemCode "AERS" ;
+	bridgeDB:idExample "ADENINE" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:hasUrlPattern <http://aers.data2semantics.org/resource/drug/$id> .
+
 bridgeDB:DataSource_Affy a bridgeDB:DataSource ;
 	bridgeDB:fullName "Affy" ;
 	bridgeDB:systemCode "X" ;
@@ -642,7 +649,7 @@ bridgeDB:DataSource_Chebi a bridgeDB:DataSource ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/obo.chebi/CHEBI:$id> ;
 	bridgeDB:hasBio2RdfPattern <http://bio2rdf.org/chebi:$id> ;
-    bridgeDB:hasUriPattern <http://purl.obolibrary.org/obo/CHEBI_$id>  .
+    bridgeDB:hasUriPattern <http://purl.obolibrary.org/obo/CHEBI_$id> .
 
 bridgeDB:DataSource_ChemBank a bridgeDB:DataSource ;
 	bridgeDB:fullName "ChemBank" ;
@@ -653,6 +660,16 @@ bridgeDB:DataSource_ChemBank a bridgeDB:DataSource ;
 	bridgeDB:hasUrlPattern <http://chembank.broadinstitute.org/chemistry/viewMolecule.htm?cbid=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/chembank/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://chembank.broadinstitute.org/chemistry/viewMolecule.htm?cbid=$id> .
+
+bridgeDB:DataSource_ChEMBL_compound a bridgeDB:DataSource ;
+	bridgeDB:fullName "ChEMBL compound" ;
+	bridgeDB:mainUrl "https://www.ebi.ac.uk/chembldb/" ;
+	bridgeDB:idExample "CHEMBL308052" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "metabolite" ;
+	bridgeDB:hasUrlPattern <https://www.ebi.ac.uk/chembldb/index.php/compound/inspect/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/chembl.compound/$id> ;
+	bridgeDB:hasWikiPathwaysPattern <https://www.ebi.ac.uk/chembldb/index.php/compound/inspect/$id> .
 
 bridgeDB:DataSource_Chembl_Id a bridgeDB:DataSource ;
 	bridgeDB:fullName "Chembl Id" ;
@@ -675,6 +692,14 @@ bridgeDB:DataSource_Chembl_Molecule a bridgeDB:DataSource ;
 	bridgeDB:hasWikiPathwaysPattern <http://data.kasabi.com/dataset/chembl-rdf/molecule/m$id> ;
 	bridgeDB:hasUriPattern <http://linkedchemistry.info/chembl/molecule/m$id> .
 
+bridgeDB:DataSource_Chembl_16_Molecule a bridgeDB:DataSource ;
+	bridgeDB:fullName "Chembl 16 Molecule" ;
+	bridgeDB:systemCode "Chembl16Molecule" ;
+	bridgeDB:idExample "CHEMBL1625375" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://rdf.ebi.ac.uk/resource/chembl/molecule/$id> .
+
 bridgeDB:DataSource_Chembl_Target a bridgeDB:DataSource ;
 	bridgeDB:fullName "Chembl Target" ;
 	bridgeDB:systemCode "ChemblTarget" ;
@@ -686,16 +711,6 @@ bridgeDB:DataSource_Chembl_Target a bridgeDB:DataSource ;
 	bridgeDB:hasWikiPathwaysPattern <http://data.kasabi.com/dataset/chembl-rdf/target/t$id> ;
 	bridgeDB:hasUriPattern <http://linkedchemistry.info/chembl/target/t$id> .
 
-bridgeDB:DataSource_ChEMBL_compound a bridgeDB:DataSource ;
-	bridgeDB:fullName "ChEMBL compound" ;
-	bridgeDB:mainUrl "https://www.ebi.ac.uk/chembldb/" ;
-	bridgeDB:idExample "CHEMBL308052" ;
-	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "metabolite" ;
-	bridgeDB:hasUrlPattern <https://www.ebi.ac.uk/chembldb/index.php/compound/inspect/$id> ;
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/chembl.compound/$id> ;
-	bridgeDB:hasWikiPathwaysPattern <https://www.ebi.ac.uk/chembldb/index.php/compound/inspect/$id> .
-
 bridgeDB:DataSource_ChEMBL_target a bridgeDB:DataSource ;
 	bridgeDB:fullName "ChEMBL target" ;
 	bridgeDB:mainUrl "https://www.ebi.ac.uk/chembldb/" ;
@@ -705,6 +720,23 @@ bridgeDB:DataSource_ChEMBL_target a bridgeDB:DataSource ;
 	bridgeDB:hasUrlPattern <https://www.ebi.ac.uk/chembldb/index.php/target/inspect/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/chembl.target/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <https://www.ebi.ac.uk/chembldb/index.php/target/inspect/$id> .
+
+bridgeDB:DataSource_Chembl_16_Target a bridgeDB:DataSource ;
+	bridgeDB:fullName "Chembl 16 Target" ;
+	bridgeDB:systemCode "Chembl16Target" ;
+	bridgeDB:idExample "CHEMBL1293266" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://rdf.ebi.ac.uk/resource/chembl/target/$id> .
+
+bridgeDB:DataSource_ChEMBL_target_component a bridgeDB:DataSource ;
+	bridgeDB:fullName "ChEMBL target component" ;
+    bridgeDB:systemCode "Chembl16TargetComponent" ;
+	bridgeDB:mainUrl "https://www.ebi.ac.uk/chembldb/" ;
+	bridgeDB:idExample "CHEMBL_TC_3597" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://rdf.ebi.ac.uk/resource/chembl/targetcomponent/$id> .
 
 bridgeDB:DataSource_ChemDB a bridgeDB:DataSource ;
 	bridgeDB:fullName "ChemDB" ;
@@ -747,6 +779,7 @@ bridgeDB:DataSource_Chemspider a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/chemspider/$id> ;
 	bridgeDB:hasSourceRdfPattern <http://rdf.chemspider.com/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://rdf.chemspider.com/$id> ;
+    bridgeDB:hasUriPattern <http://www.chemspider.com/Chemical-Structure.$id.rdf> ;
 	bridgeDB:hasUriPattern <http://www.chemspider.com/$id> .
 
 bridgeDB:DataSource_Cint a bridgeDB:DataSource ;
@@ -1091,33 +1124,30 @@ bridgeDB:DataSource_DragonDB_Protein a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/dragondb.protein/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://antirrhinum.net/cgi-bin/ace/generic/tree/DragonDB?name=$id;class=Peptide> .
 
-bridgeDB:DataSource_Drug_Bank_Target a bridgeDB:DataSource ;
-	bridgeDB:fullName "Drug Bank Target" ;
-	bridgeDB:systemCode "Drug Bank Target" ;
+bridgeDB:DataSource_drugbankTarget a bridgeDB:DataSource ;
+	bridgeDB:fullName "Dugbank Target" ;
+	bridgeDB:systemCode "drugbankTarget" ;
 	bridgeDB:idExample "6511" ;
+	bridgeDB:mainUrl "http://www.drugbank.ca/" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "unknown" ;
-	bridgeDB:hasUrlPattern <http://www4.wiwiss.fu-berlin.de/drugbank/resource/targets/$id> ;
+	bridgeDB:hasUrlPattern <http://www.drugbank.ca/molecules/$id> ;
+    bridgeDB:hasUriPattern <http://www.drugbank.ca/molecules/$id?as=target> ;
+    bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/drugbank.target/$id> ;
+	bridgeDB:hasUriPattern <http://www4.wiwiss.fu-berlin.de/drugbank/resource/targets/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www4.wiwiss.fu-berlin.de/drugbank/resource/targets/$id> .
 
-bridgeDB:DataSource_DrugBank a bridgeDB:DataSource ;
-	bridgeDB:fullName "DrugBank" ;
+bridgeDB:DataSource_drugbankDrugs a bridgeDB:DataSource ;
+	bridgeDB:fullName "Drugbank Drugs" ;
+	bridgeDB:systemCode "drugbankDrugs" ;
 	bridgeDB:mainUrl "http://www.drugbank.ca/" ;
 	bridgeDB:idExample "DB00001" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "metabolite" ;
 	bridgeDB:hasUrlPattern <http://www.drugbank.ca/drugs/$id> ;
+	bridgeDB:hasUriPattern <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugs/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/drugbank/$id> ;
 	bridgeDB:hasBio2RdfPattern <http://bio2rdf.org/drugbank:$id> ;
-	bridgeDB:hasWikiPathwaysPattern <http://bio2rdf.org/drugbank:$id> .
-
-bridgeDB:DataSource_DrugBank_drugs a bridgeDB:DataSource ;
-	bridgeDB:fullName "DrugBank drugs" ;
-	bridgeDB:systemCode "DrugBank drugs" ;
-	bridgeDB:idExample "DB02901" ;
-	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "unknown" ;
-	bridgeDB:hasUrlPattern <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugs/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugs/$id> .
 
 bridgeDB:DataSource_EchoBASE a bridgeDB:DataSource ;
@@ -1493,6 +1523,7 @@ bridgeDB:DataSource_Entrez_Gene a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.ncbi.nlm.nih.gov/gene/$id> ;
+    bridgeDB:hasUriPattern  <http://purl.uniprot.org/geneid/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/ncbigene/$id> ;
 	bridgeDB:hasBio2RdfPattern <http://bio2rdf.org/geneid:$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://bio2rdf.org/geneid:$id> .
@@ -4273,6 +4304,13 @@ bridgeDB:DataSource_Uniprot_TrEMBL a bridgeDB:DataSource ;
 	bridgeDB:hasWikiPathwaysPattern <http://purl.uniprot.org/uniprot/$id> ;
     bridgeDB:hasUriPattern <http://bio2rdf.org/uniprot:$id> ;
 	bridgeDB:hasUriPattern <http://www.uniprot.org/uniprot/$id> .
+
+bridgeDB:DataSource_UNIPROT_geneid a bridgeDB:DataSource ;
+	bridgeDB:fullName "UNIPROT geneid" ;
+	bridgeDB:systemCode "UNIPROT_geneid" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUriPattern <http://purl.uniprot.org/geneid/$id> .
 
 bridgeDB:DataSource_UNIPROT_ID a bridgeDB:DataSource ;
 	bridgeDB:fullName "UNIPROT_ID" ;
