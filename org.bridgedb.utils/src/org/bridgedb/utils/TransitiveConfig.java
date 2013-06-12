@@ -52,13 +52,11 @@ public class TransitiveConfig {
     }
 
     public static void useTestDirectory() throws BridgeDBException{
-        System.out.println("useTest");
         if (useTest) {
             return; //Already in useTest mode
         } else {
             useTest = true;
             File testDir = getTestDirectory();
-            System.out.println(testDir);
             deleteChildren(testDir);
         }        
     } 
