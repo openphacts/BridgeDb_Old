@@ -154,7 +154,11 @@ public class Lens {
 	}
     
     public String toUri(String contextPath){
-        return contextPath + URI_PREFIX + getId();
+        if (contextPath != null){
+            return contextPath + URI_PREFIX + getId();
+        } else {
+            return "http::" + URI_PREFIX + getId();
+        }
     }
     
 	/**

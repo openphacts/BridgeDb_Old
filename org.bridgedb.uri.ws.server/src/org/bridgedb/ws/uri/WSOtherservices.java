@@ -21,6 +21,7 @@ package org.bridgedb.ws.uri;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -1444,9 +1445,11 @@ public class WSOtherservices extends WSFrame {
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/" + WsUriConstants.LENS) 
-	public Response getLensesHtml(@Context HttpServletRequest httpServletRequest) throws BridgeDBException {
-		List<Lens> lenses = Lens.getLens();
-        StringBuilder sb = topAndSide("Lens Summary",  httpServletRequest);
+	public Response getLensesHtml(@QueryParam(WsUriConstants.LENS_URI)  String lensUri,
+            @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
+        List<Lens> lenses = getTheLens(lensUri);
+         StringBuilder sb = topAndSide("Lens Summary",  httpServletRequest);
+        sb.append("lensUri=").append(lensUri).append("<br>");
         sb.append("<table border=\"1\">");
         sb.append("<tr>");
         sb.append("<th>Name</th>");

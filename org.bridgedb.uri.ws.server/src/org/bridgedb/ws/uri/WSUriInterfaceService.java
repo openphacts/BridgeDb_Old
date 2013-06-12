@@ -402,28 +402,39 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
 	@GET
 	@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
 	@Path("/" + WsUriConstants.LENS + "/{id}")
-	public LensBean getLens(@PathParam("id") String id, HttpServletRequest httpServletRequest) throws BridgeDBException {
+	public LensBean getLens(@PathParam("id") String id) throws BridgeDBException {
  		Lens lens = Lens.byId(id);
-		LensBean result = LensBean.asBean(lens, httpServletRequest.getContextPath());
+		LensBean result = LensBean.asBean(lens, null);
 		return result;
 	}
     
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsUriConstants.LENS + WsUriConstants.XML) 
-    public List<LensBean> getLensesXML(HttpServletRequest httpServletRequest) throws BridgeDBException {
-        return getLenses(httpServletRequest);
+    public List<LensBean> getLensesXML(@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
+        return getLenses(lensUri);
     }
-    
+
+    protected List<Lens> getTheLens(String lensUri) throws BridgeDBException{
+        if (lensUri == null || lensUri.isEmpty()){
+            return  Lens.getLens();
+        } else {
+            Lens lens = Lens.byId(lensUri);
+            List<Lens> lenses = new ArrayList<Lens>();
+            lenses.add(lens);  
+            return lenses;
+        }
+    }
+
     @GET
     @Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
     @Path("/" + WsUriConstants.LENS) 
-	public List<LensBean> getLenses(HttpServletRequest httpServletRequest) throws BridgeDBException {
-		List<Lens> lenses = Lens.getLens();
-		List<LensBean> results = new ArrayList<LensBean>();
-		for (Lens lens:lenses) {
-			results.add(LensBean.asBean(lens, httpServletRequest.getContextPath()));
-		}
+	public List<LensBean> getLenses(@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
+ 		List<LensBean> results = new ArrayList<LensBean>();
+        List<Lens> lenses = getTheLens(lensUri);
+        for (Lens lens:lenses) {
+            results.add(LensBean.asBean(lens, null));
+        }
 		return results;
 	}
     
