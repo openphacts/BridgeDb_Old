@@ -407,7 +407,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
                 shortSource = mappingSource.substring(index + 1, mappingSource.length());
              }
         } catch (URISyntaxException ex) {
-            //do nothing as not a uri
+            shortSource = ex.getMessage();
         }
         if (shortSource == null || shortSource.isEmpty()){ 
             sb.append(mappingSource);
@@ -425,11 +425,17 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
     }
 
     private void addMappingInfoLink(StringBuilder sb, int i) throws BridgeDBException{
-        String summaryUri = httpServletRequest.getContextPath() + "/getMappingInfo/" + infos[i].getStringId();
+        int id;
+        if (i > 0){
+            id = i;
+        } else {
+            id = 0-i;
+        }
+        String summaryUri = httpServletRequest.getContextPath() + "/getMappingInfo/" + infos[id].getStringId();
         sb.append("<a href=\"");
             sb.append(summaryUri);
             sb.append("\">");
-            sb.append(infos[i].getStringId());
+            sb.append(infos[id].getStringId());
             sb.append("</a>");        
     }
     
@@ -442,17 +448,12 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
     private void addLinkCell(StringBuilder sb, String uri) throws BridgeDBException {
         sb.append("\t\t<td><a href=\"");
         sb.append(uri);
-        sb.append("\"");
+        sb.append("\">");
         if (uri == null){
             sb.append("null"); 
         } else {
-            UriPattern pattern = UriPattern.existingByUri(uri);
-            if (pattern == null){
-                URIImpl impl = new URIImpl(uri); 
-                sb.append(impl.getLocalName());
-            } else {
-                sb.append(UriPattern.existingByUri(uri).getIdFromUri(uri));        
-            }
+            URIImpl impl = new URIImpl(uri); 
+            sb.append(impl.getLocalName());
         }
         sb.append("</a></td>\n");
    }
