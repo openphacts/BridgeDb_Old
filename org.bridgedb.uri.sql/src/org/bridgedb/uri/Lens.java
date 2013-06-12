@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import org.apache.log4j.Logger;
 import org.bridgedb.utils.BridgeDBException;
 
 /**
@@ -42,14 +43,16 @@ public class Lens {
     private final static HashMap<String,Lens> register = new HashMap<String,Lens>();
     private static int nextNumber = 1;
     
-    public static final String ID_PREFIX = "L";
-    public static final String URI_PREFIX = "/Lens/";
+    private static final String ID_PREFIX = "L";
+    private static final String URI_PREFIX = "/Lens/";
     
     public static final String DEFAULT_LENS_NAME = "Default";
     public static final String TEST_LENS_NAME = "Test";
     public static final String ALL_LENS_NAME = "All";
     
-    public Lens(String id, String name, String createdOn, String createdBy, Collection<String> justifications) {
+    static final Logger logger = Logger.getLogger(Lens.class);
+
+   public Lens(String id, String name, String createdOn, String createdBy, Collection<String> justifications) {
         this.id = id;
         this.name = name;
         this.createdBy = createdBy;
@@ -58,8 +61,14 @@ public class Lens {
      }
  
     public static Lens factory(String name, String createdOn, String createdBy, Collection<String> justifications) throws BridgeDBException {
+        init();
+        return create(name, createdOn, createdBy, justifications);
+    }
+    
+    private static Lens create(String name, String createdOn, String createdBy, Collection<String> justifications) throws BridgeDBException {
         Lens result = new Lens("L" + nextNumber, name, createdOn, createdBy, justifications);
         nextNumber++;
+        logger.info("Register " + result);
         register.put(result.id, result);
         return result;
     }
@@ -143,7 +152,11 @@ public class Lens {
 	public String getId() {
 		return id;
 	}
-
+    
+    public String toUri(String contextPath){
+        return contextPath + URI_PREFIX + getId();
+    }
+    
 	/**
 	 * @return the name
 	 */
@@ -181,6 +194,7 @@ public class Lens {
     }
 
     public static void init() throws BridgeDBException {
+        logger.info("init");
         if (register.isEmpty()){
             String createdOn = new Date().toString();
             String createdBy = "https://wiki.openphacts.org/index.php/User:Christian";
@@ -188,7 +202,7 @@ public class Lens {
             justifications.add(getDefaultJustifictaionString());
             justifications.add("http://semanticscience.org/resource/CHEMINF_000059");
             justifications.add("http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Accession_Number");
-            Lens lens = factory(DEFAULT_LENS_NAME, createdOn, createdBy,  justifications);        
+            Lens lens = create(DEFAULT_LENS_NAME, createdOn, createdBy,  justifications);        
             if (!lens.getId().equals(Lens.getDefaultLens())){
                 throw new BridgeDBException("Incorrect Default Lens URI created. Created " + lens.getId() + " but should have been "
                     + Lens.getDefaultLens());
@@ -196,18 +210,20 @@ public class Lens {
         
            justifications.clear();
            justifications.add(getTestJustifictaion());
-           lens = factory(TEST_LENS_NAME, createdOn, createdBy,  justifications);        
+           lens = create(TEST_LENS_NAME, createdOn, createdBy,  justifications);        
             if (!lens.getId().equals(Lens.getTestLens())){
                throw new BridgeDBException("Incorrect Test Lens URI created. Created " + lens.getId() + " but should have been "
                     + Lens.getDefaultLens());
            }
+        } else{
+            logger.info("init skipped");
         }
-        System.out.println(getLens());
+        logger.info(register.values());
     }
 
-    public static List<Lens> getLens() {
+    public static List<Lens> getLens() throws BridgeDBException {
+        init();
         return new ArrayList<Lens> (register.values());
     }
-
 
 }
