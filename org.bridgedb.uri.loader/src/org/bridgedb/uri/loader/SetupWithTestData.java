@@ -36,6 +36,7 @@ public class SetupWithTestData {
         Reporter.println("       Loaded as mappingSet " + mappingSetId);
      }
     /**
+     * ONLY recommended if using BridgeDB without the OpenPhacts IMS extension.
      * Test of parse method, of class LinksetListener.
      */
    public static void main(String[] args) throws BridgeDBException {
