@@ -37,7 +37,7 @@ public class TransativeFinder extends SQLBase{
     private SQLUriMapper mapper;
     protected final StoreType storeType;
   
-    private final static String LAST_TRANSATIVEL_LOADED_KEY = "LastMappingLoadedTransatively";
+    private final static String LAST_TRANSATIVE_LOADED_KEY = "LastMappingLoadedTransatively";
     
     public TransativeFinder(StoreType storeType) throws BridgeDBException{
         super(storeType);
@@ -47,7 +47,8 @@ public class TransativeFinder extends SQLBase{
     
     public void UpdateTransative() throws BridgeDBException, RDFHandlerException, IOException{
         System.out.println("start update");
-        String lastIdString = mapper.getProperty(LAST_TRANSATIVEL_LOADED_KEY);
+        String lastIdString = mapper.getProperty(LAST_TRANSATIVE_LOADED_KEY);
+        System.out.println(lastIdString);
         int lastId;
         if (lastIdString == null){
             lastId = 0;
@@ -58,6 +59,7 @@ public class TransativeFinder extends SQLBase{
     }
     
     private void computeTransatives(int lastTranstativeLoaded) throws BridgeDBException, RDFHandlerException, IOException{
+        System.out.println(lastTranstativeLoaded);
         int maxMappingSet = getMaxMappingSet();
         if (maxMappingSet <= lastTranstativeLoaded){
             return;
@@ -69,7 +71,7 @@ public class TransativeFinder extends SQLBase{
             //}
         }
         int newMaxMappingSet = getMaxMappingSet();
-        mapper.putProperty(LAST_TRANSATIVEL_LOADED_KEY, "" + maxMappingSet);
+        mapper.putProperty(LAST_TRANSATIVE_LOADED_KEY, "" + maxMappingSet);
         if (maxMappingSet != newMaxMappingSet){
             computeTransatives(maxMappingSet);
         }

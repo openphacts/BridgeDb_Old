@@ -21,19 +21,13 @@ package org.bridgedb.ws.uri;
 
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
-import org.bridgedb.statistics.DataSetInfo;
-import org.bridgedb.statistics.MappingSetInfo;
-import org.bridgedb.uri.Lens;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WsUriConstants;
 
@@ -41,7 +35,7 @@ import org.bridgedb.ws.WsUriConstants;
  *
  * @author Christian
  */
-public class WSUriServer extends WSApiShower{
+public class WSUriServer extends WSOtherservices{
     
     static final Logger logger = Logger.getLogger(WSUriInterfaceService.class);
 
@@ -50,29 +44,6 @@ public class WSUriServer extends WSApiShower{
         logger.info("WsUriServer setup");        
     }
     
-    private final void uriMappingForm(StringBuilder sb, HttpServletRequest httpServletRequest) throws BridgeDBException {
-    	sb.append("<form method=\"get\" action=\"");
-        sb.append(httpServletRequest.getContextPath());
-    	sb.append("/");
-    	sb.append(WsUriConstants.MAP_URI);
-    	sb.append("\">");
-    	sb.append("<fieldset>");
-    	sb.append("<legend>Mapper</legend>");
-    	sb.append("<p><label for=\"");
-    	sb.append(WsUriConstants.URI);
-    	sb.append("\">Input URI</label>");
-    	sb.append("<input type=\"text\" id=\"");
-    	sb.append(WsUriConstants.URI);
-    	sb.append("\" name=\"");
-    	sb.append(WsUriConstants.URI);
-    	sb.append("\" style=\"width:80%\"/></p>");
-    	generateLensSelector(sb, httpServletRequest);
-    	sb.append("<p><input type=\"submit\" value=\"Submit\"/></p>");
-    	sb.append("<p>Note: If the new page does not open click on the address bar and press enter</p>");
-    	sb.append("</fieldset></form>\n");
-    }
-
-           
     /**
      * Welcome page for the Serivce.
      * 
@@ -101,7 +72,7 @@ public class WSUriServer extends WSApiShower{
      * @return
      * @throws BridgeDBException
      * @throws UnsupportedEncodingException 
-     */
+     * /
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/" + WsUriConstants.BRIDGEDB_HOME)
@@ -152,7 +123,7 @@ public class WSUriServer extends WSApiShower{
      * @return
      * @throws BridgeDBException
      * @throws UnsupportedEncodingException 
-     */
+     * /
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/api")
@@ -254,8 +225,7 @@ public class WSUriServer extends WSApiShower{
         }
         sb.append("}"); 
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
-    }
-
+    }*/
 }
 
 

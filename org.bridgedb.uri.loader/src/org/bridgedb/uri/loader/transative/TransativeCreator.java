@@ -51,11 +51,10 @@ public class TransativeCreator {
     private final boolean reflexive;
     
     private static URI GENERATE_PREDICATE = null;
-    public static final String VERSION = "1.2";
 
     static final Logger logger = Logger.getLogger(TransativeCreator.class);
     
-   public static File doTransativeIfPossible(MappingSetInfo left, MappingSetInfo right, StoreType storeType) throws BridgeDBException, IOException {
+    public static File doTransativeIfPossible(MappingSetInfo left, MappingSetInfo right, StoreType storeType) throws BridgeDBException, IOException {
         TransativeCreator creator = new TransativeCreator(left, right, storeType);
         return creator.generateOutputFileIfPossible();
     }
@@ -109,7 +108,7 @@ public class TransativeCreator {
     }
 
     protected String getid(){
-        return "Version " + VERSION + "Transitive" + leftInfo.getStringId() + "and" + rightInfo.getStringId() + ".ttl";
+        return "Transitive" + leftInfo.getStringId() + "and" + rightInfo.getStringId() + ".ttl";
     }
     
     private boolean getSQL(RDFWriter rdfwriter) throws BridgeDBException, IOException, RDFHandlerException {
@@ -124,7 +123,6 @@ public class TransativeCreator {
         query.append("AND mapping2.mappingSetId = ");
             query.append(rightInfo.getIntId());
             query.append(" ");
-        System.out.println(query);
         Connection connection = sqlAccess.getConnection();
         java.sql.Statement statement;
         try {

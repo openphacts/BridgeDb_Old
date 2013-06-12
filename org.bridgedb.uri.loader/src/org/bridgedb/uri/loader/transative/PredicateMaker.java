@@ -34,6 +34,11 @@ public class PredicateMaker {
         if (left.equals(right)){
             return left;
         }
+        left = cleanup(left);
+        right = cleanup(right);
+        if (left.equals(right)){
+            return left;
+        }
         if (left.equals(OwlConstants.SAME_AS)) {
             if (right.equals(OwlConstants.EQUIVALENT_CLASS)) return OwlConstants.EQUIVALENT_CLASS;
             if (right.equals(SkosConstants.EXACT_MATCH)) return SkosConstants.EXACT_MATCH;
@@ -105,4 +110,16 @@ public class PredicateMaker {
         throw new BridgeDBException("unable to combine " + left + " with " + right);
     }
     
+    private static String cleanup(String predicate){
+        if (predicate.equals(SkosConstants.BROADER)){
+            return SkosConstants.BROAD_MATCH;
+        }
+        if (predicate.equals(SkosConstants.NARROWER)){
+            return SkosConstants.NARROW_MATCH;
+        }
+        if (predicate.equals(SkosConstants.RELATED)){
+            return SkosConstants.RELATED_MATCH;
+        }
+        return predicate;
+     }
 }

@@ -102,6 +102,11 @@ public class PredicateMakerTest {
 	}
 	
 	@Test
+	public void testCombine_related_exactMatch() throws BridgeDBException {
+		assertEquals(OboConstants.HAS_PART, PredicateMaker.combine(OboConstants.HAS_PART, SkosConstants.EXACT_MATCH));
+	}
+
+    @Test
 	public void testCombine_closeMatch_oboHasParts() throws BridgeDBException {
 		assertEquals(OboConstants.HAS_PART, PredicateMaker.combine(SkosConstants.CLOSE_MATCH, OboConstants.HAS_PART));
 	}

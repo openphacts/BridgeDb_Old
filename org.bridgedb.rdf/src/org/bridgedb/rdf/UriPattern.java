@@ -229,10 +229,10 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
     * Also null may be returned because two or more known UriPatterns have are known to start in the same way
     * 
     */ 
-    public final static UriPattern existingByUri(String uri){
-        String nameSpace = getNameSpace(uri);
-        return byPrefixOrNameSpaceOnly.get(nameSpace);
-    }
+    //public final static UriPattern existingByUri(String uri){
+    //    String nameSpace = getNameSpace(uri);
+    //    return byPrefixOrNameSpaceOnly.get(nameSpace);
+    //}
 
 
     private static UriPattern byPrefixAndPostFix(String nameSpace, String postfix) throws BridgeDBException{
