@@ -663,18 +663,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         if (uri == null || uri.isEmpty()){
             return null;
         }
-        //First try splitting the uri follwoing normal rules
-        //This avoids the more expensive like
-        UriPattern pattern = UriPattern.existingByUri(uri);
-        if (pattern != null){
-            String id = pattern.getIdFromUri(uri);
-            DataSource dataSource = pattern.getDataSource();
-            return new Xref(id, dataSource);
-        }
-        return toXrefUsingLike(uri);
-    }
-   
-    private Xref toXrefUsingLike(String uri) throws BridgeDBException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT ");
         query.append(DATASOURCE_COLUMN_NAME);
@@ -733,16 +721,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         if (uri == null || uri.isEmpty()){
             return null;
         }
-        //First try splitting the uri follwoing normal rules
-        //This avoids the more expensive like
-        UriPattern pattern = UriPattern.existingByUri(uri);
-        if (pattern != null){
-            return pattern;
-        }
-        return toUriPatternUsingLike(uri);
-    }
-    
-    private UriPattern toUriPatternUsingLike(String uri) throws BridgeDBException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT ");
         query.append(PREFIX_COLUMN_NAME);
