@@ -265,9 +265,7 @@ public class WSFrame extends WSUriInterfaceService {
     	sb.append("\">");
 		for (Lens lens : lenses) {
 			sb.append("<option value=\"");
-            sb.append(httpServletRequest.getContextPath());
-            sb.append(Lens.URI_PREFIX);
- 			sb.append(lens.getId());
+ 			sb.append(lens.toUri(httpServletRequest.getContextPath()));
 			sb.append("\">");
 			sb.append(lens.getName());
 			sb.append("</option>");

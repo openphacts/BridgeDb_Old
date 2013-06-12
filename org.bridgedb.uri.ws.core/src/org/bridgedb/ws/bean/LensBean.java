@@ -41,19 +41,19 @@ public class LensBean {
     public LensBean(){
     }
 
-    public static Lens asLensInfo(LensBean bean){
+    public static Lens asLens(LensBean bean){
         String id = bean.getUri().substring(bean.getUri().indexOf("/"));
         return new Lens(id, bean.getName(), bean.getCreatedOn(), 
         		bean.getCreatedBy(), bean.getJustification());
     }
 
-    public static LensBean asBean(Lens info, String ContextPath) {
+    public static LensBean asBean(Lens lens, String contextPath) {
         LensBean bean = new LensBean();
-    	bean.uri = ContextPath + Lens.URI_PREFIX + info.getId();
-        bean.name = info.getName();
-        bean.createdBy = info.getCreatedBy();
-        bean.createdOn = info.getCreatedOn();
-        bean.justification = new HashSet<String>(info.getJustification());
+    	bean.uri = lens.toUri(contextPath);
+        bean.name = lens.getName();
+        bean.createdBy = lens.getCreatedBy();
+        bean.createdOn = lens.getCreatedOn();
+        bean.justification = new HashSet<String>(lens.getJustification());
         return bean;
     }
     
