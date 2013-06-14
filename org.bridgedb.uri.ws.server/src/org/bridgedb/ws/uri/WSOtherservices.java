@@ -284,9 +284,9 @@ public class WSOtherservices extends WSFrame {
                 sb.append("<ul>");
                 sb.append("<li><a href=\"");
                     sb.append(RdfConfig.getTheBaseURI());
-                    sb.append(WsUriConstants.LENS);
+                    sb.append(Lens.METHOD_NAME);
                     sb.append("\">");
-                    sb.append(WsUriConstants.LENS);
+                    sb.append(Lens.METHOD_NAME);
                     sb.append("</a></li>");    
                 sb.append("</ul>");
             sb.append("<li>While the current API includes this parameter there is not yet any lens based data.</li>");
@@ -1444,7 +1444,7 @@ public class WSOtherservices extends WSFrame {
     
     @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path("/" + WsUriConstants.LENS) 
+    @Path("/" + Lens.METHOD_NAME) 
 	public Response getLensesHtml(@QueryParam(WsUriConstants.LENS_URI)  String lensUri,
             @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
         List<Lens> lenses = getTheLens(lensUri);
@@ -1454,20 +1454,21 @@ public class WSOtherservices extends WSFrame {
         sb.append("<tr>");
         sb.append("<th>Name</th>");
         sb.append("<th>URI</th>");
+        sb.append("<th>Description</th></tr>");
 		for (Lens lens:lenses) {
             sb.append("<tr><td>");
             sb.append(lens.getName());
             sb.append("</td><td><a href=\"");
-            sb.append(lens.getId());//TODO fix this
+            sb.append(lens.toUri(httpServletRequest.getContextPath()));
             sb.append("\">");
-            sb.append(lens.getId());
-            sb.append("</a></td>");        
+            sb.append(lens.toUri(httpServletRequest.getContextPath()));
+            sb.append("</a></td><td>").append(lens.getDescription()).append("</td></tr>");        
 		}
-        sb.append("</tr></table>");
+        sb.append("</table>");
         sb.append("<p><a href=\"");
         sb.append(httpServletRequest.getContextPath());
         sb.append("/");
-        sb.append(WsUriConstants.LENS);
+        sb.append(Lens.METHOD_NAME);
         sb.append(WsUriConstants.XML);
         sb.append("\">");
         sb.append("XML Format");

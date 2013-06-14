@@ -19,14 +19,16 @@
 //
 package org.bridgedb.mysql;
 
+import java.util.Set;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.sql.TestSqlFactory;
+import org.bridgedb.uri.Lens;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.StoreType;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
 
 /**
  *
@@ -45,7 +47,17 @@ public class LensTest extends org.bridgedb.uri.UriListenerTest {
         sqlUriMapper = SQLUriMapper.factory(true, StoreType.TEST);
         listener = sqlUriMapper;
         loadData();
-        uriMapper = sqlUriMapper;;
+        uriMapper = sqlUriMapper;
     }
-            
+        
+    @Test
+    public void testDefaultAndLens() throws Exception {
+        report("MapID_sourceXref_lensId_tgtDataSources_second_null");
+        Lens defaultLens = Lens.byId(Lens.getDefaultLens());
+        assertThat (defaultLens.getJustifications().size(), greaterThanOrEqualTo(1));
+        Lens allLens = Lens.byId(Lens.getAllLens());
+        assertThat (allLens.getJustifications().size(), greaterThanOrEqualTo(defaultLens.getJustifications().size()));
+        Set<String> justifications = sqlUriMapper.getJustifications();
+        assertThat (allLens.getJustifications().size(), greaterThanOrEqualTo(justifications.size()));       
+    }
 }

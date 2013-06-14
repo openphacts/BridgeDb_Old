@@ -38,7 +38,7 @@ public abstract class UriMapperOtherTest extends UriListenerTest{
         assertNotNull(result.getCreatedBy());
         assertNotNull(result.getCreatedOn());
         assertNotNull(result.getName());
-        assertThat(result.getJustification().size(), greaterThanOrEqualTo(1));
+        assertThat(result.getJustifications().size(), greaterThanOrEqualTo(1));
      }
 
     /**
@@ -49,9 +49,10 @@ public abstract class UriMapperOtherTest extends UriListenerTest{
         report("GetAllLens");
         Lens result = Lens.byId(Lens.getAllLens());
         assertEquals(Lens.getAllLens(), result.getId());
-        assertNotNull(result.getCreatedBy());
-        assertNotNull(result.getCreatedOn());
+        //assertNotNull(result.getCreatedBy());
+        System.out.println(result);
+        assertNotNull(result.getDescription());
         assertNotNull(result.getName());
-        assertThat(result.getJustification().size(), greaterThanOrEqualTo(1));
+        assertThat(result.getJustifications().size(), greaterThanOrEqualTo(1));
      }
 }

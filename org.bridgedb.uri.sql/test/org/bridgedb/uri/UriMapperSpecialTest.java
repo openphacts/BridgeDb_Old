@@ -40,7 +40,6 @@ import org.junit.Test;
  * 
  * @author Christian
  */
-@Ignore
 public abstract class UriMapperSpecialTest extends UriListenerTest{
            
     @Test 
@@ -265,31 +264,4 @@ public abstract class UriMapperSpecialTest extends UriListenerTest{
         //ystem.out.println(end.getTime()-start.getTime());
      }
     
-    @Test 
-    public void testToUriPattern() throws BridgeDBException{
-        org.junit.Assume.assumeTrue(listener != null);
-        report("ToUriPattern");
-        UriPattern result = listener.toUriPattern(map1Uri1);
-        assertEquals(uriPattern1, result);
-    }
-
-    @Test 
-    public void testToUriPatternUsingLike() throws BridgeDBException{
-        org.junit.Assume.assumeTrue(listener != null);
-        report("ToUriPatternUsingLike");
-        UriPattern result = listener.toUriPattern("http://bio2rdf.org/chebi:1234");
-        UriPattern target = UriPattern.byPrefixOrNameSpace("http://bio2rdf.org/chebi:");
-        assertEquals(target, result);
-    }
-
-    @Test 
-    public void testToUriPatternUsingLike2() throws BridgeDBException{
-        org.junit.Assume.assumeTrue(listener != null);
-        report("ToUriPatternUsingLike2");
-        DataSource test2 = DataSource.register("testToUriPatternUsingLike2", "testToUriPatternUsingLike2").asDataSource();
-        UriPattern target = UriPattern.byPrefixAndPostfix("http://bio2rdf.org/junk:", ".html");
-        listener.registerUriPattern(test2, "http://bio2rdf.org/junk:$id.html");
-        UriPattern result = listener.toUriPattern("http://bio2rdf.org/junk:1234.html");
-        assertEquals(target, result);
-    }
 }

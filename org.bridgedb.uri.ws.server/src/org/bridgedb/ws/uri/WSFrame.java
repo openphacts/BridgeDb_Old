@@ -193,7 +193,7 @@ public class WSFrame extends WSUriInterfaceService {
             logger.error("Error getting getAllLens", ex);
         }
         addSideBarItem(sb, WsUriConstants.GRAPHVIZ, "Default Mappings Graphviz",  httpServletRequest);
-        addSideBarItem(sb, WsUriConstants.LENS, WsUriConstants.LENS,  httpServletRequest);
+        addSideBarItem(sb, Lens.METHOD_NAME, Lens.METHOD_NAME,  httpServletRequest);
         addSideBarItem(sb, WsUriConstants.BRIDGEDB_API, "Api", httpServletRequest);
     }
 
@@ -221,7 +221,7 @@ public class WSFrame extends WSUriInterfaceService {
             addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfPredicates()) + " Predicates", httpServletRequest);
             addSideBarItem(sb, "getSupportedTgtDataSources", formatter.format(statistics.getNumberOfTargetDataSources()) 
                     + " Target Data Sources ", httpServletRequest);
-            addSideBarItem(sb, WsUriConstants.LENS, formatter.format(statistics.getNumberOfLenses())
+            addSideBarItem(sb, Lens.METHOD_NAME, formatter.format(statistics.getNumberOfLenses())
                     + " Lenses ", httpServletRequest);
         } catch (BridgeDBException ex) {
             sb.append("\nStatisitics currenlty unavailable.");

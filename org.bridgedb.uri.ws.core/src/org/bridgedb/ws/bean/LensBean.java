@@ -31,11 +31,12 @@ import org.bridgedb.uri.Lens;
 @XmlRootElement(name="Lens")
 public class LensBean {
 
-	String uri;
-    String name;
-    String createdBy;
-    String createdOn;
-    Set<String> justification;
+	private String uri;
+    private String name;
+    private String createdBy;
+    private String createdOn;
+    private String description;
+    private Set<String> justification;
     
     //Webservice constructor
     public LensBean(){
@@ -43,8 +44,8 @@ public class LensBean {
 
     public static Lens asLens(LensBean bean){
         String id = bean.getUri().substring(bean.getUri().indexOf("/"));
-        return new Lens(id, bean.getName(), bean.getCreatedOn(), 
-        		bean.getCreatedBy(), bean.getJustification());
+        return new Lens(id, bean.getName(), bean.getCreatedOn(), bean.getCreatedBy(), 
+                bean.getDescription(), bean.getJustification());
     }
 
     public static LensBean asBean(Lens lens, String contextPath) {
@@ -53,7 +54,8 @@ public class LensBean {
         bean.name = lens.getName();
         bean.createdBy = lens.getCreatedBy();
         bean.createdOn = lens.getCreatedOn();
-        bean.justification = new HashSet<String>(lens.getJustification());
+        bean.description = lens.getDescription();
+        bean.justification = new HashSet<String>(lens.getJustifications());
         return bean;
     }
     
@@ -134,5 +136,19 @@ public class LensBean {
 	public void setJustification(Set<String> justification) {
 		this.justification = justification;
 	}
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
     
 }

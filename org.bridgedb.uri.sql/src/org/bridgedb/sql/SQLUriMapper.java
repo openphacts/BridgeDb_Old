@@ -86,12 +86,14 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         SQLUriMapper result;
         if (dropTables){
             result =  new SQLUriMapper(dropTables, storeType);
+            Lens.init(result);
             getRegister().put(storeType, result);
             return result;
         };
         result = getRegister().get(storeType);
         if (result == null){
             result =  new SQLUriMapper(dropTables, storeType);
+            Lens.init(result);
             getRegister().put(storeType, result);
             return result;
         }
@@ -123,7 +125,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             this.registerUriPattern(pattern);
         }
         checkDataSources();
-        Lens.init();
         subjectUriPatterns = new HashMap<Integer,UriPattern>();
         targetUriPatterns = new HashMap<Integer,UriPattern>();
     }   
@@ -1506,6 +1507,22 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
            original = original.substring(0, original.length()-1);
        }
        return result;
+   }
+
+    public Set<String> getJustifications() throws BridgeDBException {
+        HashSet<String> justifications = new HashSet<String>();
+        String lensQuery = "SELECT DISTINCT " + JUSTIFICATION_COLUMN_NAME
+            + " FROM " + MAPPING_SET_TABLE_NAME;
+        try {
+            Statement statement = this.createStatement();    		
+            ResultSet rs = statement.executeQuery(lensQuery);
+          	while (rs.next()) {
+                justifications.add(rs.getString(JUSTIFICATION_COLUMN_NAME));
+            }
+        } catch (SQLException ex) {
+            throw new BridgeDBException("Error retrieving justifications ", ex);
+        }
+        return justifications;
    }
    
 }

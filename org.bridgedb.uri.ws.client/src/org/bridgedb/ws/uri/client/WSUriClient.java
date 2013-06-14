@@ -216,14 +216,14 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
 
 	public List<LensBean> getLenses() {
 		List<LensBean> result = 
-				webResource.path(WsUriConstants.LENS)
+				webResource.path(Lens.METHOD_NAME)
 				.accept(MediaType.APPLICATION_XML_TYPE)
 				.get(new GenericType<List<LensBean>>() {});
 		return result;
 	}
 
 	public LensBean getLens(String id) throws BridgeDBException {
-  		LensBean result = webResource.path(WsUriConstants.LENS + "/" + id)
+  		LensBean result = webResource.path(Lens.METHOD_NAME + "/" + id)
 		.accept(MediaType.APPLICATION_XML_TYPE)
 		.get(new GenericType<LensBean>() {});
 		return result;
