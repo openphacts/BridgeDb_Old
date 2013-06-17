@@ -58,7 +58,7 @@ public class SQLListener extends SQLBase implements MappingListener{
     private static final int LINK_SET_ID_LENGTH = 100;
     private static final int KEY_LENGTH= 100; 
     private static final int PROPERTY_LENGTH = 100;
-    private static final int MAX_BLOCK_SIZE = 1000;
+    private static final int MAX_BLOCK_SIZE = 100;
     private static final int MAPPING_SOURCE_LENGTH = 200;
     
     //static final String DATASOURCE_TABLE_NAME = "DataSource";
@@ -105,8 +105,6 @@ public class SQLListener extends SQLBase implements MappingListener{
     private int doubleCount = 0;  
     private StringBuilder insertQuery;
     protected final String autoIncrement;
-    private final static long REPORT_DELAY = 10000;
-    private long lastUpdate = 0;
     
     static final Logger logger = Logger.getLogger(SQLListener.class);
 
@@ -209,7 +207,6 @@ public class SQLListener extends SQLBase implements MappingListener{
         } catch (SQLException ex) {
             throw new BridgeDBException ("Error getting new indetity with " + query, ex);
         }
-        lastUpdate = new Date().getTime();
         logger.info("Registered new Mappingset " + autoinc + " from " + getDataSourceKey(source) + " to " + getDataSourceKey(target));
         return autoinc;
     }
@@ -357,12 +354,7 @@ public class SQLListener extends SQLBase implements MappingListener{
                 //Reporter.report("insertTook " + (new Date().getTime() - start));
                 insertCount += changed;
                 doubleCount += blockCount - changed;
-                long now = new Date().getTime();
-                if (now - lastUpdate > REPORT_DELAY){
-                    logger.debug("Inserted " + insertCount + " links and ignored " + doubleCount + " so far");
-                    lastUpdate = now;
-                }
-            } catch (SQLException ex) {
+           } catch (SQLException ex) {
                 System.err.println(ex);
                 throw new BridgeDBException ("Error inserting link ", ex, insertQuery.toString());
             }
