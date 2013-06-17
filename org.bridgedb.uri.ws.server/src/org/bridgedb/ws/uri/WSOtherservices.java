@@ -43,6 +43,7 @@ import org.bridgedb.uri.Mapping;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WsConstants;
 import org.bridgedb.ws.WsUriConstants;
+import org.bridgedb.ws.bean.MappingBean;
 
 /**
  * This class provides the Reposnse Frame including Top and Sidebar 
@@ -1506,37 +1507,6 @@ public class WSOtherservices extends WSFrame {
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
     }
 
-    @Produces({MediaType.TEXT_PLAIN})
-    @Path("/" + WsUriConstants.MAPPING + WsUriConstants.RDF)
-    public String getMappingRDF() throws BridgeDBException {
-        throw new BridgeDBException(WsUriConstants.ID + " parameter missing.");     
-    }
-    
-    @Produces({MediaType.TEXT_HTML})
-    @Path("/" + WsUriConstants.MAPPING + WsUriConstants.RDF)
-    public Response getMappingRDFHtml() throws BridgeDBException {
-        throw new BridgeDBException(WsUriConstants.ID + " parameter missing.");     
-    }
-    
-    @Produces({MediaType.TEXT_PLAIN})
-    @Path("/" + WsUriConstants.MAPPING + WsUriConstants.RDF + "/{id}")
-    public String getMappingRDF(@PathParam(WsUriConstants.ID) String idString) throws BridgeDBException {
-        if (idString == null) throw new BridgeDBException(WsUriConstants.ID + " parameter missing.");
-        if (idString.isEmpty()) throw new BridgeDBException(WsUriConstants.ID + " parameter may not be null.");
-        int id = Integer.parseInt(idString);
-        Mapping mapping = uriMapper.getMapping(id);
-        return mapping.toString();
-    }
-    
-    @Produces({MediaType.TEXT_HTML})
-    @Path("/" + WsUriConstants.MAPPING + WsUriConstants.RDF + "/{id}")
-    public Response getMappingRDF(@PathParam(WsUriConstants.ID) String idString,
-            @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
-        StringBuilder sb = topAndSide("Mapping",  httpServletRequest);
-        sb.append(getMappingRDF(idString));
-        footerAndEnd(sb);
-        return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
-   }
 }
 
 
