@@ -27,6 +27,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -1448,7 +1449,7 @@ public class WSOtherservices extends WSFrame {
 	public Response getLensesHtml(@QueryParam(WsUriConstants.LENS_URI)  String lensUri,
             @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
         List<Lens> lenses = getTheLens(lensUri);
-         StringBuilder sb = topAndSide("Lens Summary",  httpServletRequest);
+        StringBuilder sb = topAndSide("Lens Summary",  httpServletRequest);
         sb.append("lensUri=").append(lensUri).append("<br>");
         sb.append("<table border=\"1\">");
         sb.append("<tr>");
@@ -1505,6 +1506,37 @@ public class WSOtherservices extends WSFrame {
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
     }
 
+    @Produces({MediaType.TEXT_PLAIN})
+    @Path("/" + WsUriConstants.MAPPING + WsUriConstants.RDF)
+    public String getMappingRDF() throws BridgeDBException {
+        throw new BridgeDBException(WsUriConstants.ID + " parameter missing.");     
+    }
+    
+    @Produces({MediaType.TEXT_HTML})
+    @Path("/" + WsUriConstants.MAPPING + WsUriConstants.RDF)
+    public Response getMappingRDFHtml() throws BridgeDBException {
+        throw new BridgeDBException(WsUriConstants.ID + " parameter missing.");     
+    }
+    
+    @Produces({MediaType.TEXT_PLAIN})
+    @Path("/" + WsUriConstants.MAPPING + WsUriConstants.RDF + "/{id}")
+    public String getMappingRDF(@PathParam(WsUriConstants.ID) String idString) throws BridgeDBException {
+        if (idString == null) throw new BridgeDBException(WsUriConstants.ID + " parameter missing.");
+        if (idString.isEmpty()) throw new BridgeDBException(WsUriConstants.ID + " parameter may not be null.");
+        int id = Integer.parseInt(idString);
+        Mapping mapping = uriMapper.getMapping(id);
+        return mapping.toString();
+    }
+    
+    @Produces({MediaType.TEXT_HTML})
+    @Path("/" + WsUriConstants.MAPPING + WsUriConstants.RDF + "/{id}")
+    public Response getMappingRDF(@PathParam(WsUriConstants.ID) String idString,
+            @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
+        StringBuilder sb = topAndSide("Mapping",  httpServletRequest);
+        sb.append(getMappingRDF(idString));
+        footerAndEnd(sb);
+        return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
+   }
 }
 
 

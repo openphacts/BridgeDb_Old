@@ -31,6 +31,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
@@ -341,7 +342,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsUriConstants.MAPPING)
     public Mapping getMapping() throws BridgeDBException {
-       throw new BridgeDBException("Path parameter missing.");
+       throw new BridgeDBException(WsUriConstants.ID + " parameter missing.");
     }
 
     @Override
@@ -349,8 +350,8 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsUriConstants.MAPPING + "/{id}")
     public MappingBean getMapping(@PathParam(WsUriConstants.ID) String idString) throws BridgeDBException {
-        if (idString == null) throw new BridgeDBException("Path parameter missing.");
-        if (idString.isEmpty()) throw new BridgeDBException("Path parameter may not be null.");
+        if (idString == null) throw new BridgeDBException(WsUriConstants.ID + " parameter missing.");
+        if (idString.isEmpty()) throw new BridgeDBException(WsUriConstants.ID + " parameter may not be null.");
         int id = Integer.parseInt(idString);
         Mapping mapping = uriMapper.getMapping(id);
         return MappingBean.asBean(mapping);
