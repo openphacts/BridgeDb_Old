@@ -378,7 +378,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/" + WsUriConstants.GET_MAPPING_INFO + WsUriConstants.XML) 
+    @Path("/" + WsUriConstants.MAPPING_SET + WsUriConstants.XML) 
     public List<MappingSetInfoBean> getMappingSetInfosXML(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
             @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
@@ -388,7 +388,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     @Override
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/" + WsUriConstants.GET_MAPPING_INFO) 
+    @Path("/" + WsUriConstants.MAPPING_SET) 
     public List<MappingSetInfoBean> getMappingSetInfos(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
             @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
@@ -442,7 +442,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     @Override
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/" + WsUriConstants.GET_MAPPING_INFO + "/{id}")
+    @Path("/" + WsUriConstants.MAPPING_SET + "/{id}")
     public MappingSetInfoBean getMappingSetInfo(@PathParam("id") String idString) throws BridgeDBException {
         if (idString == null) throw new BridgeDBException("Path parameter missing.");
         if (idString.isEmpty()) throw new BridgeDBException("Path parameter may not be null.");

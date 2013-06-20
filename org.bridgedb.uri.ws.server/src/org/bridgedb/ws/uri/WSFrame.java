@@ -180,12 +180,12 @@ public class WSFrame extends WSUriInterfaceService {
         sb.append("<div class=\"menugroup\">BridgeDb Service</div>");
         addSideBarItem(sb, WsUriConstants.BRIDGEDB_HOME, "Home", httpServletRequest);
         try {
-            String allMappingInfo = WsUriConstants.GET_MAPPING_INFO + "?" + WsUriConstants.LENS_URI + "=" + Lens.getAllLens();
+            String allMappingInfo = WsUriConstants.MAPPING_SET + "?" + WsUriConstants.LENS_URI + "=" + Lens.getAllLens();
             addSideBarItem(sb, allMappingInfo,"All Mappings Summary", httpServletRequest);
         } catch (BridgeDBException ex) {
             logger.error("Error getting getAllLens", ex);
         }
-        addSideBarItem(sb,  WsUriConstants.GET_MAPPING_INFO, "Default Mappings Summary", httpServletRequest);
+        addSideBarItem(sb,  WsUriConstants.MAPPING_SET, "Default Mappings Summary", httpServletRequest);
         try {
             String allGraphwiz = WsUriConstants.GRAPHVIZ + "?" + WsUriConstants.LENS_URI + "=" + Lens.getAllLens();
             addSideBarItem(sb, allGraphwiz, "All Mappings Graphviz",  httpServletRequest);

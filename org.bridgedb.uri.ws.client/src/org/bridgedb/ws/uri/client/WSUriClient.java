@@ -170,7 +170,7 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
     @Override
     public MappingSetInfoBean getMappingSetInfo(String mappingSetId) throws BridgeDBException {
         MappingSetInfoBean result = 
-                webResource.path(WsUriConstants.GET_MAPPING_INFO + "/" + mappingSetId)
+                webResource.path(WsUriConstants.MAPPING_SET + "/" + mappingSetId)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<MappingSetInfoBean>() {});
          return result;
@@ -184,7 +184,7 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
         params.add(WsUriConstants.LENS_URI, encode(lensUri));
         //Make service call
         List<MappingSetInfoBean> result = 
-                webResource.path(WsUriConstants.GET_MAPPING_INFO)
+                webResource.path(WsUriConstants.MAPPING_SET)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<List<MappingSetInfoBean>>() {});

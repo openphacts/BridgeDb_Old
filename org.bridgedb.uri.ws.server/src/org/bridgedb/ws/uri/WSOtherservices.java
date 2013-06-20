@@ -1132,9 +1132,9 @@ public class WSOtherservices extends WSFrame {
        
     protected final void introduce_Info(StringBuilder sb) {
         sb.append("<dt><a href=\"#");
-                sb.append(WsUriConstants.GET_MAPPING_INFO);
+                sb.append(WsUriConstants.MAPPING_SET);
                 sb.append("\">");
-                sb.append(WsUriConstants.GET_MAPPING_INFO);
+                sb.append(WsUriConstants.MAPPING_SET);
                 sb.append("</a></dt>");
         sb.append("<dd>Brings up a table of all the mappings in the system by URISpace</dd>");
         sb.append("<dt><a href=\"#");
@@ -1149,9 +1149,9 @@ public class WSOtherservices extends WSFrame {
             throws BridgeDBException, UnsupportedEncodingException {
         sb.append("<h2>Support methods");
         sb.append("<h3><a name=\"");
-                sb.append(WsUriConstants.GET_MAPPING_INFO);
+                sb.append(WsUriConstants.MAPPING_SET);
                 sb.append("\">");
-                sb.append(WsUriConstants.GET_MAPPING_INFO);
+                sb.append(WsUriConstants.MAPPING_SET);
                 sb.append("</h3>");
                 sb.append("<ul>");
             sb.append("<li>Brings up a table/List of mappings in the system by URISpaces</li>");
@@ -1170,27 +1170,27 @@ public class WSOtherservices extends WSFrame {
                 sb.append("</ul>");           
             sb.append("<li>Example: <a href=\"");
                     sb.append(RdfConfig.getTheBaseURI());
-                    sb.append(WsUriConstants.GET_MAPPING_INFO);
+                    sb.append(WsUriConstants.MAPPING_SET);
                     sb.append("\">");
-                    sb.append(WsUriConstants.GET_MAPPING_INFO);
+                    sb.append(WsUriConstants.MAPPING_SET);
                     sb.append("</a></li>");    
             sb.append("<li>XML Example: <a href=\"");
                     sb.append(RdfConfig.getTheBaseURI());
-                    sb.append(WsUriConstants.GET_MAPPING_INFO);
+                    sb.append(WsUriConstants.MAPPING_SET);
                     sb.append(WsUriConstants.XML);
                     sb.append("\">");
-                    sb.append(WsUriConstants.GET_MAPPING_INFO);
+                    sb.append(WsUriConstants.MAPPING_SET);
                     sb.append(WsUriConstants.XML);
                     sb.append("</a></li>");    
             sb.append("<li>Example: <a href=\"");
                     sb.append(RdfConfig.getTheBaseURI());
-                    sb.append(WsUriConstants.GET_MAPPING_INFO);
+                    sb.append(WsUriConstants.MAPPING_SET);
                     sb.append(FIRST_SOURCE_PARAMETER);
                     sb.append(sourceSysCode);
                     sb.append(TARGET_PARAMETER);
                     sb.append(targetSysCode);
                     sb.append("\">");
-                    sb.append(WsUriConstants.GET_MAPPING_INFO);
+                    sb.append(WsUriConstants.MAPPING_SET);
                     sb.append(FIRST_SOURCE_PARAMETER);
                     sb.append(URLEncoder.encode(sourceSysCode, "UTF-8"));
                     sb.append(TARGET_PARAMETER);
@@ -1411,7 +1411,7 @@ public class WSOtherservices extends WSFrame {
     
     @GET
     @Produces(MediaType.TEXT_HTML)
-    @Path("/" + WsUriConstants.GET_MAPPING_INFO)
+    @Path("/" + WsUriConstants.MAPPING_SET)
     public Response getMappingInfo(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
             @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode,
             @QueryParam(WsUriConstants.LENS_URI) String lensUri,

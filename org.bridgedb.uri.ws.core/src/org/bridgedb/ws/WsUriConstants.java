@@ -29,7 +29,7 @@ public class WsUriConstants extends WsConstants{
     public static final String BRIDGEDB_API = "BridgeDbApi";
     public static final String BRIDGEDB_HOME = "BridgeDb";
     public static final String DATA_SOURCE = "dataSource";
-    public static final String GET_MAPPING_INFO = "getMappingInfo";
+    public static final String MAPPING_SET = "mappingSet";
     public static final String GET_OVERALL_STATISTICS = "getOverallStatistics";
     public static final String GET_SAMPLE_MAPPINGS = "getSampleMappings";
     public static final String GRAPHVIZ = "graphviz";
