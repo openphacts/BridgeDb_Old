@@ -4471,6 +4471,7 @@ bridgeDB:DataSource_WormBase a bridgeDB:DataSource ;
 	bridgeDB:hasUrlPattern <http://www.wormbase.org/db/gene/gene?name=$id;class=Gene> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/wormbase/$id> ;
 	bridgeDB:Organism bridgeDB:Organism_Ce ;
+    bridgeDB:hasUriPattern  <http://purl.uniprot.org/wormbase/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.wormbase.org/db/gene/gene?name=$id;class=Gene> .
 
 bridgeDB:DataSource_Wormpep a bridgeDB:DataSource ;
