@@ -34,6 +34,7 @@ import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.utils.BridgeDBException;
+import org.bridgedb.ws.WsUriConstants;
 import org.openrdf.model.impl.URIImpl;
 
 /**
@@ -72,18 +73,24 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         sb.append(SCRIPT);
         sb.append(TABLE_HEADER);
         newSource(sb, 0);
+        logger.info("tableMaker");        
         for (int i = 1; i < infos.length; i++){
-            if (infos[i].getSource().equals(infos[i-1].getSource())){
-                if (infos[i].getTarget().equals(infos[i-1].getTarget())){
-                    AddMappingSet(sb, i);
+            try{
+                if (infos[i].getSource().equals(infos[i-1].getSource())){
+                    if (infos[i].getTarget().equals(infos[i-1].getTarget())){
+                        AddMappingSet(sb, i);
+                    } else {
+                        newTarget(sb, i);
+                    }
                 } else {
-                    newTarget(sb, i);
+                    newSource(sb, i);
                 }
-            } else {
-                newSource(sb, i);
+            } catch (Exception ex){
+                throw new BridgeDBException ("i = " + i, ex);
             }
         }
         sb.append("</table>");
+        logger.info("done");        
     }
     
     private final String TABLE_HEADER = "<table border=\"1\">\n"
@@ -394,7 +401,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
 
     private void addMappingSetCells(StringBuilder sb, int i) throws BridgeDBException {
         sb.append("\t\t<td>");
-        addMappingInfoLink(sb, i);
+        addMappingInfoLinkByLocation(sb, i);
         sb.append("</td>\n");  
         sb.append("\t\t<td>");
         String mappingSource = infos[i].getMappingSource();
@@ -424,19 +431,27 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         sb.append("</td>\n");
     }
 
-    private void addMappingInfoLink(StringBuilder sb, int i) throws BridgeDBException{
+    private void addMappingInfoLinkByLocation(StringBuilder sb, int i) {
         int id;
         if (i > 0){
             id = i;
         } else {
             id = 0-i;
         }
-        String summaryUri = httpServletRequest.getContextPath() + "/getMappingInfo/" + infos[id].getStringId();
-        sb.append("<a href=\"");
+        addMappingInfoLinkById(sb, infos[id].getStringId());
+    }
+    
+    private void addMappingInfoLinkById(StringBuilder sb, String id){
+         try{
+            String summaryUri = httpServletRequest.getContextPath() + "/" + WsUriConstants.MAPPING_SET + "/" + id;
+            sb.append("<a href=\"");
             sb.append(summaryUri);
             sb.append("\">");
-            sb.append(infos[id].getStringId());
+            sb.append(id);
             sb.append("</a>");        
+        } catch (Exception ex){
+            sb.append(ex);
+        }
     }
     
     private void addNumberOfLinksCell(StringBuilder sb, int numberOfLinks) {
@@ -484,7 +499,11 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         size = chainSet.size();
         count = 0;
         for (Integer chain:chainSet){
-            addMappingInfoLink(sb, chain);
+            if (chain >= 0){
+                addMappingInfoLinkById(sb, "" + chain);
+            } else {
+                addMappingInfoLinkById(sb, "" + (0-chain));
+            }
             count++;
             if (count < size){
                 sb.append(", ");
