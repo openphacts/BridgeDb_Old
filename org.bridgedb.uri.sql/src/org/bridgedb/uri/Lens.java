@@ -38,13 +38,13 @@ import org.bridgedb.utils.ConfigReader;
 public class Lens {
 
 	private final String id;
-    private final String name;
+    private String name;
     private String createdBy;
     private String createdOn;
     private String description;
     private final List<String> justifications;
     
-    private final static HashMap<String,Lens> register = new HashMap<String,Lens>();
+    private static HashMap<String,Lens> register = null;
     private static int nextNumber = -0; 
     
     private static final String ID_PREFIX = "L";
@@ -56,6 +56,7 @@ public class Lens {
     private static final String CREATED_ON = "createdOn";
     private static final String DESCRIPTION = "description";
     private static final String JUSTIFICATION = "justification";
+    private static final String NAME = "name";
     
     private static final String DEFAULT_LENS_NAME = "Default";
     private static final String TEST_LENS_NAME = "Test";
@@ -83,48 +84,50 @@ public class Lens {
         this.justifications = new  ArrayList<String>(justifications);
     }
 
-    private Lens(String name) {
-        this.id = "L" + nextNumber;
-        nextNumber++;
+    private Lens(String id, String name) {
         this.name = name;
+        this.id = id;
         this.justifications = new  ArrayList<String>();
-        register.put(this.id, this);
+        this.description = name + " lens";
+        register(this);
         logger.info("Register " + this);
-     }
- 
-    public static Lens factory(String name, String createdOn, String createdBy, String description, Collection<String> justifications) throws BridgeDBException {
-        init();
-        Lens result = new Lens("L" + nextNumber, name, createdOn, createdBy, description, justifications);
-        nextNumber++;
-        logger.info("Register " + result);
-        register.put(result.id, result);
-        return result;
     }
-    
-    public static Lens byId(String id) throws BridgeDBException{
+ 
+     public static Lens byId(String id) throws BridgeDBException{
         if (id.contains(URI_PREFIX)){
             id = id.substring(id.indexOf(URI_PREFIX)+URI_PREFIX.length());
         }
-        Lens result = register.get(id);
+        Lens result = lookupById(id);
         if (result == null){
-            if (id.equals(TEST_LENS_NAME)){
-                return  testLens();
-            } else { 
-                throw new BridgeDBException("No Lens known with Id " + id);
-            }
+            throw new BridgeDBException("No Lens known with Id " + id);
         }
         return result;
     }
     
-    private static Lens byName(String name){
+    private static Lens findOrCreatedById(String id) throws BridgeDBException{
+        Lens result = lookupById(id);
+        if (result == null){
+            result = new Lens(id, id);
+        }
+        return result;       
+    }
+    
+    private static Lens findOrCreatedByName(String name) throws BridgeDBException{
         for (Lens lens:register.values()){
             if (lens.getName().equals(name)){
                 return lens;
             }
         }
-        return new Lens(name);
+        String id;
+        Lens check;
+        do {
+            id = ID_PREFIX + nextNumber;
+            nextNumber++;
+            check = lookupById(id.toLowerCase());
+        } while (check != null);
+        return new Lens(id, name);
     }
-    
+
     public static List<String> getJustificationsbyId(String id) throws BridgeDBException{
         Lens lens = byId(id);
         return lens.getJustifications();
@@ -140,7 +143,8 @@ public class Lens {
         		   " Justifications: " + this.getJustifications();
     }
     
-    public static int getNumberOfLenses(){
+    public static int getNumberOfLenses() throws BridgeDBException{
+        init();
         return register.size();
     }
 
@@ -157,21 +161,11 @@ public class Lens {
      * @throws BridgeDBException 
      */
     public static String getDefaultLens() throws BridgeDBException{
-        return ID_PREFIX + 1;
+        return DEFAULT_LENS_NAME;
     }
     
-    private static Lens testLens() {
-        Lens testLens = register.get(TEST_LENS_NAME);
-        if (testLens == null){
-           testLens = byName(TEST_LENS_NAME); 
-           testLens.addJustification(getTestJustifictaion());
-           testLens.setDescription(ID_PREFIX);
-        }
-        return testLens;
-    }
     
     public static String getTestLens() throws BridgeDBException{
-        testLens();
         return TEST_LENS_NAME;
     }
     
@@ -182,7 +176,7 @@ public class Lens {
      * @throws BridgeDBException 
      */
     public static String getAllLens() throws BridgeDBException{
-        return ID_PREFIX + 0;
+        return ALL_LENS_NAME;
     }
     
 
@@ -232,32 +226,43 @@ public class Lens {
     public static String getDefaultJustifictaionString() {
        return "http://www.w3.org/2000/01/rdf-schema#isDefinedBy"; 
     }
-    
+
     public static String getTestJustifictaion() {
         return "http://www.bridgedb.org/test#testJustification";
     }
 
-    private static void initAllLens() throws BridgeDBException {
-    }
-
-    public static void init() throws BridgeDBException {
-        logger.info("init");
+    private static Lens lookupById(String id) throws BridgeDBException {
         if (register.isEmpty()){
-            System.out.println("init called");
-            //Make sure all and default is always LENS 0 and 1
-            Lens all = byName(ALL_LENS_NAME);
-            Lens defaultLens = byName(DEFAULT_LENS_NAME);
+            init();
+        }
+        return register.get(id.toLowerCase());
+    }
+    
+    private void register(Lens lens){
+        register.put(id.toLowerCase(), lens);
+    }
+    
+    public static void init() throws BridgeDBException {
+        if (register == null){
+            logger.info("init");
+            register = new HashMap<String,Lens>();
+            //Create the all, default and test lens
+            Lens all = findOrCreatedById(ALL_LENS_NAME);
+            Lens defaultLens = findOrCreatedById(DEFAULT_LENS_NAME);
+            Lens testLens = findOrCreatedById(TEST_LENS_NAME);
             Properties properties = ConfigReader.getProperties();
             Set<String> keys = properties.stringPropertyNames();
             for (String key:keys){
                 System.out.println(key);
                 if (key.startsWith(PROPERTY_PREFIX)){
                     String[] parts = key.split("\\.");
-                    Lens lens = byName(parts[1]);
+                    Lens lens = findOrCreatedById(parts[1]);
                     if (parts[2].equals(CREATED_BY)){
                         lens.setCreatedBy(properties.getProperty(key));
                     } else if (parts[2].equals(CREATED_ON)){
                         lens.setCreatedOn(properties.getProperty(key));
+                    } else if (parts[2].equals(NAME)){
+                        lens.name = properties.getProperty(key);
                     } else if (parts[2].equals(DESCRIPTION)){
                         lens.setDescription(properties.getProperty(key));
                     } else if (parts[2].equals(JUSTIFICATION)){
@@ -276,10 +281,10 @@ public class Lens {
                 all.setDescription("Lens which includes all justfications.");
             }
             System.out.println(all);
-            byId(Lens.getDefaultLens());
             if (defaultLens.getJustifications().isEmpty()){
                 defaultLens.addJustifications(all.getJustifications());
             }
+            testLens.addJustification(getTestJustifictaion());
         }
      }
 
@@ -289,7 +294,7 @@ public class Lens {
         Collection<String> justifications = mapper.getJustifications();
         for (String justification:justifications){
             all.addJustification(justification);
-            Lens byName = Lens.byName(justification);
+            Lens byName = findOrCreatedByName(justification);
             if (byName.getDescription() == null){
                 byName.setDescription("Lens with just the singgle jusification: " + justification);
                 byName.addJustification(justification);

@@ -1452,11 +1452,12 @@ public class WSOtherservices extends WSFrame {
         List<Lens> lenses = getTheLens(lensUri);
         StringBuilder sb = topAndSide("Lens Summary",  httpServletRequest);
         sb.append("lensUri=").append(lensUri).append("<br>");
-        sb.append("<table border=\"1\">");
+        sb.append("ContextPath=").append(httpServletRequest.getContextPath()).append("<br>");
+        sb.append("\n<table border=\"1\">");
         sb.append("<tr>");
         sb.append("<th>Name</th>");
         sb.append("<th>URI</th>");
-        sb.append("<th>Description</th></tr>");
+        sb.append("<th>Description</th></tr>\n");
 		for (Lens lens:lenses) {
             sb.append("<tr><td>");
             sb.append(lens.getName());
@@ -1464,7 +1465,7 @@ public class WSOtherservices extends WSFrame {
             sb.append(lens.toUri(httpServletRequest.getContextPath()));
             sb.append("\">");
             sb.append(lens.toUri(httpServletRequest.getContextPath()));
-            sb.append("</a></td><td>").append(lens.getDescription()).append("</td></tr>");        
+            sb.append("</a></td><td>").append(lens.getDescription()).append("</td></tr>\n");        
 		}
         sb.append("</table>");
         sb.append("<p><a href=\"");
@@ -1474,7 +1475,7 @@ public class WSOtherservices extends WSFrame {
         sb.append(WsUriConstants.XML);
         sb.append("\">");
         sb.append("XML Format");
-        sb.append("</a></p>");        
+        sb.append("</a></p>\n");        
         footerAndEnd(sb);
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
 	}
