@@ -578,6 +578,9 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         }
         if (!lensId.equals(Lens.getAllLens())) {
             List<String> justifications = Lens.getJustificationsbyId(lensId);
+            if (justifications.isEmpty()){
+                throw new BridgeDBException ("No  justifications found for Lens " + lensId);
+            }
             if (whereAdded){
                 query.append(" AND");  
             } else {

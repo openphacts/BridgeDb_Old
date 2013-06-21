@@ -277,6 +277,8 @@ public class Lens {
             for (Lens lens:getLens()){
                 all.addJustifications(lens.getJustifications());
             }
+            all.addJustification(getDefaultJustifictaionString());
+            all.addJustification(getTestJustifictaion());
             if (all.getDescription() == null || all.getDescription().isEmpty()){
                 all.setDescription("Lens which includes all justfications.");
             }
@@ -295,10 +297,8 @@ public class Lens {
         for (String justification:justifications){
             all.addJustification(justification);
             Lens byName = findOrCreatedByName(justification);
-            if (byName.getDescription() == null){
-                byName.setDescription("Lens with just the singgle jusification: " + justification);
-                byName.addJustification(justification);
-            }
+            byName.setDescription("Lens with just the singgle jusification: " + justification);
+            byName.addJustification(justification);
         }
         Lens defaultLens =  byId(Lens.getDefaultLens());
         if (defaultLens.getJustifications().isEmpty()){
