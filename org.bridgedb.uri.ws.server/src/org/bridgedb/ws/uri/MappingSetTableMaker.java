@@ -27,10 +27,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
-import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.utils.BridgeDBException;
@@ -278,7 +276,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             sb.append("_level1=level1>\n");
         sb.append("\t\t<td><span onclick=\"showLevel2('");
             sb.append(cleanup(source));
-            sb.append("')\"> &dArr; </span></td>\n");
+            sb.append("')\"> + </span></td>\n");
         sb.append("\t\t<td>&nbsp</td>\n");
         addDataSourceCell(sb, source);
         addTargetCount(sb, targetCount);
@@ -290,7 +288,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         addLevel2Tr(sb, source);
         sb.append("\t\t<td><span onclick=\"hideLevel2('");
             sb.append(cleanup(source));
-            sb.append("')\"> &uArr; </span></td>\n");
+            sb.append("')\"> - </span></td>\n");
         sb.append("\t\t<td>&nbsp</td>\n");
         addDataSourceCell(sb, source);
         addTargetCount(sb, targetCount);
@@ -311,7 +309,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             sb.append(cleanup(source));
             sb.append("_");
             sb.append(cleanup(target));
-            sb.append("')\"> &dArr; </span></td>\n");
+            sb.append("')\"> + </span></td>\n");
         addDataSourceCell(sb, source);
         addDataSourceCell(sb, target);
         addMappingSummary(sb, numberOfLinks, mappingCount); 
@@ -325,7 +323,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             sb.append(cleanup(source));
             sb.append("_");
             sb.append(cleanup(target));
-            sb.append("')\"> &uArr; </span></td>\n");
+            sb.append("')\"> - </span></td>\n");
         addDataSourceCell(sb, source);
         addDataSourceCell(sb, target);
         addMappingSummary(sb, numberOfLinks, mappingCount); 

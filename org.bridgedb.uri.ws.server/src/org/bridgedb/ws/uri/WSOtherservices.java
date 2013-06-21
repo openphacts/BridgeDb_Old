@@ -1437,7 +1437,7 @@ public class WSOtherservices extends WSFrame {
         } else {
             sb.append("\n<p>Warning summary lines are just a sum of the mappings from all mapping files.");
             sb.append("So if various sources include the same mapping it will be counted multiple times. </p>");
-            sb.append("\n<p>Click on the arrows in the first column to expand or contract the table.</p>");
+            sb.append("\n<p>Click on the plus in the firsts column to expand or minus to contract the table.</p>");
             MappingSetTableMaker.addTable(sb, mappingSetInfos, httpServletRequest);
         }
         footerAndEnd(sb);
