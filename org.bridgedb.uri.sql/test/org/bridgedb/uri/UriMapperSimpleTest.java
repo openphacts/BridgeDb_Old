@@ -73,6 +73,8 @@ public abstract class UriMapperSimpleTest extends UriListenerTest{
         assertFalse(results.contains(map3xref2));
         checkForNoOtherLensXrefs(results);
     }
+    
+    
 
     /**
      * Test of mapUri method, of class UriMapper.
@@ -177,6 +179,27 @@ public abstract class UriMapperSimpleTest extends UriListenerTest{
         String sourceUri = map3Uri2;
         String lensId = Lens.getDefaultLens();
         Set results = uriMapper.mapUri(sourceUri, lensId);
+        assertTrue(results.contains(map3Uri1));
+        assertTrue(results.contains(map3Uri2));
+        assertTrue(results.contains(map3Uri2a));
+        assertTrue(results.contains(map3Uri3));
+        assertFalse(results.contains(map2Uri2));
+        assertFalse(results.contains(map1Uri3));
+        checkForNoOtherlensId(results);
+    }
+
+   /**
+     * Test of mapUri method, of class UriMapper.
+     */
+    @Test
+    public void testMapBySet_sourceUri_lensId() throws Exception {
+        report("MapBySeti_sourceUri_lensId");
+        String sourceUri = map3Uri2;
+        String lensId = Lens.getDefaultLens();
+        LensMapping lensMapping = uriMapper.mapBySet(sourceUri, lensId);
+        System.out.println(lensMapping);
+        Set<String> results = lensMapping.getTargetUris();
+        System.out.println(map3Uri2);
         assertTrue(results.contains(map3Uri1));
         assertTrue(results.contains(map3Uri2));
         assertTrue(results.contains(map3Uri2a));

@@ -140,6 +140,9 @@ public interface UriMapper extends IDMapper{
     public Set<String> mapUri(String sourceUri, String LensUri, UriPattern... tgtUriPatterns) 
             throws BridgeDBException;
 
+    public LensMapping mapBySet(String sourceUri, String LensUri) 
+            throws BridgeDBException;
+
     /**
 	 * Get all Uris mapped to the given entity, restricting the
 	 * result to contain only references which match the given UriPattern and Lens.

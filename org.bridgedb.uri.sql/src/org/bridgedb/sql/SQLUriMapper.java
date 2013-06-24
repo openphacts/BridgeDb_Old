@@ -39,6 +39,7 @@ import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
 import org.bridgedb.uri.Lens;
+import org.bridgedb.uri.LensMapping;
 import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.UriListener;
 import org.bridgedb.uri.UriMapper;
@@ -343,6 +344,35 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             results.addAll (toUris(target));
         }
         return results;
+    }
+    @Override
+    public LensMapping mapBySet(String sourceUri, String lensUri) 
+            throws BridgeDBException {
+        Xref sourceXref = toXref(sourceUri);
+        StringBuilder query = new StringBuilder("SELECT ");
+        query.append(TARGET_ID_COLUMN_NAME);
+            query.append(", ");
+            query.append(TARGET_DATASOURCE_COLUMN_NAME);
+            query.append(", ");
+            query.append(MAPPING_SET_ID_COLUMN_NAME);
+            query.append(", ");
+            query.append(PREDICATE_COLUMN_NAME);
+            query.append(", ");
+            query.append(JUSTIFICATION_COLUMN_NAME);
+            query.append(", ");
+            query.append(MAPPING_SOURCE_COLUMN_NAME);
+        appendMappingFromAndWhere(query, sourceXref, lensUri, null);
+        Statement statement = this.createStatement();
+        ResultSet rs;
+        try {
+            rs = statement.executeQuery(query.toString());
+        } catch (SQLException ex) {
+            throw new BridgeDBException("Unable to run query. " + query, ex);
+        }    
+        LensMapping lensMapping =  resultSetToLensMapping(rs, sourceUri, lensUri);
+        //TODO add other uriSpace ones
+        lensMapping.addMapping(sourceUri, toUris(sourceXref));
+        return lensMapping;
     }
     
     @Override
@@ -1286,6 +1316,28 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             throw new BridgeDBException("Unable to parse results.", ex);
         }
         return results;
+    }
+
+    private LensMapping resultSetToLensMapping(ResultSet rs, String sourceUri, String lensUri) throws BridgeDBException {
+        LensMapping lensMapping = new LensMapping(lensUri);
+        try {
+            while (rs.next()){
+                String targetId = rs.getString(TARGET_ID_COLUMN_NAME);
+                String targetKey = rs.getString(TARGET_DATASOURCE_COLUMN_NAME);
+                DataSource targetDatasource = keyToDataSource(targetKey);
+                Xref target = new Xref(targetId, targetDatasource);
+                Set<String> targetUris = toUris(target);
+                Integer mappingSetId = rs.getInt(MAPPING_SET_ID_COLUMN_NAME);
+                String predicate = rs.getString(PREDICATE_COLUMN_NAME);
+                String justification = rs.getString(JUSTIFICATION_COLUMN_NAME);
+                String mappingSource = rs.getString(MAPPING_SOURCE_COLUMN_NAME);
+                lensMapping.addMapping(mappingSetId, predicate, justification, mappingSource, sourceUri, targetUris);
+            }
+            return lensMapping;
+       } catch (SQLException ex) {
+            throw new BridgeDBException("Unable to parse results.", ex);
+       }        
+       
     }
 
     /**
