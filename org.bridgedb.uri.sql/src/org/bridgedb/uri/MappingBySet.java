@@ -44,16 +44,26 @@ public class MappingBySet {
     
     public void addMapping (int mappingSetId, String predicate, String justification, String mappingSource, 
             String sourceUri, Set<String> targetUris){
-        SetMapping info = infoById(mappingSetId);
-        if (info == null){
-            info = new SetMapping(mappingSetId, predicate, justification, mappingSource);
-            setMappings.add(info);
+        SetMapping setMapping = setMappingById(mappingSetId);
+        if (setMapping == null){
+            setMapping = new SetMapping(mappingSetId, predicate, justification, mappingSource);
+            setMappings.add(setMapping);
         }
         for (String targetUri: targetUris){
-            info.addMapping(new UriMapping(sourceUri, targetUri));
+            setMapping.addMapping(new UriMapping(sourceUri, targetUri));
         }
     }
 
+    public void addMapping (int mappingSetId, String predicate, String justification, String mappingSource, 
+            String sourceUri, String targetUri){
+        SetMapping setMapping = setMappingById(mappingSetId);
+        if (setMapping == null){
+            setMapping = new SetMapping(mappingSetId, predicate, justification, mappingSource);
+            setMappings.add(setMapping);
+        }
+        setMapping.addMapping(new UriMapping(sourceUri, targetUri));
+    }
+    
     public final void addMapping (String sourceUri, String targetUri){
         mappings.add(new UriMapping(sourceUri, targetUri));
     }
@@ -64,10 +74,10 @@ public class MappingBySet {
        }
     }
 
-    private SetMapping infoById(int id) {
-        for (SetMapping info: setMappings){
-            if (info.getId() == id){
-                return info;
+    private SetMapping setMappingById(int id) {
+        for (SetMapping setMapping: setMappings){
+            if (setMapping.getId() == id){
+                return setMapping;
             }
         }
         return null;

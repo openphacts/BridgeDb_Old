@@ -140,9 +140,6 @@ public interface UriMapper extends IDMapper{
     public Set<String> mapUri(String sourceUri, String LensUri, UriPattern... tgtUriPatterns) 
             throws BridgeDBException;
 
-    public MappingBySet mapBySet(String sourceUri, String LensUri) 
-            throws BridgeDBException;
-
     /**
 	 * Get all Uris mapped to the given entity, restricting the
 	 * result to contain only references which match the given UriPattern and Lens.
@@ -209,7 +206,13 @@ public interface UriMapper extends IDMapper{
 	 * Set when no cross references could be found. This method does not return null.
 	 * @throws IDMapperException if the mapping service is (temporarily) unavailable 
      */
-    public Set<String> mapUri(String sourceUri, String LensUri) 
+    public Set<String> mapUri(String sourceUri, String lensUri) 
+            throws BridgeDBException;
+
+    public MappingBySet mapBySet(String sourceUri, String lensUri) 
+            throws BridgeDBException;
+
+    public MappingBySet mapBySet(String sourceUri, String lensUri, UriPattern tgtUriPattern) 
             throws BridgeDBException;
 
     /**

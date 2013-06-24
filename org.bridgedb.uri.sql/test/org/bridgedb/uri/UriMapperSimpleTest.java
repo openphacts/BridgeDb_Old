@@ -170,6 +170,24 @@ public abstract class UriMapperSimpleTest extends UriListenerTest{
         checkForNoOtherlensId(results);
     }
 
+    @Test
+    public void testMapBySet_sourceUri_lensId_tgtUriPattern() throws Exception {
+        report("MapBySet_sourceUri_lensId_tgtUriPattern");
+        String sourceUri = map3Uri2;
+        String lensId = Lens.getDefaultLens();
+        UriPattern tgtUriPattern = uriPattern3;
+        MappingBySet lensMapping = uriMapper.mapBySet(sourceUri, lensId, tgtUriPattern);
+        System.out.println(lensMapping);
+        Set<String> results = lensMapping.getTargetUris();
+        assertFalse(results.contains(map3Uri1));
+        assertFalse(results.contains(map3Uri2));
+        assertFalse(results.contains(map3Uri2a));
+        assertTrue(results.contains(map3Uri3));
+        assertFalse(results.contains(map2Uri2));
+        assertFalse(results.contains(map1Uri3));
+        checkForNoOtherlensId(results);
+    }
+    
     /**
      * Test of mapUri method, of class UriMapper.
      */
