@@ -39,7 +39,7 @@ import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
 import org.bridgedb.uri.Lens;
-import org.bridgedb.uri.MappingBySet;
+import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.UriListener;
 import org.bridgedb.uri.UriMapper;
@@ -346,31 +346,53 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return results;
     }
     
+    public MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern... tgtUriPatterns) throws BridgeDBException {
+        if (tgtUriPatterns == null || tgtUriPatterns.length == 0){
+            return mapBySet (sourceUri, lensUri);
+        }
+        MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
+        for (UriPattern tgtUriPattern:tgtUriPatterns){
+            mapBySet(sourceUri, mappingsBySet, lensUri, tgtUriPattern);
+        }
+        return mappingsBySet;
+        
+    }
     @Override
-    public MappingBySet mapBySet(String sourceUri, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
+    public MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
+        MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
+        mapBySet(sourceUri, mappingsBySet, lensUri, tgtUriPattern) ;    
+        return mappingsBySet;
+    }
+
+    private void mapBySet(String sourceUri, MappingsBySet mappingsBySet, String lensUri, 
+            UriPattern tgtUriPattern) throws BridgeDBException {
+        sourceUri = scrubUri(sourceUri);
         Xref sourceXref = toXref(sourceUri);
-        ResultSet rs = mapBySetOnly(sourceXref, sourceUri, lensUri, tgtUriPattern);
-        MappingBySet mappingBySet = new MappingBySet(lensUri);
-        resultSetAddToMappingBySet(rs, sourceUri, mappingBySet, tgtUriPattern);
-            
-        return mappingBySet;
+        
+        DataSource tgtDataSource = tgtUriPattern.getDataSource();
+        ResultSet rs = mapBySetOnly(sourceXref, sourceUri, lensUri, tgtDataSource);       
+        resultSetAddToMappingsBySet(rs, sourceUri, mappingsBySet, tgtUriPattern);           
+        if (sourceXref.getDataSource().equals(tgtDataSource)){
+            mappingsBySet.addMapping(sourceUri, sourceUri); 
+        }
     }
 
     @Override
-    public MappingBySet mapBySet(String sourceUri, String lensUri) 
+    public MappingsBySet mapBySet(String sourceUri, String lensUri) 
             throws BridgeDBException {
+        sourceUri = scrubUri(sourceUri);
         Xref sourceXref = toXref(sourceUri);
         ResultSet rs = mapBySetOnly(sourceXref, sourceUri, lensUri, null);
-        MappingBySet mappingBySet = new MappingBySet(lensUri);
-        resultSetAddToMappingBySet(rs, sourceUri, mappingBySet);
-        mappingBySet.addMapping(sourceUri, toUris(sourceXref));
-        return mappingBySet;
+        MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
+        resultSetAddToMappingsBySet(rs, sourceUri, mappingsBySet);
+        mappingsBySet.addMapping(sourceUri, toUris(sourceXref));
+        return mappingsBySet;
     }
     
-    private ResultSet mapBySetOnly(Xref sourceXref, String sourceUri, String lensUri, UriPattern tgtUriPattern) 
+    private ResultSet mapBySetOnly(Xref sourceXref, String sourceUri, String lensUri, DataSource tgtDataSource) 
             throws BridgeDBException {
-        StringBuilder query =  startMappingBySetQuery();
-        appendMappingFromAndWhere(query, sourceXref, lensUri, null);
+        StringBuilder query =  startMappingsBySetQuery();
+        appendMappingFromAndWhere(query, sourceXref, lensUri, tgtDataSource);
         Statement statement = this.createStatement();
         try {
             return statement.executeQuery(query.toString());
@@ -547,7 +569,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return query;
     }
     
-   private StringBuilder startMappingBySetQuery(){
+   private StringBuilder startMappingsBySetQuery(){
         StringBuilder query = new StringBuilder("SELECT ");
         query.append(TARGET_ID_COLUMN_NAME);
         query.append(", ");
@@ -1338,7 +1360,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return results;
     }
 
-    private void resultSetAddToMappingBySet(ResultSet rs, String sourceUri, MappingBySet mappingBySet) 
+    private void resultSetAddToMappingsBySet(ResultSet rs, String sourceUri, MappingsBySet mappingsBySet) 
             throws BridgeDBException {
         try {
             while (rs.next()){
@@ -1351,14 +1373,14 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 String predicate = rs.getString(PREDICATE_COLUMN_NAME);
                 String justification = rs.getString(JUSTIFICATION_COLUMN_NAME);
                 String mappingSource = rs.getString(MAPPING_SOURCE_COLUMN_NAME);
-                mappingBySet.addMapping(mappingSetId, predicate, justification, mappingSource, sourceUri, targetUris);
+                mappingsBySet.addMapping(mappingSetId, predicate, justification, mappingSource, sourceUri, targetUris);
             }
        } catch (SQLException ex) {
             throw new BridgeDBException("Unable to parse results.", ex);
        }              
     }
 
-    private void resultSetAddToMappingBySet(ResultSet rs, String sourceUri, MappingBySet mappingBySet, 
+    private void resultSetAddToMappingsBySet(ResultSet rs, String sourceUri, MappingsBySet mappingsBySet, 
             UriPattern tgtUriPattern) throws BridgeDBException {
         try {
             while (rs.next()){
@@ -1368,7 +1390,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 String predicate = rs.getString(PREDICATE_COLUMN_NAME);
                 String justification = rs.getString(JUSTIFICATION_COLUMN_NAME);
                 String mappingSource = rs.getString(MAPPING_SOURCE_COLUMN_NAME);
-                mappingBySet.addMapping(mappingSetId, predicate, justification, mappingSource, sourceUri, targetUri);
+                mappingsBySet.addMapping(mappingSetId, predicate, justification, mappingSource, sourceUri, targetUri);
             }
        } catch (SQLException ex) {
             throw new BridgeDBException("Unable to parse results.", ex);

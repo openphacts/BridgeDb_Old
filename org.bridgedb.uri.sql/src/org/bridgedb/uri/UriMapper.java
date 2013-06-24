@@ -209,13 +209,15 @@ public interface UriMapper extends IDMapper{
     public Set<String> mapUri(String sourceUri, String lensUri) 
             throws BridgeDBException;
 
-    public MappingBySet mapBySet(String sourceUri, String lensUri) 
+    public MappingsBySet mapBySet(String sourceUri, String lensUri) 
             throws BridgeDBException;
 
-    public MappingBySet mapBySet(String sourceUri, String lensUri, UriPattern tgtUriPattern) 
+    public MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern tgtUriPattern) 
             throws BridgeDBException;
 
-    /**
+   public MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern... tgtUriPatterns) throws BridgeDBException;
+   
+   /**
 	 * Get the set of mappings based the parameters supplied.
      * 
 	 * @param sourceXref @see Class java docs. 

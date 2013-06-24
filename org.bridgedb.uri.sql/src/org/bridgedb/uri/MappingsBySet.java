@@ -28,7 +28,7 @@ import java.util.Set;
  * Does not include everything in the void header but only what is captured in the SQL.
  * @author Christian
  */
-public class MappingBySet {
+public class MappingsBySet {
     private final String lens;
     private final Set<SetMapping> setMappings;
     /*
@@ -36,7 +36,7 @@ public class MappingBySet {
      */
     private final Set<UriMapping> mappings;
     
-    public MappingBySet(String lens){
+    public MappingsBySet(String lens){
         this.lens = lens;
         this.setMappings = new HashSet<SetMapping>();
         this.mappings = new HashSet<UriMapping>();
