@@ -19,12 +19,8 @@
 //
 package org.bridgedb.ws.bean;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import org.bridgedb.Xref;
 import org.bridgedb.uri.Mapping;
 
 /**
