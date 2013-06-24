@@ -28,26 +28,26 @@ import java.util.Set;
  * Does not include everything in the void header but only what is captured in the SQL.
  * @author Christian
  */
-public class LensMapping {
+public class MappingBySet {
     private final String lens;
-    private final Set<MappingInfo> mappingInfos;
+    private final Set<SetMapping> setMappings;
     /*
      * These are the direct mappings based on namespace substitution
      */
     private final Set<UriMapping> mappings;
     
-    public LensMapping(String lens){
+    public MappingBySet(String lens){
         this.lens = lens;
-        this.mappingInfos = new HashSet<MappingInfo>();
+        this.setMappings = new HashSet<SetMapping>();
         this.mappings = new HashSet<UriMapping>();
     }
     
     public void addMapping (int mappingSetId, String predicate, String justification, String mappingSource, 
             String sourceUri, Set<String> targetUris){
-        MappingInfo info = infoById(mappingSetId);
+        SetMapping info = infoById(mappingSetId);
         if (info == null){
-            info = new MappingInfo(mappingSetId, predicate, justification, mappingSource);
-            mappingInfos.add(info);
+            info = new SetMapping(mappingSetId, predicate, justification, mappingSource);
+            setMappings.add(info);
         }
         for (String targetUri: targetUris){
             info.addMapping(new UriMapping(sourceUri, targetUri));
@@ -64,8 +64,8 @@ public class LensMapping {
        }
     }
 
-    private MappingInfo infoById(int id) {
-        for (MappingInfo info: mappingInfos){
+    private SetMapping infoById(int id) {
+        for (SetMapping info: setMappings){
             if (info.getId() == id){
                 return info;
             }
@@ -75,8 +75,8 @@ public class LensMapping {
     
     public Set<String> getTargetUris(){
         HashSet<String> targetUris = new HashSet<String>();
-        for (MappingInfo info: mappingInfos){
-            targetUris.addAll(info.getTargetUris());           
+        for (SetMapping setMapping: setMappings){
+            targetUris.addAll(setMapping.getTargetUris());           
         }
         for (UriMapping mapping:mappings){
             targetUris.add(mapping.getTargetUri());
@@ -88,8 +88,8 @@ public class LensMapping {
     public String toString(){
         StringBuilder sb = new StringBuilder("Lens: ");
         sb.append(lens);
-        for (MappingInfo info: mappingInfos){
-            info.append(sb);           
+        for (SetMapping setMapping: setMappings){
+            setMapping.append(sb);           
         }
         sb.append("\n\tUriSpace based mappings");
         for (UriMapping mapping:mappings){

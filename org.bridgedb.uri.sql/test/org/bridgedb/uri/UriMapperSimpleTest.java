@@ -196,7 +196,7 @@ public abstract class UriMapperSimpleTest extends UriListenerTest{
         report("MapBySeti_sourceUri_lensId");
         String sourceUri = map3Uri2;
         String lensId = Lens.getDefaultLens();
-        LensMapping lensMapping = uriMapper.mapBySet(sourceUri, lensId);
+        MappingBySet lensMapping = uriMapper.mapBySet(sourceUri, lensId);
         System.out.println(lensMapping);
         Set<String> results = lensMapping.getTargetUris();
         System.out.println(map3Uri2);
