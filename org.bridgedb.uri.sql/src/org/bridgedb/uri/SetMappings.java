@@ -28,14 +28,14 @@ import java.util.Set;
  * Does not include everything in the void header but only what is captured in the SQL.
  * @author Christian
  */
-public class SetMapping {
+public class SetMappings {
     private final int id;
     private final String predicate;
     private final String justification;
     private final String mappingSource;
     private final Set<UriMapping> mappings;
     
-    public SetMapping(int id, String predicate, String justification, String mappingSource){
+    public SetMappings(int id, String predicate, String justification, String mappingSource){
         this.id = id;
         this.predicate = predicate;
         this.justification = justification;

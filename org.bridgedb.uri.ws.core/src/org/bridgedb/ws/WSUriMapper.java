@@ -29,15 +29,15 @@ import org.bridgedb.Xref;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
-import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.Mapping;
+import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.bean.DataSourceUriPatternBean;
 import org.bridgedb.ws.bean.MappingBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
+import org.bridgedb.ws.bean.MappingsBySetBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
-import org.bridgedb.ws.bean.LensBean;
 import org.bridgedb.ws.bean.UriSearchBean;
 import org.bridgedb.ws.bean.XrefBean;
 
@@ -129,6 +129,40 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     public Set<String> mapUri(String sourceUri, String lensUri) throws BridgeDBException {
         Collection<Mapping> beans = mapFull(sourceUri, lensUri);
         return extractUris(beans);
+    }
+
+    @Override
+    public MappingsBySet mapBySet(String sourceUri, String lensUri) throws BridgeDBException {
+        Set<String> sourceUris = new HashSet<String>();
+        sourceUris.add(sourceUri);
+        return mapBySet(sourceUris, lensUri);
+    }
+
+    @Override
+    public MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
+        Set<String> sourceUris = new HashSet<String>();
+        sourceUris.add(sourceUri);
+        return mapBySet(sourceUris, lensUri, tgtUriPattern);
+    }
+
+    @Override
+    public MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern... tgtUriPatterns) throws BridgeDBException {
+        Set<String> sourceUris = new HashSet<String>();
+        sourceUris.add(sourceUri);
+        return mapBySet(sourceUris, lensUri, tgtUriPatterns);
+    }
+
+    @Override
+    public MappingsBySet mapBySet(Set<String> sourceUris, String lensUri, UriPattern... tgtUriPatterns) throws BridgeDBException {
+        ArrayList<String> soureUrisList = new ArrayList(sourceUris);
+        ArrayList<String> tgtUriPatternStrings = new ArrayList<String>();
+        for (UriPattern tgtUriPattern:tgtUriPatterns){
+            if (tgtUriPattern != null){
+                tgtUriPatternStrings.add(tgtUriPattern.getUriPattern());
+            }
+        }
+        MappingsBySetBean bean = uriService.mapBySet(soureUrisList, lensUri,tgtUriPatternStrings);
+        return bean.asMappingsBySet();
     }
 
     @Override
@@ -358,6 +392,5 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     public int getSqlCompatVersion() throws BridgeDBException {
         return Integer.parseInt(uriService.getSqlCompatVersion());
     }
-
 
   }

@@ -26,6 +26,7 @@ import org.bridgedb.ws.bean.MappingBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
 import org.bridgedb.ws.bean.LensBean;
+import org.bridgedb.ws.bean.MappingsBySetBean;
 import org.bridgedb.ws.bean.UriExistsBean;
 import org.bridgedb.ws.bean.UriSearchBean;
 import org.bridgedb.ws.bean.XrefBean;
@@ -38,6 +39,9 @@ public interface WSUriInterface extends WSCoreInterface{
 
     public List<MappingBean> map(String id, String scrCode, String uri, String lensUri, List<String> targetCodes, 
             List<String> targetUriPattern) throws BridgeDBException;
+
+    public MappingsBySetBean mapBySet(List<String> uri, String lensUri, List<String> targetUriPattern) 
+            throws BridgeDBException;
 
     public UriExistsBean UriExists(String Uri) throws BridgeDBException;
 

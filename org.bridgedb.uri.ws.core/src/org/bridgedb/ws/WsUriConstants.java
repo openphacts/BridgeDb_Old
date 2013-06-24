@@ -36,6 +36,7 @@ public class WsUriConstants extends WsConstants{
     public static final String MAPPING = "mapping";
     public static final String MAP = "map";
     public static final String MAP_URI = "mapUri";
+    public static final String MAP_BY_SET = "mapBySet";
     public static final String MAP_URL = "mapURL";
     public static final String LENS_URI = "lensUri";
     public static final String SQL_COMPAT_VERSION = "SqlCompatVersion";

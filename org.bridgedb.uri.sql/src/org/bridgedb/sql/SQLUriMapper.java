@@ -382,8 +382,12 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
            throws BridgeDBException{
         MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
         for (String sourceUri:sourceUris) {
-            for (UriPattern tgtUriPattern:tgtUriPatterns) {
-                mapBySet(sourceUri, mappingsBySet, lensUri, tgtUriPattern);
+            if (tgtUriPatterns == null || tgtUriPatterns.length == 0){
+                mapBySet(sourceUri, mappingsBySet, lensUri);
+            } else {
+                for (UriPattern tgtUriPattern:tgtUriPatterns) {
+                    mapBySet(sourceUri, mappingsBySet, lensUri, tgtUriPattern);
+                }
             }
         }
         return mappingsBySet;           
@@ -392,15 +396,21 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     @Override
     public MappingsBySet mapBySet(String sourceUri, String lensUri) 
             throws BridgeDBException {
+        MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
+        mapBySet(sourceUri, mappingsBySet, lensUri);
+        return mappingsBySet;
+    }
+    
+    public MappingsBySet mapBySet(String sourceUri, MappingsBySet mappingsBySet, String lensUri) 
+            throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         Xref sourceXref = toXref(sourceUri);
         ResultSet rs = mapBySetOnly(sourceXref, sourceUri, lensUri, null);
-        MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
         resultSetAddToMappingsBySet(rs, sourceUri, mappingsBySet);
         mappingsBySet.addMapping(sourceUri, toUris(sourceXref));
         return mappingsBySet;
     }
-    
+
     private ResultSet mapBySetOnly(Xref sourceXref, String sourceUri, String lensUri, DataSource tgtDataSource) 
             throws BridgeDBException {
         StringBuilder query =  startMappingsBySetQuery();

@@ -24,14 +24,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
@@ -41,6 +39,7 @@ import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.Mapping;
+import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.StoreType;
@@ -52,6 +51,7 @@ import org.bridgedb.ws.bean.DataSourceUriPatternBean;
 import org.bridgedb.ws.bean.LensBean;
 import org.bridgedb.ws.bean.MappingBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
+import org.bridgedb.ws.bean.MappingsBySetBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
 import org.bridgedb.ws.bean.UriExistsBean;
 import org.bridgedb.ws.bean.UriMappings;
@@ -180,6 +180,18 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     		@QueryParam(WsUriConstants.URL) String url,
             @QueryParam(WsUriConstants.TARGET_URI_SPACE) List<String> targetUriPatterns) throws BridgeDBException {
         return this.map(null, null, url, null, null, targetUriPatterns);
+    }
+
+    @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("/" + WsUriConstants.MAP_BY_SET)
+    public MappingsBySetBean mapBySet(@QueryParam(WsUriConstants.URI) List<String> uris,
+     		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns) throws BridgeDBException {
+        HashSet<String> uriSet = new HashSet<String>(uris);
+        UriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
+        MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, targetPatterns);
+        return new MappingsBySetBean(mappingsBySet);
     }
 
     private List<MappingBean> map(String uri, String lensUri, DataSource[] targetDataSources, 
@@ -516,7 +528,5 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             throw new BridgeDBException (FILE + " parameter may not be null");
         }
     }
-
-
 
 }

@@ -30,7 +30,7 @@ import java.util.Set;
  */
 public class MappingsBySet {
     private final String lens;
-    private final Set<SetMapping> setMappings;
+    private final Set<SetMappings> setMappings;
     /*
      * These are the direct mappings based on namespace substitution
      */
@@ -38,15 +38,15 @@ public class MappingsBySet {
     
     public MappingsBySet(String lens){
         this.lens = lens;
-        this.setMappings = new HashSet<SetMapping>();
+        this.setMappings = new HashSet<SetMappings>();
         this.mappings = new HashSet<UriMapping>();
     }
     
     public void addMapping (int mappingSetId, String predicate, String justification, String mappingSource, 
             String sourceUri, Set<String> targetUris){
-        SetMapping setMapping = setMappingById(mappingSetId);
+        SetMappings setMapping = setMappingById(mappingSetId);
         if (setMapping == null){
-            setMapping = new SetMapping(mappingSetId, predicate, justification, mappingSource);
+            setMapping = new SetMappings(mappingSetId, predicate, justification, mappingSource);
             setMappings.add(setMapping);
         }
         for (String targetUri: targetUris){
@@ -54,12 +54,16 @@ public class MappingsBySet {
         }
     }
 
+    public void addSetMapping(SetMappings setMapping){
+        setMappings.add(setMapping);
+    }
+    
     public void addMapping (int mappingSetId, String predicate, String justification, String mappingSource, 
             String sourceUri, String targetUri){
-        SetMapping setMapping = setMappingById(mappingSetId);
+        SetMappings setMapping = setMappingById(mappingSetId);
         if (setMapping == null){
-            setMapping = new SetMapping(mappingSetId, predicate, justification, mappingSource);
-            setMappings.add(setMapping);
+            setMapping = new SetMappings(mappingSetId, predicate, justification, mappingSource);
+            getSetMappings().add(setMapping);
         }
         setMapping.addMapping(new UriMapping(sourceUri, targetUri));
     }
@@ -68,14 +72,17 @@ public class MappingsBySet {
         mappings.add(new UriMapping(sourceUri, targetUri));
     }
     
-    public void addMapping (String sourceUri, Set<String> targetUris){
+    public final void addMapping (UriMapping uriMapping){
+        mappings.add(uriMapping);
+    }
+     public void addMapping (String sourceUri, Set<String> targetUris){
        for (String targetUri:targetUris){
            addMapping(sourceUri, targetUri);
        }
     }
 
-    private SetMapping setMappingById(int id) {
-        for (SetMapping setMapping: setMappings){
+    private SetMappings setMappingById(int id) {
+        for (SetMappings setMapping: getSetMappings()){
             if (setMapping.getId() == id){
                 return setMapping;
             }
@@ -85,10 +92,10 @@ public class MappingsBySet {
     
     public Set<String> getTargetUris(){
         HashSet<String> targetUris = new HashSet<String>();
-        for (SetMapping setMapping: setMappings){
+        for (SetMappings setMapping: getSetMappings()){
             targetUris.addAll(setMapping.getTargetUris());           
         }
-        for (UriMapping mapping:mappings){
+        for (UriMapping mapping:getMappings()){
             targetUris.add(mapping.getTargetUri());
         }
 
@@ -97,14 +104,35 @@ public class MappingsBySet {
 
     public String toString(){
         StringBuilder sb = new StringBuilder("Lens: ");
-        sb.append(lens);
-        for (SetMapping setMapping: setMappings){
+        sb.append(getLens());
+        for (SetMappings setMapping: getSetMappings()){
             setMapping.append(sb);           
         }
         sb.append("\n\tUriSpace based mappings");
-        for (UriMapping mapping:mappings){
+        for (UriMapping mapping:getMappings()){
             mapping.append(sb);
         }
         return sb.toString();
+    }
+
+    /**
+     * @return the lens
+     */
+    public String getLens() {
+        return lens;
+    }
+
+    /**
+     * @return the setMappings
+     */
+    public Set<SetMappings> getSetMappings() {
+        return setMappings;
+    }
+
+    /**
+     * @return the mappings
+     */
+    public Set<UriMapping> getMappings() {
+        return mappings;
     }
 }
