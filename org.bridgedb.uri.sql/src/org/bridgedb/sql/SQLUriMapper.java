@@ -378,6 +378,18 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
+    public MappingsBySet mapBySet(Set<String> sourceUris, String lensUri, UriPattern... tgtUriPatterns) 
+           throws BridgeDBException{
+        MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
+        for (String sourceUri:sourceUris) {
+            for (UriPattern tgtUriPattern:tgtUriPatterns) {
+                mapBySet(sourceUri, mappingsBySet, lensUri, tgtUriPattern);
+            }
+        }
+        return mappingsBySet;           
+    }
+       
+    @Override
     public MappingsBySet mapBySet(String sourceUri, String lensUri) 
             throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
