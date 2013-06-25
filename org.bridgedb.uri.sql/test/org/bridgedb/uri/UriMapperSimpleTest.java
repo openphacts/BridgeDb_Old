@@ -12,6 +12,7 @@ import org.bridgedb.rdf.UriPattern;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.openrdf.model.Statement;
 
 /**
  *
@@ -239,6 +240,8 @@ public abstract class UriMapperSimpleTest extends UriListenerTest{
         assertFalse(results.contains(map2Uri2));
         assertFalse(results.contains(map1Uri3));
         checkForNoOtherlensId(results);
+        System.out.println(lensMapping.asRDF(null));
+        System.out.println(lensMapping.toRDF(null, null));
     }
     
     /**

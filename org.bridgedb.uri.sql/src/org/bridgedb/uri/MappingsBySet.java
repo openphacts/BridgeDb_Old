@@ -19,9 +19,21 @@
 //
 package org.bridgedb.uri;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
-
+import org.bridgedb.rdf.RdfBase;
+import org.bridgedb.rdf.constants.DulConstants;
+import org.bridgedb.rdf.constants.VoidConstants;
+import org.bridgedb.utils.BridgeDBException;
+import org.openrdf.model.Statement;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.RDFWriterFactory;
+import org.openrdf.rio.RDFWriterRegistry;
 /**
  * Holder class for the main Meta Data of MappingSet.
  *
@@ -31,6 +43,7 @@ import java.util.Set;
 public class MappingsBySet {
     private final String lens;
     private final Set<SetMappings> setMappings;
+    
     /*
      * These are the direct mappings based on namespace substitution
      */
@@ -134,5 +147,61 @@ public class MappingsBySet {
      */
     public Set<UriMapping> getMappings() {
         return mappings;
+    }
+    
+    public Set<Statement> asRDF(String contextPath) throws BridgeDBException{
+        if (contextPath == null){
+            contextPath = RdfBase.DEFAULT_BASE_URI;
+        }
+        HashSet<Statement> statements = new HashSet<Statement>();
+        for (SetMappings setMapping: getSetMappings()){
+            Lens theLens = Lens.byId(lens);
+            String lensUri = theLens.toUri(contextPath);
+            Set<Statement> more = setMapping.asRDF(lensUri, contextPath);
+            statements.addAll(more);          
+        }
+       return statements;
+    }
+    
+    private void writeRDF(Set<Statement> statements,  RDFFormat format, Writer writer) throws BridgeDBException{
+        RDFWriterRegistry register =  RDFWriterRegistry.getInstance();
+        System.out.println(format);
+        RDFWriterFactory factory = register.get(format);
+        System.out.println(factory);
+        try {
+            if (factory != null){
+                RDFWriter rdfWriter = factory.getWriter(writer);
+                writer.write(format.toString());
+                writer.write("\n");
+                rdfWriter.startRDF();
+                rdfWriter.handleNamespace("ops", RdfBase.DEFAULT_BASE_URI);
+                rdfWriter.handleNamespace("void", VoidConstants.voidns);
+                rdfWriter.handleNamespace("dul", DulConstants.dulns);
+                for(Statement statement:statements){
+                    rdfWriter.handleStatement(statement);
+                }
+                rdfWriter.endRDF();
+            } else {
+                writer.flush();
+                writer.write("No Writer available for ");
+                writer.write(format.toString());
+                writer.write("\n");
+            }
+       } catch (RDFHandlerException ex) {
+            throw new BridgeDBException("Error writing RDF. ", ex);
+        } catch (IOException ex) {
+            throw new BridgeDBException("Error writing RDF. ", ex);
+        }
+    }
+    
+    public String toRDF(String contextPath, String formatName) throws BridgeDBException{
+            Set<Statement> statements = asRDF(contextPath);
+            StringWriter writer = new StringWriter();
+            if (formatName == null){
+                formatName = "TriX";
+            }
+            RDFFormat rdfFormat = RDFFormat.valueOf(formatName);
+            writeRDF(statements,  rdfFormat, writer);
+            return writer.toString();
     }
 }

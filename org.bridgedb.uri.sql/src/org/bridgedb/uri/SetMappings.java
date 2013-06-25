@@ -21,9 +21,17 @@ package org.bridgedb.uri;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.bridgedb.rdf.RdfBase;
+import org.bridgedb.rdf.constants.DulConstants;
+import org.bridgedb.rdf.constants.VoidConstants;
+import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+import org.openrdf.model.impl.ContextStatementImpl;
+import org.openrdf.model.impl.StatementImpl;
+import org.openrdf.model.impl.URIImpl;
 
 /**
- * Holder class for the main Meta Data of MappingSet.
+ * Holder class for the main Meta Data of the relevant mappings in a single Set plus some set data.
  *
  * Does not include everything in the void header but only what is captured in the SQL.
  * @author Christian
@@ -34,6 +42,10 @@ public class SetMappings {
     private final String justification;
     private final String mappingSource;
     private final Set<UriMapping> mappings;
+    
+    public static final String METHOD_NAME = "mappingSet";
+    public static final String URI_PREFIX = "/" + METHOD_NAME + "/";
+    public static final String HAS_LENS = "http:www.bridgedb.org/rdf/fulfillsLens" ;
     
     public SetMappings(int id, String predicate, String justification, String mappingSource){
         this.id = id;
@@ -103,5 +115,40 @@ public class SetMappings {
             mapping.append(sb);
         }
     }
+
+    private  static URI toURI(String text, String contextPath){
+        try {
+            return new URIImpl(text);
+        } catch (IllegalArgumentException ex){
+            return new URIImpl("<" + contextPath + text + ">");
+        }
+    }
+    
+    Set<Statement> asRDF(String lensUri, String contextPath) {
+        HashSet<Statement> statements = new HashSet<Statement>();
+        URI setUri = new URIImpl(contextPath + URI_PREFIX + id);
+        URI predicateURI = toURI(predicate, contextPath);
+        Statement statement = new StatementImpl(setUri, VoidConstants.LINK_PREDICATE, predicateURI);
+        statements.add(statement);
+        URI justifcationURI = toURI(this.justification, contextPath);
+        statement = new StatementImpl(setUri, DulConstants.EXPRESSES, justifcationURI);
+        statements.add(statement);
+        URI mappingSourceURI = toURI(this.mappingSource, contextPath);
+        statement = new StatementImpl(setUri, VoidConstants.DATA_DUMP, mappingSourceURI);
+        statements.add(statement);
+        for (UriMapping mapping:mappings){
+            URI sourceURI = toURI(mapping.getSourceUri(), contextPath);
+            URI targetURI = toURI(mapping.getTargetUri(), contextPath);
+            statement =  new ContextStatementImpl(sourceURI, predicateURI, targetURI, setUri);
+            statements.add(statement);
+        }
+        return statements;
+    }
+    
+    public static void main(String[] args) {
+        String contextPath = RdfBase.DEFAULT_BASE_URI;
+        System.out.println(toURI("test", contextPath));
+    }
+
 
   }
