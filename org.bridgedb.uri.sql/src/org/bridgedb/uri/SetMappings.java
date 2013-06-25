@@ -24,6 +24,7 @@ import java.util.Set;
 import org.bridgedb.rdf.RdfBase;
 import org.bridgedb.rdf.constants.DulConstants;
 import org.bridgedb.rdf.constants.VoidConstants;
+import org.bridgedb.utils.BridgeDBException;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.ContextStatementImpl;
@@ -124,7 +125,7 @@ public class SetMappings {
         }
     }
     
-    Set<Statement> asRDF(String lensUri, String contextPath) {
+    Set<Statement> asRDF(String lens, String contextPath) throws BridgeDBException {
         HashSet<Statement> statements = new HashSet<Statement>();
         URI setUri = new URIImpl(contextPath + URI_PREFIX + id);
         URI predicateURI = toURI(predicate, contextPath);
@@ -136,6 +137,13 @@ public class SetMappings {
         URI mappingSourceURI = toURI(this.mappingSource, contextPath);
         statement = new StatementImpl(setUri, VoidConstants.DATA_DUMP, mappingSourceURI);
         statements.add(statement);
+        if (lens != null){
+            Lens theLens = Lens.byId(lens);
+            URI lensUri = new URIImpl(theLens.toUri(contextPath));
+            URI hasLensUri = new URIImpl(HAS_LENS);
+            statement = new StatementImpl(setUri, hasLensUri, lensUri);
+            statements.add(statement);
+        }
         for (UriMapping mapping:mappings){
             URI sourceURI = toURI(mapping.getSourceUri(), contextPath);
             URI targetURI = toURI(mapping.getTargetUri(), contextPath);

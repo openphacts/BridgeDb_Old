@@ -34,6 +34,10 @@ import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.RDFWriterFactory;
 import org.openrdf.rio.RDFWriterRegistry;
+import org.openrdf.rio.trig.TriGWriter;
+import org.openrdf.rio.turtle.TurtleWriter;
+import org.openrdf.rio.n3.N3Writer;
+import org.openrdf.rio.trix.TriXWriter;
 /**
  * Holder class for the main Meta Data of MappingSet.
  *
@@ -155,9 +159,7 @@ public class MappingsBySet {
         }
         HashSet<Statement> statements = new HashSet<Statement>();
         for (SetMappings setMapping: getSetMappings()){
-            Lens theLens = Lens.byId(lens);
-            String lensUri = theLens.toUri(contextPath);
-            Set<Statement> more = setMapping.asRDF(lensUri, contextPath);
+            Set<Statement> more = setMapping.asRDF(lens, contextPath);
             statements.addAll(more);          
         }
        return statements;

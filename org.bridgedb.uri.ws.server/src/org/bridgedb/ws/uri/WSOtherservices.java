@@ -22,6 +22,7 @@ package org.bridgedb.ws.uri;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -36,15 +37,16 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.bridgedb.Xref;
 import org.bridgedb.rdf.RdfConfig;
+import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.Mapping;
+import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.SetMappings;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WsConstants;
 import org.bridgedb.ws.WsUriConstants;
-import org.bridgedb.ws.bean.MappingBean;
 
 /**
  * This class provides the Reposnse Frame including Top and Sidebar 
@@ -1507,6 +1509,34 @@ public class WSOtherservices extends WSFrame {
         }
         sb.append("}"); 
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
+    }
+    
+    @GET
+    @Produces({MediaType.TEXT_PLAIN})
+    @Path("/" + WsUriConstants.MAP_BY_SET + WsUriConstants.RDF)
+    public String mapBySetText(@QueryParam(WsUriConstants.URI) List<String> uris,
+     		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
+            @QueryParam(WsUriConstants.RDF_FORMAT) String formatName
+            ) throws BridgeDBException {
+        HashSet<String> uriSet = new HashSet<String>(uris);
+        UriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
+        MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, targetPatterns);
+        return mappingsBySet.toRDF(null, formatName);
+    }
+    
+    @GET
+    @Produces({MediaType.TEXT_HTML})
+    @Path("/" + WsUriConstants.MAP_BY_SET + WsUriConstants.RDF)
+    public Response mapBySetTexthtml(@QueryParam(WsUriConstants.URI) List<String> uris,
+     		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
+            @QueryParam(WsUriConstants.RDF_FORMAT) String formatName
+            ) throws BridgeDBException {
+        HashSet<String> uriSet = new HashSet<String>(uris);
+        UriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
+        MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, targetPatterns);
+        return Response.ok(mappingsBySet.toRDF(null, formatName), MediaType.TEXT_HTML).build();
     }
 
 }

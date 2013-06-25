@@ -257,7 +257,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         return targets.toArray(new DataSource[0]);        
     }
             
-    private UriPattern[] getUriPatterns(List<String> targetUriPatterns){
+    final UriPattern[] getUriPatterns(List<String> targetUriPatterns){
         if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
             return null;
         }
