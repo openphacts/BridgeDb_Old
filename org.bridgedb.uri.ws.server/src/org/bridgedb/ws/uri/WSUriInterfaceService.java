@@ -413,6 +413,28 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         return results;
     }
 
+    /**
+    * @deprecated 
+    */
+   @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("/" + WsUriConstants.GET_MAPPING_INFO + WsUriConstants.XML) 
+    public List<MappingSetInfoBean> getMappingSetInfosXML(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
+            @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode) throws BridgeDBException {
+        return getMappingSetInfos(scrCode, targetCode, null);
+    }
+    
+    /**
+     * @deprecated 
+     */
+    @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("/" + WsUriConstants.GET_MAPPING_INFO) 
+    public List<MappingSetInfoBean> getMappingSetInfos(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
+            @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode) throws BridgeDBException {
+        return getMappingSetInfos(scrCode, targetCode, null);       
+    }
+
 	@GET
 	@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
 	@Path(Lens.URI_PREFIX + "{id}")
@@ -455,13 +477,23 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     @Override
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/" + SetMappings.METHOD_NAME + "/{id}")
+    @Path("/" + WsUriConstants.GET_MAPPING_INFO + "/{id}")
     public MappingSetInfoBean getMappingSetInfo(@PathParam("id") String idString) throws BridgeDBException {
         if (idString == null) throw new BridgeDBException("Path parameter missing.");
         if (idString.isEmpty()) throw new BridgeDBException("Path parameter may not be null.");
         int id = Integer.parseInt(idString);
         MappingSetInfo info = uriMapper.getMappingSetInfo(id);
         return MappingSetInfoBean.asBean(info);
+    }
+
+    /**
+     * @deprecated 
+     */
+    @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("/" + SetMappings.METHOD_NAME + "/{id}")
+    public MappingSetInfoBean getMappingSetInfoOld(@PathParam("id") String idString) throws BridgeDBException {
+        return getMappingSetInfo(idString);
     }
 
     @GET

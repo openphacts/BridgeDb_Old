@@ -79,7 +79,7 @@ public class WSAPI extends WSFrame {
     @Produces(MediaType.TEXT_HTML)
     @Path("/" + WsUriConstants.BRIDGEDB_API)
     public Response imsApiPage(@Context HttpServletRequest httpServletRequest) throws BridgeDBException, UnsupportedEncodingException {
-        String contextPath = httpServletRequest.getContextPath();
+        String contextPath = httpServletRequest.getContextPath() + "/";
         String apiString = apiStrings.get(contextPath);
         if (apiString == null){
             StringBuilder sb = new StringBuilder();
@@ -731,7 +731,7 @@ public class WSAPI extends WSFrame {
         sb.append("<dt>");
                 sb.append(WsUriConstants.MAP_URL);
                 sb.append("</a></dt>");
-        sb.append("<dd>DEPRICATED: Forwards call to");
+        sb.append("<dd>DEPRICATED: Forwards call to ");
         sb.append(WsUriConstants.MAP);
         sb.append("</dd>");
         sb.append("<dt><a href=\"#");
@@ -946,6 +946,11 @@ public class WSAPI extends WSFrame {
                 sb.append(SetMappings.METHOD_NAME);
                 sb.append("</a></dt>");
         sb.append("<dd>Brings up a table of all the mappings in the system by URISpace</dd>");
+        sb.append("<dt>");
+                sb.append(WsUriConstants.GET_MAPPING_INFO);
+                sb.append("</a></dt>");
+        sb.append("<dd>DEPRICATED: Forwards call to ");
+        sb.append(SetMappings.METHOD_NAME);
         sb.append("<dt><a href=\"#");
                 sb.append(WsUriConstants.GRAPHVIZ);
                 sb.append("\">");
@@ -972,6 +977,7 @@ public class WSAPI extends WSFrame {
                         sb.append(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE);
                         sb.append("</a></li>");
                 parameterTargetCode(sb);
+                parameterLens(sb);
                 sb.append("</ul>");           
             sb.append("<li>Example: <a href=\"");
                     sb.append(contextPath);
@@ -983,15 +989,29 @@ public class WSAPI extends WSFrame {
                     sb.append(contextPath);
                     sb.append(SetMappings.METHOD_NAME);
                     sb.append(FIRST_SOURCE_PARAMETER);
-                    sb.append(sourceSysCode);
-                    sb.append(TARGET_PARAMETER);
-                    sb.append(targetSysCode);
-                    sb.append("\">");
-                    sb.append(SetMappings.METHOD_NAME);
-                    sb.append(FIRST_SOURCE_PARAMETER);
                     sb.append(URLEncoder.encode(sourceSysCode, "UTF-8"));
                     sb.append(TARGET_PARAMETER);
                     sb.append(URLEncoder.encode(targetSysCode, "UTF-8"));
+                    sb.append("\">");
+                    sb.append(SetMappings.METHOD_NAME);
+                    sb.append(FIRST_SOURCE_PARAMETER);
+                    sb.append(sourceSysCode);
+                    sb.append(TARGET_PARAMETER);
+                    sb.append(targetSysCode);
+                    sb.append("</a></li>");    
+            sb.append("<li>Example (one Lens): <a href=\"");
+                    sb.append(contextPath);
+                    sb.append(SetMappings.METHOD_NAME); 
+                    sb.append("?");
+                    sb.append(WsUriConstants.LENS_URI);
+                    sb.append("=");
+                    sb.append(URLEncoder.encode(Lens.getDefaultLens(), "UTF-8")); 
+                    sb.append("\">");
+                    sb.append(SetMappings.METHOD_NAME);
+                    sb.append("?");
+                    sb.append(WsUriConstants.LENS_URI);
+                    sb.append("=");
+                    sb.append(Lens.getDefaultLens());                    
                     sb.append("</a></li>");    
             sb.append("<li>XML Example: <a href=\"");
                     sb.append(contextPath);
@@ -1230,7 +1250,6 @@ public class WSAPI extends WSFrame {
             sb.append(FIRST_URI_PARAMETER);
             sb.append(URLEncoder.encode(sourceUri1, "UTF-8"));
             sb.append("\">");
-            sb.append(contextPath);
             sb.append(methodName);
             sb.append(FIRST_URI_PARAMETER);
             sb.append(sourceUri1);
@@ -1245,7 +1264,6 @@ public class WSAPI extends WSFrame {
             sb.append("=");
             sb.append(URLEncoder.encode(sourceUri2, "UTF-8"));
             sb.append("\">");
-            sb.append(contextPath);
             sb.append(methodName);
             sb.append(FIRST_URI_PARAMETER);
             sb.append(sourceUri1);
@@ -1262,7 +1280,6 @@ public class WSAPI extends WSFrame {
             sb.append(TARGET_URI_PATTERN_PARAMETER);
             sb.append(URLEncoder.encode(targetUriSpace2, "UTF-8"));
             sb.append("\">");
-            sb.append(contextPath);
             sb.append(methodName);
             sb.append(FIRST_URI_PARAMETER);
             sb.append(sourceUri2);
@@ -1279,7 +1296,6 @@ public class WSAPI extends WSFrame {
             sb.append("=");
             sb.append(Lens.getDefaultLens());
             sb.append("\">");
-            sb.append(contextPath);
             sb.append(methodName);
             sb.append(FIRST_URI_PARAMETER);
             sb.append(sourceUri1);

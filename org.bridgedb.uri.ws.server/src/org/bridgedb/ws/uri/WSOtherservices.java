@@ -148,7 +148,7 @@ public class WSOtherservices extends WSAPI {
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/" + SetMappings.METHOD_NAME)
-    public Response getMappingInfo(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
+    public Response getSetMapping(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
             @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode,
             @QueryParam(WsUriConstants.LENS_URI) String lensUri,
             @Context HttpServletRequest httpServletRequest) 
@@ -180,6 +180,19 @@ public class WSOtherservices extends WSAPI {
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
     }
     
+     /**
+     * @deprecated 
+     */
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    @Path("/" + WsUriConstants.GET_MAPPING_INFO)
+     public Response getMappingInfo(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
+            @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode, 
+            @Context HttpServletRequest httpServletRequest) 
+            throws BridgeDBException, UnsupportedEncodingException {
+        return getSetMapping(scrCode, targetCode, null, httpServletRequest);
+    }
+
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/" + Lens.METHOD_NAME) 

@@ -19,6 +19,8 @@
 //
 package org.bridgedb.ws;
 
+import org.bridgedb.uri.SetMappings;
+
 /**
  *
  * @author Christian
@@ -30,6 +32,10 @@ public class WsUriConstants extends WsConstants{
     public static final String BRIDGEDB_HOME = "BridgeDb";
     public static final String DATA_SOURCE = "dataSource";
     public static final String GET_OVERALL_STATISTICS = "getOverallStatistics";
+    /**
+     * @deprecated 
+     */
+    public static final String GET_MAPPING_INFO = "getMappingInfo";
     public static final String GET_SAMPLE_MAPPINGS = "getSampleMappings";
     public static final String GRAPHVIZ = "graphviz";
     public static final String MAPPING = "mapping";
@@ -42,6 +48,7 @@ public class WsUriConstants extends WsConstants{
     public static final String RDF_FORMAT = "rdfFormat";
     public static final String SQL_COMPAT_VERSION = "SqlCompatVersion";
     public static final String TARGET_URI_PATTERN = "targetUriPattern";
+
     /** @deprecated */
     public static final String TARGET_URI_SPACE = "targetURISpace";
     public static final String TO_XREF = "toXref";
