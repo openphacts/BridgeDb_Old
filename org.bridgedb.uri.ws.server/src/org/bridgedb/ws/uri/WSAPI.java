@@ -98,12 +98,28 @@ public class WSAPI extends WSFrame {
         return Response.ok(sb.toString() + apiString, MediaType.TEXT_HTML).build();
     }
     
+     /**
+     * Forwarding page for "/api".
+     * 
+     * This is expected to be over written by the IMS/ QueryExpander and any other extension.
+     * @param httpServletRequest
+     * @return
+     * @throws BridgeDBException
+     * @throws UnsupportedEncodingException 
+     */
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    @Path("/api")
+    public Response apiPage(@Context HttpServletRequest httpServletRequest) throws BridgeDBException, UnsupportedEncodingException {
+        return imsApiPage(httpServletRequest);
+    }
+    
     private void showSummary(StringBuilder sb) {
         sb.append("<h2>Support services include:<h2>");
         sb.append("<dl>");      
         introduce(sb);
         sb.append("</dl>");
-        sb.append("</p>");
+        sb.append("</p>\n");
     }
 
     private void introduce(StringBuilder sb) {
@@ -120,7 +136,7 @@ public class WSAPI extends WSFrame {
         sb.append("<h2>Parameters </h2>");
         sb.append("The following parametes may be applicable to the methods. ");
         sb.append("See the indiviual method description for which are required and which are optional.");
-        sb.append("Their behaviour is consitant across all methods.");
+        sb.append("Their behaviour is consitant across all methods.\n");
         describeParameter(sb);
     }
 
@@ -137,16 +153,16 @@ public class WSAPI extends WSFrame {
         Xref sourceXref2 =  mapping2.getSource();
         String sourceUri2 = mapping2.getSourceUri().iterator().next();
         String targetUri2 = mapping2.getTargetUri().iterator().next();    
-        String targetUriSpace2 = targetUri2.substring(0, targetUri2.length()-sourceXref2.getId().length());
-                
+        Xref targetXref2 = mapping2.getTarget();
+        String targetUriSpace2 = targetUri2.substring(0, targetUri2.length()- targetXref2.getId().length());
         boolean freeSearchSupported = idMapper.getCapabilities().isFreeSearchSupported(); 
         Set<String> keys = idMapper.getCapabilities().getKeys();
 
         describe_IDMapper(sb, sourceXref1, tragetSysCode1, sourceXref2, freeSearchSupported);
         describe_IDMapperCapabilities(sb, sourceXref1, tragetSysCode1, keys, freeSearchSupported);
-        describe_UriMapper(sb, sourceXref1, sourceUri1, sourceXref2, sourceUri2, targetUriSpace2, 
+        describe_UriMapper(sb, sourceXref1, tragetSysCode1, sourceUri1, sourceXref2, sourceUri2, 1, targetUriSpace2, 
                 text1, 1, sourceSysCode1, freeSearchSupported);
-        describe_Info(sb, sourceXref1, sourceSysCode1, tragetSysCode1);
+        describe_MappingSet(sb, sourceXref1, sourceSysCode1, tragetSysCode1);
         describe_Graphviz(sb);      
     }
     
@@ -156,8 +172,8 @@ public class WSAPI extends WSFrame {
     }
     
     private void describeCoreParameter(StringBuilder sb) {
-        sb.append("<h3>BridgeDB Parameters</h3>");
-        sb.append("<ul>");
+        sb.append("<h3>BridgeDB Parameters</h3>\n");
+        sb.append("<ul>\n");
         sb.append("<dt><a name=\"id_code\">");
                 sb.append(WsConstants.ID);
                 sb.append(" and ");
@@ -189,12 +205,12 @@ public class WSAPI extends WSFrame {
                     sb.append(WsConstants.ID);
                     sb.append(". These do not require a \"");
                     sb.append(WsConstants.DATASOURCE_SYSTEM_CODE);
-                    sb.append("\"</li>");
+                    sb.append("\"</li>\n");
         sb.append("<dt><a name=\"key\">key</a></dt>");
             sb.append("<ul>");
             sb.append("<li>Selects which property to return.</li>");
             sb.append("<li>Only one key parameter is supported.</li>");
-            sb.append("</ul>");
+            sb.append("</ul>\n");
         sb.append("<dt><a name=\"");
                 sb.append(WsConstants.LIMIT);
                 sb.append("\">");
@@ -222,7 +238,7 @@ public class WSAPI extends WSFrame {
                     sb.append(WsConstants.LIMIT);
                     sb.append(" will be used.</li>");
             sb.append("<li>To obtain a full data dump please contact the admins.</li>");
-            sb.append("</ul>");
+            sb.append("</ul>\n");
         sb.append("<dt><a name=\"");
                 sb.append(WsConstants.SOURCE_DATASOURCE_SYSTEM_CODE);
                 sb.append("\">");
@@ -234,7 +250,7 @@ public class WSAPI extends WSFrame {
             sb.append("<li>Typically there must be exactly one ");
                     sb.append(WsConstants.SOURCE_DATASOURCE_SYSTEM_CODE);
                     sb.append(" when used..</li>");
-            sb.append("</ul>");
+            sb.append("</ul>\n");
         sb.append("<dt><a name=\"");
                 sb.append(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE);
                 sb.append("\">");
@@ -256,12 +272,12 @@ public class WSAPI extends WSFrame {
             sb.append("<li>Only one text parameter is supported.</li>");
             sb.append("<li>Note this is for searching for text in Identifiers not for mapping between text and Identifiers.</li>");
             sb.append("</ul>");      
-        sb.append("</ul>");
+        sb.append("</ul>\n");
    }
 
    private void describeUriParameter(StringBuilder sb) throws BridgeDBException {
         sb.append("<h3>Ops Exstension Parameters</h3>");
-        sb.append("<ul>");
+        sb.append("<ul>\n");
         sb.append("<dt><a name=\"");
                 sb.append(WsUriConstants.URI);
                 sb.append("\">");
@@ -274,7 +290,7 @@ public class WSAPI extends WSFrame {
             sb.append("<li>Only one ");
                     sb.append(WsUriConstants.URI);
                     sb.append(" parameters is supported.</li>");
-            sb.append("</ul>");
+            sb.append("</ul>\n");
         sb.append("<dt><a name=\"");
                 sb.append(WsUriConstants.LENS_URI);
                 sb.append("\">");
@@ -293,7 +309,7 @@ public class WSAPI extends WSFrame {
                 sb.append("</ul>");
             sb.append("<li>While the current API includes this parameter there is not yet any lens based data.</li>");
             sb.append("<li>It it not recommended to use this parameter except for testing until farther notice.</li>");
-            sb.append("</ul>");        
+            sb.append("</ul>\n");        
         sb.append("<dt><a name=\"");
                 sb.append(WsUriConstants.TARGET_URI_PATTERN);
                 sb.append("\">");
@@ -305,7 +321,7 @@ public class WSAPI extends WSFrame {
             sb.append("<li>String Format</li>");
             sb.append("<li>Do NOT include the @gt and @lt seen arround URIs in RDF</li>");
             sb.append("<li>Typically there can but need not be more than one.</li>");
-            sb.append("</ul>");
+            sb.append("</ul>\n");
          sb.append("<dt><a name=\"");
                 sb.append(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE);
                 sb.append("\">");
@@ -322,7 +338,7 @@ public class WSAPI extends WSFrame {
             sb.append("<li>Do NOT include the @gt and @lt seen arround URIs in RDF</li>");
             sb.append("<li>Typically there can but need not be more than one.</li>");
             sb.append("</ul>");
-         sb.append("</ul>");
+         sb.append("</ul>\n");
    }
 
    protected final void introduce_IDMapper(StringBuilder sb, boolean freeSearchSupported) {
@@ -330,39 +346,39 @@ public class WSAPI extends WSFrame {
                 sb.append(WsConstants.MAP_ID);
                 sb.append("\">");
                 sb.append(WsConstants.MAP_ID);
-                sb.append("</a></dt>");
-        sb.append("<dd>List the Xrefs that map to these Xrefs</dd>");
+                sb.append("</a></dt>\n");
+        sb.append("<dd>List the Xrefs that map to these Xrefs</dd>\n");
         sb.append("<dt><a href=\"#");
                 sb.append(WsConstants.XREF_EXISTS);
                 sb.append("\">");
                 sb.append(WsConstants.XREF_EXISTS);
-                sb.append("</a></dt>");
+                sb.append("</a></dt>\n");
         sb.append("<dd>State if the Xref is know to the Mapping Service or not</dd>");   
         sb.append("<dt><a href=\"#");
                 sb.append(WsConstants.FREE_SEARCH);
                 sb.append("\">");
                 sb.append(WsConstants.FREE_SEARCH);
-                sb.append("</a></dt>");
+                sb.append("</a></dt>\n");
         if (freeSearchSupported){
-            sb.append("<dd>Searches for Xrefs that have this id.</dd>");
+            sb.append("<dd>Searches for Xrefs that have this id.</dd>\n");
         } else {
-            sb.append("<dd>This is currently not supported.</dd>");      
+            sb.append("<dd>This is currently not supported.</dd>\n");      
         }
         sb.append("<dt><a href=\"#");
                 sb.append(WsConstants.GET_CAPABILITIES);
                 sb.append("\">");
                 sb.append(WsConstants.GET_CAPABILITIES);
-                sb.append("</a></dt>");
+                sb.append("</a></dt>\n");
         sb.append("<dd>Gives the Capabilitles as defined by BridgeDB.</dd>");
         sb.append("<dt>Close()</a></dt>");
         sb.append("<dd>Not supported as clients should not be able to close the server.</dd>");
         sb.append("<dt>isConnected</dt>");
-        sb.append("<dd>Not supported as Close() is not allowed</dd>");
+        sb.append("<dd>Not supported as Close() is not allowed</dd>\n");
     }
 
     protected void describe_IDMapper(StringBuilder sb, Xref sourceXref1, String tragetSysCode1, Xref sourceXref2,
             boolean freeSearchSupported) throws UnsupportedEncodingException, BridgeDBException{
-        sb.append("<h2>Implementations of BridgeDB's IDMapper methods</h2>");
+        sb.append("<h2>Implementations of BridgeDB's IDMapper methods</h2>\n");
 
         describe_mapID(sb, sourceXref1, tragetSysCode1, sourceXref2);    
         describe_xrefExists(sb, sourceXref1);
@@ -376,7 +392,7 @@ public class WSAPI extends WSFrame {
         sb.append("<dd>Not supported as clients should not be able to close the server.</dd>");
         sb.append("<dt>isConnected</dt>");
         sb.append("<dd>Not supported as Close() is not allowed</dd>");
-        sb.append("</dl>");
+        sb.append("</dl>\n");
     }
     
     private void describe_mapID(StringBuilder sb, Xref sourceXref1, String tragetSysCode1, Xref sourceXref2) 
@@ -392,62 +408,14 @@ public class WSAPI extends WSFrame {
             sb.append("<li>Implements:  Set&ltXref&gt mapID(Xref srcXrefs, DataSource... tgtDataSources)</li>");
             sb.append("<li>Required arguements: (Only Source Xref considered)</li>");
                 sb.append("<ul>");
-                sb.append("<li><a href=\"#");
-                        sb.append(ID_CODE);
-                        sb.append("\">");
-                        sb.append(WsConstants.ID);
-                        sb.append("</a></li>");
-                sb.append("<li><a href=\"#");
-                        sb.append(ID_CODE);
-                        sb.append("\">");
-                        sb.append(WsConstants.DATASOURCE_SYSTEM_CODE);
-                        sb.append("</a></li>");
+                parameterID_CODE(sb);
                 sb.append("</ul>");
             sb.append("<li>Optional arguments</li>");
                 sb.append("<ul>");
-                sb.append("<li><a href=\"#");
-                        sb.append(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE);
-                        sb.append("\">");
-                        sb.append(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE);
-                        sb.append("</a></li> ");
+                parameterTargetCode(sb);
                 sb.append("</ul>");        
-            sb.append("<li>Example: <a href=\"");
-                sb.append(RdfConfig.getTheBaseURI());
-                    StringBuilder front = new StringBuilder(WsConstants.MAP_ID);
-                    StringBuilder sbInnerPure = new StringBuilder(WsConstants.MAP_ID);
-                    StringBuilder sbInnerEncoded = new StringBuilder(WsConstants.MAP_ID);
-                    sbInnerPure.append(FIRST_ID_PARAMETER);
-                    sbInnerEncoded.append(FIRST_ID_PARAMETER);
-                    sbInnerPure.append(sourceXref1.getId());
-                    sbInnerEncoded.append(sourceXref1.getId());
-                    sbInnerPure.append(DATASOURCE_SYSTEM_CODE_PARAMETER);
-                    sbInnerEncoded.append(DATASOURCE_SYSTEM_CODE_PARAMETER);
-                    sbInnerPure.append(sourceXref1.getDataSource().getSystemCode());
-                    sbInnerEncoded.append(URLEncoder.encode(sourceXref1.getDataSource().getSystemCode(), "UTF-8"));
-                    sbInnerPure.append(ID_PARAMETER);
-                    sbInnerEncoded.append(ID_PARAMETER);
-                    sbInnerPure.append(sourceXref2.getId());
-                    sbInnerEncoded.append(URLEncoder.encode(sourceXref2.getId(), "UTF-8"));
-                    sbInnerPure.append(DATASOURCE_SYSTEM_CODE_PARAMETER);
-                    sbInnerEncoded.append(DATASOURCE_SYSTEM_CODE_PARAMETER);
-                    sbInnerPure.append(sourceXref2.getDataSource().getSystemCode());
-                    sbInnerEncoded.append(URLEncoder.encode(sourceXref2.getDataSource().getSystemCode(), "UTF-8"));
-                    sb.append(sbInnerEncoded.toString());
-                    sb.append("\">");
-                    sb.append(sbInnerPure.toString());
-                    sb.append("</a></li>");    
-            sb.append("<li>Example: <a href=\"");
-                sb.append(RdfConfig.getTheBaseURI());
-                    String targetPart = "&" + WsConstants.TARGET_DATASOURCE_SYSTEM_CODE + "=";
-                    sbInnerPure.append(targetPart);
-                    sbInnerEncoded.append(targetPart);
-                    sbInnerPure.append(tragetSysCode1);
-                    sbInnerEncoded.append(URLEncoder.encode(tragetSysCode1, "UTF-8"));
-                    sb.append(sbInnerEncoded.toString());
-                    sb.append("\">");
-                    sb.append(sbInnerPure.toString());
-                    sb.append("</a></li>");                    
-            sb.append("</ul>");
+            mapExamplesXrefbased(sb, WsConstants.MAP_ID, sourceXref1, tragetSysCode1, sourceXref2);
+            sb.append("</ul>\n");
     }
     
     private void describe_xrefExists(StringBuilder sb, Xref xref1) throws UnsupportedEncodingException, BridgeDBException{
@@ -461,16 +429,7 @@ public class WSAPI extends WSFrame {
             sb.append("<li>State if the Xref is know to the Mapping Service or not</li>");
             sb.append("<li>Required arguements: (Considers both Source and target Xrefs</li>");
                 sb.append("<ul>");
-                sb.append("<li><a href=\"#");
-                        sb.append(ID_CODE);
-                        sb.append("\">");
-                        sb.append(WsConstants.ID);
-                        sb.append("</a></li>");
-                sb.append("<li><a href=\"#");
-                        sb.append(ID_CODE);
-                        sb.append("\">");
-                        sb.append(WsConstants.DATASOURCE_SYSTEM_CODE);
-                        sb.append("</a></li>");
+                parameterID_CODE(sb);
                 sb.append("<li>Currently only a single ");
                         sb.append(WsConstants.ID);
                         sb.append(" and single ");
@@ -491,7 +450,7 @@ public class WSAPI extends WSFrame {
                     sb.append(FIRST_ID_PARAMETER);
                     sb.append(xref1.getDataSource().getSystemCode());
                     sb.append("</a></li>");    
-            sb.append("</ul>");
+            sb.append("</ul>\n");
     }
     
     private void describe_freeSearch(StringBuilder sb, Xref xref1) throws UnsupportedEncodingException, BridgeDBException{
@@ -502,19 +461,10 @@ public class WSAPI extends WSFrame {
                 sb.append("</h3>");
             sb.append("<ul>");
             sb.append("<li>Searches for Xrefs that have this id.</li>");
-            sb.append("<li>Implements:  Set@ltXref@gt freeSearch (String text, int limit)</li>");
+            sb.append("<li>Implements:  Set&ltXref&gt freeSearch (String text, int limit)</li>");
             sb.append("<li>Required arguements:</li>");
                 sb.append("<ul>");
-                sb.append("<li><a href=\"#");
-                        sb.append(WsConstants.TEXT);
-                        sb.append("\">");
-                        sb.append(WsConstants.TEXT);
-                        sb.append("</a></li>");
-                sb.append("<li><a href=\"#");
-                        sb.append(WsConstants.LIMIT);
-                        sb.append("\">");
-                        sb.append(WsConstants.LIMIT);
-                        sb.append("</a> (default available)</li>");
+                parameterTextLimit(sb);
                 sb.append("</ul>");
             sb.append("<li>Example: <a href=\"");
                     sb.append(RdfConfig.getTheBaseURI());
@@ -528,7 +478,7 @@ public class WSAPI extends WSFrame {
                     sb.append(xref1.getId());
                     sb.append(LIMIT5_PARAMETER);
                     sb.append("</a></li>");    
-            sb.append("</ul>");
+            sb.append("</ul>\n");
     }
     
   protected final void introduce_IDMapperCapabilities(StringBuilder sb, Set<String> keys, boolean freeSearchSupported) {
@@ -576,9 +526,9 @@ public class WSAPI extends WSFrame {
                 sb.append(WsConstants.GET_KEYS);
                 sb.append("</a></dt>");
         if (keys.isEmpty()){
-            sb.append("<dd>There are currently no properties supported.</dd>");
+            sb.append("<dd>There are currently no properties supported.</dd>\n");
         } else {
-            sb.append("<dd>Returns The keys and their property value.</dd>");
+            sb.append("<dd>Returns The keys and their property value.</dd>\n");
         }
     }
   
@@ -597,12 +547,12 @@ public class WSAPI extends WSFrame {
                     sb.append("\">");
                     sb.append(WsConstants.GET_CAPABILITIES);
                     sb.append("</a></li>");    
-            sb.append("</ul>");
+            sb.append("</ul>\n");
     }
     
     protected void describe_IDMapperCapabilities(StringBuilder sb, Xref xref1, String tragetSysCode1, Set<String> keys, 
             boolean freeSearchSupported) throws UnsupportedEncodingException, BridgeDBException{
-        sb.append("<h2>Implementations of BridgeDB's IDMapperCapabilities methods</h2>");
+        sb.append("<h2>Implementations of BridgeDB's IDMapperCapabilities methods</h2>\n");
         describe_isFreeSearchSupported(sb, freeSearchSupported);
         describe_getSupportedDataSources(sb);
         describe_isMappingSupported(sb, xref1, tragetSysCode1); 
@@ -629,7 +579,7 @@ public class WSAPI extends WSFrame {
                     sb.append("\">");
                     sb.append(WsConstants.IS_FREE_SEARCH_SUPPORTED);
                     sb.append("</a></li>");    
-            sb.append("</ul>");
+            sb.append("</ul>\n");
     }
     
     private void describe_getSupportedDataSources(StringBuilder sb) throws BridgeDBException {
@@ -647,7 +597,7 @@ public class WSAPI extends WSFrame {
                     sb.append("\">");
                     sb.append(WsConstants.GET_SUPPORTED_SOURCE_DATA_SOURCES);
                     sb.append("</a></li>");    
-            sb.append("</ul>");
+            sb.append("</ul>\n");
           
          sb.append("<h3><a name=\"");
                 sb.append(WsConstants.GET_SUPPORTED_TARGET_DATA_SOURCES);
@@ -663,7 +613,7 @@ public class WSAPI extends WSFrame {
                     sb.append("\">");
                     sb.append(WsConstants.GET_SUPPORTED_TARGET_DATA_SOURCES);
                     sb.append("</a></li>");    
-            sb.append("</ul>");
+            sb.append("</ul>\n");
     }
     
     private void describe_isMappingSupported(StringBuilder sb, Xref sourceXref1, String targetSysCode) 
@@ -683,11 +633,7 @@ public class WSAPI extends WSFrame {
                         sb.append("\">");
                         sb.append(WsConstants.SOURCE_DATASOURCE_SYSTEM_CODE);
                         sb.append("</a></li> ");
-                sb.append("<li><a href=\"#");
-                        sb.append(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE);
-                        sb.append("\">");
-                        sb.append(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE);
-                        sb.append("</a></li> ");
+                parameterTargetCode(sb);
                 sb.append("</ul>");
             sb.append("<li>Example: <a href=\"");
                     sb.append(RdfConfig.getTheBaseURI());
@@ -703,7 +649,7 @@ public class WSAPI extends WSFrame {
                     sb.append(TARGET_PARAMETER);
                     sb.append(URLEncoder.encode(targetSysCode, "UTF-8"));
                     sb.append("</a></li>");    
-            sb.append("</ul>");
+            sb.append("</ul>\n");
     }
 
     private void describe_getProperty(StringBuilder sb, Set<String> keys) 
@@ -734,7 +680,7 @@ public class WSAPI extends WSFrame {
                         sb.append(URLEncoder.encode(keys.iterator().next(), "UTF-8"));
                         sb.append("</a></li>");    
             }
-            sb.append("</ul>");
+            sb.append("</ul>\n");
     }
     
     private void describe_getKeys(StringBuilder sb, Set<String> keys) throws BridgeDBException{
@@ -756,7 +702,7 @@ public class WSAPI extends WSFrame {
                         sb.append(WsConstants.GET_KEYS);
                         sb.append("</a></li>");    
             }
-            sb.append("</ul>");
+            sb.append("</ul>\n");
     }
 
         protected final void introduce_URIMapper(StringBuilder sb, boolean freeSearchSupported) {
@@ -772,7 +718,21 @@ public class WSAPI extends WSFrame {
                 sb.append(WsUriConstants.MAP_URI);
                 sb.append("</a></dt>");
         sb.append("<dd>List the URIs that map to this/these URIs</dd>");
-         sb.append("<dt>");
+        sb.append("<dt><a href=\"#");
+                sb.append(WsUriConstants.MAP_BY_SET);
+                sb.append("\">");
+                sb.append(WsUriConstants.MAP_BY_SET);
+                sb.append("</a></dt>");
+        sb.append("<dd>List the URIs that map to this/these URIs organised into Sets and Source Target pairs.</dd>");
+        sb.append("<dt><a href=\"#");
+                sb.append(WsUriConstants.MAP_BY_SET + WsUriConstants.RDF);
+                sb.append("\">");
+                sb.append(WsUriConstants.MAP_BY_SET + WsUriConstants.RDF);
+                sb.append("</a></dt>");
+        sb.append("<dd>Same data as ");
+            refMapBySet(sb);
+            sb.append(" but presented at RDF.</dd>");
+        sb.append("<dt>");
                 sb.append(WsUriConstants.MAP_URL);
                 sb.append("</a></dt>");
         sb.append("<dd>DEPRICATED: Forwards call to");
@@ -810,15 +770,17 @@ public class WSAPI extends WSFrame {
                 sb.append("\">");
                 sb.append(WsUriConstants.DATA_SOURCE);
                 sb.append("</a></dt>");
-        sb.append("<dd>Returns the DataSource and associated UriSpace(s) with a specific id</dd>");
+        sb.append("<dd>Returns the DataSource and associated UriSpace(s) with a specific id</dd>\n");
     }
     
-    protected final void describe_UriMapper(StringBuilder sb, Xref sourceXref1, String sourceUri1, Xref sourceXref2, 
-            String sourceUri2, String targetUriSpace2, String text, int mappingId, String sysCode, boolean freeSearchSupported) 
+    protected final void describe_UriMapper(StringBuilder sb, Xref sourceXref1, String tragetSysCode1, String sourceUri1, Xref sourceXref2, 
+            String sourceUri2, int x, String targetUriSpace2, String text, int mappingId, String sysCode, boolean freeSearchSupported) 
             throws UnsupportedEncodingException, BridgeDBException{
-        sb.append("<h2>URI based methods</h2>");
-        describe_map(sb, sourceXref1, sourceUri1, sourceXref2, sourceUri2, targetUriSpace2);
+        sb.append("<h2>URI based methods</h2>\n");
+        describe_map(sb, sourceXref1, tragetSysCode1, sourceUri1, sourceXref2, sourceUri2, targetUriSpace2);
         describe_mapUri(sb, sourceUri1, sourceUri2, targetUriSpace2);
+        describe_mapBySet(sb, sourceUri1, sourceUri2, targetUriSpace2);
+        describe_mapBySetRDF(sb, sourceUri1, sourceUri2, targetUriSpace2);
         describe_uriExists(sb, sourceUri1);
         if (freeSearchSupported) {
             describe_uriSearch(sb, text); 
@@ -827,13 +789,13 @@ public class WSAPI extends WSFrame {
         describe_dataSource(sb, sysCode);
     }
         
-    private void describe_map(StringBuilder sb, Xref sourceXref1, String sourceUri1, Xref sourceXref2, 
+    private void describe_map(StringBuilder sb, Xref sourceXref1, String tragetSysCode1, String sourceUri1, Xref sourceXref2, 
             String sourceUri2, String targetUriSpace2) throws UnsupportedEncodingException, BridgeDBException{
         sb.append("<h3><a name=\"");
                 sb.append(WsUriConstants.MAP);
                 sb.append("\">");
                 sb.append(WsUriConstants.MAP);
-                sb.append("</h3>");
+                sb.append("</a></h3>");
             sb.append("<ul>");
             sb.append("<li>List the full mappings to this URI or Xref</li>");
             sb.append("<li>WARNING: Providing both URI and Xref parameters always causes an Exception. Even if they match!</li>");
@@ -849,116 +811,23 @@ public class WSAPI extends WSFrame {
             sb.append("<li>Required arguements:</li>");
                 sb.append("<ul>");
                 sb.append("<li>URI based</li>");
-                sb.append("<ul>");
-                    sb.append("<li><a href=\"#");
-                        sb.append(WsUriConstants.URI);
-                        sb.append("\">");
-                        sb.append(WsUriConstants.URI);
-                        sb.append("</a></li>");
+                    sb.append("<ul>");
+                    parameterUri(sb);
                     sb.append("</ul>");
                 sb.append("<li>Xref based</li>");
-                sb.append("<ul>");
-                    sb.append("<li><a href=\"#");
-                        sb.append(ID_CODE);
-                        sb.append("\">");
-                        sb.append(WsConstants.ID);
-                        sb.append("</a></li>");
-                    sb.append("<li><a href=\"#");
-                        sb.append(ID_CODE);
-                        sb.append("\">");
-                        sb.append(WsConstants.DATASOURCE_SYSTEM_CODE);
-                        sb.append("</a></li>");
-                   sb.append("</ul>");
+                    sb.append("<ul>");
+                    parameterID_CODE(sb);
+                    sb.append("</ul>");
                 sb.append("</ul>");
             sb.append("<li>Optional arguments</li>");
                 sb.append("<ul>");
-                sb.append("<li><a href=\"#");
-                        sb.append(WsUriConstants.LENS_URI);
-                        sb.append("\">");
-                        sb.append(WsUriConstants.LENS_URI);
-                        sb.append("</a></li> ");
-                sb.append("<li><a href=\"#");
-                        sb.append(WsUriConstants.TARGET_URI_PATTERN);
-                        sb.append("\">");
-                        sb.append(WsUriConstants.TARGET_URI_PATTERN);
-                        sb.append("</a></li> ");
-                sb.append("<li><a href=\"#");
-                        sb.append(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE);
-                        sb.append("\">");
-                        sb.append(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE);
-                        sb.append("</a></li> ");
+                parameterLens(sb);
+                parameterTargetPattern(sb);
+                parameterTargetCode(sb);
                 sb.append("</ul>");
-            sb.append("<li>Example: <a href=\"");
-                sb.append(RdfConfig.getTheBaseURI());
-                sb.append(WsUriConstants.MAP);
-                sb.append(FIRST_URI_PARAMETER);
-                sb.append(URLEncoder.encode(sourceUri1, "UTF-8"));
-                sb.append("\">");
-                sb.append(RdfConfig.getTheBaseURI());
-                sb.append(WsUriConstants.MAP);
-                sb.append(FIRST_URI_PARAMETER);
-                sb.append(sourceUri1);
-                sb.append("</a></li>");    
-            sb.append("<li>Example: <a href=\"");
-                sb.append(RdfConfig.getTheBaseURI());
-                sb.append(WsUriConstants.MAP);
-                sb.append(FIRST_URI_PARAMETER);
-                sb.append(URLEncoder.encode(sourceUri2, "UTF-8"));
-                sb.append(TARGET_URI_PATTERN_PARAMETER);
-                sb.append(URLEncoder.encode(targetUriSpace2, "UTF-8"));
-                sb.append("\">");
-                sb.append(RdfConfig.getTheBaseURI());
-                sb.append(WsUriConstants.MAP);
-                sb.append(FIRST_URI_PARAMETER);
-                sb.append(sourceUri2);
-                sb.append(TARGET_URI_PATTERN_PARAMETER);
-                sb.append(targetUriSpace2);
-                sb.append("</a></li>");    
-            sb.append("<li>Example: <a href=\"");
-                sb.append(RdfConfig.getTheBaseURI());
-                    StringBuilder front = new StringBuilder(WsConstants.MAP_ID);
-                    StringBuilder sbInnerPure = new StringBuilder(WsConstants.MAP_ID);
-                    StringBuilder sbInnerEncoded = new StringBuilder(WsConstants.MAP_ID);
-                    sbInnerPure.append(FIRST_ID_PARAMETER);
-                    sbInnerEncoded.append(FIRST_ID_PARAMETER);
-                    sbInnerPure.append(sourceXref1.getId());
-                    sbInnerEncoded.append(sourceXref1.getId());
-                    sbInnerPure.append(DATASOURCE_SYSTEM_CODE_PARAMETER);
-                    sbInnerEncoded.append(DATASOURCE_SYSTEM_CODE_PARAMETER);
-                    sbInnerPure.append(sourceXref1.getDataSource().getSystemCode());
-                    sbInnerEncoded.append(URLEncoder.encode(sourceXref1.getDataSource().getSystemCode(), "UTF-8"));
-                    sbInnerPure.append(ID_PARAMETER);
-                    sbInnerEncoded.append(ID_PARAMETER);
-                    sbInnerPure.append(sourceXref2.getId());
-                    sbInnerEncoded.append(URLEncoder.encode(sourceXref2.getId(), "UTF-8"));
-                    sbInnerPure.append(DATASOURCE_SYSTEM_CODE_PARAMETER);
-                    sbInnerEncoded.append(DATASOURCE_SYSTEM_CODE_PARAMETER);
-                    sbInnerPure.append(sourceXref2.getDataSource().getSystemCode());
-                    sbInnerEncoded.append(URLEncoder.encode(sourceXref2.getDataSource().getSystemCode(), "UTF-8"));
-                    sb.append(sbInnerEncoded.toString());
-                    sb.append("\">");
-                    sb.append(sbInnerPure.toString());
-                    sb.append("</a></li>");    
-            sb.append("<li>Default Lens: <a href=\"");
-                sb.append(RdfConfig.getTheBaseURI());
-                sb.append(WsUriConstants.MAP);
-                sb.append(FIRST_URI_PARAMETER);
-                sb.append(URLEncoder.encode(sourceUri1, "UTF-8"));
-                sb.append("&");
-                sb.append(WsUriConstants.LENS_URI);
-                sb.append("=");
-                sb.append(Lens.getDefaultLens());
-                sb.append("\">");
-                sb.append(RdfConfig.getTheBaseURI());
-                sb.append(WsUriConstants.MAP);
-                sb.append(FIRST_URI_PARAMETER);
-                sb.append(sourceUri1);
-                sb.append("&");
-                sb.append(WsUriConstants.LENS_URI);
-                sb.append("=");
-                sb.append(Lens.getDefaultLens());
-                sb.append("</a></li>");    
-            sb.append("</ul>");
+        mapExamplesXrefbased(sb, WsUriConstants.MAP, sourceXref1, tragetSysCode1, sourceXref2);
+        mapExamplesUribased(sb, WsUriConstants.MAP, sourceUri1, sourceUri2, targetUriSpace2);
+        sb.append("</ul>\n");
     }
     
     private void describe_mapUri(StringBuilder sb, String sourceUri1, String sourceUri2, String targetUriSpace2) 
@@ -967,99 +836,56 @@ public class WSAPI extends WSFrame {
                 sb.append(WsUriConstants.MAP_URI);
                 sb.append("\">");
                 sb.append(WsUriConstants.MAP_URI);
-                sb.append("</h3>");
-            sb.append("<ul>");
+                sb.append("</a></h3>");
+        sb.append("<ul>");
             sb.append("<li>List the URIs that map to this URI(s)</li>");
             sb.append("<li>Required arguements:</li>");
-                sb.append("<ul>");
-                 sb.append("<ul>");
-                    sb.append("<li><a href=\"#");
-                        sb.append(WsUriConstants.URI);
-                        sb.append("\">");
-                        sb.append(WsUriConstants.URI);
-                        sb.append("</a></li>");
-                    sb.append("<ul><li>In Contrast to other methods multiple values may be provided</li></ul>");  
-                    sb.append("</ul>");
-            sb.append("<li>Optional arguments</li>");
-                sb.append("<ul>");
-                sb.append("<li><a href=\"#");
-                        sb.append(WsUriConstants.LENS_URI);
-                        sb.append("\">");
-                        sb.append(WsUriConstants.LENS_URI);
-                        sb.append("</a></li> ");
-                sb.append("<li><a href=\"#");
-                        sb.append(WsUriConstants.TARGET_URI_PATTERN);
-                        sb.append("\">");
-                        sb.append(WsUriConstants.TARGET_URI_PATTERN);
-                        sb.append("</a></li> ");
+            sb.append("<ul>");
+                parameterUri(sb);
+                sb.append("<ul><li>In Contrast to other methods multiple values may be provided</li></ul>");  
                 sb.append("</ul>");
-            sb.append("<li>Example: <a href=\"");
-                sb.append(RdfConfig.getTheBaseURI());
-                sb.append(WsUriConstants.MAP_URI);
-                sb.append(FIRST_URI_PARAMETER);
-                sb.append(URLEncoder.encode(sourceUri1, "UTF-8"));
+            sb.append("<li>Optional arguments</li><ul>");
+                parameterLens(sb);
+                parameterTargetPattern(sb);
+                sb.append("</ul>");
+            mapExamplesUribased(sb, WsUriConstants.MAP_URI, sourceUri1, sourceUri2, targetUriSpace2);
+            sb.append("</ul>\n");
+    }           
+
+    private void describe_mapBySet(StringBuilder sb, String sourceUri1, String sourceUri2, String targetUriSpace2) 
+            throws UnsupportedEncodingException, BridgeDBException{
+        sb.append("<h3><a name=\"");
+                sb.append(WsUriConstants.MAP_BY_SET);
                 sb.append("\">");
-                sb.append(RdfConfig.getTheBaseURI());
-                sb.append(WsUriConstants.MAP_URI);
-                sb.append(FIRST_URI_PARAMETER);
-                sb.append(sourceUri1);
-                sb.append("</a></li>");    
-            sb.append("<li>Example: <a href=\"");
-                sb.append(RdfConfig.getTheBaseURI());
-                sb.append(WsUriConstants.MAP_URI);
-                sb.append(FIRST_URI_PARAMETER);
-                sb.append(URLEncoder.encode(sourceUri1, "UTF-8"));
-                sb.append("&");
-                sb.append(WsUriConstants.URI);
-                sb.append("=");
-                sb.append(URLEncoder.encode(sourceUri2, "UTF-8"));
+                sb.append(WsUriConstants.MAP_BY_SET);
+                sb.append("</a></h3>");
+        sb.append("<ul>");
+            sb.append("<li>List the URIs that map to this/these URIs organised into Sets and Source Target pairs.</li>");
+            sb.append("<li>Arguements same as:");
+                refMapUri(sb);
+            sb.append("</li>");
+            mapExamplesUribased(sb, WsUriConstants.MAP_BY_SET, sourceUri1, sourceUri2, targetUriSpace2);
+            sb.append("</ul>\n");
+    }           
+
+    private void describe_mapBySetRDF(StringBuilder sb, String sourceUri1, String sourceUri2, String targetUriSpace2) 
+            throws UnsupportedEncodingException, BridgeDBException{
+        sb.append("<h3><a name=\"");
+                sb.append(WsUriConstants.MAP_BY_SET + WsUriConstants.RDF);
                 sb.append("\">");
-                sb.append(RdfConfig.getTheBaseURI());
-                sb.append(WsUriConstants.MAP_URI);
-                sb.append(FIRST_URI_PARAMETER);
-                sb.append(sourceUri1);
-                sb.append("&");
-                sb.append(WsUriConstants.URI);
-                sb.append("=");
-                sb.append(sourceUri2);
-                sb.append("</a></li>");    
-            sb.append("<li>Example: <a href=\"");
-                sb.append(RdfConfig.getTheBaseURI());
-                sb.append(WsUriConstants.MAP_URI);
-                sb.append(FIRST_URI_PARAMETER);
-                sb.append(URLEncoder.encode(sourceUri2, "UTF-8"));
-                sb.append(TARGET_URI_PATTERN_PARAMETER);
-                sb.append(URLEncoder.encode(targetUriSpace2, "UTF-8"));
-                sb.append("\">");
-                sb.append(RdfConfig.getTheBaseURI());
-                sb.append(WsUriConstants.MAP_URI);
-                sb.append(FIRST_URI_PARAMETER);
-                sb.append(sourceUri2);
-                sb.append(TARGET_URI_PATTERN_PARAMETER);
-                sb.append(targetUriSpace2);
-                sb.append("</a></li>");    
-            sb.append("<li>Default Lens: <a href=\"");
-                sb.append(RdfConfig.getTheBaseURI());
-                sb.append(WsUriConstants.MAP_URI);
-                sb.append(FIRST_URI_PARAMETER);
-                sb.append(URLEncoder.encode(sourceUri1, "UTF-8"));
-                sb.append("&");
-                sb.append(WsUriConstants.LENS_URI);
-                sb.append("=");
-                sb.append(Lens.getDefaultLens());
-                sb.append("\">");
-                sb.append("\">");
-                sb.append(RdfConfig.getTheBaseURI());
-                sb.append(WsUriConstants.MAP_URI);
-                sb.append(FIRST_URI_PARAMETER);
-                sb.append(sourceUri1);
-                sb.append("&");
-                sb.append(WsUriConstants.LENS_URI);
-                sb.append("=");
-                sb.append(Lens.getDefaultLens());
-                sb.append("\">");
-                sb.append("</a></li>");    
-            sb.append("</ul>");
+                sb.append(WsUriConstants.MAP_BY_SET + WsUriConstants.RDF);
+                sb.append("</a></h3>");
+        sb.append("<ul>");
+        sb.append("<dd>Same data as ");
+            refMapBySet(sb);
+            sb.append(" but presented at RDF.</dd>");
+            sb.append("<li>Arguements same as:");
+                refMapUri(sb);
+                sb.append(" and ");
+                refMapBySet(sb);
+            sb.append("</li>");
+            mapExamplesUribased(sb, WsUriConstants.MAP_BY_SET + WsUriConstants.RDF, sourceUri1, sourceUri2, targetUriSpace2);
+            sb.append("</ul>\n");
     }           
 
     private void describe_uriExists(StringBuilder sb, String uri) throws UnsupportedEncodingException, BridgeDBException{
@@ -1072,11 +898,7 @@ public class WSAPI extends WSFrame {
             sb.append("<li>State if the URI is know to the Mapping Service or not</li>");
             sb.append("<li>Required arguements:</li>");
                 sb.append("<ul>");
-                sb.append("<li><a href=\"#");
-                        sb.append(WsUriConstants.URI);
-                        sb.append("\">");
-                        sb.append(WsUriConstants.URI);
-                        sb.append("</a></li>");
+                parameterUri(sb);
                 sb.append("<ul>");
                 sb.append("<li>Currently limited to single URI</li>");
                 sb.append("</ul>");
@@ -1091,7 +913,7 @@ public class WSAPI extends WSFrame {
                     sb.append(FIRST_URI_PARAMETER);
                     sb.append(uri);
                     sb.append("</a></li>");    
-            sb.append("</ul>");
+            sb.append("</ul>\n");
     }
     
     private void describe_uriSearch(StringBuilder sb, String text) throws UnsupportedEncodingException, BridgeDBException{
@@ -1104,16 +926,7 @@ public class WSAPI extends WSFrame {
             sb.append("<li>Searches for URIs that have this ending.</li>");
             sb.append("<li>Required arguements:</li>");
                 sb.append("<ul>");
-                sb.append("<li><a href=\"#");
-                        sb.append(WsUriConstants.TEXT);
-                        sb.append("\">");
-                        sb.append(WsUriConstants.TEXT);
-                        sb.append("</a></li>");
-                sb.append("<li><a href=\"#");
-                        sb.append(WsUriConstants.LIMIT);
-                        sb.append("\">");
-                        sb.append(WsUriConstants.LIMIT);
-                        sb.append("</a> (default available)</li>");
+                parameterTextLimit(sb);
                 sb.append("</ul>");
             sb.append("<li>Example: <a href=\"");
                     sb.append(RdfConfig.getTheBaseURI());
@@ -1127,7 +940,7 @@ public class WSAPI extends WSFrame {
                     sb.append(text);
                     sb.append(LIMIT5_PARAMETER);
                     sb.append("</a></li>");    
-            sb.append("</ul>");        
+            sb.append("</ul>\n");        
     }
        
     private final void introduce_Info(StringBuilder sb) {
@@ -1142,10 +955,10 @@ public class WSAPI extends WSFrame {
                 sb.append("\">");
                 sb.append(WsUriConstants.GRAPHVIZ);
                 sb.append("</a></dt>");
-        sb.append("<dd>Brings up the getMappingInfo as graphviz input</dd>");           
+        sb.append("<dd>Brings up the getMappingInfo as graphviz input</dd>\n");           
     }
 
-    private final void describe_Info(StringBuilder sb, Xref first, String sourceSysCode, String targetSysCode) 
+    private final void describe_MappingSet(StringBuilder sb, Xref first, String sourceSysCode, String targetSysCode) 
             throws BridgeDBException, UnsupportedEncodingException {
         sb.append("<h2>Support methods");
         sb.append("<h3><a name=\"");
@@ -1162,11 +975,7 @@ public class WSAPI extends WSFrame {
                         sb.append("\">");
                         sb.append(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE);
                         sb.append("</a></li>");
-                sb.append("<li><a href=\"#");
-                        sb.append(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE);
-                        sb.append("\">");
-                        sb.append(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE);
-                        sb.append("</a> (default available)</li>");
+                parameterTargetCode(sb);
                 sb.append("</ul>");           
             sb.append("<li>Example: <a href=\"");
                     sb.append(RdfConfig.getTheBaseURI());
@@ -1174,15 +983,7 @@ public class WSAPI extends WSFrame {
                     sb.append("\">");
                     sb.append(SetMappings.METHOD_NAME);
                     sb.append("</a></li>");    
-            sb.append("<li>XML Example: <a href=\"");
-                    sb.append(RdfConfig.getTheBaseURI());
-                    sb.append(SetMappings.METHOD_NAME);
-                    sb.append(WsUriConstants.XML);
-                    sb.append("\">");
-                    sb.append(SetMappings.METHOD_NAME);
-                    sb.append(WsUriConstants.XML);
-                    sb.append("</a></li>");    
-            sb.append("<li>Example: <a href=\"");
+            sb.append("<li>Example (one Source): <a href=\"");
                     sb.append(RdfConfig.getTheBaseURI());
                     sb.append(SetMappings.METHOD_NAME);
                     sb.append(FIRST_SOURCE_PARAMETER);
@@ -1196,7 +997,21 @@ public class WSAPI extends WSFrame {
                     sb.append(TARGET_PARAMETER);
                     sb.append(URLEncoder.encode(targetSysCode, "UTF-8"));
                     sb.append("</a></li>");    
-            sb.append("</ul>");
+            sb.append("<li>XML Example: <a href=\"");
+                    sb.append(RdfConfig.getTheBaseURI());
+                    sb.append(SetMappings.METHOD_NAME);
+                    sb.append(WsUriConstants.XML);
+                    sb.append("\">");
+                    sb.append(SetMappings.METHOD_NAME);
+                    sb.append(WsUriConstants.XML);
+                    sb.append("</a></li>");    
+            sb.append("<li>Example (one Set): <a href=\"");
+                    sb.append(RdfConfig.getTheBaseURI());
+                    sb.append(SetMappings.METHOD_NAME);
+                    sb.append("/1\">");
+                    sb.append(SetMappings.METHOD_NAME);
+                    sb.append("/1</a></li>");    
+            sb.append("</ul>\n");
     }  
             
     private final void describe_Graphviz(StringBuilder sb) throws BridgeDBException, UnsupportedEncodingException {
@@ -1222,7 +1037,7 @@ public class WSAPI extends WSFrame {
                 sb.append("\">");
                 sb.append(WsUriConstants.GRAPHVIZ);
                 sb.append("</a></li>");    
-            sb.append("</ul>");        
+            sb.append("</ul>\n");        
     }
 
    private void describe_mapping(StringBuilder sb, int mappingId) throws BridgeDBException {
@@ -1247,7 +1062,7 @@ public class WSAPI extends WSFrame {
                     sb.append("/");
                     sb.append(mappingId);
                     sb.append("</a></li>");    
-            sb.append("</ul>");        
+            sb.append("</ul>\n");        
     }
    
    private void describe_dataSource(StringBuilder sb, String sysCode) 
@@ -1273,7 +1088,7 @@ public class WSAPI extends WSFrame {
                     sb.append("/");
                     sb.append(sysCode);
                     sb.append("</a></li>");    
-            sb.append("</ul>");        
+            sb.append("</ul>\n");        
    }
 
    private void describe_getOverallStatistics(StringBuilder sb) 
@@ -1294,25 +1109,191 @@ public class WSAPI extends WSFrame {
                     sb.append("\">");
                     sb.append(WsUriConstants.GET_OVERALL_STATISTICS);
                     sb.append("</a></li>");    
-            sb.append("</ul>");        
-   }
- 
-     /**
-     * Forwarding page for "/api".
-     * 
-     * This is expected to be overwirriten by the QueryExpander
-     * @param httpServletRequest
-     * @return
-     * @throws BridgeDBException
-     * @throws UnsupportedEncodingException 
-     */
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/api")
-    public Response apiPage(@Context HttpServletRequest httpServletRequest) throws BridgeDBException, UnsupportedEncodingException {
-        return imsApiPage(httpServletRequest);
+            sb.append("</ul>\n");        
+    }
+
+    private void parameterID_CODE(StringBuilder sb){
+        sb.append("<li><a href=\"#");
+            sb.append(ID_CODE);
+            sb.append("\">");
+            sb.append(WsConstants.ID);
+            sb.append("</a></li>");
+        sb.append("<li><a href=\"#");
+            sb.append(ID_CODE);
+            sb.append("\">");
+            sb.append(WsConstants.DATASOURCE_SYSTEM_CODE);
+            sb.append("</a></li>");
     }
     
-}
+    private void parameterTargetCode(StringBuilder sb){
+        sb.append("<li><a href=\"#");
+        sb.append(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE);
+        sb.append("\">");
+        sb.append(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE);
+        sb.append("</a></li> ");
+    }
+    
+    private void parameterUri(StringBuilder sb){
+        sb.append("<li><a href=\"#");
+        sb.append(WsUriConstants.URI);
+        sb.append("\">");
+        sb.append(WsUriConstants.URI);
+        sb.append("</a></li>");
+    }
 
+    private void parameterLens(StringBuilder sb){
+        sb.append("<li><a href=\"#");
+        sb.append(WsUriConstants.LENS_URI);
+        sb.append("\">");
+        sb.append(WsUriConstants.LENS_URI);
+        sb.append("</a></li> ");
+    }
+
+    private void parameterTargetPattern(StringBuilder sb){
+        sb.append("<li><a href=\"#");
+        sb.append(WsUriConstants.TARGET_URI_PATTERN);
+        sb.append("\">");
+        sb.append(WsUriConstants.TARGET_URI_PATTERN);
+        sb.append("</a></li> ");
+    }
+
+    private void parameterTextLimit(StringBuilder sb){
+        sb.append("<li><a href=\"#");
+            sb.append(WsConstants.TEXT);
+            sb.append("\">");
+            sb.append(WsConstants.TEXT);
+            sb.append("</a></li>");
+        sb.append("<li><a href=\"#");
+            sb.append(WsConstants.LIMIT);
+            sb.append("\">");
+            sb.append(WsConstants.LIMIT);
+            sb.append("</a> (default available)</li>");
+    }
+
+    private void refMapUri(StringBuilder sb){
+        sb.append("<a href=\"#");
+        sb.append(WsUriConstants.MAP_URI);
+        sb.append("\">");
+        sb.append(WsUriConstants.MAP_URI);
+        sb.append("</a>");
+    }
+
+    private void refMapBySet(StringBuilder sb){
+        sb.append("<a href=\"#");
+        sb.append(WsUriConstants.MAP_BY_SET);
+        sb.append("\">");
+        sb.append(WsUriConstants.MAP_BY_SET);
+        sb.append("</a>");
+    }
+
+    private void mapExamplesXrefbased(StringBuilder sb, String methodName, Xref sourceXref1, String tragetSysCode1, Xref sourceXref2) 
+            throws UnsupportedEncodingException, BridgeDBException{
+        sb.append("<li>Example: <a href=\"");
+            sb.append(RdfConfig.getTheBaseURI());
+            StringBuilder front = new StringBuilder(methodName);
+            StringBuilder sbInnerPure = new StringBuilder(methodName);
+            StringBuilder sbInnerEncoded = new StringBuilder(methodName);
+            sbInnerPure.append(FIRST_ID_PARAMETER);
+            sbInnerEncoded.append(FIRST_ID_PARAMETER);
+            sbInnerPure.append(sourceXref1.getId());
+            sbInnerEncoded.append(sourceXref1.getId());
+            sbInnerPure.append(DATASOURCE_SYSTEM_CODE_PARAMETER);
+            sbInnerEncoded.append(DATASOURCE_SYSTEM_CODE_PARAMETER);
+            sbInnerPure.append(sourceXref1.getDataSource().getSystemCode());
+            sbInnerEncoded.append(URLEncoder.encode(sourceXref1.getDataSource().getSystemCode(), "UTF-8"));
+            sbInnerPure.append(ID_PARAMETER);
+            sbInnerEncoded.append(ID_PARAMETER);
+            sbInnerPure.append(sourceXref2.getId());
+            sbInnerEncoded.append(URLEncoder.encode(sourceXref2.getId(), "UTF-8"));
+            sbInnerPure.append(DATASOURCE_SYSTEM_CODE_PARAMETER);
+            sbInnerEncoded.append(DATASOURCE_SYSTEM_CODE_PARAMETER);
+            sbInnerPure.append(sourceXref2.getDataSource().getSystemCode());
+            sbInnerEncoded.append(URLEncoder.encode(sourceXref2.getDataSource().getSystemCode(), "UTF-8"));
+            sb.append(sbInnerEncoded.toString());
+            sb.append("\">");
+            sb.append(sbInnerPure.toString());
+            sb.append("</a></li>\n");    
+        sb.append("<li>Example: <a href=\"");
+            sb.append(RdfConfig.getTheBaseURI());
+            String targetPart = "&" + WsConstants.TARGET_DATASOURCE_SYSTEM_CODE + "=";
+            sbInnerPure.append(targetPart);
+            sbInnerEncoded.append(targetPart);
+            sbInnerPure.append(tragetSysCode1);
+            sbInnerEncoded.append(URLEncoder.encode(tragetSysCode1, "UTF-8"));
+            sb.append(sbInnerEncoded.toString());
+            sb.append("\">");
+            sb.append(sbInnerPure.toString());
+            sb.append("</a></li>");                    
+     }
+    
+    private void mapExamplesUribased(StringBuilder sb, String methodName, String sourceUri1, String sourceUri2, String targetUriSpace2) 
+            throws UnsupportedEncodingException, BridgeDBException{
+        sb.append("<li>Example: <a href=\"");
+            sb.append(RdfConfig.getTheBaseURI());
+            sb.append(methodName);
+            sb.append(FIRST_URI_PARAMETER);
+            sb.append(URLEncoder.encode(sourceUri1, "UTF-8"));
+            sb.append("\">");
+            sb.append(RdfConfig.getTheBaseURI());
+            sb.append(methodName);
+            sb.append(FIRST_URI_PARAMETER);
+            sb.append(sourceUri1);
+            sb.append("</a></li>");    
+        sb.append("<li>Example: <a href=\"");
+            sb.append(RdfConfig.getTheBaseURI());
+            sb.append(methodName);
+            sb.append(FIRST_URI_PARAMETER);
+            sb.append(URLEncoder.encode(sourceUri1, "UTF-8"));
+            sb.append("&");
+            sb.append(WsUriConstants.URI);
+            sb.append("=");
+            sb.append(URLEncoder.encode(sourceUri2, "UTF-8"));
+            sb.append("\">");
+            sb.append(RdfConfig.getTheBaseURI());
+            sb.append(methodName);
+            sb.append(FIRST_URI_PARAMETER);
+            sb.append(sourceUri1);
+            sb.append("&");
+            sb.append(WsUriConstants.URI);
+            sb.append("=");
+            sb.append(sourceUri2);
+            sb.append("</a></li>");    
+        sb.append("<li>Example: <a href=\"");
+            sb.append(RdfConfig.getTheBaseURI());
+            sb.append(methodName);
+            sb.append(FIRST_URI_PARAMETER);
+            sb.append(URLEncoder.encode(sourceUri2, "UTF-8"));
+            sb.append(TARGET_URI_PATTERN_PARAMETER);
+            sb.append(URLEncoder.encode(targetUriSpace2, "UTF-8"));
+            sb.append("\">");
+            sb.append(RdfConfig.getTheBaseURI());
+            sb.append(methodName);
+            sb.append(FIRST_URI_PARAMETER);
+            sb.append(sourceUri2);
+            sb.append(TARGET_URI_PATTERN_PARAMETER);
+            sb.append(targetUriSpace2);
+            sb.append("</a></li>");    
+        sb.append("<li>Default Lens: <a href=\"");
+            sb.append(RdfConfig.getTheBaseURI());
+            sb.append(methodName);
+            sb.append(FIRST_URI_PARAMETER);
+            sb.append(URLEncoder.encode(sourceUri1, "UTF-8"));
+            sb.append("&");
+            sb.append(WsUriConstants.LENS_URI);
+            sb.append("=");
+            sb.append(Lens.getDefaultLens());
+            sb.append("\">");
+            sb.append(RdfConfig.getTheBaseURI());
+            sb.append(methodName);
+            sb.append(FIRST_URI_PARAMETER);
+            sb.append(sourceUri1);
+            sb.append("&");
+            sb.append(WsUriConstants.LENS_URI);
+            sb.append("=");
+            sb.append(Lens.getDefaultLens());
+            sb.append("\">");
+            sb.append("</a></li>");    
+    }           
+
+}
 
