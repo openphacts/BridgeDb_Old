@@ -25,6 +25,7 @@ import org.bridgedb.rdf.RdfBase;
 import org.bridgedb.rdf.constants.DulConstants;
 import org.bridgedb.rdf.constants.VoidConstants;
 import org.bridgedb.utils.BridgeDBException;
+import org.bridgedb.utils.Reporter;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.ContextStatementImpl;
@@ -155,7 +156,7 @@ public class SetMappings {
     
     public static void main(String[] args) {
         String contextPath = RdfBase.DEFAULT_BASE_URI;
-        System.out.println(toURI("test", contextPath));
+        Reporter.println(toURI("test", contextPath).toString());
     }
 
 

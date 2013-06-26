@@ -24,20 +24,27 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.log4j.Logger;
 import org.bridgedb.rdf.RdfBase;
 import org.bridgedb.rdf.constants.DulConstants;
 import org.bridgedb.rdf.constants.VoidConstants;
 import org.bridgedb.utils.BridgeDBException;
+import org.bridgedb.utils.Reporter;
 import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.RDFWriterFactory;
 import org.openrdf.rio.RDFWriterRegistry;
+import org.openrdf.rio.binary.BinaryRDFWriter;
 import org.openrdf.rio.trig.TriGWriter;
 import org.openrdf.rio.turtle.TurtleWriter;
 import org.openrdf.rio.n3.N3Writer;
+import org.openrdf.rio.ntriples.NTriplesWriter;
+import org.openrdf.rio.rdfxml.RDFXMLWriter;
+import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
 import org.openrdf.rio.trix.TriXWriter;
+
 /**
  * Holder class for the main Meta Data of MappingSet.
  *
@@ -47,6 +54,8 @@ import org.openrdf.rio.trix.TriXWriter;
 public class MappingsBySet {
     private final String lens;
     private final Set<SetMappings> setMappings;
+    
+    static final Logger logger = Logger.getLogger(MappingsBySet.class);
     
     /*
      * These are the direct mappings based on namespace substitution
@@ -165,14 +174,31 @@ public class MappingsBySet {
        return statements;
     }
     
-    private void writeRDF(Set<Statement> statements,  RDFFormat format, Writer writer) throws BridgeDBException{
+    /**
+     * This method is required as at last check the BinaryRDFWriterFactory was not fully implemeneted.
+     * @param format
+     * @param writer
+     * @return 
+     */
+    private static RDFWriter getWriterIfPossible(RDFFormat format, Writer writer){
         RDFWriterRegistry register =  RDFWriterRegistry.getInstance();
-        System.out.println(format);
         RDFWriterFactory factory = register.get(format);
-        System.out.println(factory);
+        if (factory == null){
+            return null;
+        }
         try {
-            if (factory != null){
-                RDFWriter rdfWriter = factory.getWriter(writer);
+            return factory.getWriter(writer);
+        } catch (Exception ex){
+            logger.error(ex);
+            return null;
+        }
+    }
+    
+    private void writeRDF(Set<Statement> statements,  RDFFormat format, Writer writer) throws BridgeDBException{        
+        System.out.println(format);
+        RDFWriter rdfWriter = getWriterIfPossible(format, writer); 
+        try {
+            if (rdfWriter != null){
                 writer.write(format.toString());
                 writer.write("\n");
                 rdfWriter.startRDF();
@@ -202,8 +228,33 @@ public class MappingsBySet {
             if (formatName == null){
                 formatName = "TriX";
             }
-            RDFFormat rdfFormat = RDFFormat.valueOf(formatName);
+            for (RDFFormat rdfFormat:RDFFormat.values()){
+            //RDFFormat rdfFormat = RDFFormat.valueOf(formatName);
             writeRDF(statements,  rdfFormat, writer);
-            return writer.toString();
+            } return writer.toString();
     }
+    
+    public static Set<String> getAvaiableWriters(){
+        N3Writer n = null;
+        NTriplesWriter nt = null;
+        RDFXMLPrettyWriter x2 = null;
+        RDFXMLWriter x = null;
+        TriGWriter tr = null;
+        TriXWriter tw = null;
+        TurtleWriter t = null;
+        HashSet<String> results = new HashSet<String>();
+        StringWriter writer = new StringWriter();
+        for (RDFFormat rdfFormat:RDFFormat.values()){
+            RDFWriter rdfWriter = getWriterIfPossible(rdfFormat, writer); 
+            if (rdfWriter != null){
+                results.add(rdfFormat.getName());
+            }
+        }
+        return results;
+    }
+    
+    public static void main(String[] args) {
+        Reporter.println(getAvaiableWriters().toString());
+    }
+
 }

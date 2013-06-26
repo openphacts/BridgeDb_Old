@@ -69,20 +69,26 @@
         </dependency>
 	 <dependency>
 	  <groupId>org.openrdf.sesame</groupId>
+	  <artifactId>sesame-rio-compliance</artifactId>
+	  <version>${sesame.version}</version>
+	  <type>jar</type>
+	 </dependency>
+	 <dependency>
+	  <groupId>org.openrdf.sesame</groupId>
 	  <artifactId>sesame-rio-trig</artifactId>
-	  <version>2.7.3-SNAPSHOT</version>
+	  <version>${sesame.version}</version>
 	  <type>jar</type>
 	 </dependency>
 	 <dependency>
 	  <groupId>org.openrdf.sesame</groupId>
 	  <artifactId>sesame-rio-n3</artifactId>
-	  <version>2.7.3-SNAPSHOT</version>
+	  <version>${sesame.version}</version>
 	  <type>jar</type>
 	 </dependency>
 	 <dependency>
 	  <groupId>org.openrdf.sesame</groupId>
 	  <artifactId>sesame-rio-trix</artifactId>
-	  <version>2.7.3-SNAPSHOT</version>
+	  <version>${sesame.version}</version>
 	  <type>jar</type>
 	 </dependency>
 	</dependencies>
