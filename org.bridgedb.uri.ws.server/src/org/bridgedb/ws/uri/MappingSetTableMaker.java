@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
+import org.bridgedb.uri.SetMappings;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WsUriConstants;
 import org.openrdf.model.impl.URIImpl;
@@ -441,7 +442,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
     
     private void addMappingInfoLinkById(StringBuilder sb, String id){
          try{
-            String summaryUri = httpServletRequest.getContextPath() + "/" + WsUriConstants.MAPPING_SET + "/" + id;
+            String summaryUri = httpServletRequest.getContextPath() + "/" + SetMappings.METHOD_NAME + "/" + id;
             sb.append("<a href=\"");
             sb.append(summaryUri);
             sb.append("\">");

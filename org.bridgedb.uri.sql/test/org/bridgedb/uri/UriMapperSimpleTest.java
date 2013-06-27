@@ -12,6 +12,7 @@ import org.bridgedb.rdf.UriPattern;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.openrdf.model.Statement;
 
 /**
  *
@@ -73,6 +74,8 @@ public abstract class UriMapperSimpleTest extends UriListenerTest{
         assertFalse(results.contains(map3xref2));
         checkForNoOtherLensXrefs(results);
     }
+    
+    
 
     /**
      * Test of mapUri method, of class UriMapper.
@@ -82,8 +85,63 @@ public abstract class UriMapperSimpleTest extends UriListenerTest{
         report("MapUri_sourceUri_lensId_tgtUriPatterns");
         String sourceUri = map3Uri3;
         String lensId = Lens.getDefaultLens();
-        UriPattern[] tgtUriPatterns = null;
         Set results = uriMapper.mapUri(sourceUri, lensId, uriPattern2, uriPattern3);
+        assertFalse(results.contains(map3Uri1));
+        assertTrue(results.contains(map3Uri2));
+        assertFalse(results.contains(map3Uri2a));
+        assertTrue(results.contains(map3Uri3));
+        assertFalse(results.contains(map2Uri2));
+        assertFalse(results.contains(map1Uri3));
+        checkForNoOtherlensId(results);
+    }
+
+    /**
+     * Test of mapUri method, of class UriMapper.
+     */
+    @Test
+    public void testMapBySet_sourceUri_lensId_tgtUriPatterns() throws Exception {
+        report("MapUri_sourceUri_lensId_tgtUriPatterns");
+        String sourceUri = map3Uri3;
+        String lensId = Lens.getDefaultLens();
+        MappingsBySet lensMapping = uriMapper.mapBySet(sourceUri, lensId, uriPattern2, uriPattern3);
+        Set<String> results = lensMapping.getTargetUris();
+        assertFalse(results.contains(map3Uri1));
+        assertTrue(results.contains(map3Uri2));
+        assertFalse(results.contains(map3Uri2a));
+        assertTrue(results.contains(map3Uri3));
+        assertFalse(results.contains(map2Uri2));
+        assertFalse(results.contains(map1Uri3));
+        checkForNoOtherlensId(results);
+    }
+
+    @Test
+    public void testMapBySet_sourceUris_lensId_tgtUriPatterns() throws Exception {
+        report("MapUri_sourceUris_lensId_tgtUriPatterns");
+        Set<String> sourceUris = new HashSet<String>();
+        sourceUris.add(map3Uri3);
+        sourceUris.add(map1Uri1);
+        String lensId = Lens.getDefaultLens();
+        MappingsBySet lensMapping = uriMapper.mapBySet(sourceUris, lensId, uriPattern2, uriPattern3);
+        Set<String> results = lensMapping.getTargetUris();
+        assertFalse(results.contains(map3Uri1));
+        assertTrue(results.contains(map3Uri2));
+        assertFalse(results.contains(map3Uri2a));
+        assertTrue(results.contains(map3Uri3));
+        assertFalse(results.contains(map2Uri2));
+        assertTrue(results.contains(map1Uri3));
+        checkForNoOtherlensId(results);
+    }
+    
+    @Test
+    public void testMapBySet_sourceUrisB_lensId_tgtUriPatterns() throws Exception {
+        report("MapUri_sourceUrisB_lensId_tgtUriPatterns");
+        Set<String> sourceUris = new HashSet<String>();
+        sourceUris.add(map3Uri3);
+        sourceUris.add(map3Uri1);
+        String lensId = Lens.getDefaultLens();
+        MappingsBySet lensMapping = uriMapper.mapBySet(sourceUris, lensId, uriPattern2, uriPattern3);
+        System.out.println(lensMapping);
+        Set<String> results = lensMapping.getTargetUris();
         assertFalse(results.contains(map3Uri1));
         assertTrue(results.contains(map3Uri2));
         assertFalse(results.contains(map3Uri2a));
@@ -138,7 +196,6 @@ public abstract class UriMapperSimpleTest extends UriListenerTest{
         report("MapUri_sourceXref_lensId_tgtUriPatterns");
         Xref sourceXref = map3xref2;
         String lensId = Lens.getDefaultLens();
-        UriPattern[] tgtUriPatterns = null;
         Set results = uriMapper.mapUri(sourceXref, lensId, uriPattern2, uriPattern3);
         assertFalse(results.contains(map3Uri1));
         assertTrue(results.contains(map3Uri2));
@@ -168,6 +225,25 @@ public abstract class UriMapperSimpleTest extends UriListenerTest{
         checkForNoOtherlensId(results);
     }
 
+    @Test
+    public void testMapBySet_sourceUri_lensId_tgtUriPattern() throws Exception {
+        report("MapBySet_sourceUri_lensId_tgtUriPattern");
+        String sourceUri = map3Uri2;
+        String lensId = Lens.getDefaultLens();
+        UriPattern tgtUriPattern = uriPattern3;
+        MappingsBySet lensMapping = uriMapper.mapBySet(sourceUri, lensId, tgtUriPattern);
+        Set<String> results = lensMapping.getTargetUris();
+        assertFalse(results.contains(map3Uri1));
+        assertFalse(results.contains(map3Uri2));
+        assertFalse(results.contains(map3Uri2a));
+        assertTrue(results.contains(map3Uri3));
+        assertFalse(results.contains(map2Uri2));
+        assertFalse(results.contains(map1Uri3));
+        checkForNoOtherlensId(results);
+        System.out.println(lensMapping.asRDF(null));
+        System.out.println(lensMapping.toRDF(null, null));
+    }
+    
     /**
      * Test of mapUri method, of class UriMapper.
      */
@@ -177,6 +253,25 @@ public abstract class UriMapperSimpleTest extends UriListenerTest{
         String sourceUri = map3Uri2;
         String lensId = Lens.getDefaultLens();
         Set results = uriMapper.mapUri(sourceUri, lensId);
+        assertTrue(results.contains(map3Uri1));
+        assertTrue(results.contains(map3Uri2));
+        assertTrue(results.contains(map3Uri2a));
+        assertTrue(results.contains(map3Uri3));
+        assertFalse(results.contains(map2Uri2));
+        assertFalse(results.contains(map1Uri3));
+        checkForNoOtherlensId(results);
+    }
+
+   /**
+     * Test of mapUri method, of class UriMapper.
+     */
+    @Test
+    public void testMapBySet_sourceUri_lensId() throws Exception {
+        report("MapBySeti_sourceUri_lensId");
+        String sourceUri = map3Uri2;
+        String lensId = Lens.getDefaultLens();
+        MappingsBySet lensMapping = uriMapper.mapBySet(sourceUri, lensId);
+        Set<String> results = lensMapping.getTargetUris();
         assertTrue(results.contains(map3Uri1));
         assertTrue(results.contains(map3Uri2));
         assertTrue(results.contains(map3Uri2a));

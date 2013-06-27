@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import org.apache.log4j.Logger;
+import org.bridgedb.rdf.RdfBase;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
@@ -191,7 +192,7 @@ public class Lens {
         if (contextPath != null){
             return contextPath + URI_PREFIX + getId();
         } else {
-            return "#" + URI_PREFIX + getId();
+            return RdfBase.DEFAULT_BASE_URI + URI_PREFIX + getId();
         }
     }
     

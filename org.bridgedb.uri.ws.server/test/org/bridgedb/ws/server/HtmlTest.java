@@ -43,7 +43,7 @@ public class HtmlTest {
     @Test 
     public void testGetMappingInfo() throws BridgeDBException, UnsupportedEncodingException{
         Reporter.println("GetMappingInfo");
-        Response result = server.getMappingInfo(null, null, null, new DummyHttpServletRequest());
+        Response result = server.getSetMapping(null, null, null, new DummyHttpServletRequest());
         assertEquals(200, result.getStatus());
     }
 }

@@ -24,14 +24,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
@@ -41,6 +39,8 @@ import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.Mapping;
+import org.bridgedb.uri.MappingsBySet;
+import org.bridgedb.uri.SetMappings;
 import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.StoreType;
@@ -52,6 +52,7 @@ import org.bridgedb.ws.bean.DataSourceUriPatternBean;
 import org.bridgedb.ws.bean.LensBean;
 import org.bridgedb.ws.bean.MappingBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
+import org.bridgedb.ws.bean.MappingsBySetBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
 import org.bridgedb.ws.bean.UriExistsBean;
 import org.bridgedb.ws.bean.UriMappings;
@@ -182,6 +183,18 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         return this.map(null, null, url, null, null, targetUriPatterns);
     }
 
+    @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("/" + WsUriConstants.MAP_BY_SET)
+    public MappingsBySetBean mapBySet(@QueryParam(WsUriConstants.URI) List<String> uris,
+     		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns) throws BridgeDBException {
+        HashSet<String> uriSet = new HashSet<String>(uris);
+        UriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
+        MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, targetPatterns);
+        return new MappingsBySetBean(mappingsBySet);
+    }
+
     private List<MappingBean> map(String uri, String lensUri, DataSource[] targetDataSources, 
             UriPattern[] targetPatterns) throws BridgeDBException {
         Set<Mapping> mappings;
@@ -244,7 +257,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         return targets.toArray(new DataSource[0]);        
     }
             
-    private UriPattern[] getUriPatterns(List<String> targetUriPatterns){
+    final UriPattern[] getUriPatterns(List<String> targetUriPatterns){
         if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
             return null;
         }
@@ -378,7 +391,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/" + WsUriConstants.MAPPING_SET + WsUriConstants.XML) 
+    @Path("/" + SetMappings.METHOD_NAME + WsUriConstants.XML) 
     public List<MappingSetInfoBean> getMappingSetInfosXML(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
             @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
@@ -388,7 +401,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     @Override
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/" + WsUriConstants.MAPPING_SET) 
+    @Path("/" + SetMappings.METHOD_NAME) 
     public List<MappingSetInfoBean> getMappingSetInfos(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
             @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
@@ -398,6 +411,28 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             results.add(MappingSetInfoBean.asBean(info));
         }
         return results;
+    }
+
+    /**
+    * @deprecated 
+    */
+   @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("/" + WsUriConstants.GET_MAPPING_INFO + WsUriConstants.XML) 
+    public List<MappingSetInfoBean> getMappingSetInfosXML(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
+            @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode) throws BridgeDBException {
+        return getMappingSetInfos(scrCode, targetCode, null);
+    }
+    
+    /**
+     * @deprecated 
+     */
+    @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("/" + WsUriConstants.GET_MAPPING_INFO) 
+    public List<MappingSetInfoBean> getMappingSetInfos(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
+            @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode) throws BridgeDBException {
+        return getMappingSetInfos(scrCode, targetCode, null);       
     }
 
 	@GET
@@ -442,13 +477,23 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     @Override
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/" + WsUriConstants.MAPPING_SET + "/{id}")
+    @Path("/" + WsUriConstants.GET_MAPPING_INFO + "/{id}")
     public MappingSetInfoBean getMappingSetInfo(@PathParam("id") String idString) throws BridgeDBException {
         if (idString == null) throw new BridgeDBException("Path parameter missing.");
         if (idString.isEmpty()) throw new BridgeDBException("Path parameter may not be null.");
         int id = Integer.parseInt(idString);
         MappingSetInfo info = uriMapper.getMappingSetInfo(id);
         return MappingSetInfoBean.asBean(info);
+    }
+
+    /**
+     * @deprecated 
+     */
+    @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("/" + SetMappings.METHOD_NAME + "/{id}")
+    public MappingSetInfoBean getMappingSetInfoOld(@PathParam("id") String idString) throws BridgeDBException {
+        return getMappingSetInfo(idString);
     }
 
     @GET
@@ -516,7 +561,5 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             throw new BridgeDBException (FILE + " parameter may not be null");
         }
     }
-
-
 
 }

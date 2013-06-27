@@ -206,10 +206,20 @@ public interface UriMapper extends IDMapper{
 	 * Set when no cross references could be found. This method does not return null.
 	 * @throws IDMapperException if the mapping service is (temporarily) unavailable 
      */
-    public Set<String> mapUri(String sourceUri, String LensUri) 
+    public Set<String> mapUri(String sourceUri, String lensUri) 
             throws BridgeDBException;
 
-    /**
+    public MappingsBySet mapBySet(String sourceUri, String lensUri) 
+            throws BridgeDBException;
+
+    public MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern tgtUriPattern) 
+            throws BridgeDBException;
+
+   public MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern... tgtUriPatterns) throws BridgeDBException;
+   
+   public MappingsBySet mapBySet(Set<String> sourceUris, String lensUri, UriPattern... tgtUriPatterns) 
+           throws BridgeDBException;
+   /**
 	 * Get the set of mappings based the parameters supplied.
      * 
 	 * @param sourceXref @see Class java docs. 

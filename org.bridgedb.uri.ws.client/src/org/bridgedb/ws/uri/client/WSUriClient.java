@@ -29,6 +29,7 @@ import org.bridgedb.DataSourceOverwriteLevel;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.Lens;
+import org.bridgedb.uri.SetMappings;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WSCoreClient;
 import org.bridgedb.ws.WSUriInterface;
@@ -39,6 +40,7 @@ import org.bridgedb.ws.bean.MappingBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
 import org.bridgedb.ws.bean.LensBean;
+import org.bridgedb.ws.bean.MappingsBySetBean;
 import org.bridgedb.ws.bean.UriExistsBean;
 import org.bridgedb.ws.bean.UriSearchBean;
 import org.bridgedb.ws.bean.XrefBean;
@@ -91,6 +93,31 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
                 .get(new GenericType<List<MappingBean>>() {});
          return result;
     }
+
+    @Override
+    public MappingsBySetBean mapBySet(List<String> uris, String lensUri, List<String> targetUriPattern) throws BridgeDBException {
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        for (String uri:uris){
+            if (uri != null){
+                params.add(WsUriConstants.URI, uri);            
+            }
+        }
+        if (lensUri != null){
+            params.add(WsUriConstants.LENS_URI, lensUri);        
+        }
+        if (targetUriPattern != null){
+            for (String target:targetUriPattern){
+                params.add(WsUriConstants.TARGET_URI_PATTERN, target);
+            }
+        }
+        MappingsBySetBean result = 
+                webResource.path(WsUriConstants.MAP_BY_SET)
+                .queryParams(params)
+                .accept(MediaType.APPLICATION_XML_TYPE)
+                .get(new GenericType<MappingsBySetBean>() {});
+        return result;        
+    }
+
 
     @Override
     public UriExistsBean UriExists(String uri) throws BridgeDBException {
@@ -170,7 +197,7 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
     @Override
     public MappingSetInfoBean getMappingSetInfo(String mappingSetId) throws BridgeDBException {
         MappingSetInfoBean result = 
-                webResource.path(WsUriConstants.MAPPING_SET + "/" + mappingSetId)
+                webResource.path(SetMappings.METHOD_NAME + "/" + mappingSetId)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<MappingSetInfoBean>() {});
          return result;
@@ -184,7 +211,7 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
         params.add(WsUriConstants.LENS_URI, encode(lensUri));
         //Make service call
         List<MappingSetInfoBean> result = 
-                webResource.path(WsUriConstants.MAPPING_SET)
+                webResource.path(SetMappings.METHOD_NAME)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<List<MappingSetInfoBean>>() {});
@@ -238,6 +265,5 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
                 .get(new GenericType<String>() {});
          return result;
     }
-
 
 }

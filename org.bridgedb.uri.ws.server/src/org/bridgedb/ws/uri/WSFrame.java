@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.bridgedb.statistics.OverallStatistics;
 import org.bridgedb.uri.Lens;
+import org.bridgedb.uri.SetMappings;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WsUriConstants;
 
@@ -180,12 +181,12 @@ public class WSFrame extends WSUriInterfaceService {
         sb.append("<div class=\"menugroup\">BridgeDb Service</div>");
         addSideBarItem(sb, WsUriConstants.BRIDGEDB_HOME, "Home", httpServletRequest);
         try {
-            String allMappingInfo = WsUriConstants.MAPPING_SET + "?" + WsUriConstants.LENS_URI + "=" + Lens.getAllLens();
+            String allMappingInfo = SetMappings.METHOD_NAME + "?" + WsUriConstants.LENS_URI + "=" + Lens.getAllLens();
             addSideBarItem(sb, allMappingInfo,"All Mappings Summary", httpServletRequest);
         } catch (BridgeDBException ex) {
             logger.error("Error getting getAllLens", ex);
         }
-        addSideBarItem(sb,  WsUriConstants.MAPPING_SET, "Default Mappings Summary", httpServletRequest);
+        addSideBarItem(sb,  SetMappings.METHOD_NAME, "Default Mappings Summary", httpServletRequest);
         try {
             String allGraphwiz = WsUriConstants.GRAPHVIZ + "?" + WsUriConstants.LENS_URI + "=" + Lens.getAllLens();
             addSideBarItem(sb, allGraphwiz, "All Mappings Graphviz",  httpServletRequest);
