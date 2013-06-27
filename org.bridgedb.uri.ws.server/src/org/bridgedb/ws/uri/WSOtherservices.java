@@ -271,18 +271,33 @@ public class WSOtherservices extends WSAPI {
         return mappingsBySet.toRDF(null, formatName);
     }
     
+    private void generateTextarea(StringBuilder sb, String fieldName, String text) {
+        sb.append("<p>").append(fieldName);
+    	sb.append("<br/><textarea rows=\"40\" name=\"").append(fieldName)
+                .append("\" style=\"width:100%; background-color: #EEEEFF;\">");
+        if (text != null){
+            sb.append(text);
+        }
+        sb.append("</textarea></p>\n");
+    }
+    
     @GET
     @Produces({MediaType.TEXT_HTML})
     @Path("/" + WsUriConstants.MAP_BY_SET + WsUriConstants.RDF)
     public Response mapBySetTexthtml(@QueryParam(WsUriConstants.URI) List<String> uris,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
             @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
-            @QueryParam(WsUriConstants.RDF_FORMAT) String formatName
+            @QueryParam(WsUriConstants.RDF_FORMAT) String formatName,
+            @Context HttpServletRequest httpServletRequest
             ) throws BridgeDBException {
         HashSet<String> uriSet = new HashSet<String>(uris);
         UriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
         MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, targetPatterns);
-        return Response.ok(mappingsBySet.toRDF(null, formatName), MediaType.TEXT_HTML).build();
+        StringBuilder sb = topAndSide("HTML friendly " + WsUriConstants.MAP_BY_SET + WsUriConstants.RDF + " Output",  httpServletRequest);
+        sb.append("<h1>Use MediaType.TEXT_PLAIN to remove HTML stuff</h1>");
+        generateTextarea(sb, "RDF", mappingsBySet.toRDF(null, formatName));
+         footerAndEnd(sb);
+        return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
     }
 
 }
