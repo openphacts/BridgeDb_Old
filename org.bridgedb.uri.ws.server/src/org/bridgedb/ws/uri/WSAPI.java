@@ -34,6 +34,7 @@ import org.apache.log4j.Logger;
 import org.bridgedb.Xref;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.Mapping;
+import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.SetMappings;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WsConstants;
@@ -334,6 +335,27 @@ public class WSAPI extends WSFrame {
             sb.append("<li>Do NOT include the @gt and @lt seen arround URIs in RDF</li>");
             sb.append("<li>Typically there can but need not be more than one.</li>");
             sb.append("</ul>");
+        sb.append("<dt><a name=\"");
+                sb.append(WsUriConstants.RDF_FORMAT);
+                sb.append("\">");
+                sb.append(WsUriConstants.RDF_FORMAT);
+                sb.append("</a></dt>");
+            sb.append("<ul>");
+            sb.append("<li>Specifies the RDF format that should be used.</li>");
+            sb.append("<ul>");         
+                sb.append("<li>WARNING: Not all RDF formats supports contexts/graphs.</li>");
+                sb.append("<li>So some formats will not have the mapppings in Set contexts.</li>");
+                sb.append("</ul>");
+            sb.append("<li>String Format</li>");
+            sb.append("<li>Legal values are:</li><ul>");
+                for (String formatName:MappingsBySet.getAvaiableWriters()){
+                    sb.append("<li>");
+                    sb.append(formatName);
+                    sb.append("</li>");
+                }
+                sb.append("</ul>");
+            sb.append("<li>Only one format can be specified.</li>");
+            sb.append("</ul>\n");
          sb.append("</ul>\n");
    }
 
@@ -822,7 +844,7 @@ public class WSAPI extends WSFrame {
                 parameterTargetCode(sb);
                 sb.append("</ul>");
         mapExamplesXrefbased(sb, contextPath, WsUriConstants.MAP, sourceXref1, tragetSysCode1, sourceXref2);
-        mapExamplesUribased(sb, contextPath, WsUriConstants.MAP, sourceUri1, sourceUri2, targetUriSpace2);
+        mapExamplesUriBased(sb, contextPath, WsUriConstants.MAP, sourceUri1, sourceUri2, targetUriSpace2);
         sb.append("</ul>\n");
     }
     
@@ -844,7 +866,7 @@ public class WSAPI extends WSFrame {
                 parameterLens(sb);
                 parameterTargetPattern(sb);
                 sb.append("</ul>");
-            mapExamplesUribased(sb, contextPath, WsUriConstants.MAP_URI, sourceUri1, sourceUri2, targetUriSpace2);
+            mapExamplesUriBased(sb, contextPath, WsUriConstants.MAP_URI, sourceUri1, sourceUri2, targetUriSpace2);
             sb.append("</ul>\n");
     }           
 
@@ -860,7 +882,7 @@ public class WSAPI extends WSFrame {
             sb.append("<li>Arguements same as:");
                 refMapUri(sb);
             sb.append("</li>");
-            mapExamplesUribased(sb, contextPath, WsUriConstants.MAP_BY_SET, sourceUri1, sourceUri2, targetUriSpace2);
+            mapExamplesUriBased(sb, contextPath, WsUriConstants.MAP_BY_SET, sourceUri1, sourceUri2, targetUriSpace2);
             sb.append("</ul>\n");
     }           
 
@@ -872,15 +894,21 @@ public class WSAPI extends WSFrame {
                 sb.append(WsUriConstants.MAP_BY_SET + WsUriConstants.RDF);
                 sb.append("</a></h3>");
         sb.append("<ul>");
-        sb.append("<dd>Same data as ");
-            refMapBySet(sb);
-            sb.append(" but presented at RDF.</dd>");
-            sb.append("<li>Arguements same as:");
+            sb.append("<li>Same data as ");
+                refMapBySet(sb);
+                sb.append(" but presented at RDF.</dd>");
+            sb.append("<li>Includes all arguements as:");
                 refMapUri(sb);
                 sb.append(" and ");
                 refMapBySet(sb);
-            sb.append("</li>");
-            mapExamplesUribased(sb, contextPath, WsUriConstants.MAP_BY_SET + WsUriConstants.RDF, sourceUri1, sourceUri2, targetUriSpace2);
+                sb.append("</li>");
+            sb.append("<li>Plus Optional argument</li><ul>");
+                parameterRdfFormat(sb);
+                sb.append("</li></ul>");
+            mapExamplesUriBased(sb, contextPath, WsUriConstants.MAP_BY_SET + WsUriConstants.RDF, sourceUri1, sourceUri2, targetUriSpace2);
+            for (String formatName:MappingsBySet.getAvaiableWriters()){
+                mapExamplesUriBasedFormatted(sb, contextPath, WsUriConstants.MAP_BY_SET + WsUriConstants.RDF, sourceUri1, formatName);
+            }
             sb.append("</ul>\n");
     }           
 
@@ -1186,6 +1214,14 @@ public class WSAPI extends WSFrame {
             sb.append("</a> (default available)</li>");
     }
 
+   private void parameterRdfFormat(StringBuilder sb){
+        sb.append("<li><a href=\"#");
+        sb.append(WsUriConstants.RDF_FORMAT);
+        sb.append("\">");
+        sb.append(WsUriConstants.RDF_FORMAT);
+        sb.append("</a></li> ");
+    }
+   
     private void refMapUri(StringBuilder sb){
         sb.append("<a href=\"#");
         sb.append(WsUriConstants.MAP_URI);
@@ -1242,70 +1278,116 @@ public class WSAPI extends WSFrame {
             sb.append("</a></li>");                    
      }
     
-    private void mapExamplesUribased(StringBuilder sb, String contextPath, String methodName, String sourceUri1, String sourceUri2, String targetUriSpace2) 
+    private void mapExamplesUriBased(StringBuilder sb, String contextPath, String methodName, String sourceUri1, String sourceUri2, String targetUriSpace2) 
+            throws UnsupportedEncodingException, BridgeDBException{
+        mapExamplesUriBased1(sb, contextPath, methodName, sourceUri1);
+        mapExamplesUriBased2(sb, contextPath, methodName, sourceUri1, sourceUri2);
+        mapExamplesUriBased3(sb, contextPath, methodName, sourceUri2, targetUriSpace2);
+        mapExamplesUriBased4(sb, contextPath, methodName, sourceUri1);
+    }
+    
+    private void mapExamplesUriBased1(StringBuilder sb, String contextPath, String methodName, String sourceUri1) 
             throws UnsupportedEncodingException, BridgeDBException{
         sb.append("<li>Example: <a href=\"");
-            sb.append(contextPath);
-            sb.append(methodName);
-            sb.append(FIRST_URI_PARAMETER);
-            sb.append(URLEncoder.encode(sourceUri1, "UTF-8"));
-            sb.append("\">");
-            sb.append(methodName);
-            sb.append(FIRST_URI_PARAMETER);
-            sb.append(sourceUri1);
-            sb.append("</a></li>");    
+        sb.append(contextPath);
+        sb.append(methodName);
+        sb.append(FIRST_URI_PARAMETER);
+        sb.append(URLEncoder.encode(sourceUri1, "UTF-8"));
+        sb.append("\">");
+        sb.append(methodName);
+        sb.append(FIRST_URI_PARAMETER);
+        sb.append(sourceUri1);
+        sb.append("</a></li>");    
+    }
+    
+    private void mapExamplesUriBased2(StringBuilder sb, String contextPath, String methodName, String sourceUri1, String sourceUri2) 
+            throws UnsupportedEncodingException, BridgeDBException{
         sb.append("<li>Example: <a href=\"");
-            sb.append(contextPath);
-            sb.append(methodName);
-            sb.append(FIRST_URI_PARAMETER);
-            sb.append(URLEncoder.encode(sourceUri1, "UTF-8"));
-            sb.append("&");
-            sb.append(WsUriConstants.URI);
-            sb.append("=");
-            sb.append(URLEncoder.encode(sourceUri2, "UTF-8"));
-            sb.append("\">");
-            sb.append(methodName);
-            sb.append(FIRST_URI_PARAMETER);
-            sb.append(sourceUri1);
-            sb.append("&");
-            sb.append(WsUriConstants.URI);
-            sb.append("=");
-            sb.append(sourceUri2);
-            sb.append("</a></li>");    
+        sb.append(contextPath);
+        sb.append(methodName);
+        sb.append(FIRST_URI_PARAMETER);
+        sb.append(URLEncoder.encode(sourceUri1, "UTF-8"));
+        sb.append("&");
+        sb.append(WsUriConstants.URI);
+        sb.append("=");
+        sb.append(URLEncoder.encode(sourceUri2, "UTF-8"));
+        sb.append("\">");
+        sb.append(methodName);
+        sb.append(FIRST_URI_PARAMETER);
+        sb.append(sourceUri1);
+        sb.append("&");
+        sb.append(WsUriConstants.URI);
+        sb.append("=");
+        sb.append(sourceUri2);
+        sb.append("</a></li>");    
+    }
+    
+    private void mapExamplesUriBased3(StringBuilder sb, String contextPath, String methodName, String sourceUri2, String targetUriSpace2) 
+            throws UnsupportedEncodingException, BridgeDBException{
         sb.append("<li>Example: <a href=\"");
-            sb.append(contextPath);
-            sb.append(methodName);
-            sb.append(FIRST_URI_PARAMETER);
-            sb.append(URLEncoder.encode(sourceUri2, "UTF-8"));
-            sb.append(TARGET_URI_PATTERN_PARAMETER);
-            sb.append(URLEncoder.encode(targetUriSpace2, "UTF-8"));
-            sb.append("\">");
-            sb.append(methodName);
-            sb.append(FIRST_URI_PARAMETER);
-            sb.append(sourceUri2);
-            sb.append(TARGET_URI_PATTERN_PARAMETER);
-            sb.append(targetUriSpace2);
-            sb.append("</a></li>");    
+        sb.append(contextPath);
+        sb.append(methodName);
+        sb.append(FIRST_URI_PARAMETER);
+        sb.append(URLEncoder.encode(sourceUri2, "UTF-8"));
+        sb.append(TARGET_URI_PATTERN_PARAMETER);
+        sb.append(URLEncoder.encode(targetUriSpace2, "UTF-8"));
+        sb.append("\">");
+        sb.append(methodName);
+        sb.append(FIRST_URI_PARAMETER);
+        sb.append(sourceUri2);
+        sb.append(TARGET_URI_PATTERN_PARAMETER);
+        sb.append(targetUriSpace2);
+        sb.append("</a></li>");    
+    }
+    
+    private void addDefaultLens(StringBuilder sb) throws BridgeDBException{
+        sb.append("&");
+        sb.append(WsUriConstants.LENS_URI);
+        sb.append("=");
+        sb.append(Lens.getDefaultLens());
+    }
+    
+    private void mapExamplesUriBased4(StringBuilder sb, String contextPath, String methodName, String sourceUri1) 
+            throws UnsupportedEncodingException, BridgeDBException{
         sb.append("<li>Default Lens: <a href=\"");
-            sb.append(contextPath);
-            sb.append(methodName);
-            sb.append(FIRST_URI_PARAMETER);
-            sb.append(URLEncoder.encode(sourceUri1, "UTF-8"));
-            sb.append("&");
-            sb.append(WsUriConstants.LENS_URI);
-            sb.append("=");
-            sb.append(Lens.getDefaultLens());
-            sb.append("\">");
-            sb.append(methodName);
-            sb.append(FIRST_URI_PARAMETER);
-            sb.append(sourceUri1);
-            sb.append("&");
-            sb.append(WsUriConstants.LENS_URI);
-            sb.append("=");
-            sb.append(Lens.getDefaultLens());
-            sb.append("\">");
-            sb.append("</a></li>");    
+        sb.append(contextPath);
+        sb.append(methodName);
+        sb.append(FIRST_URI_PARAMETER);
+        sb.append(URLEncoder.encode(sourceUri1, "UTF-8"));
+        addDefaultLens(sb);
+        sb.append("\">");
+        sb.append(methodName);
+        sb.append(FIRST_URI_PARAMETER);
+        sb.append(sourceUri1);
+        addDefaultLens(sb);
+        sb.append("\">");
+        sb.append("</a></li>");    
     }           
 
+    private void mapExamplesUriBasedFormatted(StringBuilder sb, String contextPath, String methodName, String sourceUri1, 
+            String RdfFormat) throws UnsupportedEncodingException, BridgeDBException{
+        sb.append("<li>Example: <a href=\"");
+        sb.append(contextPath);
+        sb.append(methodName);
+        sb.append(FIRST_URI_PARAMETER);
+        sb.append(URLEncoder.encode(sourceUri1, "UTF-8"));
+        addDefaultLens(sb);
+        sb.append("&");
+        sb.append(WsUriConstants.RDF_FORMAT);
+        sb.append("=");
+        sb.append(RdfFormat);
+        sb.append("\">");
+        sb.append(methodName);
+        sb.append(FIRST_URI_PARAMETER);
+        sb.append(sourceUri1);
+        addDefaultLens(sb);
+        sb.append("&");
+        sb.append(WsUriConstants.RDF_FORMAT);
+        sb.append("=");
+        sb.append(RdfFormat);
+        sb.append("\">");
+        sb.append("</a></li>");    
+    }
+ 
 }
 
