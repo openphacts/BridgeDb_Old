@@ -36,7 +36,6 @@ import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.RDFWriterFactory;
 import org.openrdf.rio.RDFWriterRegistry;
-import org.openrdf.rio.binary.BinaryRDFWriter;
 import org.openrdf.rio.trig.TriGWriter;
 import org.openrdf.rio.turtle.TurtleWriter;
 import org.openrdf.rio.n3.N3Writer;
@@ -195,12 +194,9 @@ public class MappingsBySet {
     }
     
     private void writeRDF(Set<Statement> statements,  RDFFormat format, Writer writer) throws BridgeDBException{        
-        System.out.println(format);
         RDFWriter rdfWriter = getWriterIfPossible(format, writer); 
         try {
             if (rdfWriter != null){
-                writer.write(format.toString());
-                writer.write("\n");
                 rdfWriter.startRDF();
                 rdfWriter.handleNamespace("ops", RdfBase.DEFAULT_BASE_URI);
                 rdfWriter.handleNamespace("void", VoidConstants.voidns);
@@ -228,10 +224,9 @@ public class MappingsBySet {
             if (formatName == null){
                 formatName = "TriX";
             }
-            for (RDFFormat rdfFormat:RDFFormat.values()){
-            //RDFFormat rdfFormat = RDFFormat.valueOf(formatName);
+            RDFFormat rdfFormat = RDFFormat.valueOf(formatName);
             writeRDF(statements,  rdfFormat, writer);
-            } return writer.toString();
+            return writer.toString();
     }
     
     public static Set<String> getAvaiableWriters(){
