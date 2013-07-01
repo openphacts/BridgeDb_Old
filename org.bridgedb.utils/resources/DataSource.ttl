@@ -1234,6 +1234,7 @@ bridgeDB:DataSource_Ensembl a bridgeDB:DataSource ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.ensembl.org/id/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/ensembl/$id> ;
+    bridgeDB:hasUriPattern <http://purl.uniprot.org/ensembl/$id> ;
 	bridgeDB:hasRegexUriPattern <http://bio2rdf.org/ensembl:$id> .
 
 bridgeDB:DataSource_Ensembl_B_subtilis a bridgeDB:DataSource ;
@@ -1565,6 +1566,7 @@ bridgeDB:DataSource_FlyBase a bridgeDB:DataSource ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://flybase.org/reports/$id.html> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/flybase/$id> ;
+    bridgeDB:hasUriPattern <http://purl.uniprot.org/flybase/$id> ;
 	bridgeDB:Organism bridgeDB:Organism_Dm ;
 	bridgeDB:hasWikiPathwaysPattern <http://flybase.org/reports/$id.html> .
 
@@ -2174,6 +2176,7 @@ bridgeDB:DataSource_IPI a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "probe" ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/cgi-bin/dbfetch?db=IPI&id=$id&format=default> ;
+    bridgeDB:hasUriPattern <http://purl.uniprot.org/ipi/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/ipi/$id> ;
 	bridgeDB:hasBio2RdfPattern <http://bio2rdf.org/ipi:$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://bio2rdf.org/ipi:$id> .
@@ -2582,17 +2585,33 @@ bridgeDB:DataSource_MGED_Ontology a bridgeDB:DataSource ;
 	bridgeDB:hasWikiPathwaysPattern <http://purl.bioontology.org/ontology/MO/$id> .
 
 bridgeDB:DataSource_MGI a bridgeDB:DataSource ;
-	bridgeDB:fullName "MGI" ;
-	bridgeDB:systemCode "M" ;
-	bridgeDB:mainUrl "http://www.informatics.jax.org/" ;
+ 	bridgeDB:fullName "MGI" ;
+ 	bridgeDB:systemCode "M" ;
+ 	bridgeDB:mainUrl "http://www.informatics.jax.org/" ;
 	bridgeDB:idExample "MGI:2442292" ;
+ 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+ 	bridgeDB:type "gene" ;
+	#bridgeDB:hasUrlPattern <http://www.informatics.jax.org/marker/$id> ;
+	#bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/mgd/$id> ;
+ 	bridgeDB:Organism bridgeDB:Organism_Mm .
+   ##TO BE confirmed if these are with our without the MGI: prefix
+	##bridgeDB:hasBio2RdfPattern <http://bio2rdf.org/mgi:$id> ;
+	##bridgeDB:hasWikiPathwaysPattern <http://bio2rdf.org/mgi:$id> .
+
+bridgeDB:DataSource_MGI_URI a bridgeDB:DataSource ;
+	bridgeDB:fullName "MGI URI" ;
+	bridgeDB:systemCode "MGI_URI" ;
+	bridgeDB:mainUrl "http://www.informatics.jax.org/" ;
+	bridgeDB:idExample "2442292" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
-	bridgeDB:hasUrlPattern <http://www.informatics.jax.org/marker/$id> ;
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/mgd/$id> ;
+	bridgeDB:hasUrlPattern <http://www.informatics.jax.org/marker/MGI:$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/mgd/MGI:$id> ;
 	bridgeDB:Organism bridgeDB:Organism_Mm ;
-	bridgeDB:hasBio2RdfPattern <http://bio2rdf.org/mgi:$id> ;
-	bridgeDB:hasWikiPathwaysPattern <http://bio2rdf.org/mgi:$id> .
+    bridgeDB:hasUriPattern <http://purl.uniprot.org/mgi/$id> .
+    ##TO BE confirmed if these are with our without the MGI: prefix
+	##bridgeDB:hasBio2RdfPattern <http://bio2rdf.org/mgi:$id> ;
+	##bridgeDB:hasWikiPathwaysPattern <http://bio2rdf.org/mgi:$id> .
 
 bridgeDB:DataSource_Microbial_Protein_Interaction_Database a bridgeDB:DataSource ;
 	bridgeDB:fullName "Microbial Protein Interaction Database" ;
@@ -3031,6 +3050,7 @@ bridgeDB:DataSource_OMIM a bridgeDB:DataSource ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://omim.org/entry/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/omim/$id> ;
+	bridgeDB:hasUriPattern <http://purl.uniprot.org/mim/$id> ;
 	bridgeDB:hasBio2RdfPattern <http://bio2rdf.org/omim:$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://bio2rdf.org/omim:$id> .
 
@@ -3172,6 +3192,7 @@ bridgeDB:DataSource_PDB a bridgeDB:DataSource ;
 	bridgeDB:hasUrlPattern <http://www.rcsb.org/pdb/explore/explore.do?structureId=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/pdb/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.rcsb.org/pdb/explore/explore.do?structureId=$id> ;
+    bridgeDB:hasUriPattern <http://rdf.wwpdb.org/pdb/$id> ;
     bridgeDB:hasUriPattern <http://purl.uniprot.org/pdb/$id> ;
 	bridgeDB:hasUriPattern <http://www.pdb.org/pdb/explore/explore.do?pdbId=$id> .
 
@@ -3522,6 +3543,7 @@ bridgeDB:DataSource_PubChem_compound a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "metabolite" ;
 	bridgeDB:hasUrlPattern <http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?cid=$id> ;
+	bridgeDB:hasUriPattern <http://pubchem.ncbi.nlm.nih.gov/rest/rdf/compound/CID$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/pubchem.compound/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?cid=$id> .
 
@@ -3590,6 +3612,7 @@ bridgeDB:DataSource_RefSeq a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=$id> ;
+	bridgeDB:hasUriPattern <http://purl.uniprot.org/refseq/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/refseq/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=$id> .
 
@@ -3632,6 +3655,8 @@ bridgeDB:DataSource_RGD a bridgeDB:DataSource ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://rgd.mcw.edu/tools/genes/genes_view.cgi?id=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/rgd/$id> ;
+    bridgeDB:hasUriPattern <http://rgd.mcw.edu/rgdweb/report/gene/main.html?id=$id> ;
+    bridgeDB:hasUriPattern <http://purl.uniprot.org/rgd/$id> ;
 	bridgeDB:Organism bridgeDB:Organism_Rn ;
 	bridgeDB:hasWikiPathwaysPattern <http://rgd.mcw.edu/tools/genes/genes_view.cgi?id=$id> .
 
@@ -3801,6 +3826,7 @@ bridgeDB:DataSource_SGD a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=$id> ;
+	bridgeDB:hasUriPattern <http://purl.uniprot.org/sgd/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/sgd/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=$id> .
 
@@ -4262,6 +4288,14 @@ bridgeDB:DataSource_UniGene a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/unigene/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.ncbi.nlm.nih.gov/unigene?term=$id> .
 
+bridgeDB:DataSource_UniGene_URI a bridgeDB:DataSource ;
+	bridgeDB:fullName "UniGene URI" ;
+	bridgeDB:systemCode "UniGene_URI" ;
+	bridgeDB:mainUrl "http://www.ncbi.nlm.nih.gov/unigene" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://purl.uniprot.org/unigene/$id> .
+
 bridgeDB:DataSource_UniParc a bridgeDB:DataSource ;
 	bridgeDB:fullName "UniParc" ;
 	bridgeDB:mainUrl "http://www.ebi.ac.uk/uniparc/" ;
@@ -4512,6 +4546,7 @@ bridgeDB:DataSource_ZFIN a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://zfin.org/action/marker/view/$id> ;
+	bridgeDB:hasUriPattern <http://purl.uniprot.org/zfin/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/zfin/$id> ;
 	bridgeDB:Organism bridgeDB:Organism_Dr ;
 	bridgeDB:hasWikiPathwaysPattern <http://zfin.org/action/marker/view/$id> .
@@ -4535,8 +4570,7 @@ bridgeDB:DataSource_ZFIN_Phenotype a bridgeDB:DataSource ;
 	bridgeDB:hasUrlPattern <http://zfin.org/action/genotype/show_all_phenotype?zdbID=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/zfin.phenotype/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://zfin.org/action/genotype/show_all_phenotype?zdbID=$id> .
-
-bridgeDB:Organism_Ag a bridgeDB:Organism ;
+    bridgeDB:Organism_Ag a bridgeDB:Organism ;
 	bridgeDB:code "Ag" ;
 	bridgeDB:shortName "Mosquito" ;
 	bridgeDB:latinName "Anopheles gambiae" .
