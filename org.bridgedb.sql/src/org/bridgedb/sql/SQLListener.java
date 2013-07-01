@@ -306,6 +306,12 @@ public class SQLListener extends SQLBase implements MappingListener{
         }
     }
     
+    public static String addEscapeCharacters(String original){
+        String result = original.replaceAll("\\\\", "\\\\\\\\");
+        result = result.replaceAll("'", "\\\\'");
+        result = result.replaceAll("\"", "\\\\\"");
+        return result;
+    }
     /**
      * One way insertion of a link.
      * <p>
@@ -332,9 +338,9 @@ public class SQLListener extends SQLBase implements MappingListener{
         }
         blockCount++;
         insertQuery.append("('");
-        insertQuery.append(sourceId);
+        insertQuery.append(addEscapeCharacters(sourceId));
         insertQuery.append("', '");
-        insertQuery.append(targetId);
+        insertQuery.append(addEscapeCharacters(targetId));
         insertQuery.append("', ");
         insertQuery.append(mappingSetId);
         insertQuery.append(")");
