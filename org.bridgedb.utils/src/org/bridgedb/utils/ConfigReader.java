@@ -327,11 +327,14 @@ public class ConfigReader {
         }
         return false;
     }
-    
-    //Transative Section
-    
+        
     public static void useTest() {
         useTest = true;
     } 
-    
+
+    public static boolean inTestMode() {
+        return useTest;
+    }
+
+
 }
