@@ -4,7 +4,6 @@
  */
 package org.bridgedb.uri.loader.transative;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,7 +11,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.sql.SQLAccess;
@@ -22,7 +20,7 @@ import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.TransitiveConfig;
+import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.utils.Reporter;
 import org.bridgedb.utils.StoreType;
 import org.openrdf.model.Statement;
@@ -86,7 +84,7 @@ public class TransativeCreator {
     
     public File generateOutputFileIfPossible() throws BridgeDBException, IOException{
         try {
-            File parent = TransitiveConfig.getTransativeDirectory();
+            File parent = ConfigReader.getTransativeDirectory();
             File outputFile = new File(parent, getid());
             Reporter.println("Writing transative to " + outputFile.getAbsolutePath());
             FileWriter writer = new FileWriter(outputFile);

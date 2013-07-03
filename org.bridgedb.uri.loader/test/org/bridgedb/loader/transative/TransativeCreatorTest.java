@@ -26,7 +26,7 @@ import org.bridgedb.uri.loader.RdfParser;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.TransitiveConfig;
+import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.utils.Reporter;
 import org.bridgedb.utils.StoreType;
 import static org.hamcrest.Matchers.*;
@@ -56,7 +56,7 @@ public class TransativeCreatorTest {
     
     @BeforeClass
     public static void setUpClass() throws BridgeDBException {
-        TransitiveConfig.useTestDirectory();
+        ConfigReader.useTest();
         uriListener = SQLUriMapper.factory(true, StoreType.TEST);
         instance = new LinksetListener(uriListener);
     }
