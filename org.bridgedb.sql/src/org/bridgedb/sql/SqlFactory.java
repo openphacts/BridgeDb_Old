@@ -64,7 +64,6 @@ public class SqlFactory extends ConfigReader{
                 sqlAccess = new MySQLAccess(sqlPort() + "/" + sqlTestDatabase(), testSqlUser(), testSqlPassword());
                 logger.info("Connecting to test MYSQL database " + sqlTestDatabase());
             } else {
-                int error = 1/0;
                 sqlAccess = new MySQLAccess(sqlPort() + "/" + sqlDatabase(), sqlUser(), sqlPassword());
                 logger.info("Connecting to Live MYSQL database " + sqlDatabase());
             }
