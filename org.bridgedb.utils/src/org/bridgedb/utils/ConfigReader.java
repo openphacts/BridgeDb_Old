@@ -30,7 +30,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.log4j.ConsoleAppender;
@@ -46,14 +45,11 @@ public class ConfigReader {
     
     public static final String CONFIG_FILE_NAME = "Config.txt";
 
-    public static final String VOID_OWL_FILE = "VoidInfo.owl";
-    
-    public static final String CONFIG_FILE_PATH_PROPERTY = "ConfigPath";
+   public static final String CONFIG_FILE_PATH_PROPERTY = "ConfigPath";
     public static final String CONFIG_FILE_PATH_SOURCE_PROPERTY = "ConfigPathSource";
     public static final String LOG_PROPERTIES_FILE = "log4j.properties";
-    public static final String SANDBOX_LOG_PROPERTIES_FILE = "sandboxLog4j.properties";
-    public static final String[] CONFIG_PROPERTIES_ARRAY = new String[] {CONFIG_FILE_PATH_PROPERTY, CONFIG_FILE_PATH_SOURCE_PROPERTY};
-    public static final Set<String> CONFIG_PROPERTIES = new HashSet<String>(Arrays.asList(CONFIG_PROPERTIES_ARRAY));
+ //   public static final String[] CONFIG_PROPERTIES_ARRAY = new String[] {CONFIG_FILE_PATH_PROPERTY, CONFIG_FILE_PATH_SOURCE_PROPERTY};
+ //   public static final Set<String> CONFIG_PROPERTIES = new HashSet<String>(Arrays.asList(CONFIG_PROPERTIES_ARRAY));
     
     private InputStream inputStream;
     private String findMethod;
@@ -144,7 +140,9 @@ public class ConfigReader {
     
     private boolean loadDirectly(String fileName) throws FileNotFoundException {
         File file = new File(fileName);
-        if (!file.exists()) return false;
+        if (!file.exists()) {
+            return false;
+        }
         inputStream = new FileInputStream(file);
         findMethod = "Loaded from run Directory.";
         foundAt = file.getAbsolutePath();
@@ -185,7 +183,7 @@ public class ConfigReader {
             }
             return true;
         } else {
-            String error = "Environment Variable OPS-IMS-CONFIG points to " + envPath + 
+            error = "Environment Variable OPS-IMS-CONFIG points to " + envPath + 
                     " but is not a directory";
             throw new BridgeDBException (error);
         }
@@ -310,10 +308,9 @@ public class ConfigReader {
     }
 
     private boolean getInputStreamFromJar(String name) throws IOException{
-        ZipInputStream zip = null;
         CodeSource src = this.getClass().getProtectionDomain().getCodeSource();
         URL jar = src.getLocation();
-        zip = new ZipInputStream( jar.openStream());
+        ZipInputStream zip = new ZipInputStream( jar.openStream());
         ZipEntry ze = null;
         while( ( ze = zip.getNextEntry() ) != null ) {
             if (name.equals(ze.getName())){
@@ -328,4 +325,5 @@ public class ConfigReader {
         }
         return false;
     }
+    
 }
