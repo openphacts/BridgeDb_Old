@@ -75,11 +75,6 @@ TransitiveBaseUri       http://localhost:8080/Transitive/
 #Warning WS Client test will still cause the server to write to the normal directories.
 TestDirectory           ../TestDirectory
 
-######## IP Address configuration ########
-#Not used in OpenPhacts version 1.2
-#Local Host always OK
-127.0.0.1   LocalHost
-
 ####### Accounts ###########
 #Use this file to add logins and passwords to read uris.
 #For example to read uris from remote sites.
