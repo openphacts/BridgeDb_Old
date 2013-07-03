@@ -19,13 +19,10 @@
 //
 package org.bridgedb.sql;
 
-import java.io.IOException;
-import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.bridgedb.mysql.MySQLAccess;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
-import org.bridgedb.utils.StoreType;
 import org.bridgedb.virtuoso.VirtuosoAccess;
 
 /**
@@ -34,7 +31,7 @@ import org.bridgedb.virtuoso.VirtuosoAccess;
  * @See load() for where and in which order the file will be looked for.
  * @author Christian
  */
-public class SqlFactory {
+public class SqlFactory extends ConfigReader{
     /**
      * Name of the file assumed to hold the SQl configurations.
      */
@@ -49,7 +46,6 @@ public class SqlFactory {
     public static final String TEST_SQL_USER_PROPERTY = "TestSqlUser";
     public static final String TEST_SQL_PASSWORD_PROPERTY = "TestSqlPassword";
             
-    private static Properties properties; 
     //TODO get from properties
     private static boolean useMySQL = true;
     
@@ -61,40 +57,20 @@ public class SqlFactory {
      * @return 
      * @throws BridgeDBException 
      */
-    public static SQLAccess createTheSQLAccess(StoreType type) throws BridgeDBException {
+    public static SQLAccess createTheSQLAccess() throws BridgeDBException {
         SQLAccess sqlAccess;
         if (useMySQL){
-            switch (type){
-                case LIVE:
-                    sqlAccess = new MySQLAccess(sqlPort() + "/" + sqlDatabase(), sqlUser(), sqlPassword());
-                    logger.info("Connecting to Live MYSQL database " + sqlDatabase());
-                    break;
-                case LOAD:
-                    sqlAccess = new MySQLAccess(sqlPort() + "/" + sqlLoadDatabase(), sqlUser(), sqlPassword());
-                    logger.info("Connecting to Load MYSQL database " + sqlLoadDatabase());
-                    break;
-                case TEST:
-                    sqlAccess = new MySQLAccess(sqlPort() + "/" + sqlTestDatabase(), testSqlUser(), testSqlPassword());
-                    logger.info("Connecting to test MYSQL database " + sqlTestDatabase());
-                    break;
-                default:     
-                    throw new UnsupportedOperationException("Unexpected StoreType " + type);
-            } 
-        } else {       
-            logger.info("Connecting to hardcoded Virtuoso database. Ignoring StoreType");
-            switch (type){
-                case LIVE:
-                    sqlAccess = new VirtuosoAccess();;
-                    break;
-                case LOAD:
-                    sqlAccess = new VirtuosoAccess();;
-                    break;
-                case TEST:
-                    sqlAccess = new VirtuosoAccess();;
-                    break;
-                default:     
-                    throw new UnsupportedOperationException("Unexpected StoreType " + type);
+            if (useTest){
+                sqlAccess = new MySQLAccess(sqlPort() + "/" + sqlTestDatabase(), testSqlUser(), testSqlPassword());
+                logger.info("Connecting to test MYSQL database " + sqlTestDatabase());
+            } else {
+                int error = 1/0;
+                sqlAccess = new MySQLAccess(sqlPort() + "/" + sqlDatabase(), sqlUser(), sqlPassword());
+                logger.info("Connecting to Live MYSQL database " + sqlDatabase());
             }
+        } else {       
+            sqlAccess = new VirtuosoAccess();;
+            logger.info("Connecting to hardcoded Virtuoso database. Ignoring StoreType");
         }
         sqlAccess.getConnection();
         return sqlAccess;
@@ -203,19 +179,7 @@ public class SqlFactory {
             return ex.getMessage();
         }
         if (result != null) return result;
-     return "imstest";
-       }
-
-    /**
-     * Returns all the properties found in the config file as well as those set during loading.
-     * @return
-     * @throws IOException 
-     */
-    private static Properties getProperties() throws BridgeDBException{
-        if (properties == null){
-            properties = ConfigReader.getProperties();
-        }
-        return properties;
+            return "imstest";
     }
 
     static boolean supportsIsValid() {

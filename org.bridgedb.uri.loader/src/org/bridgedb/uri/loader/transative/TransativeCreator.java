@@ -22,7 +22,6 @@ import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.utils.Reporter;
-import org.bridgedb.utils.StoreType;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.StatementImpl;
@@ -39,7 +38,6 @@ public class TransativeCreator {
 
     private static SQLAccess sqlAccess = null;
     private final UriMapper mapper;
-    protected final StoreType storeType;
     protected final MappingSetInfo leftInfo;
     protected final MappingSetInfo rightInfo;
     protected final URI predicate;
@@ -52,26 +50,25 @@ public class TransativeCreator {
 
     static final Logger logger = Logger.getLogger(TransativeCreator.class);
     
-    public static File doTransativeIfPossible(MappingSetInfo left, MappingSetInfo right, StoreType storeType) throws BridgeDBException, IOException {
-        TransativeCreator creator = new TransativeCreator(left, right, storeType);
+    public static File doTransativeIfPossible(MappingSetInfo left, MappingSetInfo right) throws BridgeDBException, IOException {
+        TransativeCreator creator = new TransativeCreator(left, right);
         return creator.generateOutputFileIfPossible();
     }
 
-    public static File doTransativeIfPossible(int leftId, int rightId, StoreType storeType) 
+    public static File doTransativeIfPossible(int leftId, int rightId) 
             throws BridgeDBException, IOException {
-        SQLUriMapper mapper = SQLUriMapper.factory(false, storeType);
+        SQLUriMapper mapper = SQLUriMapper.getExisting();
         MappingSetInfo left = mapper.getMappingSetInfo(leftId);
         MappingSetInfo right = mapper.getMappingSetInfo(rightId);
-        return doTransativeIfPossible(left, right, storeType);
+        return doTransativeIfPossible(left, right);
     }
     
-    protected TransativeCreator(MappingSetInfo left, MappingSetInfo right, StoreType storeType) 
+    protected TransativeCreator(MappingSetInfo left, MappingSetInfo right) 
             throws BridgeDBException, IOException{
         if (sqlAccess == null){
-            sqlAccess = SqlFactory.createTheSQLAccess(storeType);
+            sqlAccess = SqlFactory.createTheSQLAccess();
         }
-        mapper = SQLUriMapper.factory(false, storeType);
-        this.storeType = storeType;
+        mapper = SQLUriMapper.getExisting();
         leftInfo = left;
         rightInfo = right;
         predicate = new URIImpl(PredicateMaker.combine(left.getPredicate(), right.getPredicate()));

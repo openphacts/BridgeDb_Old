@@ -21,20 +21,10 @@ package org.bridgedb.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 import org.apache.log4j.Logger;
-import org.bridgedb.DataSource;
-import org.bridgedb.DataSourceOverwriteLevel;
-import org.bridgedb.mapping.MappingListener;
-import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.StoreType;
 
 /**
  * This is the root class of the SQL stack.
@@ -54,8 +44,8 @@ public class SQLBase {
     
     static final Logger logger = Logger.getLogger(SQLBase.class);
 
-    public SQLBase(StoreType storeType) throws BridgeDBException{
-       this.sqlAccess = SqlFactory.createTheSQLAccess(storeType);
+    public SQLBase() throws BridgeDBException{
+       this.sqlAccess = SqlFactory.createTheSQLAccess();
        this.supportsIsValid = SqlFactory.supportsIsValid();
    }
         	

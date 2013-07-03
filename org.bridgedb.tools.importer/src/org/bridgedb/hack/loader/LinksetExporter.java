@@ -41,7 +41,6 @@ import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.utils.Reporter;
-import org.bridgedb.utils.StoreType;
 
 /**
  *

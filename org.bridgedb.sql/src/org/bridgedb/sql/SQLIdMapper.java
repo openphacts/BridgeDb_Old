@@ -27,14 +27,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.bridgedb.DataSource;
-import org.bridgedb.DataSourceOverwriteLevel;
 import org.bridgedb.IDMapper;
 import org.bridgedb.IDMapperCapabilities;
 import org.bridgedb.IDMapperException;
 import org.bridgedb.Xref;
 import org.bridgedb.impl.InternalUtils;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.StoreType;
 
 /**
  * Builds on the SQLListener to implement the Standard BridgeDB functions of IDMapper and IDMapperCapabilities.
@@ -60,8 +58,8 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
      */
     private final boolean useTop;
     
-    public SQLIdMapper(boolean dropTables, StoreType storeType) throws BridgeDBException{
-        super(dropTables, storeType);
+    public SQLIdMapper(boolean dropTables) throws BridgeDBException{
+        super(dropTables);
         useLimit = SqlFactory.supportsLimit();
         useTop = SqlFactory.supportsTop();
      }   

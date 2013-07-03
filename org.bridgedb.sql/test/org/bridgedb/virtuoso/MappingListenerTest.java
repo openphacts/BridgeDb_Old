@@ -24,7 +24,7 @@ import org.bridgedb.sql.SQLIdMapper;
 import org.bridgedb.sql.SQLListener;
 import org.bridgedb.sql.TestSqlFactory;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.StoreType;
+import org.bridgedb.utils.ConfigReader;
 import org.junit.BeforeClass;
 
 /**
@@ -41,9 +41,10 @@ public class MappingListenerTest extends org.bridgedb.mapping.MappingListenerTes
     public static void setupIDMapper() throws BridgeDBException{
         connectionOk = false;
         TestSqlFactory.checkVirtuosoAccess();
-        listener = new SQLListener(true, StoreType.TEST);
+        ConfigReader.useTest();
+        listener = new SQLListener(true);
         loadData();
-        idMapper = new SQLIdMapper(false, StoreType.TEST);
+        idMapper = new SQLIdMapper(false);
         connectionOk = true;
         capabilities = idMapper.getCapabilities(); 
         logger.info("Virtuoso Setup successfull");

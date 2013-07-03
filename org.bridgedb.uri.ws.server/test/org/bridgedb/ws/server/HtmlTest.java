@@ -5,16 +5,10 @@
 package org.bridgedb.ws.server;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import javax.ws.rs.core.Response;
-import org.bridgedb.sql.SQLUriMapper;
-import org.bridgedb.sql.TestSqlFactory;
-import org.bridgedb.uri.UriListenerTest;
 import org.bridgedb.utils.BridgeDBException;
+import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.utils.Reporter;
-import org.bridgedb.utils.StoreType;
-import org.bridgedb.ws.WSUriMapper;
-import org.bridgedb.ws.uri.WSUriInterfaceService;
 import org.bridgedb.ws.uri.WSUriServer;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
@@ -30,6 +24,7 @@ public class HtmlTest {
     
     @BeforeClass
     public static void setupIDMapper() throws BridgeDBException{
+        ConfigReader.useTest();
         server = new WSUriServer();
     }
 

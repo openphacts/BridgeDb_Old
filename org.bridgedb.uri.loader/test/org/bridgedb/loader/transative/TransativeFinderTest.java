@@ -19,21 +19,21 @@
 //
 package org.bridgedb.loader.transative;
 
-import org.bridgedb.uri.loader.transative.TransativeFinder;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.bridgedb.DataSource;
-import org.bridgedb.uri.loader.LinksetListener;
 import org.bridgedb.rdf.DataSourceUris;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.sql.TestSqlFactory;
 import org.bridgedb.statistics.OverallStatistics;
 import org.bridgedb.uri.Lens;
+import org.bridgedb.uri.loader.LinksetListener;
+import org.bridgedb.uri.loader.transative.TransativeFinder;
 import org.bridgedb.utils.BridgeDBException;
+import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.utils.Reporter;
-import org.bridgedb.utils.StoreType;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -55,7 +55,8 @@ public class TransativeFinderTest {
     public void testLoader() throws BridgeDBException, IOException, OpenRDFException, FileNotFoundException {
         //Check database is running and settup correctly or kill the test. 
         TestSqlFactory.checkSQLAccess();
-        mapper = SQLUriMapper.factory(true, StoreType.TEST);
+        ConfigReader.useTest();
+        mapper = SQLUriMapper.createNew();
 //        linksetLoader = new LinksetLoader();
 //        linksetLoader.clearExistingData( StoreType.TEST);  
         setupPattern("TransativeTestA", "http://www.example.com/DS_A/$id");
@@ -88,7 +89,7 @@ public class TransativeFinderTest {
         load("../org.bridgedb.uri.loader/test-data/sampleEToD.ttl");
         load("../org.bridgedb.uri.loader/test-data/sampleAToC.ttl");
         load("../org.bridgedb.uri.loader/test-data/sampleAToD.ttl");
-        TransativeFinder transativeFinder = new TransativeFinder(StoreType.TEST);
+        TransativeFinder transativeFinder = new TransativeFinder();
         transativeFinder.UpdateTransative();
         OverallStatistics results = mapper.getOverallStatistics(Lens.getAllLens());
         assertEquals(20, results.getNumberOfMappingSets());
@@ -102,7 +103,7 @@ public class TransativeFinderTest {
         load("../org.bridgedb.uri.loader/test-data/sampleAToC.ttl");
         load("../org.bridgedb.uri.loader/test-data/sampleAToD.ttl");
         load("../org.bridgedb.uri.loader/test-data/sampleEToD.ttl");
-        TransativeFinder transativeFinder = new TransativeFinder(StoreType.TEST);
+        TransativeFinder transativeFinder = new TransativeFinder();
         transativeFinder.UpdateTransative();
         OverallStatistics results = mapper.getOverallStatistics(Lens.getAllLens());
         assertEquals(20, results.getNumberOfMappingSets());
@@ -116,7 +117,7 @@ public class TransativeFinderTest {
         load("../org.bridgedb.uri.loader/test-data/sampleBToC.ttl");
         load("../org.bridgedb.uri.loader/test-data/sampleEToD.ttl");
         load("../org.bridgedb.uri.loader/test-data/sampleCToD.ttl");
-        TransativeFinder transativeFinder = new TransativeFinder(StoreType.TEST);
+        TransativeFinder transativeFinder = new TransativeFinder();
         transativeFinder.UpdateTransative();
         transativeFinder.UpdateTransative();
         OverallStatistics results = mapper.getOverallStatistics(Lens.getAllLens());
@@ -131,7 +132,7 @@ public class TransativeFinderTest {
         load("../org.bridgedb.uri.loader/test-data/sampleBToC.ttl");
         load("../org.bridgedb.uri.loader/test-data/sampleEToD.ttl");
         load("../org.bridgedb.uri.loader/test-data/sampleEToF.ttl");
-        TransativeFinder transativeFinder = new TransativeFinder(StoreType.TEST);
+        TransativeFinder transativeFinder = new TransativeFinder();
         transativeFinder.UpdateTransative();
         load("../org.bridgedb.uri.loader/test-data/sampleCToD.ttl");
         transativeFinder.UpdateTransative();
@@ -145,7 +146,7 @@ public class TransativeFinderTest {
         Reporter.println("testFinder5");
         load("../org.bridgedb.uri.loader/test-data/sampleAToB.ttl");
         load("../org.bridgedb.uri.loader/test-data/sampleAToA.ttl");
-        TransativeFinder transativeFinder = new TransativeFinder(StoreType.TEST);
+        TransativeFinder transativeFinder = new TransativeFinder();
         transativeFinder.UpdateTransative();
         OverallStatistics results = mapper.getOverallStatistics(Lens.getAllLens());
         assertEquals(8, results.getNumberOfMappingSets());
@@ -157,7 +158,7 @@ public class TransativeFinderTest {
         Reporter.println("testFinder6");
         load("../org.bridgedb.uri.loader/test-data/sampleAToB.ttl");
         load("../org.bridgedb.uri.loader/test-data/sampleAToA.ttl");
-        TransativeFinder transativeFinder = new TransativeFinder(StoreType.TEST);
+        TransativeFinder transativeFinder = new TransativeFinder();
         transativeFinder.UpdateTransative();
         load("../org.bridgedb.uri.loader/test-data/sampleAToC.ttl");
         transativeFinder.UpdateTransative();
@@ -171,7 +172,7 @@ public class TransativeFinderTest {
         Reporter.println("testFinder7");
         load("../org.bridgedb.uri.loader/test-data/sampleAToB.ttl");
         load("../org.bridgedb.uri.loader/test-data/sampleAToA.ttl");
-        TransativeFinder transativeFinder = new TransativeFinder(StoreType.TEST);
+        TransativeFinder transativeFinder = new TransativeFinder();
         transativeFinder.UpdateTransative();
         load("../org.bridgedb.uri.loader/test-data/sampleBToC.ttl");
         transativeFinder.UpdateTransative();
@@ -186,7 +187,7 @@ public class TransativeFinderTest {
         load("../org.bridgedb.uri.loader/test-data/sampleAToB.ttl");
         load("../org.bridgedb.uri.loader/test-data/sampleAToA.ttl");
         load("../org.bridgedb.uri.loader/test-data/sampleAToA_1.ttl");
-        TransativeFinder transativeFinder = new TransativeFinder(StoreType.TEST);
+        TransativeFinder transativeFinder = new TransativeFinder();
         transativeFinder.UpdateTransative();
         OverallStatistics results = mapper.getOverallStatistics(Lens.getAllLens());
         assertEquals(14, results.getNumberOfMappingSets());

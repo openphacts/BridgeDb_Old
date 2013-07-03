@@ -330,7 +330,7 @@ public class ConfigReader {
     
     //Transative Section
     
-    public static void useTest() throws BridgeDBException{
+    public static void useTest() {
         useTest = true;
     } 
     

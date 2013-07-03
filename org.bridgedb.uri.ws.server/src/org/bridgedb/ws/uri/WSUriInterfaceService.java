@@ -43,7 +43,6 @@ import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.SetMappings;
 import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.StoreType;
 import org.bridgedb.ws.WSCoreService;
 import org.bridgedb.ws.WSUriInterface;
 import org.bridgedb.ws.WsConstants;
@@ -82,7 +81,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     protected WSUriInterfaceService() throws BridgeDBException {
         super();
 //        this.linksetInterface = new LinksetLoader();
-        uriMapper = SQLUriMapper.factory(false, StoreType.LIVE);
+        uriMapper = SQLUriMapper.getExisting();
         idMapper = uriMapper;
     }
 
@@ -536,18 +535,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         return result.trim();
     }
     
-     protected final StoreType parseStoreType(String storeTypeString) throws BridgeDBException{
-        if (storeTypeString == null){
-            throw new BridgeDBException (STORE_TYPE + " parameter may not be null");
-        }
-        storeTypeString = trim(storeTypeString);
-        if (storeTypeString.isEmpty()){
-            throw new BridgeDBException (STORE_TYPE + " parameter may not be empty");
-        }
-        return StoreType.parseString(storeTypeString);
-    }
-
-   protected final void validateInfo(String info) throws BridgeDBException{
+    protected final void validateInfo(String info) throws BridgeDBException{
         if (info == null){
             throw new BridgeDBException (INFO + " parameter may not be null");
         }

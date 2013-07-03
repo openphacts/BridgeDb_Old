@@ -19,14 +19,10 @@
 //
 package org.bridgedb.ws.uri.client;
 
-import java.util.Date;
-import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.StoreType;
 import org.bridgedb.ws.WSUriInterface;
 import org.bridgedb.ws.WSUriMapper;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 
 /**
  * 

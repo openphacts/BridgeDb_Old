@@ -4,22 +4,22 @@
  */
 package org.bridgedb.loader;
 
-import org.bridgedb.uri.loader.LinksetListener;
 import java.io.File;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.statistics.MappingSetInfo;
+import org.bridgedb.uri.loader.LinksetListener;
 import org.bridgedb.utils.BridgeDBException;
+import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.utils.Reporter;
-import org.bridgedb.utils.StoreType;
+import static org.hamcrest.Matchers.*;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
-import static org.hamcrest.Matchers.*;
 
 /**
  *
@@ -38,7 +38,8 @@ public class LinksetListenerTest {
     
     @BeforeClass
     public static void setUpClass() throws BridgeDBException {
-        uriListener = SQLUriMapper.factory(true, StoreType.TEST);
+        ConfigReader.useTest();
+        uriListener = SQLUriMapper.createNew();
         instance = new LinksetListener(uriListener);
     }
     

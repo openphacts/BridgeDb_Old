@@ -22,7 +22,7 @@ package org.bridgedb.mysql;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.sql.TestSqlFactory;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.StoreType;
+import org.bridgedb.utils.ConfigReader;
 import org.junit.BeforeClass;
 
 /**
@@ -40,9 +40,10 @@ public class UriMapperOtherTest extends org.bridgedb.uri.UriMapperOtherTest {
         connectionOk = false;
         TestSqlFactory.checkSQLAccess();
         connectionOk = true;
-        listener = SQLUriMapper.factory(true, StoreType.TEST);
+        ConfigReader.useTest();
+        listener = SQLUriMapper.createNew();
         loadData();
-        uriMapper = SQLUriMapper.factory(false, StoreType.TEST);
+        uriMapper = SQLUriMapper.getExisting();
     }
             
 }

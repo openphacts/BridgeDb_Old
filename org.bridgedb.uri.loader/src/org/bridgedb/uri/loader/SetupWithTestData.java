@@ -8,7 +8,6 @@ import java.io.File;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.Reporter;
-import org.bridgedb.utils.StoreType;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 
@@ -25,7 +24,7 @@ public class SetupWithTestData {
     private LinksetListener instance;
 
     public SetupWithTestData() throws BridgeDBException {
-        uriListener = SQLUriMapper.factory(true, StoreType.LOAD);
+        uriListener = SQLUriMapper.createNew();
         instance = new LinksetListener(uriListener);
     }
     

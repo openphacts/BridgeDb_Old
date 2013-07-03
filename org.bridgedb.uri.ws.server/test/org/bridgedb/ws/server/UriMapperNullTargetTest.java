@@ -23,7 +23,7 @@ import java.util.Date;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.sql.TestSqlFactory;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.StoreType;
+import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.ws.uri.WSUriInterfaceService;
 import org.bridgedb.ws.WSUriMapper;
 import org.junit.BeforeClass;
@@ -45,9 +45,10 @@ public class UriMapperNullTargetTest extends org.bridgedb.uri.UriMapperNullTarge
         connectionOk = false;
         TestSqlFactory.checkSQLAccess();
         connectionOk = true;
-        listener = SQLUriMapper.factory(true, StoreType.TEST);
+        ConfigReader.useTest();
+        listener = SQLUriMapper.createNew();
         loadData();
-        SQLUriMapper sqlUriMapper = SQLUriMapper.factory(false, StoreType.TEST);
+        SQLUriMapper sqlUriMapper = SQLUriMapper.getExisting();
         uriMapper = new WSUriMapper(new WSUriInterfaceService(sqlUriMapper)); 
     }
       

@@ -31,7 +31,6 @@ import org.bridgedb.DataSourceOverwriteLevel;
 import org.bridgedb.mapping.MappingListener;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.StoreType;
 
 /**
  * This is the root class of the SQL stack.
@@ -108,8 +107,8 @@ public class SQLListener extends SQLBase implements MappingListener{
     
     static final Logger logger = Logger.getLogger(SQLListener.class);
 
-    public SQLListener(boolean dropTables, StoreType storeType) throws BridgeDBException{
-        super(storeType);
+    public SQLListener(boolean dropTables) throws BridgeDBException{
+        super();
         DataSource.setOverwriteLevel(DataSourceOverwriteLevel.STRICT);
         BridgeDBRdfHandler.init();
         this.autoIncrement = SqlFactory.getAutoIncrementCommand();

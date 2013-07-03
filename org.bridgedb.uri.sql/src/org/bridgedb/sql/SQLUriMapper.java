@@ -45,7 +45,6 @@ import org.bridgedb.uri.UriListener;
 import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
-import org.bridgedb.utils.StoreType;
 import org.openrdf.rio.RDFHandlerException;
 
 /**
@@ -78,37 +77,26 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     private static final String MIMETYPE_COLUMN_NAME = "mimetype";
     private static final String NAME_COLUMN_NAME = "name";
     
-    private static HashMap<StoreType,SQLUriMapper> register = null;
+    private static SQLUriMapper mapper = null;
     private HashMap<Integer,UriPattern> subjectUriPatterns;
     private HashMap<Integer,UriPattern> targetUriPatterns;
     static final Logger logger = Logger.getLogger(SQLListener.class);
 
-    public static SQLUriMapper factory(boolean dropTables, StoreType storeType) throws BridgeDBException{
-        SQLUriMapper result;
-        if (dropTables){
-            result =  new SQLUriMapper(dropTables, storeType);
-            Lens.init(result);
-            getRegister().put(storeType, result);
-            return result;
-        };
-        result = getRegister().get(storeType);
-        if (result == null){
-            result =  new SQLUriMapper(dropTables, storeType);
-            Lens.init(result);
-            getRegister().put(storeType, result);
-            return result;
-        }
-        return result;
-    }
-    
-    private static HashMap<StoreType,SQLUriMapper> getRegister() throws BridgeDBException{
-        if (register == null){
+    public static SQLUriMapper getExisting() throws BridgeDBException{
+        if (mapper == null){
             BridgeDBRdfHandler.init();
-            register = new HashMap<StoreType,SQLUriMapper>();
+            mapper =  new SQLUriMapper(false);
+            Lens.init(mapper);
         }
-        return register;
+        return mapper;
     }
     
+    public static SQLUriMapper createNew() throws BridgeDBException{
+        BridgeDBRdfHandler.init();
+        mapper =  new SQLUriMapper(true);
+        return mapper;
+    }
+
     /**
      * Creates a new UriMapper including BridgeDB implementation based on a connection to the SQL Database.
      *
@@ -118,8 +106,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
      * @param specific Code to hold the things that are different between different SQL implementaions.
      * @throws BridgeDBException
      */
-     private SQLUriMapper(boolean dropTables, StoreType storeType) throws BridgeDBException{
-        super(dropTables, storeType);
+     private SQLUriMapper(boolean dropTables) throws BridgeDBException{
+        super(dropTables);
         clearUriPatterns();
         Collection<UriPattern> patterns = UriPattern.getUriPatterns();
         for (UriPattern pattern:patterns){
@@ -128,6 +116,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         checkDataSources();
         subjectUriPatterns = new HashMap<Integer,UriPattern>();
         targetUriPatterns = new HashMap<Integer,UriPattern>();
+        Lens.init(this);
     }   
     
     @Override
@@ -1626,7 +1615,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
    public static void main(String[] args) throws BridgeDBException, RDFHandlerException, IOException  {
         ConfigReader.logToConsole();
         BridgeDBRdfHandler.init();
-        SQLUriMapper test = new SQLUriMapper(false, StoreType.LOAD);
+        SQLUriMapper test = new SQLUriMapper(false);
    }
    
    public final static String scrubUri(String original){

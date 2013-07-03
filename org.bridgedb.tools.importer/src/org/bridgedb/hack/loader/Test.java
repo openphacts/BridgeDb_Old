@@ -21,7 +21,6 @@ package org.bridgedb.hack.loader;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
@@ -36,13 +35,9 @@ import org.bridgedb.IDMapperException;
 import org.bridgedb.Xref;
 import org.bridgedb.XrefIterator;
 import org.bridgedb.bio.BioDataSource;
-import org.bridgedb.mysql.MySQLSpecific;
-import org.bridgedb.sql.SQLAccess;
 import org.bridgedb.sql.SQLUriMapper;
-import org.bridgedb.sql.SqlFactory;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
-import org.bridgedb.utils.StoreType;
 
 /**
  *
@@ -86,7 +81,8 @@ public class Test {
      * @param mapper MUST implement XrefIterator
      */
     public static void printLinksetLines(IDMapper mapper) throws BridgeDBException{
-        SQLUriMapper sqlMapper = SQLUriMapper.factory(false, StoreType.TEST);
+        ConfigReader.useTest();
+        SQLUriMapper sqlMapper = SQLUriMapper.getExisting();
 
         XrefIterator iterator = (XrefIterator)mapper;
         Set<DataSource> srcDataSources;

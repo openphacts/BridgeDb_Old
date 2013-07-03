@@ -22,7 +22,6 @@ package org.bridgedb.sql;
 import org.apache.log4j.Logger;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
-import org.bridgedb.utils.StoreType;
 
 /**
  * Methods to generate the SQLAccess for MYSQl and Virtuso
@@ -37,8 +36,9 @@ public abstract class TestSqlFactory {
     static final Logger logger = Logger.getLogger(TestSqlFactory.class);
     
     public static void checkSQLAccess() {
+        ConfigReader.useTest();
         try {
-            SQLAccess sqlAccess = SqlFactory.createTheSQLAccess(StoreType.TEST);
+            SQLAccess sqlAccess = SqlFactory.createTheSQLAccess();
             sqlAccess.getConnection();
         } catch (BridgeDBException ex) {
             logger.error("Unable to connect to SQL", ex);
@@ -52,8 +52,9 @@ public abstract class TestSqlFactory {
 
     public static void checkVirtuosoAccess() {
         SqlFactory.setUseMySQL(false);
+        ConfigReader.useTest();
         try {
-            SQLAccess sqlAccess = SqlFactory.createTheSQLAccess(StoreType.TEST);
+            SQLAccess sqlAccess = SqlFactory.createTheSQLAccess();
             sqlAccess.getConnection();
         } catch (BridgeDBException ex) {
             logger.error("Unable to connect to Virtuoso", ex);
@@ -67,8 +68,9 @@ public abstract class TestSqlFactory {
 
     public static void checkMySQLAccess() {
         SqlFactory.setUseMySQL(true);
+        ConfigReader.useTest();
         try {
-            SQLAccess sqlAccess = SqlFactory.createTheSQLAccess(StoreType.TEST);
+            SQLAccess sqlAccess = SqlFactory.createTheSQLAccess();
             sqlAccess.getConnection();
         } catch (BridgeDBException ex) {
             logger.error("Unable to connect to Virtuoso", ex);

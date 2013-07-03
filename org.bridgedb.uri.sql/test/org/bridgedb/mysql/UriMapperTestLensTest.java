@@ -23,7 +23,7 @@ import java.util.Date;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.sql.TestSqlFactory;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.StoreType;
+import org.bridgedb.utils.ConfigReader;
 import org.junit.BeforeClass;
 
 /**
@@ -45,11 +45,10 @@ public class UriMapperTestLensTest extends org.bridgedb.uri.UriMapperTestLensTes
         connectionOk = false;
         TestSqlFactory.checkSQLAccess();
         connectionOk = true;
-        SQLUriMapper mapper = SQLUriMapper.factory(true, StoreType.TEST);
-        listener = mapper;
+        ConfigReader.useTest();
+        listener = SQLUriMapper.createNew();
         loadData();
-        uriMapper = mapper;
-        
+        uriMapper = SQLUriMapper.getExisting();        
     }
             
 }

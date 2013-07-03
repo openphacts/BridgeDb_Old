@@ -27,7 +27,7 @@ import org.bridgedb.sql.SQLIdMapper;
 import org.bridgedb.sql.SQLListener;
 import org.bridgedb.sql.TestSqlFactory;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.StoreType;
+import org.bridgedb.utils.ConfigReader;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -47,9 +47,10 @@ public class MappingListenerTest extends org.bridgedb.mapping.MappingListenerTes
     public static void setupIDMapper() throws BridgeDBException{
         connectionOk = false;
         TestSqlFactory.checkMySQLAccess();
-        listener = new SQLListener(true, StoreType.TEST);
+        ConfigReader.useTest();
+        listener = new SQLListener(true);
         loadData();
-        sqlIdMapper = new SQLIdMapper(false, StoreType.TEST);
+        sqlIdMapper = new SQLIdMapper(false);
         idMapper  = sqlIdMapper;
         connectionOk = true;
         capabilities = idMapper.getCapabilities(); 

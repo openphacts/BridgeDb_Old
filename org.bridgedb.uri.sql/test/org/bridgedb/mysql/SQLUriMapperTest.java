@@ -26,7 +26,7 @@ import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.sql.TestSqlFactory;
 import org.bridgedb.uri.UriListenerTest;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.StoreType;
+import org.bridgedb.utils.ConfigReader;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
@@ -46,7 +46,8 @@ public abstract class SQLUriMapperTest extends UriListenerTest{
     @BeforeClass
     public static void setupIDMapper() throws BridgeDBException{
         TestSqlFactory.checkSQLAccess();
-        sqlUriMapper = SQLUriMapper.factory(false, StoreType.TEST);
+        ConfigReader.useTest();
+        sqlUriMapper = SQLUriMapper.createNew();
     }
     
     @Test 

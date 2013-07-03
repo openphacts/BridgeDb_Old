@@ -24,7 +24,7 @@ import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.sql.TestSqlFactory;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.StoreType;
+import org.bridgedb.utils.ConfigReader;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
@@ -40,11 +40,11 @@ public class LensTest extends org.bridgedb.uri.UriListenerTest {
     
     @BeforeClass
     public static void setupIDMapper() throws BridgeDBException{
-
         connectionOk = false;
         TestSqlFactory.checkSQLAccess();
         connectionOk = true;
-        sqlUriMapper = SQLUriMapper.factory(true, StoreType.TEST);
+        ConfigReader.useTest();
+        sqlUriMapper = SQLUriMapper.createNew();
         listener = sqlUriMapper;
         loadData();
         uriMapper = sqlUriMapper;
