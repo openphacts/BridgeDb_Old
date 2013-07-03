@@ -254,7 +254,6 @@ public class Lens {
             Properties properties = ConfigReader.getProperties();
             Set<String> keys = properties.stringPropertyNames();
             for (String key:keys){
-                System.out.println(key);
                 if (key.startsWith(PROPERTY_PREFIX)){
                     String[] parts = key.split("\\.");
                     Lens lens = findOrCreatedById(parts[1]);
@@ -271,7 +270,6 @@ public class Lens {
                     } else {
                         logger.error("Found unexpected property " + key);
                     }
-                     System.out.println(lens);
                 }
             }
             all.setCreatedOn(new Date().toString());
@@ -283,7 +281,6 @@ public class Lens {
             if (all.getDescription() == null || all.getDescription().isEmpty()){
                 all.setDescription("Lens which includes all justfications.");
             }
-            System.out.println(all);
             if (defaultLens.getJustifications().isEmpty()){
                 defaultLens.addJustifications(all.getJustifications());
             }
