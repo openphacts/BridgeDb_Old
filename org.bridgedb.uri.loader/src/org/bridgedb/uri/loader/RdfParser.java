@@ -27,8 +27,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.apache.log4j.Logger;
+import org.bridgedb.uri.loader.transative.TransativeConfig;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.ConfigReader;
 import org.openrdf.OpenRDFException;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
@@ -110,11 +110,11 @@ public class RdfParser {
     }
 
     public static String fileToURL(File file) throws BridgeDBException{
-        String baseURI = ConfigReader.getTransitiveBaseUri();
+        String baseURI = TransativeConfig.getTransitiveBaseUri();
         if (baseURI == null || baseURI.isEmpty()){
             return fileToURI(file); 
         }
-        if (file.getParent().equals(ConfigReader.getTransativeDirectory())){
+        if (file.getParent().equals(TransativeConfig.getTransativeDirectory())){
             return baseURI + file.getName();
         } else {
             return RdfParser.fileToURI(file);

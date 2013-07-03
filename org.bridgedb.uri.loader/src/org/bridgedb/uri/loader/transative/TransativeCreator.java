@@ -84,7 +84,7 @@ public class TransativeCreator {
     
     public File generateOutputFileIfPossible() throws BridgeDBException, IOException{
         try {
-            File parent = ConfigReader.getTransativeDirectory();
+            File parent = TransativeConfig.getTransativeDirectory();
             File outputFile = new File(parent, getid());
             Reporter.println("Writing transative to " + outputFile.getAbsolutePath());
             FileWriter writer = new FileWriter(outputFile);

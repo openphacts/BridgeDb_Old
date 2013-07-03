@@ -44,10 +44,6 @@ public class ConfigReader {
     public static final String CONFIG_FILE_NAME = "Config.txt";
     public static final String LOG_PROPERTIES_FILE = "log4j.properties";
 
-    //Properties
-    public static final String TRANSATIVE_DIRECTORY_PROPERTY = "TransitiveDirectory";
-    public static final String TRANSATIVE_BASE_URI = "TransitiveBaseUri";
-    public static final String TEST_DIRECTORY_PROPERTY = "TestDirectory";
     //Properties added by this class
     public static final String CONFIG_FILE_PATH_PROPERTY = "ConfigPath";
     public static final String CONFIG_FILE_PATH_SOURCE_PROPERTY = "ConfigPathSource";
@@ -58,11 +54,11 @@ public class ConfigReader {
     private String error = null;
     private Properties properties = null;
     
-    private static boolean useTest = false;
+    protected static boolean useTest = false;
     private static boolean loggerSetup = false;
     private static ConfigReader propertyReader = null;
     
-    static final Logger logger = Logger.getLogger(ConfigReader.class);
+    private static final Logger logger = Logger.getLogger(ConfigReader.class);
     
     public static Properties getProperties() throws BridgeDBException{
         if (propertyReader == null){
@@ -73,8 +69,8 @@ public class ConfigReader {
     }
   
     public static InputStream getInputStream(String fileName) throws BridgeDBException{
-        ConfigReader finder = new ConfigReader(fileName);
         configureLogger();
+        ConfigReader finder = new ConfigReader(fileName);
         return finder.getInputStream();
     }
         
@@ -92,6 +88,9 @@ public class ConfigReader {
     public static void logToConsole() throws BridgeDBException{
         configureLogger();
         Logger.getRootLogger().addAppender(new ConsoleAppender(new SimpleLayout(), ConsoleAppender.SYSTEM_OUT));
+    }
+
+    protected ConfigReader(){
     }
     
     private ConfigReader(String fileName) throws BridgeDBException{
@@ -332,77 +331,7 @@ public class ConfigReader {
     //Transative Section
     
     public static void useTest() throws BridgeDBException{
-        if (useTest) {
-            return; //Already in useTest mode
-        } else {
-            useTest = true;
-            File testDir = getTestDirectory();
-            deleteChildren(testDir);
-        }        
+        useTest = true;
     } 
     
-    public static File getTransativeDirectory() throws BridgeDBException {
-        if (useTest){
-            return getTestDirectory();
-        }
-        return getDirectory(TRANSATIVE_DIRECTORY_PROPERTY, "Transative");
-    }
-
-    public static String getTransitiveBaseUri() throws BridgeDBException{
-        return getProperties().getProperty(TRANSATIVE_BASE_URI);
-    }
-
-    private static File getTestDirectory() throws BridgeDBException {
-        return getDirectory(TEST_DIRECTORY_PROPERTY, "TestDirectory");
-    }
-
-    private static File getDirectory(String property, String type) throws BridgeDBException {
-        String fileName = getProperties().getProperty(property);
-        if (fileName == null || fileName.isEmpty()){
-            logger.warn("No directory property found for " + type + " so just using " + type + " as a relative file name");
-            fileName = type;
-        }
-        File file = new File(fileName);
-        if (!file.exists()){
-            File parent = file.getParentFile();
-            if (parent == null || parent.isDirectory()){
-                boolean made = file.mkdir();
-                if (!made){
-                    throw new BridgeDBException("Unable to create " + type + " directory " + file.getAbsolutePath());
-                }
-            } else {
-                throw new BridgeDBException("No parent (" + parent.getAbsolutePath() + ")found for " + type + " directory " + file.getAbsolutePath());
-            }
-        }
-        if (!file.isDirectory()){
-            throw new BridgeDBException(type + " directory " + file.getAbsolutePath() + " is not a directory");            
-        }
-        return file;
-    }
-     
-    private static void deleteChildren(File testFile) throws BridgeDBException {
-        if (testFile.isFile()){
-            checkOkToDelete(testFile);
-            boolean check = testFile.delete();
-            if (!check){
-                logger.warn("Unable to delete test file "+ testFile);
-            }
-        } else if (testFile.isDirectory()){
-            File[] children = testFile.listFiles();
-            for (File child:children){
-                deleteChildren(child);
-            }
-            testFile.delete();
-        }
-    }
-
-    private static void checkOkToDelete(File file) throws BridgeDBException {
-        String name = file.getName();
-        if (name.endsWith(".ttl")) return ;
-        if (name.endsWith(".n3")) return ;
-        if (name.endsWith(".xml")) return ;
-        if (name.endsWith(".txt")) return ;
-        throw new BridgeDBException("Unexpected file being deleted " + file.getAbsolutePath());
-    }
-
 }
