@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.log4j.ConsoleAppender;
@@ -99,12 +100,13 @@ public class ConfigReader {
             if (loadDirectly(fileName)) return;
             if (loadByEnviromentVariable(fileName)) return;
             if (loadByCatalinaHomeConfigs(fileName)) return;
-            if (loadFromDirectory(fileName, "../org.bridgedb.utils/resources")) return;
             if (loadFromDirectory(fileName, "../conf/OPS-IMS")) return;
-            if (loadFromDirectory(fileName, "conf/OPS-IMS")) return;
-            if (loadFromDirectory(fileName, "../../BridgeDb/org.bridgedb.utils/resources")) return;
-            if (getInputStreamFromResource(fileName)) return;
-            if (getInputStreamFromJar(fileName)) return;
+            if (getInputStreamWithClassLoader(fileName)) return;
+            //if (loadFromDirectory(fileName, "../org.bridgedb.utils/resources")) return;
+            //if (loadFromDirectory(fileName, "conf/OPS-IMS")) return;
+            //if (loadFromDirectory(fileName, "../../BridgeDb/org.bridgedb.utils/resources")) return;
+            //if (getInputStreamFromResource(fileName)) return;
+            //if (getInputStreamFromJar(fileName)) return;
             throw new BridgeDBException("Unable to find " + fileName);
         } catch (IOException ex) {
             error = "Unexpected IOEXception after doing checks.";
@@ -261,6 +263,31 @@ public class ConfigReader {
                 logger.info("Loaded file " + fileName + " from " + foundAt);    
             }
             return true;
+    }
+
+    private boolean getInputStreamWithClassLoader(String fileName) throws FileNotFoundException{
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        URL url = classLoader.getResource(fileName);
+        if (url != null){
+            try {
+                inputStream =  url.openStream();
+            } catch (IOException ex) {
+                if (loggerSetup){
+                    logger.info("Error opeing url " + url , ex);
+                    return false;
+                }
+            }
+            findMethod = "Loaded with class loader";
+            foundAt = url.getPath();
+            if (loggerSetup){
+                logger.info("Loaded " + url + " with class loader. ");    
+            }
+            return true;
+        }
+        if (loggerSetup){
+            logger.info("Not found by class loader. ");    
+        }
+        return false;
     }
 
     private boolean getInputStreamFromResource(String name) throws FileNotFoundException{
