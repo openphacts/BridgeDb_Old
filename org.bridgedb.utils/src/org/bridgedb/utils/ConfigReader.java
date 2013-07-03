@@ -62,12 +62,18 @@ public class ConfigReader {
     
     public static Properties getProperties() throws BridgeDBException{
         if (propertyReader == null){
-            propertyReader = new ConfigReader(CONFIG_FILE_NAME);            
             configureLogger();
+            propertyReader = new ConfigReader(CONFIG_FILE_NAME);            
         }
         return propertyReader.readProperties();
     }
   
+    public static Properties getProperties(String fileName) throws BridgeDBException{
+        configureLogger();
+        ConfigReader configReader = new ConfigReader(fileName);            
+        return configReader.readProperties();
+    }
+    
     public static InputStream getInputStream(String fileName) throws BridgeDBException{
         configureLogger();
         ConfigReader finder = new ConfigReader(fileName);

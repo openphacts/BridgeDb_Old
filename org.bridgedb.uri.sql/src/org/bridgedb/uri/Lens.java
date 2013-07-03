@@ -45,6 +45,8 @@ public class Lens {
     private String description;
     private final List<String> justifications;
     
+    private static final String PROPERTIES_FILE = "lens.properties";
+    
     private static HashMap<String,Lens> register = null;
     private static int nextNumber = -0; 
     
@@ -251,7 +253,7 @@ public class Lens {
             Lens all = findOrCreatedById(ALL_LENS_NAME);
             Lens defaultLens = findOrCreatedById(DEFAULT_LENS_NAME);
             Lens testLens = findOrCreatedById(TEST_LENS_NAME);
-            Properties properties = ConfigReader.getProperties();
+            Properties properties = ConfigReader.getProperties(PROPERTIES_FILE);
             Set<String> keys = properties.stringPropertyNames();
             for (String key:keys){
                 if (key.startsWith(PROPERTY_PREFIX)){
