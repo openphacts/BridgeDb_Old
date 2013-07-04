@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import org.apache.log4j.Logger;
 import org.bridgedb.sql.SQLBase;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.statistics.DataSetInfo;
@@ -35,16 +36,16 @@ public class TransativeFinder extends SQLBase{
     private SQLUriMapper mapper;
   
     private final static String LAST_TRANSATIVE_LOADED_KEY = "LastMappingLoadedTransatively";
-    
+        
+    static final Logger logger = Logger.getLogger(TransativeFinder.class);
+
     public TransativeFinder() throws BridgeDBException{
         super();
         mapper = SQLUriMapper.getExisting();  
     }
     
     public void UpdateTransative() throws BridgeDBException, RDFHandlerException, IOException{
-        System.out.println("start update");
         String lastIdString = mapper.getProperty(LAST_TRANSATIVE_LOADED_KEY);
-        System.out.println(lastIdString);
         int lastId;
         if (lastIdString == null){
             lastId = 0;
@@ -55,7 +56,7 @@ public class TransativeFinder extends SQLBase{
     }
     
     private void computeTransatives(int lastTranstativeLoaded) throws BridgeDBException, RDFHandlerException, IOException{
-        System.out.println(lastTranstativeLoaded);
+        logger.info("Computing from " + lastTranstativeLoaded);
         int maxMappingSet = getMaxMappingSet();
         if (maxMappingSet <= lastTranstativeLoaded){
             return;
@@ -74,7 +75,9 @@ public class TransativeFinder extends SQLBase{
     }
    
     private void computeTransative(MappingSetInfo info) throws BridgeDBException, RDFHandlerException, IOException {
-        System.out.println ("compute transtaive mappingset " + info.getIntId());
+        if (logger.isDebugEnabled()){
+            logger.debug("compute transtaive mappingset " + info.getIntId());
+        }
         //ystem.out.println (info);
 //        lastTranstativeLoaded = mappingSetId;
         List<MappingSetInfo> possibleInfos = findTransativeCandidates(info);
@@ -129,20 +132,26 @@ public class TransativeFinder extends SQLBase{
     private boolean checkValidTransative(MappingSetInfo left, MappingSetInfo right, HashSet<Integer> chainIds) throws BridgeDBException {
         //Must match in the middle
         if (!left.getTarget().getSysCode().equals(right.getSource().getSysCode())){
-            System.out.println ("No match " + left.getStringId() + " -> " + right.getStringId());
-            System.out.println ("    " + left.getTarget().getSysCode() + " != " + right.getSource().getSysCode());
+            if (logger.isDebugEnabled()){
+                logger.debug("No match " + left.getStringId() + " -> " + right.getStringId());
+                logger.debug ("    " + left.getTarget().getSysCode() + " != " + right.getSource().getSysCode());
+            }
             return false;
         }
         if (left.isSymmetric()){
             if (left.getSymmetric() == right.getIntId()){
-                System.out.println ("Symmetric " + left.getStringId() + " -> " + right.getStringId());
+                if (logger.isDebugEnabled()){
+                    logger.debug("Symmetric " + left.getStringId() + " -> " + right.getStringId());
+                }
                 return false;
                 
             }
         }
         if (right.isSymmetric()){
             if (right.getSymmetric() == left.getIntId()){
-                System.out.println ("Symmetric " + left.getStringId() + " -> " + right.getStringId());
+                if (logger.isDebugEnabled()){
+                    logger.debug("Symmetric " + left.getStringId() + " -> " + right.getStringId());
+                }
                 return false;              
             }
         }
@@ -152,8 +161,10 @@ public class TransativeFinder extends SQLBase{
         for (Integer id:chainIds){
             if (id < 0){
                 if (repeatFound){
-                    System.out.println("Multiple linksets used repeatedly with " + left.getStringId() + " -> " + right.getStringId());
-                    System.out.println("    " + chainIds);
+                    if (logger.isDebugEnabled()){
+                        logger.debug("Multiple linksets used repeatedly with " + left.getStringId() + " -> " + right.getStringId());
+                        logger.debug("    " + chainIds);
+                    }
                     return false;
                 }
                 repeatFound = true;
@@ -162,8 +173,10 @@ public class TransativeFinder extends SQLBase{
                 MappingSetInfo info = mapper.getMappingSetInfo(id);
                 if (info.getSource().equals(info.getTarget())){
                     if (loopFound != null){
-                        System.out.println ("Two Loops found: " + left.getStringId() + " -> " + right.getStringId());
-                        System.out.println ("    " + id + " and " + loopFound);
+                        if (logger.isDebugEnabled()){
+                            logger.debug("Two Loops found: " + left.getStringId() + " -> " + right.getStringId());
+                            logger.debug("    " + id + " and " + loopFound);
+                        }
                         return false;            
                     }  else {
                         loopFound = id;
@@ -181,8 +194,10 @@ public class TransativeFinder extends SQLBase{
             }
         }
         if (chainAlreadyExists(chainIds)){
-            System.out.println("Chain already exists with " + left.getStringId() + " -> " + right.getStringId());
-            System.out.println("    " + chainIds);
+            if (logger.isDebugEnabled()){
+                logger.debug("Chain already exists with " + left.getStringId() + " -> " + right.getStringId());
+                logger.debug("    " + chainIds);
+            }
             return false;        
         }
         return true;
@@ -191,31 +206,41 @@ public class TransativeFinder extends SQLBase{
     private boolean checkValidNoLoopTransative(MappingSetInfo left, MappingSetInfo right, HashSet<Integer> chainIds) throws BridgeDBException {
         for (DataSetInfo via:left.getViaDataSets()){
             if (right.getTarget().getSysCode().equals(via.getSysCode())){
-                System.out.println("Target in Via with " + left.getStringId() + " -> " + right.getStringId());
-                System.out.println ("    " + via.getSysCode() + " == " + right.getTarget().getSysCode());            
+                if (logger.isDebugEnabled()){
+                    logger.debug("Target in Via with " + left.getStringId() + " -> " + right.getStringId());
+                    logger.debug("    " + via.getSysCode() + " == " + right.getTarget().getSysCode());            
+                }
                 return false;
             }
             if (left.getTarget().getSysCode().equals(via.getSysCode())){
-                System.out.println("Middle in Via with " + left.getStringId() + " -> " + right.getStringId());
-                System.out.println ("    " + via.getSysCode() + " == " + left.getTarget().getSysCode());            
+                if (logger.isDebugEnabled()){
+                    logger.debug("Middle in Via with " + left.getStringId() + " -> " + right.getStringId());
+                    logger.debug("    " + via.getSysCode() + " == " + left.getTarget().getSysCode());            
+                }
                 return false;
             }
         }
         for (DataSetInfo via:right.getViaDataSets()){
             if (left.getSource().getSysCode().equals(via.getSysCode())){
-                System.out.println("Source in Via with " + left.getStringId() + " -> " + right.getStringId());
-                System.out.println ("    " + via.getSysCode() + " == " + left.getSource().getSysCode());            
+                if (logger.isDebugEnabled()){
+                    logger.debug("Source in Via with " + left.getStringId() + " -> " + right.getStringId());
+                    logger.debug("    " + via.getSysCode() + " == " + left.getSource().getSysCode());  
+                }
                 return false;
             }
             if (left.getTarget().getSysCode().equals(via.getSysCode())){
-                System.out.println("Middle in Via with " + left.getStringId() + " -> " + right.getStringId());
-                System.out.println ("    " + via.getSysCode() + " == " + left.getTarget().getSysCode());            
+                if (logger.isDebugEnabled()){
+                    logger.debug("Middle in Via with " + left.getStringId() + " -> " + right.getStringId());
+                    logger.debug("    " + via.getSysCode() + " == " + left.getTarget().getSysCode());            
+                }
                 return false;
             }
             for (DataSetInfo via2:left.getViaDataSets()){           
                 if (via.equals(via2)){
-                    System.out.println("Similar via with " + left.getStringId() + " -> " + right.getStringId());
-                    System.out.println("    " + via);
+                    if (logger.isDebugEnabled()){
+                        logger.debug("Similar via with " + left.getStringId() + " -> " + right.getStringId());
+                        logger.debug("    " + via);
+                    }
                     return false;
                 }
             }
@@ -224,10 +249,14 @@ public class TransativeFinder extends SQLBase{
     }
 
     private boolean checkValidLoopTransative(MappingSetInfo left, MappingSetInfo right, HashSet<Integer> chainIds) throws BridgeDBException {
-        System.out.println ("Checkin loop " + left.getStringId() + " -> " + right.getStringId());
+        if (logger.isDebugEnabled()){
+            logger.debug("Checkin loop " + left.getStringId() + " -> " + right.getStringId());
+        }
         if (left.getSource().getSysCode().equals(right.getSource().getSysCode())){
-            System.out.println ("Loop with self in middle " + left.getStringId() + " -> " + right.getStringId());
-            System.out.println ("    " + left.getSource().getSysCode()+ " == " + right.getSource().getSysCode() + " == " + right.getTarget().getSysCode());
+            if (logger.isDebugEnabled()){
+                logger.debug("Loop with self in middle " + left.getStringId() + " -> " + right.getStringId());
+                logger.debug("    " + left.getSource().getSysCode()+ " == " + right.getSource().getSysCode() + " == " + right.getTarget().getSysCode());
+            }
             return false;
         }
         Set<Integer> leftChain = getChain(left);
@@ -238,8 +267,10 @@ public class TransativeFinder extends SQLBase{
         if (leftChain.size()-1 == rightChain.size()){
             return compareChains(left, right, leftChain, rightChain);
         }
-        System.out.println ("chain size mismatch " + left.getStringId() + " -> " + right.getStringId());
-        System.out.println ("    " + leftChain + " / " + rightChain );
+        if (logger.isDebugEnabled()){
+            logger.debug("chain size mismatch " + left.getStringId() + " -> " + right.getStringId());
+            logger.debug("    " + leftChain + " / " + rightChain );
+        }
         return false;
         
     }
@@ -268,9 +299,11 @@ public class TransativeFinder extends SQLBase{
         int leftId = left.getIntId();
         int rightId = right.getIntId();
         Reporter.println("Creating tranasative from " + leftId + " to " + rightId);
-        System.out.println(left);
-        System.out.println(right);
-        System.out.println(chainIds);
+        if (logger.isDebugEnabled()){
+            logger.debug(left);
+            logger.debug(right);
+            logger.debug(chainIds);
+        }
         Set<String> viaLabels = new HashSet<String>();
         for (DataSetInfo info:left.getViaDataSets()){
             viaLabels.add(info.getSysCode());
@@ -279,7 +312,9 @@ public class TransativeFinder extends SQLBase{
             viaLabels.add(info.getSysCode());
         }
         viaLabels.add(left.getTarget().getSysCode());
-        System.out.println(viaLabels);
+        if (logger.isDebugEnabled()){
+            logger.debug(viaLabels);
+        }
         String predicate = PredicateMaker.combine(left.getPredicate(), right.getPredicate());
         String justification = JustificationMaker.combine(left.getJustification(), right.getJustification());
 
@@ -290,7 +325,9 @@ public class TransativeFinder extends SQLBase{
         } else {
             Reporter.println("Created " + fileName);
             int dataSet =  loadLinkset(fileName.getAbsolutePath(), predicate, justification, viaLabels, chainIds);
-            System.out.println("Loaded " + dataSet);
+            if (logger.isDebugEnabled()){
+                logger.debug("Loaded " + dataSet);
+            }
             return dataSet;
         }
     }
@@ -384,23 +421,31 @@ public class TransativeFinder extends SQLBase{
     }
 
     private boolean compareChains(MappingSetInfo left, MappingSetInfo right, Set<Integer> bigChain, Set<Integer> smallChain) throws BridgeDBException {
-        System.out.println(bigChain + " -> " + smallChain);
+        if (logger.isDebugEnabled()){
+            logger.debug(bigChain + " -> " + smallChain);
+        }
         bigChain.removeAll(smallChain);
         if (bigChain.size() != 1){
-           System.out.println ("Chain too different " + left.getStringId() + " -> " + right.getStringId());
-           System.out.println ("    " + bigChain);
+            if (logger.isDebugEnabled()){
+                logger.debug("Chain too different " + left.getStringId() + " -> " + right.getStringId());
+                logger.debug("    " + bigChain);
+            }
            return false;
         }
         Integer id = bigChain.iterator().next();
         MappingSetInfo info = mapper.getMappingSetInfo(id);
         if (!info.getSource().equals(info.getTarget())){
-           System.out.println ("Diffrent is not loop " + left.getStringId() + " -> " + right.getStringId());
-           System.out.println ("    " + info);
+            if (logger.isDebugEnabled()){
+                logger.debug("Diffrent is not loop " + left.getStringId() + " -> " + right.getStringId());
+                logger.debug("    " + info);
+            }
            return false;            
         }
         if (info.getSource().equals(left.getSource())){
-           System.out.println ("Loop same source " + left.getStringId() + " -> " + right.getStringId());
-           System.out.println ("    " + left.getSource() + " == " + info.getSource());
+            if (logger.isDebugEnabled()){
+                logger.debug("Loop same source " + left.getStringId() + " -> " + right.getStringId());
+                logger.debug("    " + left.getSource() + " == " + info.getSource());
+            }
            return false;            
         }
         
