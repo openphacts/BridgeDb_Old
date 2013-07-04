@@ -8,14 +8,7 @@ SqlDatabase         ims
 SqlUser             ims
 SqlPassword         ims
 
-#Load SQL Database (OPTIONAL)
-#This give the option of having a separate load database to reload all data while the service stays live.
-#Note: You will have to stop start the service (or drop in a new war) after swapping load and production servers
-LoadSqlDatabase     ims
-     #Defaults to SqlDatabase if not set
-#Load Database should have the same user as production database so they can be swapped.
-
-#Test Database (REQUIRED)
+#Test Database 
 #Test Database MUST NOT be the main or load Database as tests drops and recreates all tables!
 #Test user may be the same but having a different users adds security
 
@@ -75,7 +68,11 @@ TransitiveBaseUri       http://localhost:8080/Transitive/
 #Warning WS Client test will still cause the server to write to the normal directories.
 TestDirectory           ../TestDirectory
 
+
+
 ####### Accounts ###########
+#NOTE: This section is not used by BridgeDB and is included here purely to present a unique config file across all OpenPhacts projects.
+
 #Use this file to add logins and passwords to read uris.
 #For example to read uris from remote sites.
 #Note: the standard data loading for OpenPhacts 1.2 does not use any password protected sites.
