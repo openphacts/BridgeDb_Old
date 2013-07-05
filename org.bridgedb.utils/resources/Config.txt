@@ -21,15 +21,12 @@ TestSqlPassword     imstest
 #Remember that the parent directories (in the defaults ../***) MUST exist.
 #Remember to grant READ and WRITE ACCESS to all users running any bridgedb programs including tomcat.
 
-#BaseURI should match the localing the war will be propped to or links will not work.
-BaseURI                 http://localhost:8080/OPS-IMS/
-
+############ RDF Repository ##############
 #WARNING leaving the default relative links is not recommeneded!
 #Relative links will fail if loading and running is not done from the same directory.
-#Remember that these directies (in the defaults ../rdf/linksets and ../rdf/testLinksets) MUST exist, 
+#Remember that these directies (or the defaults ../rdf/linksets and ../rdf/testLinksets) MUST exist, 
 #Remember to grant READ and WRITE ACCESS to all users running any BridgeDB programs including tomcat.
 
-############ RDF Repository ##############
 #Main RDF store
 SailNativeStore         ../rdf/linksets
 
@@ -45,8 +42,11 @@ LoadSailNativeStore     ../rdf/linksets
 #the default relative directory will use the RDF directory directly below $BridgeDB
 TestSailNativeStore     ../rdf/testLinksets
 
+#BaseURI should match the local location where war will be hosted from to or links will not work.
+#Currently not used but may be in the future so best to set correctly.
+BaseURI                 http://localhost:8080/OPS-IMS/
+
 ##### Transitive ############
-#This section is only used IMS that extends this code.
 
 #This section is used to save transitive files automatically created.
 #Location where transitive files will be written to
@@ -67,7 +67,6 @@ TransitiveBaseUri       http://localhost:8080/Transitive/
 #This directory is cleared at the begining of each test run.
 #Warning WS Client test will still cause the server to write to the normal directories.
 TestDirectory           ../TestDirectory
-
 
 
 ####### Accounts ###########
@@ -101,11 +100,11 @@ TestDirectory           ../TestDirectory
 #Please ask Christian for the password of that account
 opsgithub.uri            https://raw.github.com/openphacts/
 opsgithub.login          OpsReadOnly
-opsgithub.password       askChrisian
+opsgithub.password       ask Chrisian
 
 #The rsc has a FTP account.
 #Please contact them directly if you require the user name and password.
 #OpenPhacts members can also ask Christian
 chemspiderftp.uri        ftp://ftp.rsc-us.org
-chemspiderftp.login      askRSC
-chemspiderftp.password   askRSC
+chemspiderftp.login      ask RSC
+chemspiderftp.password   ask RSC

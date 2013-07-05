@@ -10,6 +10,3 @@ CREATE USER 'ims'@'localhost' identified by 'ims';
 CREATE DATABASE ims;
 GRANT CREATE, DROP, DELETE, INDEX, SELECT, INSERT, UPDATE on ims.* TO 'ims'@'localhost';
 
--- Optional if using Sandbox with default settings
-CREATE DATABASE sandbox;
-GRANT CREATE, DROP, DELETE, INDEX, SELECT, INSERT, UPDATE on ims.* TO 'ims'@'localhost';
