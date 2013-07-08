@@ -54,6 +54,8 @@ public class SQLListener extends SQLBase implements MappingListener{
     private static final int TYPE_LENGTH = 100;
     private static final int URNBASE_LENGTH = 100;
     protected static final int PREDICATE_LENGTH = 100;
+    protected static final int JUSTIFICATION_LENGTH = 150;
+
     private static final int LINK_SET_ID_LENGTH = 100;
     private static final int KEY_LENGTH= 100; 
     private static final int PROPERTY_LENGTH = 100;
@@ -454,7 +456,7 @@ public class SQLListener extends SQLBase implements MappingListener{
                     + " (" + ID_COLUMN_NAME                   + " INT " + autoIncrement + " PRIMARY KEY, " 
                         + SOURCE_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ") NOT NULL, "
                         + PREDICATE_COLUMN_NAME         + " VARCHAR(" + PREDICATE_LENGTH + ") NOT NULL, "
-                        + JUSTIFICATION_COLUMN_NAME     + " VARCHAR(" + PREDICATE_LENGTH + ") NOT NULL, "
+                        + JUSTIFICATION_COLUMN_NAME     + " VARCHAR(" + JUSTIFICATION_LENGTH + ") NOT NULL, "
                         + TARGET_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ")  NOT NULL, "
                         + MAPPING_SOURCE_COLUMN_NAME  + " VARCHAR(" + MAPPING_SOURCE_LENGTH + ")  NOT NULL, "
                         + SYMMETRIC_COLUMN_NAME + " INT, "
