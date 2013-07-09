@@ -2625,7 +2625,7 @@ bridgeDB:DataSource_MGI_URI a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.informatics.jax.org/marker/MGI:$id> ;
-	bridgeDB:hasUriPattern <http://identifiers.org/mgi/MGI%3A$id> ;  #HACK to load linksets for now
+	#bridgeDB:hasUriPattern <http://identifiers.org/mgi/MGI%3A$id> ;  #HACK to load linksets for now
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/mgd/MGI:$id> ;
 	bridgeDB:Organism bridgeDB:Organism_Mm ;
     bridgeDB:hasUriPattern <http://purl.uniprot.org/mgi/$id> ;
@@ -4357,13 +4357,6 @@ bridgeDB:DataSource_Uniprot_TrEMBL a bridgeDB:DataSource ;
 	bridgeDB:hasWikiPathwaysPattern <http://purl.uniprot.org/uniprot/$id> ;
     bridgeDB:hasUriPattern <http://bio2rdf.org/uniprot:$id> ;
 	bridgeDB:hasUriPattern <http://www.uniprot.org/uniprot/$id> .
-
-bridgeDB:DataSource_UNIPROT_geneid a bridgeDB:DataSource ;
-	bridgeDB:fullName "UNIPROT geneid" ;
-	bridgeDB:systemCode "UNIPROT_geneid" ;
-	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "unknown" ;
-	bridgeDB:hasUriPattern <http://purl.uniprot.org/geneid/$id> .
 
 bridgeDB:DataSource_UNIPROT_ID a bridgeDB:DataSource ;
 	bridgeDB:fullName "UNIPROT_ID" ;
