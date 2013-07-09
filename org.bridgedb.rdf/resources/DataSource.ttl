@@ -2628,10 +2628,8 @@ bridgeDB:DataSource_MGI_URI a bridgeDB:DataSource ;
 	bridgeDB:hasUriPattern <http://identifiers.org/mgi/MGI%3A$id> ;  #HACK to load linksets for now
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/mgd/MGI:$id> ;
 	bridgeDB:Organism bridgeDB:Organism_Mm ;
-    bridgeDB:hasUriPattern <http://purl.uniprot.org/mgi/$id> .
-    ##TO BE confirmed if these are with our without the MGI: prefix
-	##bridgeDB:hasBio2RdfPattern <http://bio2rdf.org/mgi:$id> ;
-	##bridgeDB:hasWikiPathwaysPattern <http://bio2rdf.org/mgi:$id> .
+    bridgeDB:hasUriPattern <http://purl.uniprot.org/mgi/$id> ;
+ 	bridgeDB:hasBio2RdfPattern <http://bio2rdf.org/mgi:MGI:$id> .
 
 bridgeDB:DataSource_Microbial_Protein_Interaction_Database a bridgeDB:DataSource ;
 	bridgeDB:fullName "Microbial Protein Interaction Database" ;
