@@ -1218,6 +1218,15 @@ bridgeDB:DataSource_EMBL a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/insdc/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://srs.ebi.ac.uk/srsbin/cgi-bin/wgetz?-page+EntryPage+-e+[EMBL:$id]+-view+EmblEntry> .
 
+bridgeDB:DataSource_Ena a bridgeDB:DataSource ;
+	bridgeDB:fullName "European Nucleotide Archive" ;
+	bridgeDB:systemCode "Ena" ;
+	bridgeDB:mainUrl "http://www.ebi.ac.uk/ena/" ;
+	bridgeDB:idExample "DAAA02031803" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/ena/data/view/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/ena.embl/$id> .
+
 bridgeDB:DataSource_ENSEMBL a bridgeDB:DataSource ;
 	bridgeDB:fullName "ENSEMBL" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
@@ -1667,7 +1676,8 @@ bridgeDB:DataSource_GeneOntology a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "probe" ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/QuickGO/GTerm?id=$id> ;
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/obo.go/$id> ;
+	bridgeDB:hasUriPattern <http://identifiers.org/obo.go/$id> ; #Deprecated
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/go/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.ebi.ac.uk/QuickGO/GTerm?id=$id> .
 
 bridgeDB:DataSource_GeneTree a bridgeDB:DataSource ;
@@ -2472,6 +2482,15 @@ bridgeDB:DataSource_LipidBank a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/lipidbank/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://lipidbank.jp/cgi-bin/detail.cgi?id=$id> .
 
+bridgeDB:DataSource_LRG a bridgeDB:DataSource ;
+    bridgeDB:systemCode "lrg" ;
+	bridgeDB:fullName "Locus Reference Genomic" ;
+	bridgeDB:mainUrl "http://www.lrg-sequence.org/" ;
+	bridgeDB:idExample "LRG_258" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:hasUrlPattern <ftp://ftp.ebi.ac.uk/pub/databases/lrgex/$id.xml> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/lrg/$id> .
+
 bridgeDB:DataSource_MACiE a bridgeDB:DataSource ;
 	bridgeDB:fullName "MACiE" ;
 	bridgeDB:mainUrl "http://www.ebi.ac.uk/thornton-srv/databases/MACiE/index.html" ;
@@ -2606,6 +2625,7 @@ bridgeDB:DataSource_MGI_URI a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.informatics.jax.org/marker/MGI:$id> ;
+	bridgeDB:hasUriPattern <http://identifiers.org/mgi/MGI%3A$id> ;  #HACK to load linksets for now
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/mgd/MGI:$id> ;
 	bridgeDB:Organism bridgeDB:Organism_Mm ;
     bridgeDB:hasUriPattern <http://purl.uniprot.org/mgi/$id> .
@@ -3642,9 +3662,10 @@ bridgeDB:DataSource_Rfam a bridgeDB:DataSource ;
 	bridgeDB:idExample "RF00066" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
-	bridgeDB:hasUrlPattern <http://www.sanger.ac.uk/cgi-bin/Rfam/getacc?$id> ;
-	bridgeDB:urnBase "Rf" ;
-	bridgeDB:hasWikiPathwaysPattern <http://www.sanger.ac.uk/cgi-bin/Rfam/getacc?$id> .
+	bridgeDB:hasUrlPattern <http://www.sanger.ac.uk/cgi-bin/Rfam/getacc?$id> ; #not working 7/7/2013
+    bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/rfam/$id> ;
+    bridgeDB:hasUriPattern <http://rfam.sanger.ac.uk/family/$id>;
+    bridgeDB:hasUriPattern <http://rfam.janelia.org/family/$id>.
 
 bridgeDB:DataSource_RGD a bridgeDB:DataSource ;
 	bridgeDB:fullName "RGD" ;
@@ -4457,8 +4478,8 @@ bridgeDB:DataSource_WikiGenes a bridgeDB:DataSource ;
 	bridgeDB:primary "false"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.wikigenes.org/e/gene/e/$id.html> ;
-	bridgeDB:urnBase "Wg" ;
-	bridgeDB:hasWikiPathwaysPattern <http://www.wikigenes.org/e/gene/e/$id.html> .
+    bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/wikigene/$id> .
+	#bridgeDB:urnBase "Wg" .
 
 bridgeDB:DataSource_WikiPathways a bridgeDB:DataSource ;
 	bridgeDB:fullName "WikiPathways" ;
