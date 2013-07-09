@@ -41,7 +41,8 @@ import org.apache.log4j.SimpleLayout;
 public class ConfigReader {
     
     //Files
-    public static final String CONFIG_FILE_NAME = "Config.txt";
+    public static final String CONFIG_FILE_NAME = "BridgeDb.properties";
+    public static final String LOCAL_FILE_NAME = "local.properties";
     public static final String LOG_PROPERTIES_FILE = "log4j.properties";
 
     //Properties added by this class
@@ -63,7 +64,9 @@ public class ConfigReader {
     public static Properties getProperties() throws BridgeDBException{
         if (propertyReader == null){
             configureLogger();
-            propertyReader = new ConfigReader(CONFIG_FILE_NAME);            
+            propertyReader = new ConfigReader(CONFIG_FILE_NAME);    
+            propertyReader.readProperties();
+            propertyReader.properties = addLocalProperties(propertyReader.properties);
         }
         return propertyReader.readProperties();
     }
@@ -71,9 +74,24 @@ public class ConfigReader {
     public static Properties getProperties(String fileName) throws BridgeDBException{
         configureLogger();
         ConfigReader configReader = new ConfigReader(fileName);            
-        return configReader.readProperties();
+        Properties original = configReader.readProperties();
+        return addLocalProperties(original);
     }
     
+    private static Properties addLocalProperties(Properties original) throws BridgeDBException{
+        //Logger already configured
+        ConfigReader localReader = new ConfigReader(LOCAL_FILE_NAME); 
+        localReader.properties = new Properties();           
+        try {
+            localReader.properties.load(localReader.getInputStream());
+            localReader.inputStream.close();
+        } catch (IOException ex) {
+            throw new BridgeDBException("Unexpected file not fond exception after file.exists returns true.", ex);
+        }
+        original.putAll(localReader.properties);
+        return original;
+    }
+
     public static InputStream getInputStream(String fileName) throws BridgeDBException{
         configureLogger();
         ConfigReader finder = new ConfigReader(fileName);

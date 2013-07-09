@@ -1,6 +1,6 @@
 Configuration - This file is out of date.
 -------------
-File Location:
+Properties File Location:
 BridgeDB looks for the configuration files in the following locations. 
 Once it finds a configuration file the other locations are ignored. 
 * Directly in the run directory  (Mainly for java *.jar runs)
@@ -11,31 +11,41 @@ Once it finds a configuration file the other locations are ignored.
 
 ======================
 The configuration files used (and described below are)
-Config.txt
+BridgeDB.properties
 log4j.properties
 DataSource.ttl 
 lens.properties
-note: Configuartion files used by OpenPhacts extension of BridgeBD (such as the queryExpander) are not described here.
-....
+local.properties
+======================
+local.properties
+
+This is the recommended place to overwrite individual property values of any other *.property file.
+
+Local properties will overwrite values with the same key in any other properties file.
+Properties not overwritten in local will keep their original values.
+
+To install local properties you need to.
+1. Create a local.properties file
+2. Store it in a high priority location as described above
+3. Copy the keys from the original file 
+4. Addition Key values pairs added to the original properties file will not be blocked by a local.properties file
+
+To remove all properties from a properties file you will need to.
+1. Create a copy of that file in a high priority location as described above
+2. Edit your copy of that properties file
+3. Any additions to the original properties file will have to be manual added as required
 
 ======================
-Config.txt  (Must be checked/ changed locally!)
+BridgeDB.properties  (Must be checked with local values saved to local.properties)
 ------------
 
 This file contain the local setup information which MUST be checked and ideally changed to match the local setup.
 
-The default configuration config.txt file can be found at
+The default configuration BridgeDB.properties file can be found at
 	$BRIDGEDB_HOME/org.bridgedb.utils/resources
 		
-The default configuration files will always be found by the classLoader step during testing and runs if no local version is available.
-
-You must either edit the configuration files to match your local setup or setup
-your data stores to use the defaults. If you edit the files to your configuration
-we recommend copying the file to the tomcat configuration folder.
-
-Note: Packages that extend BridgeDB including OPS-IMS, and OPS-QueryExpander 
-   as well as ones that sit next to BridgeDB such as Ops-Validator
-   Should ideally use the same config.txt file.
+You must either supply local values matching your local setup 
+or setup your data stores to use the defaults. 
 
 Database Dependency
 -------------------
@@ -71,21 +81,6 @@ As long as the testing user would have permission to create and delete files the
 
 The BaseURI variable is no longer used but may be in the future so is worth setting correctly.
 
-Accounts
-------------
-NOTE: This section is not used by BridgeDB and is included here purely to present a unique config file across all OpenPhacts projects.
-List a number of Uris http or ftp
-For which a user name and password are required.
-If you wish to read from any of these sites you will have to copy and edit this file.
-As for security reasons passwords and some login have been replaced by a note who to ask for them.
-Otherwise you will not be able to read from these Uris.
-Note: Should not be required for OpenPhacts 1.2
-
---------------------------------------------------------------------------
-SANDBOX:
--------
-Sandbox no longer supported.
-
 ======================================================
 Other Configuration files
 
@@ -98,7 +93,7 @@ Please refer to the log4j documentation for more information.
 DataSource.ttl 
 --------------
 RDF format of all the BridgeDB DataSource(s) and Registered UriPatterns,
-Found in  RDF Resource directory.
+Found in $BRIDGEDB_HOME/org.bridgedb.rdf/resources
 
 This file defines all the URI patterns that will match every BridgeDB DataSource.
 Warning: As additional UriPatterns are constantly being found and created this file is subject to continuous updates. 
@@ -107,7 +102,8 @@ Instead please push any changes into the version inside the source code.
 
 If local additions that should not become general usage (such as commercial uriPatterns) 
   the suggested approach is to change the code to use multiple dataSource files.
- 
+  Note: This file is NOT effected by local.properties
+
 DataSource.owl
 --------------
 Ontology of above file. 
@@ -116,15 +112,20 @@ Included for reference only and may not be update.
 lens.properties
 ---------------
 This file defines the lens to be used in the system.
-It can be found in the URI SQL resource directory
+It can be found in the $BRIDGEDB_HOME/org.bridgedb.rdf/resources
 
 Warning: As Lens is still subject to alterations the format of this file could be changed at any time.
 Also as additional Lens are constantly being found and created this file is subject to continuous updates. 
 Having a local lens.properties is therefor highly discouraged as it will block future updates being discovered.
 Instead please push any changes into the version inside the source code.
 
-If local additions that should not become general usage (such as commercial lens) 
-  the suggested approach is to change the code to use multiple property files.
+Local additions that should not become general usage (such as commercial lens) 
+    can be added to the local.properties file.
+
+Note: the fourth part of the key
+   lens.lenkey.justification.***
+   only serves to keep the keys unique and can have any value.
+   If extending a key we suggest using local** as the fourth part of the justification key to ensure not overwriting general additions.
 
 Other files found in resources folders
 --------------------------------------
@@ -158,6 +159,8 @@ Code can be found at:
 https://github.com/openphacts/Validator
 and
 https://github.com/openphacts/IdentityMappingService
+
+However if none OpenPhacts loading of linksets is required the code in SetupWithTestData can be adapted.
 -------------------------------------------------------------------------------
 
 Compilation
@@ -170,10 +173,7 @@ able to compile with a simple:
 	
 Note that for the maven build to run all tests 
 1) The MySQL database must be running and configured as above.
-2) http://localhost:8080/OPS-IMS to be running and include the test data
-   This can be either org.bridgedb.uri.ws.server-*.war 
-   or something that extends the the bridgeDB's uri.ws.server.war such as the the IMS's ws.server-*.war
-3) http://localhost:8080/OPS-IMS to be running the war created by the URI webserver Server module.
+2 {Optional}) http://localhost:8080/OPS-IMS to be running the war created by the URI webserver Server module.
    With test data which can be loaded using the class SetupWithTestData in the URI Loader module
    Maven will skip the client tests if the localhost server is not found.
 
@@ -183,9 +183,9 @@ Note: There is an ant build but it may not work in the OpenPhacts branch(es)
 OPS Webservice Setup.
 --------------------
 
-Make sure your local config.txt file matches:
+Make sure your local.properties file matches:
 The SQL databases included user names and password
-The rdf parent directories y setup (and accessible) as above.
+The rdf parent directories are setup (and accessible) as above.
 
 Deploy $BridgeDb/org.bridgedb.uri.ws.service/target/org.bridgedb.uri.ws.server-*.war to something like tomcat/webapps
  To setup databases and add test data run org.bridgedb.uri.loader.SetupLoaderWithTestData
