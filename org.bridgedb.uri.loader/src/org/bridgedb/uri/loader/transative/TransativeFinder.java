@@ -63,9 +63,13 @@ public class TransativeFinder extends SQLBase{
         }
         for (int i = lastTranstativeLoaded + 1; i <= maxMappingSet; i++){
             MappingSetInfo info = mapper.getMappingSetInfo(i);
-            //if (!info.isSymmetric()){
+            if (info != null){
                 computeTransative(info);
-            //}
+            }
+            mapper.putProperty(LAST_TRANSATIVE_LOADED_KEY, "" + i); 
+            //See if this recovers some memory.
+            //Connection will automatically be reopened later.
+            mapper.closeConnection();
         }
         int newMaxMappingSet = getMaxMappingSet();
         mapper.putProperty(LAST_TRANSATIVE_LOADED_KEY, "" + maxMappingSet);
@@ -171,7 +175,7 @@ public class TransativeFinder extends SQLBase{
             }
             if (id > 0){
                 MappingSetInfo info = mapper.getMappingSetInfo(id);
-                if (info.getSource().equals(info.getTarget())){
+                if (info != null && info.getSource().equals(info.getTarget())){
                     if (loopFound != null){
                         if (logger.isDebugEnabled()){
                             logger.debug("Two Loops found: " + left.getStringId() + " -> " + right.getStringId());
@@ -434,6 +438,9 @@ public class TransativeFinder extends SQLBase{
         }
         Integer id = bigChain.iterator().next();
         MappingSetInfo info = mapper.getMappingSetInfo(id);
+        if (info == null){
+            return false;
+        }
         if (!info.getSource().equals(info.getTarget())){
             if (logger.isDebugEnabled()){
                 logger.debug("Diffrent is not loop " + left.getStringId() + " -> " + right.getStringId());
@@ -448,7 +455,6 @@ public class TransativeFinder extends SQLBase{
             }
            return false;            
         }
-        
         return true;
     }
 
