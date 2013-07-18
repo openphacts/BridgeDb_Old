@@ -23,14 +23,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.bridgedb.utils.BridgeDBException;
 
 /**
  * This is the root class of the SQL stack.
- * It handles the creation of all the tables and handles all inserts, except those only required for URL and UriSpaces
- * 
- * See CreateSQLTables method for an explanation of the tables.
  * 
  * @author Christian
  */
@@ -59,13 +57,25 @@ public class SQLBase {
 			possibleOpenConnection = sqlAccess.getConnection();
 		}
 	}
-  
+
+    public synchronized void closeConnection() { 
+        if (this.possibleOpenConnection != null){
+            try {
+                this.possibleOpenConnection.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        logger.info("close() successful");
+    }
+
+
     /**
      * 
      * @return
      * @throws BridgeDBException 
      */
-    public final Statement createStatement() throws BridgeDBException{
+    public synchronized final Statement createStatement() throws BridgeDBException{
         try {
             checkConnection();  
             return possibleOpenConnection.createStatement();
@@ -74,7 +84,7 @@ public class SQLBase {
         }
     }
     
-    public final PreparedStatement createPreparedStatement(String sql) throws BridgeDBException {
+    public synchronized final PreparedStatement createPreparedStatement(String sql) throws BridgeDBException {
     	try {
     		checkConnection();
     		return possibleOpenConnection.prepareStatement(sql);
@@ -83,7 +93,7 @@ public class SQLBase {
     	}
     }
     
-    public final void startTransaction() throws BridgeDBException {
+    public synchronized final void startTransaction() throws BridgeDBException {
     	try {
 			checkConnection();
 			possibleOpenConnection.setAutoCommit(false);
@@ -92,7 +102,7 @@ public class SQLBase {
 		}
     }
     
-    public final void commitTransaction() throws BridgeDBException {
+    public synchronized final void commitTransaction() throws BridgeDBException {
     	try {
 			possibleOpenConnection.commit();
 		} catch (SQLException ex) {
@@ -100,7 +110,7 @@ public class SQLBase {
 		}
     }
     
-    public final void rollbackTransaction() throws BridgeDBException {
+    public synchronized final void rollbackTransaction() throws BridgeDBException {
     	try {
     		possibleOpenConnection.rollback();    		
     	} catch (SQLException ex) {
@@ -108,12 +118,11 @@ public class SQLBase {
     	}
     }
     
-    public final String insertEscpaeCharacters(String original) {
+    public synchronized final String insertEscpaeCharacters(String original) {
        String result = original.replaceAll("\\\\", "\\\\\\\\");
        result = result.replaceAll("'", "\\\\'");
        result = result.replaceAll("\"", "\\\\\"");
        return result;
     }
-
 
 }

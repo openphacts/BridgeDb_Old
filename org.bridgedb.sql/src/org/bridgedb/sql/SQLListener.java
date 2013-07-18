@@ -278,7 +278,7 @@ public class SQLListener extends SQLBase implements MappingListener{
     }
 
     @Override
-    public void closeInput() throws BridgeDBException {
+    public synchronized void closeInput() throws BridgeDBException {
         runInsert();
         insertQuery = null;
         logger.info("Finished processing linkset");
@@ -300,7 +300,7 @@ public class SQLListener extends SQLBase implements MappingListener{
     }
     
     @Override
-    public void insertLink(String sourceId, String targetId, int mappingSet, boolean symetric) throws BridgeDBException {
+    public synchronized void insertLink(String sourceId, String targetId, int mappingSet, boolean symetric) throws BridgeDBException {
         insertLink(sourceId, targetId, mappingSet);
         if (symetric){
             insertLink(targetId, sourceId, mappingSet + 1);
@@ -796,7 +796,7 @@ public class SQLListener extends SQLBase implements MappingListener{
         putProperty(LAST_UDPATES, date);
     }
 
-    public void putProperty(String key, String value) throws BridgeDBException {
+    public synchronized void putProperty(String key, String value) throws BridgeDBException {
         String delete = "DELETE from " + PROPERTIES_TABLE_NAME + " where " + KEY_COLUMN_NAME + " = '" + key + "'";
         Statement statement = this.createStatement();
         try {
@@ -900,5 +900,5 @@ public class SQLListener extends SQLBase implements MappingListener{
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }
     }
-
+    
 }

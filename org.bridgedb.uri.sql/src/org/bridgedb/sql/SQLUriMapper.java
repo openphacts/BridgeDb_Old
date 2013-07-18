@@ -82,7 +82,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     private HashMap<Integer,UriPattern> targetUriPatterns;
     static final Logger logger = Logger.getLogger(SQLListener.class);
 
-    public static SQLUriMapper getExisting() throws BridgeDBException{
+    public synchronized static SQLUriMapper getExisting() throws BridgeDBException{
         if (mapper == null){
             BridgeDBRdfHandler.init();
             mapper =  new SQLUriMapper(false);
@@ -91,7 +91,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return mapper;
     }
     
-    public static SQLUriMapper createNew() throws BridgeDBException{
+    public synchronized static SQLUriMapper createNew() throws BridgeDBException{
         BridgeDBRdfHandler.init();
         mapper =  new SQLUriMapper(true);
         return mapper;
@@ -188,7 +188,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public Set<Xref> mapID(Xref sourceXref, String lensUri, DataSource... tgtDataSource) throws BridgeDBException {
+    public synchronized Set<Xref> mapID(Xref sourceXref, String lensUri, DataSource... tgtDataSource) throws BridgeDBException {
         if (tgtDataSource == null || tgtDataSource.length == 0){
             return mapID(sourceXref, lensUri);
         }
@@ -203,7 +203,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     @Override
-    public Set<Xref> mapID(Xref sourceXref, String lensUri, DataSource tgtDataSource) throws BridgeDBException {
+    public synchronized Set<Xref> mapID(Xref sourceXref, String lensUri, DataSource tgtDataSource) throws BridgeDBException {
         if (badXref(sourceXref)) {
             logger.warn("mapId called with a badXref " + sourceXref);
             return new HashSet<Xref>();
@@ -230,7 +230,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     @Override
-    public Set<Xref> mapID(Xref sourceXref, String lensUri) throws BridgeDBException {
+    public synchronized Set<Xref> mapID(Xref sourceXref, String lensUri) throws BridgeDBException {
         if (badXref(sourceXref)) {
             logger.warn("mapId called with a badXref " + sourceXref);
             return new HashSet<Xref>();
@@ -251,7 +251,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     @Override
-    public Set<String> mapUri (Xref sourceXref, String lensUri, UriPattern... tgtUriPatterns) 
+    public synchronized Set<String> mapUri (Xref sourceXref, String lensUri, UriPattern... tgtUriPatterns) 
             throws BridgeDBException {
         if (tgtUriPatterns == null || tgtUriPatterns.length == 0){
             return mapUri (sourceXref, lensUri);
@@ -264,7 +264,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
  
     @Override
-    public Set<String> mapUri (Xref sourceXref, String lensUri, UriPattern tgtUriPattern) 
+    public synchronized Set<String> mapUri (Xref sourceXref, String lensUri, UriPattern tgtUriPattern) 
             throws BridgeDBException {
         if (tgtUriPattern == null){
             logger.warn("mapUri called with a null tgtDatasource and " + sourceXref);
@@ -280,7 +280,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     @Override
-    public Set<String> mapUri (Xref sourceXref, String lensUri) 
+    public synchronized Set<String> mapUri (Xref sourceXref, String lensUri) 
             throws BridgeDBException {
         Set<Xref> targetXrefs = mapID(sourceXref, lensUri);
         HashSet<String> results = new HashSet<String>();
@@ -291,7 +291,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     @Override
-    public Set<String> mapUri (String sourceUri, String lensUri, UriPattern... tgtUriPatterns) 
+    public synchronized Set<String> mapUri (String sourceUri, String lensUri, UriPattern... tgtUriPatterns) 
             throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         if (tgtUriPatterns == null || tgtUriPatterns.length == 0){
@@ -305,7 +305,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
  
     @Override
-    public Set<String> mapUri (String sourceUri, String lensUri, UriPattern tgtUriPattern) 
+    public synchronized Set<String> mapUri (String sourceUri, String lensUri, UriPattern tgtUriPattern) 
             throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         Xref sourceXref = toXref(sourceUri);
@@ -323,7 +323,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     @Override
-    public Set<String> mapUri (String sourceUri, String lensUri) 
+    public synchronized Set<String> mapUri (String sourceUri, String lensUri) 
             throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         Xref sourceXref = toXref(sourceUri);
@@ -335,7 +335,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return results;
     }
     
-    public MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern... tgtUriPatterns) throws BridgeDBException {
+    public synchronized MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern... tgtUriPatterns) throws BridgeDBException {
         if (tgtUriPatterns == null || tgtUriPatterns.length == 0){
             return mapBySet (sourceUri, lensUri);
         }
@@ -347,7 +347,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         
     }
     @Override
-    public MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
+    public synchronized MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
         MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
         mapBySet(sourceUri, mappingsBySet, lensUri, tgtUriPattern) ;    
         return mappingsBySet;
@@ -367,7 +367,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public MappingsBySet mapBySet(Set<String> sourceUris, String lensUri, UriPattern... tgtUriPatterns) 
+    public synchronized MappingsBySet mapBySet(Set<String> sourceUris, String lensUri, UriPattern... tgtUriPatterns) 
            throws BridgeDBException{
         MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
         for (String sourceUri:sourceUris) {
@@ -383,14 +383,14 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
        
     @Override
-    public MappingsBySet mapBySet(String sourceUri, String lensUri) 
+    public synchronized MappingsBySet mapBySet(String sourceUri, String lensUri) 
             throws BridgeDBException {
         MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
         mapBySet(sourceUri, mappingsBySet, lensUri);
         return mappingsBySet;
     }
     
-    public MappingsBySet mapBySet(String sourceUri, MappingsBySet mappingsBySet, String lensUri) 
+    public synchronized MappingsBySet mapBySet(String sourceUri, MappingsBySet mappingsBySet, String lensUri) 
             throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         Xref sourceXref = toXref(sourceUri);
@@ -413,7 +413,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public Set<Mapping> mapFull (Xref sourceXref, String lensUri) throws BridgeDBException{
+    public synchronized Set<Mapping> mapFull (Xref sourceXref, String lensUri) throws BridgeDBException{
         if (badXref(sourceXref)) {
             logger.warn("mapId called with a badXref " + sourceXref);
             return new HashSet<Mapping>();
@@ -439,7 +439,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     @Override
-    public Set<Mapping> mapFull(String sourceUri, String lensUri) throws BridgeDBException {
+    public synchronized Set<Mapping> mapFull(String sourceUri, String lensUri) throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         Xref sourceXref = toXref(sourceUri);
         Set<Mapping> results = mapFull(sourceXref,  lensUri);
@@ -450,7 +450,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-	public Set<Mapping> mapFull (Xref sourceXref, String lensUri, DataSource tgtDataSource) throws BridgeDBException{
+	public synchronized Set<Mapping> mapFull (Xref sourceXref, String lensUri, DataSource tgtDataSource) throws BridgeDBException{
         Set<Mapping> results = mapPart(sourceXref, lensUri, tgtDataSource);
         //Add targetUris
         for (Mapping mapping: results){
@@ -487,7 +487,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public Set<Mapping> mapFull (Xref ref, String lensUri, DataSource... tgtDataSources) 
+    public synchronized Set<Mapping> mapFull (Xref ref, String lensUri, DataSource... tgtDataSources) 
             throws BridgeDBException{
         if (tgtDataSources == null || tgtDataSources.length == 0){
             return mapFull (ref, lensUri);
@@ -501,7 +501,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-	public Set<Mapping> mapFull (Xref sourceXref, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
+	public synchronized Set<Mapping> mapFull (Xref sourceXref, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
         if (tgtUriPattern == null){
             logger.warn("mapFull called with a null tgtDatasource and " + sourceXref);
             return new HashSet<Mapping>();
@@ -515,7 +515,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public Set<Mapping> mapFull (Xref sourceXref, String lensUri, UriPattern... tgtUriPatterns) 
+    public synchronized Set<Mapping> mapFull (Xref sourceXref, String lensUri, UriPattern... tgtUriPatterns) 
             throws BridgeDBException{
         if (tgtUriPatterns == null || tgtUriPatterns.length == 0){
             return mapFull (sourceXref, lensUri);
@@ -529,7 +529,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public Set<Mapping> mapFull(String sourceUri, String lensUri, UriPattern... tgtUriPatterns) throws BridgeDBException {
+    public synchronized Set<Mapping> mapFull(String sourceUri, String lensUri, UriPattern... tgtUriPatterns) throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         Xref sourceXref = toXref(sourceUri);
         Set<Mapping> results = mapFull(sourceXref,  lensUri, tgtUriPatterns);
@@ -551,7 +551,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public Set<Mapping> mapFull(String sourceUri, String lensUri, DataSource... tgtDataSources) throws BridgeDBException {
+    public synchronized Set<Mapping> mapFull(String sourceUri, String lensUri, DataSource... tgtDataSources) throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         Xref sourceXref = toXref(sourceUri);
         Set<Mapping> results = mapFull(sourceXref,  lensUri, tgtDataSources);
@@ -562,7 +562,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public Set<Mapping> mapFull(String sourceUri, String lensUri, DataSource tgtDataSource) throws BridgeDBException {
+    public synchronized Set<Mapping> mapFull(String sourceUri, String lensUri, DataSource tgtDataSource) throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         Xref sourceXref = toXref(sourceUri);
         Set<Mapping> results = mapFull(sourceXref,  lensUri, tgtDataSource);
@@ -678,7 +678,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 	}
 
     @Override
-    public boolean uriExists(String uri) throws BridgeDBException {
+    public synchronized boolean uriExists(String uri) throws BridgeDBException {
         uri = scrubUri(uri);
         Xref xref = toXref(uri);
         if (xref == null){
@@ -688,7 +688,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public Set<String> uriSearch(String text, int limit) throws BridgeDBException {
+    public synchronized Set<String> uriSearch(String text, int limit) throws BridgeDBException {
         Set<Xref> xrefs = freeSearch(text, limit);
         Set<String> results = new HashSet<String>();
         for (Xref xref:xrefs){
@@ -711,7 +711,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     @Override
-    public Xref toXref(String uri) throws BridgeDBException {
+    public synchronized Xref toXref(String uri) throws BridgeDBException {
         if (uri == null || uri.isEmpty()){
             return null;
         }
@@ -769,7 +769,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public UriPattern toUriPattern(String uri) throws BridgeDBException {
+    public synchronized UriPattern toUriPattern(String uri) throws BridgeDBException {
         if (uri == null || uri.isEmpty()){
             return null;
         }
@@ -821,7 +821,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public Mapping getMapping(int id) throws BridgeDBException {
+    public synchronized Mapping getMapping(int id) throws BridgeDBException {
         StringBuilder query = startMappingQuery();
         appendMappingInfo(query);
         appendSourceInfo(query);
@@ -856,7 +856,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     //@Override too slow
-    public List<Mapping> getSampleMapping() throws BridgeDBException {
+    public synchronized List<Mapping> getSampleMapping() throws BridgeDBException {
         StringBuilder query = new StringBuilder("SELECT DISTINCT ");
         //TODO get DISTINCT working on Virtuosos
         this.appendTopConditions(query, 0, 5);
@@ -898,7 +898,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public OverallStatistics getOverallStatistics(String lensId) throws BridgeDBException {
+    public synchronized OverallStatistics getOverallStatistics(String lensId) throws BridgeDBException {
         int numberOfLenses;
         if (Lens.getAllLens().equals(lensId)){
             numberOfLenses = Lens.getNumberOfLenses();
@@ -964,7 +964,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }*/
 
     @Override
-    public MappingSetInfo getMappingSetInfo(int mappingSetId) throws BridgeDBException {
+    public synchronized MappingSetInfo getMappingSetInfo(int mappingSetId) throws BridgeDBException {
         String query = "SELECT *"
                 + " FROM " + MAPPING_SET_TABLE_NAME
                 + " WHERE " + ID_COLUMN_NAME + " = " + mappingSetId;
@@ -973,7 +973,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             ResultSet rs = statement.executeQuery(query.toString());
             List<MappingSetInfo> results = resultSetToMappingSetInfos(rs);
             if (results.isEmpty()){
-                throw new BridgeDBException ("No mappingSet found with id " + mappingSetId);
+                return null;
             }
             if (results.size() > 1){
                 throw new BridgeDBException (results.size() + " mappingSets found with id " + mappingSetId);
@@ -986,7 +986,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public List<MappingSetInfo> getMappingSetInfos(String sourceSysCode, String targetSysCode,String lensUri) throws BridgeDBException {
+    public synchronized List<MappingSetInfo> getMappingSetInfos(String sourceSysCode, String targetSysCode,String lensUri) throws BridgeDBException {
         StringBuilder query = new StringBuilder("select * from " + MAPPING_SET_TABLE_NAME);
         boolean whereAdded = appendSystemCodes(query, sourceSysCode, targetSysCode);
         appendLensClause(query, lensUri, whereAdded);         
@@ -1001,7 +1001,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public Set<String> getUriPatterns(String dataSource) throws BridgeDBException {
+    public synchronized Set<String> getUriPatterns(String dataSource) throws BridgeDBException {
         String query = ("SELECT " + PREFIX_COLUMN_NAME + ", " + POSTFIX_COLUMN_NAME + " FROM " + URI_TABLE_NAME
                 + " WHERE " + DATASOURCE_COLUMN_NAME + " = '" + dataSource + "'");
         Statement statement = this.createStatement();
@@ -1016,7 +1016,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     @Override
-    public int getSqlCompatVersion() throws BridgeDBException {
+    public synchronized int getSqlCompatVersion() throws BridgeDBException {
         String query = ("select " + SCHEMA_VERSION_COLUMN_NAME + " from " + INFO_TABLE_NAME);
         Statement statement = this.createStatement();
         ResultSet rs;
@@ -1034,7 +1034,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     // **** UriListener Methods
     
     @Override
-    public void registerUriPattern(DataSource source, String uriPattern) throws BridgeDBException {
+    public synchronized void registerUriPattern(DataSource source, String uriPattern) throws BridgeDBException {
         //checkDataSourceInDatabase(source);
         int pos = uriPattern.indexOf("$id");
         if (pos == -1) {
@@ -1053,7 +1053,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     @Override
-    public void registerUriPattern(DataSource dataSource, String prefix, String postfix) throws BridgeDBException {
+    public synchronized void registerUriPattern(DataSource dataSource, String prefix, String postfix) throws BridgeDBException {
         //checkDataSourceInDatabase(dataSource);
         if (postfix == null){
             postfix = "";
@@ -1089,7 +1089,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public int registerMappingSet(UriPattern sourceUriPattern, String predicate, String justification, 
+    public synchronized int registerMappingSet(UriPattern sourceUriPattern, String predicate, String justification, 
             UriPattern targetUriPattern, String mappingSource, boolean symetric, Set<String> viaLabels, 
             Set<Integer> chainedLinkSets) throws BridgeDBException {
         checkUriPattern(sourceUriPattern);
@@ -1132,7 +1132,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     @Override
-    public void insertUriMapping(String sourceUri, String targetUri, int mappingSetId, boolean symetric) throws BridgeDBException {
+    public synchronized void insertUriMapping(String sourceUri, String targetUri, int mappingSetId, boolean symetric) throws BridgeDBException {
         UriPattern uriPattern = subjectUriPatterns.get(mappingSetId);
         if (uriPattern == null){
             throw new BridgeDBException("No SourceURIPattern regstered for mappingSetId " + mappingSetId);
@@ -1161,7 +1161,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public void closeInput() throws BridgeDBException {
+    public synchronized void closeInput() throws BridgeDBException {
         super.closeInput();
         subjectUriPatterns.clear();
         targetUriPatterns.clear();
@@ -1350,7 +1350,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
      * @return
      * @throws BridgeDBException
      */
-    public List<MappingSetInfo> resultSetToMappingSetInfos(ResultSet rs ) throws BridgeDBException{
+    public synchronized List<MappingSetInfo> resultSetToMappingSetInfos(ResultSet rs ) throws BridgeDBException{
         ArrayList<MappingSetInfo> results = new ArrayList<MappingSetInfo>();
         try {
             while (rs.next()){
@@ -1632,7 +1632,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
        return result;
    }
 
-    public Set<String> getJustifications() throws BridgeDBException {
+    public synchronized Set<String> getJustifications() throws BridgeDBException {
         HashSet<String> justifications = new HashSet<String>();
         String lensQuery = "SELECT DISTINCT " + JUSTIFICATION_COLUMN_NAME
             + " FROM " + MAPPING_SET_TABLE_NAME;
