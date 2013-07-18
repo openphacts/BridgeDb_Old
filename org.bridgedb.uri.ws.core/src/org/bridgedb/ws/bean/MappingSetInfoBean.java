@@ -55,16 +55,18 @@ public class MappingSetInfoBean {
 
     public static MappingSetInfoBean asBean(MappingSetInfo info) {
         MappingSetInfoBean bean = new MappingSetInfoBean();
-        bean.id = info.getIntId();
-        bean.source = DataSetInfoBean.asBean(info.getSource());
-        bean.predicate = info.getPredicate();
-        bean.target = DataSetInfoBean.asBean(info.getTarget());
-        bean.justification = info.getJustification();
-        bean.mappingSource = info.getMappingSource();
-        bean.symmetric = info.getSymmetric();
-        bean.numberOfLinks = info.getNumberOfLinks();
-        bean.viaDataSets = DataSetInfoBean.asBeans(info.getViaDataSets());
-        bean.chainId = info.getChainIds();
+        if (bean != null){
+            bean.id = info.getIntId();
+            bean.source = DataSetInfoBean.asBean(info.getSource());
+            bean.predicate = info.getPredicate();
+            bean.target = DataSetInfoBean.asBean(info.getTarget());
+            bean.justification = info.getJustification();
+            bean.mappingSource = info.getMappingSource();
+            bean.symmetric = info.getSymmetric();
+            bean.numberOfLinks = info.getNumberOfLinks();
+            bean.viaDataSets = DataSetInfoBean.asBeans(info.getViaDataSets());
+            bean.chainId = info.getChainIds();
+        }
         return bean;
     }
     
