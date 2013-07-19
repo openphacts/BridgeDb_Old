@@ -84,19 +84,22 @@ public class TransativeFinder extends SQLBase{
         }
         //ystem.out.println (info);
 //        lastTranstativeLoaded = mappingSetId;
-        List<MappingSetInfo> possibleInfos = findTransativeCandidates(info);
-        for (MappingSetInfo possibleInfo:possibleInfos) {
-            HashSet<Integer> chainIds = this.getChain(possibleInfo, info);
-            if (checkValidTransative(possibleInfo, info, chainIds)){
-                int result = doTransative(possibleInfo, info, chainIds);
-            }
-            if (checkValidTransative(info, possibleInfo, chainIds)){
-                doTransative(info, possibleInfo, chainIds);
+//        List<MappingSetInfo> possibleInfos = findTransativeCandidates(info);
+        for (int i = 0; i< info.getIntId(); i++){
+            MappingSetInfo possibleInfo = mapper.getMappingSetInfo(i);
+            if (possibleInfo != null){
+                HashSet<Integer> chainIds = this.getChain(possibleInfo, info);
+                if (checkValidTransative(possibleInfo, info, chainIds)){
+                    int result = doTransative(possibleInfo, info, chainIds);
+                }
+                if (checkValidTransative(info, possibleInfo, chainIds)){
+                    doTransative(info, possibleInfo, chainIds);
+                }
             }
          }
     }
  
-    private List<MappingSetInfo> findTransativeCandidates(MappingSetInfo info) throws BridgeDBException {
+    /*private List<MappingSetInfo> findTransativeCandidates(MappingSetInfo info) throws BridgeDBException {
         Statement statement = mapper.createStatement();
         String query = "SELECT *"
                 + " FROM " + SQLUriMapper.MAPPING_SET_TABLE_NAME
@@ -131,7 +134,7 @@ public class TransativeFinder extends SQLBase{
         } catch (SQLException ex) {
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }
-    }
+    }*/
     
     private boolean checkValidTransative(MappingSetInfo left, MappingSetInfo right, HashSet<Integer> chainIds) throws BridgeDBException {
         //Must match in the middle
