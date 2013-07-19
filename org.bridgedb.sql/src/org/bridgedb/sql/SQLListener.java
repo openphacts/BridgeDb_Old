@@ -296,6 +296,7 @@ public class SQLListener extends SQLBase implements MappingListener{
         insertCount = 0;
         doubleCount = 0;   
         updateLastUpdated();
+        closeConnection();
         logger.debug("Closed input");
     }
     
