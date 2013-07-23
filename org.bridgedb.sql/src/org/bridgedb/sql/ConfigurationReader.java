@@ -261,39 +261,39 @@ public class ConfigurationReader {
     }
     
     /**
-     * Looks for the config file in the directory set up the environment variable "OPS-IMS-CONFIG"
-     * @return True if the config files was found. False if the environment variable "OPS-IMS-CONFIG" was unset.
+     * Looks for the config file in the directory set up the environment variable "OPS_IMS_CONFIG"
+     * @return True if the config files was found. False if the environment variable "OPS_IMS_CONFIG" was unset.
      * @throws IOException Thrown if the environment variable is not null, 
      *    and the config file is not found as indicated, or could not be read.
      */
     private static boolean loadByEnviromentVariable() throws IOException {
-        String envPath = System.getenv().get("OPS-IMS-CONFIG");
+        String envPath = System.getenv().get("OPS_IMS_CONFIG");
         if (envPath == null || envPath.isEmpty()) return false;
         File envDir = new File(envPath);
         if (!envDir.exists()){
-            throw new FileNotFoundException ("Environment Variable OPS-IMS-CONFIG points to " + envPath + 
+            throw new FileNotFoundException ("Environment Variable OPS_IMS_CONFIG points to " + envPath + 
                     " but no directory found there");
         }
         if (envDir.isDirectory()){
             File envFile = new File(envDir, CONFIG_FILE_NAME);
             if (!envFile.exists()){
-                throw new FileNotFoundException ("Environment Variable OPS-IMS-CONFIG points to " + envPath + 
+                throw new FileNotFoundException ("Environment Variable OPS_IMS_CONFIG points to " + envPath + 
                         " but no " + CONFIG_FILE_NAME + " file found there");
             }
             FileInputStream configs = new FileInputStream(envFile);
             properties.load(configs);
             properties.put(CONFIG_FILE_PATH_PROPERTY, envFile.getAbsolutePath());
-            properties.put(CONFIG_FILE_PATH_SOURCE_PROPERTY, "OPS-IMS-CONFIG Enviroment Variable");
+            properties.put(CONFIG_FILE_PATH_SOURCE_PROPERTY, "OPS_IMS_CONFIG Enviroment Variable");
             return true;
         } else {
-            throw new FileNotFoundException ("Environment Variable OPS-IMS-CONFIG points to " + envPath + 
+            throw new FileNotFoundException ("Environment Variable OPS_IMS_CONFIG points to " + envPath + 
                     " but is not a directory");            
         }
     }
 
     /**
-     * Looks for the config file in the directory set up the environment variable "OPS-IMS-CONFIG"
-     * @return True if the config files was found. False if the environment variable "OPS-IMS-CONFIG" was unset.
+     * Looks for the config file in the directory set up the environment variable "OPS_IMS_CONFIG"
+     * @return True if the config files was found. False if the environment variable "OPS_IMS_CONFIG" was unset.
      * @throws IOException Thrown if the environment variable is not null, 
      *    and the config file is not found as indicated, or could not be read.
      */
@@ -320,7 +320,7 @@ public class ConfigurationReader {
             FileInputStream configs = new FileInputStream(catalineHomeDir);
             properties.load(configs);
             properties.put(CONFIG_FILE_PATH_PROPERTY, catalineHomeDir.getAbsolutePath());
-            properties.put(CONFIG_FILE_PATH_SOURCE_PROPERTY, "OPS-IMS-CONFIG Enviroment Variable");
+            properties.put(CONFIG_FILE_PATH_SOURCE_PROPERTY, "OPS_IMS_CONFIG Enviroment Variable");
             return true;
         } else {
             throw new FileNotFoundException ("Environment Variable CATALINA_HOME points to " + catalinaHomePath  + 

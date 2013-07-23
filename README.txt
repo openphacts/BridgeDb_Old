@@ -4,7 +4,7 @@ Properties File Location:
 BridgeDB looks for the configuration files in the following locations. 
 Once it finds a configuration file the other locations are ignored. 
 * Directly in the run directory  (Mainly for java *.jar runs)
-* Environment Variable OPS-IMS-CONFIG: can be used to point to any location
+* Environment Variable OPS_IMS_CONFIG: can be used to point to any location
 * Tomcat configuration folder: $CATALINA_HOME/conf/OPS-IMS
 * ../conf/OPS-IMS                  #Allows tomcat to pick up $CATALINA_HOME/conf/OPS-IMS even if it can not get $CATALINA_HOME
 * Using classLoader getResource. This will pick up the files included in Jars and Wars.
