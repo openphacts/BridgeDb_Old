@@ -107,14 +107,14 @@ public class WSOtherservices extends WSAPI {
         
         sb.append("<h2>Usage Information</h2>");
         sb.append("\n<p>The Main OPS method are: <ul>");
-        sb.append("\n<dt><a href=\"/");
+        sb.append("\n<dt><a href=\"");
         sb.append(httpServletRequest.getContextPath());
         sb.append("/api/#");
         sb.append(WsUriConstants.MAP_URI);
         sb.append("\">");
         sb.append(WsUriConstants.MAP_URI);
         sb.append("<dt><dd>List the URIs that map to this/these URI(s)</dd>");
-        sb.append("\n<dt><a href=\"/");
+        sb.append("\n<dt><a href=\"");
         sb.append(httpServletRequest.getContextPath());
         sb.append("/api/#");
         sb.append(WsUriConstants.MAP);
@@ -122,7 +122,7 @@ public class WSOtherservices extends WSAPI {
         sb.append(WsUriConstants.MAP);
         sb.append("<dt><dd>List the full Mappings to this URI/Xref</dd>");
         sb.append("</ul>");
-        sb.append("\n<p><a href=\"/");
+        sb.append("\n<p><a href=\"");
         sb.append(httpServletRequest.getContextPath());
         sb.append("/api\">API Page</a></p>");
         footerAndEnd(sb);
