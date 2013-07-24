@@ -121,7 +121,9 @@ public class TransativeCreator {
         Connection connection = sqlAccess.getConnection();
         java.sql.Statement statement;
         try {
-            statement = connection.createStatement();
+            statement = connection.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY,
+                    java.sql.ResultSet.CONCUR_READ_ONLY);
+            statement.setFetchSize(Integer.MIN_VALUE);
         } catch (SQLException ex) {
            throw new BridgeDBException("Unable to get statement. ", ex);
         }
