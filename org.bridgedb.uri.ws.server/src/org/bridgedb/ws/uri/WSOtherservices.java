@@ -99,7 +99,7 @@ public class WSOtherservices extends WSAPI {
         sb.append("<p>Welcome to the Identity Mapping Service. </p>");        
                 
         sb.append("\n<p>A List of which mappings we current have can be found at ");
-        sb.append("<a href=\"/");
+        sb.append("<a href=\"");
         sb.append(httpServletRequest.getContextPath());
         sb.append("/getMappingInfo\">Mapping Info Page</a></p>");
         
