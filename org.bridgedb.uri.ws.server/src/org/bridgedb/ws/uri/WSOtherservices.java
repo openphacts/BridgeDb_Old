@@ -63,7 +63,7 @@ public class WSOtherservices extends WSAPI {
         
     private void uriMappingForm(StringBuilder sb, HttpServletRequest httpServletRequest) throws BridgeDBException {
         WebTemplates webTemplates = new WebTemplates();
-        sb.append(webTemplates.getTemplate());
+        sb.append(webTemplates.getUriMappingForm());
     }
 
     /**

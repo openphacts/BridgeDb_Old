@@ -26,8 +26,8 @@ public class WebTemplates
     public void setContextPath(String contextPath) {
         this.contextPath = contextPath;
     }
-    public String getTemplate() {
-                Properties props = new Properties();
+    public String getUriMappingForm() {
+        Properties props = new Properties();
     	props.put("resource.loader", "class");
     	props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
     	VelocityEngine ve = new VelocityEngine();

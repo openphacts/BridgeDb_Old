@@ -7,7 +7,7 @@
     <groupId>org.bridgedb</groupId>
     <artifactId>org.bridgedb.uri.ws.server</artifactId>
     <packaging>jar</packaging>
-    <name>BridgeDb URI Websever Server</name>
+    <name>BridgeDb URI Webserver Server</name>
 
     <parent>
         <artifactId>bridgedb-bundle</artifactId>

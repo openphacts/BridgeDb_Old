@@ -1,4 +1,3 @@
-It's a template!
 <form method="get" action="$context/$mapURI">
 <fieldset>
 <legend>Mapper</legend>
