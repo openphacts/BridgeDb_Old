@@ -48,7 +48,8 @@
   	<module>org.bridgedb.webservice.synergizer</module>
   	<module>examples</module>
     <module>org.bridgedb.server</module-->
- </modules>
+    <module>org.bridgedb.webtemplates</module>
+  </modules>
   
   	<build>
 		<pluginManagement>
