@@ -1,4 +1,4 @@
-<form method="get" action="$context/$mapURI">
+<form method="get" action="$contextPath/$mapURI">
 <fieldset>
 <legend>Mapper</legend>
 <p><label for="$URI">Input URI</label>

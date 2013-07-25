@@ -24,6 +24,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -32,6 +37,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -44,6 +50,7 @@ import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.SetMappings;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WsUriConstants;
+
 import uk.ac.manchester.cs.openphacts.bridgedb.webtemplates.WebTemplates;
 
 /**
@@ -53,17 +60,25 @@ import uk.ac.manchester.cs.openphacts.bridgedb.webtemplates.WebTemplates;
  * 
  * @author Christian
  */
-public class WSOtherservices extends WSAPI {
+public class WSOtherservices extends WSAPI implements ServletContextListener {
             
     static final Logger logger = Logger.getLogger(WSOtherservices.class);
+	private ServletContext context;
 
     public WSOtherservices()  throws BridgeDBException   {
         super();
     }
         
     private void uriMappingForm(StringBuilder sb, HttpServletRequest httpServletRequest) throws BridgeDBException {
+        VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("contextPath", httpServletRequest.getContextPath());
+        velocityContext.put("mapURI", WsUriConstants.MAP_URI);
+        velocityContext.put("URI", WsUriConstants.URI);
+        velocityContext.put("lensURI", WsUriConstants.LENS_URI);
+        velocityContext.put("lenses", Lens.getLens());
+
         WebTemplates webTemplates = new WebTemplates();
-        sb.append(webTemplates.getUriMappingForm());
+        sb.append(webTemplates.getUriMappingForm(velocityContext));
     }
 
     /**
@@ -288,6 +303,20 @@ public class WSOtherservices extends WSAPI {
          footerAndEnd(sb);
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
     }
+
+	@Override
+	public void contextDestroyed(ServletContextEvent servletContextEvent) {
+		// TODO Auto-generated method stub
+		
+	}
+    /**
+     * Listen for servlet initialization in web.xml and set the context for use in
+     * the velocity templates
+     */
+	@Override
+	public void contextInitialized(ServletContextEvent servletContextEvent) {
+		this.context = servletContextEvent.getServletContext();
+	}
 
 }
 

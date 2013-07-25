@@ -26,23 +26,13 @@ public class WebTemplates
     public void setContextPath(String contextPath) {
         this.contextPath = contextPath;
     }
-    public String getUriMappingForm() {
+    public String getUriMappingForm(VelocityContext context) {
         Properties props = new Properties();
     	props.put("resource.loader", "class");
     	props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
     	VelocityEngine ve = new VelocityEngine();
     	ve.init(props);
         Template t = ve.getTemplate( "uriMappingForm.vm" );
-        VelocityContext context = new VelocityContext();
-        context.put("context", this.contextPath);
-        context.put("mapURI", WsUriConstants.MAP_URI);
-        context.put("URI", WsUriConstants.URI);
-        context.put("lensURI", WsUriConstants.LENS_URI);
-        try {
-            context.put("lenses", Lens.getLens());
-        } catch (BridgeDBException ex) {
-            Logger.getLogger(WebTemplates.class.getName()).log(Level.SEVERE, null, ex);
-        }
         StringWriter writer = new StringWriter();
         t.merge( context, writer );
         return writer.toString();
