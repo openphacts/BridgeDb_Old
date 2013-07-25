@@ -1,36 +1,41 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>uk.ac.manchester.cs.openphacts.bridgedb</groupId>
-    <artifactId>org.bridgedb.webtemplates</artifactId>
-    <version>1.0</version>
-    <packaging>jar</packaging>
+	<groupId>uk.ac.manchester.cs.openphacts.bridgedb</groupId>
+	<artifactId>org.bridgedb.webtemplates</artifactId>
+	<version>1.0</version>
+	<packaging>jar</packaging>
+	<parent>
+		<artifactId>bridgedb-bundle</artifactId>
+		<groupId>org.bridgedb</groupId>
+		<version>2.1.0</version>
+	</parent>
 
-    <name>BridgeDb Web Templates</name>
-    <url>http://maven.apache.org</url>
+	<name>BridgeDb Web Templates</name>
+	<url>http://maven.apache.org</url>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>1.7</version>
-        </dependency>  
-        <dependency>
-            <groupId>org.bridgedb</groupId>
-            <artifactId>org.bridgedb.uri.ws.core</artifactId>
-            <version>2.1.0</version>
-            <type>jar</type>
-        </dependency>
-    </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bridgedb</groupId>
+			<artifactId>org.bridgedb.uri.ws.core</artifactId>
+			<version>2.1.0</version>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
 </project>
