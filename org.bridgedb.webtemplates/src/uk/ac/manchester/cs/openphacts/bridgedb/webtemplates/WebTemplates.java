@@ -38,4 +38,14 @@ public class WebTemplates
         return writer.toString();
     }
     
+    public String getBridgeDBHome(VelocityContext context) {
+        Properties props = new Properties();
+    	props.put("resource.loader", "class");
+    	props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+    	VelocityEngine ve = new VelocityEngine();
+    	ve.init(props);
+        Template t = ve.getTemplate( "bridgeDBHome.vm" );
+        StringWriter writer = new StringWriter();
+        t.merge( context, writer );
+        return writer.toString();    }
 }
