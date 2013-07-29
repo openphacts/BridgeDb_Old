@@ -98,12 +98,15 @@ public class TransativeFinder extends SQLBase{
  
     private List<MappingSetInfo> findTransativeCandidates(MappingSetInfo info) throws BridgeDBException {
         Statement statement = mapper.createStatement();
-        String query = "SELECT *"
-                + " FROM " + SQLUriMapper.MAPPING_SET_TABLE_NAME
-                + " WHERE "+ SQLUriMapper.ID_COLUMN_NAME + " < " + info.getIntId();
+        StringBuilder query = new StringBuilder("SELECT *");
+        SQLUriMapper.appendMappingInfoFromAndWhere(query);
+        query.append(" AND ");
+        query.append(SQLUriMapper.ID_COLUMN_NAME);
+        query.append(" < ");
+        query.append(info.getIntId());
         ResultSet rs;
         try {
-            rs = statement.executeQuery(query);   
+            rs = statement.executeQuery(query.toString());   
             List<MappingSetInfo> possibles = mapper.resultSetToMappingSetInfos(rs);
             List<MappingSetInfo> results = new ArrayList<MappingSetInfo>();
             for (MappingSetInfo possible:possibles){

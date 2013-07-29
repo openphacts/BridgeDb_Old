@@ -180,40 +180,79 @@ public class SQLListener extends SQLBase implements MappingListener{
      * 
      */
     private int registerMappingSet(DataSource source, DataSource target, String predicate, String justification, 
-            String mappingSource, int symmetric) throws BridgeDBException {
-        String query = "INSERT INTO " + MAPPING_SET_TABLE_NAME
-                + " (" + SOURCE_DATASOURCE_COLUMN_NAME + ", " 
-                    + PREDICATE_COLUMN_NAME + ", " 
-                    + JUSTIFICATION_COLUMN_NAME + ", "
-                    + TARGET_DATASOURCE_COLUMN_NAME + ", "
-                    + MAPPING_NAME_COLUMN_NAME + ", "
-                    + SYMMETRIC_COLUMN_NAME + ") " 
-                + " VALUES (" 
-                + "'" + getDataSourceKey(source) + "', " 
-                + "'" + predicate + "', " 
-                + "'" + justification + "', "
-                + "'" + getDataSourceKey(target) + "', "
-                + "'" + mappingSource + "', "
-                + symmetric + ")";
+            String mappingName, int symmetric) throws BridgeDBException {
+        String mappingUri = null;
+        StringBuilder query = new StringBuilder("INSERT INTO ");
+        query.append(MAPPING_SET_TABLE_NAME);
+        query.append(" ("); 
+        query.append(SOURCE_DATASOURCE_COLUMN_NAME);
+        query.append(", ");
+        query.append(PREDICATE_COLUMN_NAME);
+        query.append(", "); 
+        query.append(JUSTIFICATION_COLUMN_NAME);
+        query.append(", ");
+        query.append(TARGET_DATASOURCE_COLUMN_NAME); 
+        if (mappingName != null && !mappingName.isEmpty()){
+            query.append(", ");
+            query.append(MAPPING_NAME_COLUMN_NAME); 
+        }
+        query.append(") VALUES ('"); 
+        query.append(getDataSourceKey(source));
+        query.append("', '");
+        query.append(predicate);
+        query.append("', '");
+        query.append(justification);
+        query.append("', '");
+        query.append(getDataSourceKey(target));
+        if (mappingName != null && !mappingName.isEmpty()){
+            query.append("', '");
+            query.append(mappingName);
+        }
+        query.append("')");
         Statement statement = createStatement();
         try {
-            statement.executeUpdate(query);
+            statement.executeUpdate(query.toString());
         } catch (SQLException ex) {
-            throw new BridgeDBException ("Error inserting link with " + query, ex);
+            throw new BridgeDBException ("Error inserting link with " + query.toString(), ex);
         }
         statement = createStatement();
         int autoinc = 0;
-        query = "SELECT @@identity";
+        String getId = "SELECT @@identity";
         try {
-            ResultSet rs = statement.executeQuery(query);
+            ResultSet rs = statement.executeQuery(getId);
             if (rs.next())
             {
                 autoinc = rs.getInt(1);
             } else {
-                throw new BridgeDBException ("No result getting new indetity with " + query);
+                throw new BridgeDBException ("No result getting new indetity with " + getId);
             }
         } catch (SQLException ex) {
-            throw new BridgeDBException ("Error getting new indetity with " + query, ex);
+            throw new BridgeDBException ("Error getting new indetity with " + getId, ex);
+        }
+        query = new StringBuilder("INSERT INTO ");
+        query.append(MAPPING_STATS_TABLE_NAME);
+        query.append(" ("); 
+        query.append(MAPPING_SET_ID_COLUMN_NAME);
+        query.append(", "); 
+        if (mappingUri != null && !mappingUri.isEmpty()){
+            query.append(MAPPING_URI_COLUMN_NAME);
+            query.append(", ");
+        }
+        query.append(SYMMETRIC_COLUMN_NAME);
+        query.append(") VALUES (");
+        query.append(autoinc);
+        query.append(",");
+        if (mappingUri != null && !mappingUri.isEmpty()){
+            query.append(" '");
+            query.append(mappingUri);
+            query.append("', ");
+        }
+        query.append(symmetric);
+        query.append(")");
+        try {
+            statement.executeUpdate(query.toString());
+        } catch (SQLException ex) {
+            throw new BridgeDBException ("Error inserting mapping stats with " + query.toString(), ex);
         }
         logger.info("Registered new Mappingset " + autoinc + " from " + getDataSourceKey(source) + " to " + getDataSourceKey(target));
         return autoinc;
@@ -466,14 +505,12 @@ public class SQLListener extends SQLBase implements MappingListener{
                         + PREDICATE_COLUMN_NAME         + " VARCHAR(" + PREDICATE_LENGTH + ") NOT NULL, "
                         + JUSTIFICATION_COLUMN_NAME     + " VARCHAR(" + JUSTIFICATION_LENGTH + ") NOT NULL, "
                         + TARGET_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ")  NOT NULL, "
-                        + MAPPING_NAME_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + ")  NOT NULL, "
-                        + SYMMETRIC_COLUMN_NAME + " INT, "
-                        + MAPPING_LINK_COUNT_COLUMN_NAME     + " INT "
+                        + MAPPING_NAME_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + ") "
 					+ " ) "; 
             sh.execute(query);
          	query =	"CREATE TABLE " + MAPPING_STATS_TABLE_NAME 
                     + " (" + MAPPING_SET_ID_COLUMN_NAME + " INT " + " PRIMARY KEY, " 
-                        + MAPPING_URI_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + ")  NOT NULL, "
+                        + MAPPING_URI_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + "), "
                         + SYMMETRIC_COLUMN_NAME + " INT, "
                         + MAPPING_LINK_COUNT_COLUMN_NAME     + " INT, "
                         + MAPPING_SOURCE_COUNT_COLUMN_NAME     + " INT, "
@@ -892,22 +929,55 @@ public class SQLListener extends SQLBase implements MappingListener{
      * @throws BridgeDBException 
      */
     private void countLinks () throws BridgeDBException{
-        logger.info ("Updating link count. Please Wait!");
+        logger.info ("Updating link counts. Please Wait!");
+        Statement countStatement = this.createStatement();
+        String query = ("select " + MAPPING_SET_ID_COLUMN_NAME
+                + " from " + MAPPING_STATS_TABLE_NAME 
+                + " where " + MAPPING_LINK_COUNT_COLUMN_NAME + " is NULL");  
+        ResultSet rs;
+        System.out.println(query);
+        try {
+            rs = countStatement.executeQuery(query);    
+            while (rs.next()){
+                int mappingSetId = rs.getInt(MAPPING_SET_ID_COLUMN_NAME);
+                countLinks(mappingSetId);
+            }
+            logger.info ("Updating counts finished!");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new BridgeDBException("Unable to run query. " + query, ex);
+        }
+    }
+    /**
+     * Updates the count variable for each Mapping Sets.
+     * <p>
+     * This allows the counts of the mappings in each Mapping Set to be quickly returned.
+     * @throws BridgeDBException 
+     */
+    private void countLinks (int mappingSetId) throws BridgeDBException{
+        System.out.println ("Updating link count for " + mappingSetId + ". Please Wait!");
+        logger.info ("Updating link count for " + mappingSetId + ". Please Wait!");
         Statement countStatement = this.createStatement();
         Statement updateStatement = this.createStatement();
-        String query = ("select count(*) as mycount, " + MAPPING_SET_ID_COLUMN_NAME 
+        String query = ("select count(distinct(" + SOURCE_ID_COLUMN_NAME + ")) as sources,"
+                + " count(distinct(" + TARGET_ID_COLUMN_NAME + ")) as targets,"
+                + " count(*) as mappings " 
                 + " from " + MAPPING_TABLE_NAME 
-                + " group by " + MAPPING_SET_ID_COLUMN_NAME);  
+                + " where " + MAPPING_SET_ID_COLUMN_NAME + " = " + mappingSetId);  
         ResultSet rs;
         try {
             rs = countStatement.executeQuery(query);    
             logger.info ("Count query run. Updating link count now");
             while (rs.next()){
-                int count = rs.getInt("mycount");
-                String mappingSetId = rs.getString(MAPPING_SET_ID_COLUMN_NAME);  
-                String update = "update " + MAPPING_SET_TABLE_NAME 
-                        + " set " + MAPPING_LINK_COUNT_COLUMN_NAME + " = " + count 
-                        + " where " + ID_COLUMN_NAME + " = '" + mappingSetId + "'";
+                int sources = rs.getInt("sources");
+                int targets = rs.getInt("targets");
+                int mappings = rs.getInt("mappings");
+                String update = "update " + MAPPING_STATS_TABLE_NAME 
+                        + " set " + MAPPING_SOURCE_COUNT_COLUMN_NAME + " = " + sources 
+                        + ", " + MAPPING_TARGET_COUNT_COLUMN_NAME + " = " + targets 
+                        + ", " + MAPPING_LINK_COUNT_COLUMN_NAME + " = " + mappings 
+                        + " where " + MAPPING_SET_ID_COLUMN_NAME + " = '" + mappingSetId + "'";
+                System.out.println(update);
                 try {
                     int updateCount = updateStatement.executeUpdate(update);
                     if (updateCount != 1){
@@ -923,5 +993,5 @@ public class SQLListener extends SQLBase implements MappingListener{
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }
     }
-    
+        
 }

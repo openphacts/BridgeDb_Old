@@ -636,6 +636,17 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         query.append(MAPPING_SET_TABLE_NAME);
     }
 
+    public static void appendMappingInfoFromAndWhere(StringBuilder query){
+        query.append(" FROM ");
+        query.append(MAPPING_SET_TABLE_NAME);
+        query.append(", ");
+        query.append(MAPPING_STATS_TABLE_NAME);
+        query.append(" WHERE ");
+        query.append(ID_COLUMN_NAME);
+        query.append(" = ");
+        query.append(MAPPING_SET_ID_COLUMN_NAME);
+  
+    }
     /**
      * Adds the WHERE clause conditions for ensuring that the returned mappings
      * are from active linksets.
@@ -861,20 +872,21 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         StringBuilder query = new StringBuilder("SELECT count(*) as numberOfMappingSets, ");
         query.append("count(distinct(");
         query.append(SOURCE_DATASOURCE_COLUMN_NAME);
-        query.append(")) as numberOfSourceDataSources, ");
-        query.append("count(distinct(");
+        query.append(")) as numberOfSourceDataSources,");
+        query.append(" count(distinct(");
         query.append(PREDICATE_COLUMN_NAME);
-        query.append(")) as numberOfPredicates, ");
-        query.append("count(distinct(");
+        query.append(")) as numberOfPredicates,");
+        query.append(" count(distinct(");
         query.append(TARGET_DATASOURCE_COLUMN_NAME);
-        query.append(")) as numberOfTargetDataSources, ");
-        query.append("sum(");
+        query.append(")) as numberOfTargetDataSources,");
+        query.append(" sum(");
         query.append(MAPPING_LINK_COUNT_COLUMN_NAME);
         query.append(") as numberOfMappings ");
-        query.append("FROM ");
-        query.append(MAPPING_SET_TABLE_NAME);
-        this.appendLensClause(query, lensId, false);
+        appendMappingInfoFromAndWhere(query);
+        ///
+      this.appendLensClause(query, lensId, true);
         Statement statement = this.createStatement();
+        System.out.println(query.toString());
         try {
             ResultSet rs = statement.executeQuery(query.toString());
 			if (rs.next()){
@@ -916,9 +928,12 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 
     @Override
     public synchronized MappingSetInfo getMappingSetInfo(int mappingSetId) throws BridgeDBException {
-        String query = "SELECT *"
-                + " FROM " + MAPPING_SET_TABLE_NAME
-                + " WHERE " + ID_COLUMN_NAME + " = " + mappingSetId;
+        StringBuilder query = new StringBuilder("SELECT *");
+        appendMappingInfoFromAndWhere(query);
+        query.append(" AND ");
+        query.append(ID_COLUMN_NAME);
+        query.append(" = ");
+        query.append(mappingSetId);
         Statement statement = this.createStatement();
         try {
             ResultSet rs = statement.executeQuery(query.toString());
@@ -938,9 +953,10 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 
     @Override
     public synchronized List<MappingSetInfo> getMappingSetInfos(String sourceSysCode, String targetSysCode,String lensUri) throws BridgeDBException {
-        StringBuilder query = new StringBuilder("select * from " + MAPPING_SET_TABLE_NAME);
-        boolean whereAdded = appendSystemCodes(query, sourceSysCode, targetSysCode);
-        appendLensClause(query, lensUri, whereAdded);         
+        StringBuilder query = new StringBuilder("select *");
+        appendMappingInfoFromAndWhere(query);
+        appendSystemCodes(query, sourceSysCode, targetSysCode);
+        appendLensClause(query, lensUri, true);         
         Statement statement = this.createStatement();
         try {
             ResultSet rs = statement.executeQuery(query.toString());
@@ -1444,29 +1460,21 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
        }
     }
 
-    private boolean appendSystemCodes(StringBuilder query, String sourceSysCode, String targetSysCode) {
-        boolean whereAdded = false;
+    private void appendSystemCodes(StringBuilder query, String sourceSysCode, String targetSysCode) {
         if (sourceSysCode != null && !sourceSysCode.isEmpty()){
-            whereAdded = true;
-            query.append(" WHERE ");
+            query.append(" AND ");
             query.append(SOURCE_DATASOURCE_COLUMN_NAME);
             query.append(" = \"" );
             query.append(sourceSysCode);
             query.append("\" ");
         }
         if (targetSysCode != null && !targetSysCode.isEmpty()){
-            if (whereAdded){
-                query.append(" AND " );            
-            } else {
-                query.append(" WHERE " );            
-            }
-            whereAdded = true;
+            query.append(" AND " );            
             query.append(TARGET_DATASOURCE_COLUMN_NAME);
             query.append(" = \"" );
             query.append(targetSysCode);
             query.append("\" ");
         }
-        return whereAdded;
     }
 
     private Set<String> toUris(Xref xref) throws BridgeDBException {
