@@ -17,15 +17,7 @@ import org.bridgedb.ws.WsUriConstants;
  */
 public class WebTemplates 
 {
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
-    }
-    private String contextPath;
-    
-    public void setContextPath(String contextPath) {
-        this.contextPath = contextPath;
-    }
+
     public String getUriMappingForm(VelocityContext context) {
         Properties props = new Properties();
     	props.put("resource.loader", "class");

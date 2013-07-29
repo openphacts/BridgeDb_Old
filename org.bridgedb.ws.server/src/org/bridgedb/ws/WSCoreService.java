@@ -45,7 +45,12 @@ import org.bridgedb.ws.bean.PropertyBean;
 import org.bridgedb.ws.bean.XrefBean;
 import org.bridgedb.ws.bean.XrefExistsBean;
 import org.bridgedb.ws.bean.XrefMapBean;
-
+/**
+ * Webservice server code, that uses the ws.core
+ * functionality to expose BridgeDB data
+ * @author Christian Y. A. Brenninkmeijer
+ *
+ */
 @Path("/")
 public class WSCoreService implements WSCoreInterface {
 
@@ -56,7 +61,7 @@ public class WSCoreService implements WSCoreInterface {
     /**
      * Defuault constuctor for super classes.
      * 
-     * Super classes will have the responsibilites of setting up the idMapper.
+     * Super classes will have the responsibilities of setting up the idMapper.
      */
     protected WSCoreService() throws BridgeDBException{
         ConfigReader.configureLogger();
