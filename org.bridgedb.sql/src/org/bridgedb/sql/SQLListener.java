@@ -71,16 +71,21 @@ public class SQLListener extends SQLBase implements MappingListener{
     static final String VIA_TABLE_NAME = "via";
 
     public static final String CHAIN_ID_COLUMN_NAME = "chainId";
-    //static final String FULL_NAME_COLUMN_NAME = "fullName";
     public static final String ID_COLUMN_NAME = "id";
-    //static final String ID_EXAMPLE_COLUMN_NAME = "idExample";
-    //static final String IS_PRIMARY_COLUMN_NAME = "isPrimary";
     static final String IS_PUBLIC_COLUMN_NAME = "isPublic";
     public static final String JUSTIFICATION_COLUMN_NAME = "justification";
     static final String KEY_COLUMN_NAME = "theKey";
-    //static final String MAIN_URL_COLUMN_NAME = "mainUrl";
-    static final String MAPPING_COUNT_COLUMN_NAME = "mappingCount";
-    static final String MAPPING_SOURCE_COLUMN_NAME = "mappingSource";
+    static final String MAPPING_75_PERCENT_FREQUENCY_COLUMN_NAME = "mapping75Frequency";
+    static final String MAPPING_90_PERCENT_FREQUENCY_COLUMN_NAME = "mapping90Frequency";
+    static final String MAPPING_99_PERCENT_FREQUENCY_COLUMN_NAME = "mapping99Frequency";
+    static final String MAPPING_AVG_FREQUENCY_COLUMN_NAME = "mappingAvgFrequency";
+    static final String MAPPING_LINK_COUNT_COLUMN_NAME = "mappingLinkCount";
+    static final String MAPPING_MAX_FREQUENCY_COLUMN_NAME = "mappingMaxFrequency";
+    static final String MAPPING_MEDIUM_FREQUENCY_COLUMN_NAME = "mappingMediumFrequency";
+    static final String MAPPING_NAME_COLUMN_NAME = "mappingName";
+    static final String MAPPING_SOURCE_COUNT_COLUMN_NAME = "mappingSourceCount";
+    static final String MAPPING_TARGET_COUNT_COLUMN_NAME = "mappingTargetCount";
+    static final String MAPPING_URI_COLUMN_NAME = "mappingUri";
     public static final String MAPPING_SET_ID_COLUMN_NAME = "mappingSetId";
     static final String MAPPING_SET_DOT_ID_COLUMN_NAME = MAPPING_SET_TABLE_NAME + "." + ID_COLUMN_NAME;
 
@@ -180,7 +185,7 @@ public class SQLListener extends SQLBase implements MappingListener{
                     + PREDICATE_COLUMN_NAME + ", " 
                     + JUSTIFICATION_COLUMN_NAME + ", "
                     + TARGET_DATASOURCE_COLUMN_NAME + ", "
-                    + MAPPING_SOURCE_COLUMN_NAME + ", "
+                    + MAPPING_NAME_COLUMN_NAME + ", "
                     + SYMMETRIC_COLUMN_NAME + ") " 
                 + " VALUES (" 
                 + "'" + getDataSourceKey(source) + "', " 
@@ -459,9 +464,9 @@ public class SQLListener extends SQLBase implements MappingListener{
                         + PREDICATE_COLUMN_NAME         + " VARCHAR(" + PREDICATE_LENGTH + ") NOT NULL, "
                         + JUSTIFICATION_COLUMN_NAME     + " VARCHAR(" + JUSTIFICATION_LENGTH + ") NOT NULL, "
                         + TARGET_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ")  NOT NULL, "
-                        + MAPPING_SOURCE_COLUMN_NAME  + " VARCHAR(" + MAPPING_SOURCE_LENGTH + ")  NOT NULL, "
+                        + MAPPING_NAME_COLUMN_NAME  + " VARCHAR(" + MAPPING_SOURCE_LENGTH + ")  NOT NULL, "
                         + SYMMETRIC_COLUMN_NAME + " INT, "
-                        + MAPPING_COUNT_COLUMN_NAME     + " INT "
+                        + MAPPING_LINK_COUNT_COLUMN_NAME     + " INT "
 					+ " ) "; 
             sh.execute(query);
             sh.execute ("CREATE TABLE  "
@@ -884,7 +889,7 @@ public class SQLListener extends SQLBase implements MappingListener{
                 int count = rs.getInt("mycount");
                 String mappingSetId = rs.getString(MAPPING_SET_ID_COLUMN_NAME);  
                 String update = "update " + MAPPING_SET_TABLE_NAME 
-                        + " set " + MAPPING_COUNT_COLUMN_NAME + " = " + count 
+                        + " set " + MAPPING_LINK_COUNT_COLUMN_NAME + " = " + count 
                         + " where " + ID_COLUMN_NAME + " = '" + mappingSetId + "'";
                 try {
                     int updateCount = updateStatement.executeUpdate(update);

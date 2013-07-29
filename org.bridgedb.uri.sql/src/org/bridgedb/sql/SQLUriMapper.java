@@ -592,7 +592,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         query.append(", ");
         query.append(JUSTIFICATION_COLUMN_NAME);
         query.append(", ");
-        query.append(MAPPING_SOURCE_COLUMN_NAME);
+        query.append(MAPPING_NAME_COLUMN_NAME);
         return query;
    }
 
@@ -869,7 +869,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         query.append(TARGET_DATASOURCE_COLUMN_NAME);
         query.append(")) as numberOfTargetDataSources, ");
         query.append("sum(");
-        query.append(MAPPING_COUNT_COLUMN_NAME);
+        query.append(MAPPING_LINK_COUNT_COLUMN_NAME);
         query.append(") as numberOfMappings ");
         query.append("FROM ");
         query.append(MAPPING_SET_TABLE_NAME);
@@ -1304,14 +1304,14 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         ArrayList<MappingSetInfo> results = new ArrayList<MappingSetInfo>();
         try {
             while (rs.next()){
-                Integer count = rs.getInt(MAPPING_COUNT_COLUMN_NAME);
+                Integer count = rs.getInt(MAPPING_LINK_COUNT_COLUMN_NAME);
                 int id = rs.getInt(ID_COLUMN_NAME);
                 Set<DataSetInfo> viaSysCodes = getViaCodes(id);
                 Set<Integer> chainIds = getChainIds(id);
                 DataSetInfo sourceInfo = findDataSetInfo(rs.getString(SOURCE_DATASOURCE_COLUMN_NAME));
                 DataSetInfo targetInfo = findDataSetInfo(rs.getString(TARGET_DATASOURCE_COLUMN_NAME));
                 results.add(new MappingSetInfo(id, sourceInfo, rs.getString(PREDICATE_COLUMN_NAME), targetInfo, 
-                        rs.getString(JUSTIFICATION_COLUMN_NAME), rs.getString(MAPPING_SOURCE_COLUMN_NAME), 
+                        rs.getString(JUSTIFICATION_COLUMN_NAME), rs.getString(MAPPING_NAME_COLUMN_NAME), 
                         rs.getInt(SYMMETRIC_COLUMN_NAME), 
                         viaSysCodes, chainIds, count));
             }
@@ -1333,7 +1333,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 Integer mappingSetId = rs.getInt(MAPPING_SET_ID_COLUMN_NAME);
                 String predicate = rs.getString(PREDICATE_COLUMN_NAME);
                 String justification = rs.getString(JUSTIFICATION_COLUMN_NAME);
-                String mappingSource = rs.getString(MAPPING_SOURCE_COLUMN_NAME);
+                String mappingSource = rs.getString(MAPPING_NAME_COLUMN_NAME);
                 mappingsBySet.addMapping(mappingSetId, predicate, justification, mappingSource, sourceUri, targetUris);
             }
        } catch (SQLException ex) {
@@ -1350,7 +1350,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 Integer mappingSetId = rs.getInt(MAPPING_SET_ID_COLUMN_NAME);
                 String predicate = rs.getString(PREDICATE_COLUMN_NAME);
                 String justification = rs.getString(JUSTIFICATION_COLUMN_NAME);
-                String mappingSource = rs.getString(MAPPING_SOURCE_COLUMN_NAME);
+                String mappingSource = rs.getString(MAPPING_NAME_COLUMN_NAME);
                 mappingsBySet.addMapping(mappingSetId, predicate, justification, mappingSource, sourceUri, targetUri);
             }
        } catch (SQLException ex) {
