@@ -60,13 +60,14 @@ public class SQLListener extends SQLBase implements MappingListener{
     private static final int KEY_LENGTH= 100; 
     private static final int PROPERTY_LENGTH = 100;
     private static final int MAX_BLOCK_SIZE = 10;
-    private static final int MAPPING_SOURCE_LENGTH = 200;
+    private static final int MAPPING_URI_LENGTH = 200;
     
     //static final String DATASOURCE_TABLE_NAME = "DataSource";
     public static final String CHAIN_TABLE_NAME = "chain";
     static final String INFO_TABLE_NAME = "info";  //Do not change as used by RDG packages as well
     static final String MAPPING_TABLE_NAME = "mapping";
     public static final String MAPPING_SET_TABLE_NAME = "mappingSet";
+    public static final String MAPPING_STATS_TABLE_NAME = "mappingStats";
     static final String PROPERTIES_TABLE_NAME = "properties";
     static final String VIA_TABLE_NAME = "via";
 
@@ -386,6 +387,7 @@ public class SQLListener extends SQLBase implements MappingListener{
  		dropTable(INFO_TABLE_NAME);
  		dropTable(MAPPING_TABLE_NAME);
  		dropTable(MAPPING_SET_TABLE_NAME);
+ 		dropTable(MAPPING_STATS_TABLE_NAME);
  		dropTable(PROPERTIES_TABLE_NAME);
         dropTable(VIA_TABLE_NAME);
         dropTable(CHAIN_TABLE_NAME);
@@ -464,9 +466,24 @@ public class SQLListener extends SQLBase implements MappingListener{
                         + PREDICATE_COLUMN_NAME         + " VARCHAR(" + PREDICATE_LENGTH + ") NOT NULL, "
                         + JUSTIFICATION_COLUMN_NAME     + " VARCHAR(" + JUSTIFICATION_LENGTH + ") NOT NULL, "
                         + TARGET_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ")  NOT NULL, "
-                        + MAPPING_NAME_COLUMN_NAME  + " VARCHAR(" + MAPPING_SOURCE_LENGTH + ")  NOT NULL, "
+                        + MAPPING_NAME_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + ")  NOT NULL, "
                         + SYMMETRIC_COLUMN_NAME + " INT, "
                         + MAPPING_LINK_COUNT_COLUMN_NAME     + " INT "
+					+ " ) "; 
+            sh.execute(query);
+         	query =	"CREATE TABLE " + MAPPING_STATS_TABLE_NAME 
+                    + " (" + MAPPING_SET_ID_COLUMN_NAME + " INT " + " PRIMARY KEY, " 
+                        + MAPPING_URI_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + ")  NOT NULL, "
+                        + SYMMETRIC_COLUMN_NAME + " INT, "
+                        + MAPPING_LINK_COUNT_COLUMN_NAME     + " INT, "
+                        + MAPPING_SOURCE_COUNT_COLUMN_NAME     + " INT, "
+                        + MAPPING_TARGET_COUNT_COLUMN_NAME     + " INT, "
+                        + MAPPING_AVG_FREQUENCY_COLUMN_NAME     + " INT, "
+                        + MAPPING_MEDIUM_FREQUENCY_COLUMN_NAME     + " INT, "
+                        + MAPPING_75_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
+                        + MAPPING_90_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
+                        + MAPPING_99_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
+                        + MAPPING_MAX_FREQUENCY_COLUMN_NAME     + " INT "
 					+ " ) "; 
             sh.execute(query);
             sh.execute ("CREATE TABLE  "
