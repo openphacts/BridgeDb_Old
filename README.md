@@ -11,6 +11,12 @@ so you can switch easily between flat files, relational databases and several di
 
 The server has been tested on Centos 5 with mysql 5.0 & apache tomcat 6 & 7.
 
+Architecture
+------------
+Apache CXF is used to create the endpoints for the web service calls and for the urls behind the web application front end.
+The web services are defined in `org.bridgedb.ws.server` and the web app in `org.bridgedb.uri.ws.server`.
+
+
 Configuration
 =============
 
@@ -198,7 +204,7 @@ instead the war appropriate to the other project should be deployed. See the rea
 other projects for more details.
 
 Contact
--------
+=======
 
 For OpenPhacts specific please contact Christian and use the OPS Jira.
 
@@ -208,7 +214,7 @@ Mailing list: http://groups.google.com/group/bridgedb-discuss/
 Source code can be obtained from http://svn.bigcat.unimaas.nl/bridgedb
 
 Authors
--------
+=======
 
 BridgeDb and related tools were originally developed by:
 
