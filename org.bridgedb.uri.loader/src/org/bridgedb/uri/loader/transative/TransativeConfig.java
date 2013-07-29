@@ -56,9 +56,11 @@ public class TransativeConfig extends ConfigReader{
         if (testDir == null){
             testDir = getDirectory(TEST_DIRECTORY_PROPERTY, "TestDirectory");
             deleteChildren(testDir);
-            boolean made = testDir.mkdir();
-            if (made == false){
-                throw new BridgeDBException("Unable to create testdir " + testDir.getAbsolutePath());                
+            if (!testDir.exists()){
+                boolean made = testDir.mkdir();
+                if (made == false){
+                    throw new BridgeDBException("Unable to create testdir " + testDir.getAbsolutePath());                
+                }
             }
         }
         return testDir;
