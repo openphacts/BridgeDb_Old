@@ -83,7 +83,6 @@ public class SQLListener extends SQLBase implements MappingListener{
     static final String MAPPING_SOURCE_COLUMN_NAME = "mappingSource";
     public static final String MAPPING_SET_ID_COLUMN_NAME = "mappingSetId";
     static final String MAPPING_SET_DOT_ID_COLUMN_NAME = MAPPING_SET_TABLE_NAME + "." + ID_COLUMN_NAME;
-
     static final String PREDICATE_COLUMN_NAME = "predicate";
     static final String PROPERTY_COLUMN_NAME = "property";
     static final String SCHEMA_VERSION_COLUMN_NAME = "schemaversion"; //Do not change as used by RDG packages as well
@@ -446,7 +445,8 @@ public class SQLListener extends SQLBase implements MappingListener{
   			sh.execute( //Add compatibility version of GDB
 					"INSERT INTO " + INFO_TABLE_NAME + " VALUES ( " + SQL_COMPAT_VERSION + ")");
             query = "CREATE TABLE " + MAPPING_TABLE_NAME 
-                    + "( " + SOURCE_ID_COLUMN_NAME      + " VARCHAR(" + ID_LENGTH + ") NOT NULL, "
+                    + "( " + ID_COLUMN_NAME             + " INT " + autoIncrement + " PRIMARY KEY, " 
+                    + "  " + SOURCE_ID_COLUMN_NAME      + " VARCHAR(" + ID_LENGTH + ") NOT NULL, "
         			+ "  " + TARGET_ID_COLUMN_NAME      + " VARCHAR(" + ID_LENGTH + ") NOT NULL, " 
                     + "  " + MAPPING_SET_ID_COLUMN_NAME + " INT(" + LINK_SET_ID_LENGTH + ") "
                     + " ) ";

@@ -350,25 +350,6 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         return XrefBean.asBean(xref);
     }
 
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/" + WsUriConstants.MAPPING)
-    public Mapping getMapping() throws BridgeDBException {
-       throw new BridgeDBException(WsUriConstants.ID + " parameter missing.");
-    }
-
-    @Override
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/" + WsUriConstants.MAPPING + "/{id}")
-    public MappingBean getMapping(@PathParam(WsUriConstants.ID) String idString) throws BridgeDBException {
-        if (idString == null) throw new BridgeDBException(WsUriConstants.ID + " parameter missing.");
-        if (idString.isEmpty()) throw new BridgeDBException(WsUriConstants.ID + " parameter may not be null.");
-        int id = Integer.parseInt(idString);
-        Mapping mapping = uriMapper.getMapping(id);
-        return MappingBean.asBean(mapping);
-    }
-
     /*@Override
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

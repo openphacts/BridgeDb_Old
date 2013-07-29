@@ -36,7 +36,6 @@ import org.bridgedb.uri.Mapping;
 @XmlRootElement(name="Mapping")
 public class MappingBean {
  
-    private Integer id;
     private XrefBean source;
     private XrefBean target;
     
@@ -54,7 +53,6 @@ public class MappingBean {
     
     public static MappingBean asBean(Mapping mapping){
         MappingBean bean = new MappingBean();
-        bean.setId(mapping.getId());
         bean.setSourceUri(mapping.getSourceUri());
         bean.setSource(XrefBean.asBean(mapping.getSource()));
         bean.setTargetUri(mapping.getTargetUri());
@@ -65,28 +63,13 @@ public class MappingBean {
     }
 
     public static Mapping asMapping (MappingBean bean){
-        Mapping result = new Mapping (bean.getId(),  XrefBean.asXref(bean.getSource()), bean.getPredicate(), 
-                XrefBean.asXref(bean.getTarget()), 
-                bean.getMappingSetId());
+        Mapping result = new Mapping (XrefBean.asXref(bean.getSource()), bean.getPredicate(),
+                XrefBean.asXref(bean.getTarget()), bean.getMappingSetId());
         result.setSourceUri(bean.getSourceUri());
         result.setTargetUri(bean.getTargetUri());
         return result;
     }
     
-    /**
-     * @return the id
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     /**
      * @return the source
      */

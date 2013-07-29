@@ -49,8 +49,6 @@ public interface WSUriInterface extends WSCoreInterface{
 
     public XrefBean toXref(String Uri) throws BridgeDBException;
 
-    public MappingBean getMapping(String id) throws BridgeDBException;
-
     //public List<Mapping> getSampleMappings() throws BridgeDBException;
 
     public OverallStatisticsBean getOverallStatistics(String lensUri) throws BridgeDBException;

@@ -345,12 +345,6 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
         return XrefBean.asXref(bean);
     }
 
-    @Override
-    public Mapping getMapping(int id) throws BridgeDBException {
-        MappingBean bean =  uriService.getMapping("" + id);
-        return MappingBean.asMapping(bean); 
-    }
-
     //@Override Too slow
     //public List<Mapping> getSampleMapping() throws BridgeDBException {
     //    return uriService.getSampleMappings();
@@ -391,6 +385,11 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     @Override
     public int getSqlCompatVersion() throws BridgeDBException {
         return Integer.parseInt(uriService.getSqlCompatVersion());
+    }
+
+    @Override
+    public List<Mapping> getSampleMapping() throws BridgeDBException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
   }

@@ -135,41 +135,6 @@ public abstract class UriMapperSpecialTest extends UriListenerTest{
     }
     
     @Test
-    public void testGetMapping() throws BridgeDBException {
-        report("GetMapping");
-        Set<Mapping> results = uriMapper.mapFull(map3Uri3, Lens.getDefaultLens());
-        Integer mappingId = null;
-        Integer setId = null;
-        for (Mapping mapping:results){
-            if (mapping.getTargetUri().contains(map3Uri2)){
-                mappingId = mapping.getId();
-                setId = mapping.getMappingSetId();        
-            }
-        }
-        Mapping result = uriMapper.getMapping(mappingId);
-        assertEquals(mappingId, result.getId());
-        assertTrue(result.getSourceUri().contains(map3Uri3));
-        assertEquals(TEST_PREDICATE, result.getPredicate());
-        assertTrue(result.getTargetUri().contains(map3Uri2));
-        assertEquals(setId, result.getMappingSetId());
-        assertEquals(map3xref3, result.getSource());
-        assertEquals(map3xref2, result.getTarget());
-    }
-    
-    /*@Test
-    public void testGetSampleMappings() throws BridgeDBException {
-        report("GetSampleMappings");
-        List<Mapping> results = uriMapper.getSampleMapping();
-        assertEquals(5, results.size());
-        for (Mapping mapping:results){
-            Set<String> sources = mapping.getSourceUri();
-            assertThat(sources.size(), greaterThan(0));
-            Set<String> targets = mapping.getTargetUri();
-            assertThat(targets.size(), greaterThan(0));
-        }
-    }*/
-
-    @Test
     public void testGetOverallStatistics() throws BridgeDBException {
         report("GetOverallStatistics()");
         OverallStatistics results = uriMapper.getOverallStatistics(Lens.getDefaultLens());

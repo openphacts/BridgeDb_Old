@@ -39,7 +39,6 @@ import org.bridgedb.Xref;
  */
 public class Mapping {
  
-    private Integer id;
     private Xref source;
     private Xref target;
     
@@ -56,8 +55,7 @@ public class Mapping {
         this.targetUri = new HashSet<String>();
     }
     
-    public Mapping (Integer id, Xref source, String predicate, Xref target, Integer mappingSetId){
-        this.id = id;
+    public Mapping (Xref source, String predicate, Xref target, Integer mappingSetId){
         this.sourceUri = new HashSet<String>();
         this.source = source;
         this.targetUri = new HashSet<String>();
@@ -73,7 +71,6 @@ public class Mapping {
      * @param sysCode 
      */
     public Mapping (Xref xref){
-        this.id = null;
         this.sourceUri = new HashSet<String>();
         this.source = xref;
         this.targetUri = new HashSet<String>();
@@ -86,13 +83,6 @@ public class Mapping {
         return source == target;
     }
 
-    /**
-     * @return the id
-     */
-    public Integer getId() {
-        return id;
-    }
-    
     /**
      * @return the sourceUris
      */
@@ -131,7 +121,6 @@ public class Mapping {
 
     public String toString(){
         StringBuilder output = new StringBuilder("mapping ");
-        output.append(this.getId());
         for (String sourceUri:getSourceUri()){
             output.append("\n\tSourceUri: ");
             output.append(sourceUri);
@@ -160,8 +149,7 @@ public class Mapping {
         if (other == null) return false;
         if (other instanceof Mapping){
             Mapping otherMapping = (Mapping)other;
-            if (otherMapping.getId() != getId()) return false;
-            if (!otherMapping.sourceUri.equals(sourceUri)) return false;
+           if (!otherMapping.sourceUri.equals(sourceUri)) return false;
             if (!otherMapping.targetUri.equals(targetUri)) return false;
             if (!otherMapping.getMappingSetId().equals(getMappingSetId())) return false;
             //No need to check predicate as by defintion one id has one predicate
@@ -197,13 +185,6 @@ public class Mapping {
      */
     public Xref getTarget() {
         return target;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     /**

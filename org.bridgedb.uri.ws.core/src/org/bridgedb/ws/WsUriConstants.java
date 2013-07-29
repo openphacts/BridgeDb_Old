@@ -38,7 +38,6 @@ public class WsUriConstants extends WsConstants{
     public static final String GET_MAPPING_INFO = "getMappingInfo";
     public static final String GET_SAMPLE_MAPPINGS = "getSampleMappings";
     public static final String GRAPHVIZ = "graphviz";
-    public static final String MAPPING = "mapping";
     public static final String MAP = "map";
     public static final String MAP_URI = "mapUri";
     public static final String MAP_BY_SET = "mapBySet";

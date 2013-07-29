@@ -419,26 +419,13 @@ public interface UriMapper extends IDMapper{
      */
     public Xref toXref(String uri) throws BridgeDBException;
     
-    /**
-     * Obtains the UriMapping information of the mapping of this id.
-     * <p>
-     * @See UriMappings for details of what is included in the Results.
-     * <p>
-     * The behaviour of this method if called with a non existance id is still to be determinded.
-     * @param id Identifier of the mapping
-     * @return a UriMapping with information about this mapping
-     * @throws BridgeDBException 
-     */
-    public Mapping getMapping(int id)  throws BridgeDBException;
-        
     /*
      * Gets a Sample of mappings.
      * 
      * Main use is for writing the api description page
      * @return 5 mapping which includes both source and traget Uris
      */
-    //Christian 15 Feb 2013 Stripped out as too slow 
-   // public List<Mapping> getSampleMapping() throws BridgeDBException;
+   public List<Mapping> getSampleMapping() throws BridgeDBException;
     
     /**
      * Obtains some general high level statistics about the data held.

@@ -601,10 +601,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         query.append(MAPPING_SET_ID_COLUMN_NAME);
         query.append(", ");
         query.append(PREDICATE_COLUMN_NAME);
-        query.append(", ");
-        query.append(MAPPING_TABLE_NAME);
-        query.append(".");
-        query.append(ID_COLUMN_NAME);
     }
     
     private void appendSourceInfo(StringBuilder query){
@@ -639,13 +635,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         query.append(", ");
         query.append(MAPPING_SET_TABLE_NAME);
     }
-
-    private void appendMappingJoinMapping(StringBuilder query){ 
-        query.append(" WHERE ");
-        query.append(MAPPING_SET_ID_COLUMN_NAME);
-        query.append(" = ");
-        query.append(MAPPING_SET_DOT_ID_COLUMN_NAME);
-     }
 
     /**
      * Adds the WHERE clause conditions for ensuring that the returned mappings
@@ -820,45 +809,9 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         }    
     }
 
-    @Override
-    public synchronized Mapping getMapping(int id) throws BridgeDBException {
-        StringBuilder query = startMappingQuery();
-        appendMappingInfo(query);
-        appendSourceInfo(query);
-        appendMappingFromJoinMapping(query);
-        query.append(" AND ");
-        query.append(MAPPING_TABLE_NAME);
-        query.append(".");
-        query.append(ID_COLUMN_NAME);
-        query.append(" = ");
-        query.append(id);
-        Statement statement = this.createStatement();
-        ResultSet rs;
-        try {
-            rs = statement.executeQuery(query.toString());
-        } catch (SQLException ex) {
-            throw new BridgeDBException("Unable to run query. " + query, ex);
-        }    
-        Set<Mapping> results = resultSetToMappingSet(null, rs);
-        if (results.isEmpty()){
-            throw new BridgeDBException("No mapping found with id " + id);
-        }
-        if (results.size() > 1){
-            throw new BridgeDBException("Multiple mappings found with id " + id);
-        }
-        Mapping result = results.iterator().next(); 
-        addSourceURIs(result);
-        addTargetURIs(result);      
-        if (logger.isDebugEnabled()){
-            logger.debug(" mapping " +id + " is " + result);
-        }
-        return result;    
-    }
-
     //@Override too slow
     public synchronized List<Mapping> getSampleMapping() throws BridgeDBException {
-        StringBuilder query = new StringBuilder("SELECT DISTINCT ");
-        //TODO get DISTINCT working on Virtuosos
+        StringBuilder query = new StringBuilder("SELECT ");
         this.appendTopConditions(query, 0, 5);
         query.append(TARGET_ID_COLUMN_NAME);
         query.append(", ");
@@ -905,9 +858,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         } else {
             numberOfLenses = 1;
         }
-        StringBuilder query = new StringBuilder("SELECT count(distinct(");
-        query.append(ID_COLUMN_NAME);
-        query.append(")) as numberOfMappingSets, ");
+        StringBuilder query = new StringBuilder("SELECT count(*) as numberOfMappingSets, ");
         query.append("count(distinct(");
         query.append(SOURCE_DATASOURCE_COLUMN_NAME);
         query.append(")) as numberOfSourceDataSources, ");
@@ -1319,7 +1270,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         HashSet<Mapping> results = new HashSet<Mapping>();
         try {
             while (rs.next()){
-                Integer mappingId = rs.getInt(MAPPING_TABLE_NAME + "." + ID_COLUMN_NAME); 
                 String targetId = rs.getString(TARGET_ID_COLUMN_NAME);
                 String targetKey = rs.getString(TARGET_DATASOURCE_COLUMN_NAME);
                 DataSource targetDatasource = keyToDataSource(targetKey);
@@ -1335,7 +1285,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 } else {
                     source = sourceXref;
                 }
-                Mapping uriMapping = new Mapping (mappingId, source, predicate, target, mappingSetId);       
+                Mapping uriMapping = new Mapping (source, predicate, target, mappingSetId);       
                 results.add(uriMapping);
             }
             return results;

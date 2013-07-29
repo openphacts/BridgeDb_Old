@@ -86,12 +86,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
             query.append(MAPPING_TABLE_NAME);
                 query.append(", ");
             query.append(MAPPING_SET_TABLE_NAME);
-        query.append(" WHERE ");
-            query.append(MAPPING_SET_ID_COLUMN_NAME);
-                query.append(" = ");
-                query.append(MAPPING_SET_TABLE_NAME);
-                query.append(".");
-                query.append(ID_COLUMN_NAME);
+        appendMappingJoinMapping(query);
         appendSourceXref(query, ref);
         if (tgtDataSources != null && tgtDataSources.length > 0){    
             query.append(" AND ( ");
@@ -175,12 +170,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
             query.append(MAPPING_TABLE_NAME);
                 query.append(", ");
             query.append(MAPPING_SET_TABLE_NAME);
-        query.append(" WHERE ");
-            query.append(MAPPING_SET_ID_COLUMN_NAME);
-                query.append(" = ");
-                query.append(MAPPING_SET_TABLE_NAME);
-                query.append(".");
-                query.append(ID_COLUMN_NAME);
+        appendMappingJoinMapping(query);
         appendSourceXref(query, ref);
         query.append(" AND ");
             query.append(TARGET_DATASOURCE_COLUMN_NAME);
@@ -585,5 +575,13 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
             query.append("TOP " + position + ", " + limit + " ");                
         }
     }
+
+    protected final  void appendMappingJoinMapping(StringBuilder query){ 
+        query.append(" WHERE ");
+        query.append(MAPPING_SET_ID_COLUMN_NAME);
+        query.append(" = ");
+        query.append(MAPPING_SET_DOT_ID_COLUMN_NAME);
+     }
+
 
 }
