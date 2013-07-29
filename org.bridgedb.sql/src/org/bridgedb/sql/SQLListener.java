@@ -79,7 +79,6 @@ public class SQLListener extends SQLBase implements MappingListener{
     static final String MAPPING_75_PERCENT_FREQUENCY_COLUMN_NAME = "mapping75Frequency";
     static final String MAPPING_90_PERCENT_FREQUENCY_COLUMN_NAME = "mapping90Frequency";
     static final String MAPPING_99_PERCENT_FREQUENCY_COLUMN_NAME = "mapping99Frequency";
-    static final String MAPPING_AVG_FREQUENCY_COLUMN_NAME = "mappingAvgFrequency";
     static final String MAPPING_LINK_COUNT_COLUMN_NAME = "mappingLinkCount";
     static final String MAPPING_MAX_FREQUENCY_COLUMN_NAME = "mappingMaxFrequency";
     static final String MAPPING_MEDIUM_FREQUENCY_COLUMN_NAME = "mappingMediumFrequency";
@@ -515,7 +514,6 @@ public class SQLListener extends SQLBase implements MappingListener{
                         + MAPPING_LINK_COUNT_COLUMN_NAME     + " INT, "
                         + MAPPING_SOURCE_COUNT_COLUMN_NAME     + " INT, "
                         + MAPPING_TARGET_COUNT_COLUMN_NAME     + " INT, "
-                        + MAPPING_AVG_FREQUENCY_COLUMN_NAME     + " INT, "
                         + MAPPING_MEDIUM_FREQUENCY_COLUMN_NAME     + " INT, "
                         + MAPPING_75_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
                         + MAPPING_90_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
@@ -940,7 +938,8 @@ public class SQLListener extends SQLBase implements MappingListener{
             rs = countStatement.executeQuery(query);    
             while (rs.next()){
                 int mappingSetId = rs.getInt(MAPPING_SET_ID_COLUMN_NAME);
-                countLinks(mappingSetId);
+                int mappings = countLinks(mappingSetId);
+                countFrequency(mappingSetId, mappings);
             }
             logger.info ("Updating counts finished!");
         } catch (SQLException ex) {
@@ -948,14 +947,14 @@ public class SQLListener extends SQLBase implements MappingListener{
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }
     }
+    
     /**
      * Updates the count variable for each Mapping Sets.
      * <p>
      * This allows the counts of the mappings in each Mapping Set to be quickly returned.
      * @throws BridgeDBException 
      */
-    private void countLinks (int mappingSetId) throws BridgeDBException{
-        System.out.println ("Updating link count for " + mappingSetId + ". Please Wait!");
+    private int countLinks (int mappingSetId) throws BridgeDBException{
         logger.info ("Updating link count for " + mappingSetId + ". Please Wait!");
         Statement countStatement = this.createStatement();
         Statement updateStatement = this.createStatement();
@@ -977,21 +976,113 @@ public class SQLListener extends SQLBase implements MappingListener{
                         + ", " + MAPPING_TARGET_COUNT_COLUMN_NAME + " = " + targets 
                         + ", " + MAPPING_LINK_COUNT_COLUMN_NAME + " = " + mappings 
                         + " where " + MAPPING_SET_ID_COLUMN_NAME + " = '" + mappingSetId + "'";
-                System.out.println(update);
                 try {
                     int updateCount = updateStatement.executeUpdate(update);
                     if (updateCount != 1){
                         throw new BridgeDBException("Updated rows " + updateCount + " <> 1 when running " + update);
                     }
+                    logger.info ("Updating counts finished!");
+                    return mappings;
                 } catch (SQLException ex) {
                      throw new BridgeDBException("Unable to run update. " + update, ex);
                 }
             }
-            logger.info ("Updating counts finished!");
+            throw new BridgeDBException("No results for " + query);            
         } catch (SQLException ex) {
             ex.printStackTrace();
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }
     }
         
+    /**
+     * Updates the count variable for each Mapping Sets.
+     * <p>
+     * This allows the counts of the mappings in each Mapping Set to be quickly returned.
+     * @throws BridgeDBException 
+     */
+    private void countFrequency (int mappingSetId, int mappings) throws BridgeDBException{
+        System.out.println ("Updating frequency count for " + mappingSetId + ". Please Wait!");
+        logger.info ("Updating frequency count for " + mappingSetId + ". Please Wait!");
+        Statement countStatement = this.createStatement();
+        Statement updateStatement = this.createStatement();
+        String query = "SELECT targetFrequency, COUNT(" + SOURCE_ID_COLUMN_NAME + ") as frequency"
+                + " FROM (SELECT " + SOURCE_ID_COLUMN_NAME 
+                    + ", COUNT(DISTINCT(" + TARGET_ID_COLUMN_NAME + ")) as targetFrequency"
+                    + " from mapping"
+                    + " where " + MAPPING_SET_ID_COLUMN_NAME + " = " + mappingSetId 
+                    + " GROUP BY " + SOURCE_ID_COLUMN_NAME + ") AS innerQuery"
+                + " GROUP BY targetFrequency ORDER BY targetFrequency";
+        ResultSet rs;
+        try {
+            rs = countStatement.executeQuery(query);    
+            logger.info ("Count query run. Updating link count now");
+            int frequencyTotal = 0;
+            int freqMedium = -1;
+            int freq75 = -1;
+            int freq90 = -1;
+            int freq99 = -1;
+            int targetFrequency = -1;
+            while (rs.next()){
+                targetFrequency = rs.getInt("targetFrequency");
+                int frequency = rs.getInt("frequency");
+                frequencyTotal+= frequency;
+                float frequencyPercent = frequencyTotal/ mappings;
+                if (frequencyPercent > 0.5){
+                    if (frequencyPercent > 0.75){
+                        if (frequencyPercent > 0.90){
+                            if (frequencyPercent > 0.99){
+                                if (freq99 < 0){
+                                    freq99 = targetFrequency;
+                                }
+                            } else {
+                                if (freq90 < 0){
+                                    freq90 = targetFrequency;
+                                }                                
+                            }
+                        } else {
+                            if (freq75 < 0){
+                                freq75 = targetFrequency;
+                            }
+                        }
+                    } else {
+                        if (freqMedium < 0){
+                            freqMedium = targetFrequency;
+                        }                    
+                    }
+                }
+                if (freq99 < 0){
+                    freq99 = targetFrequency;
+                }                                
+                if (freq90 < 0){
+                    freq90 = freq99;
+                }                                
+                if (freq75 < 0){
+                    freq75 = freq90;
+                }                                
+                if (freqMedium < 0){
+                    freqMedium = freq75;
+                }                                
+            }
+            String update = "update " + MAPPING_STATS_TABLE_NAME 
+                    + " set " + MAPPING_MEDIUM_FREQUENCY_COLUMN_NAME + " = " + freqMedium 
+                    + ", " + MAPPING_75_PERCENT_FREQUENCY_COLUMN_NAME + " = " + freq75 
+                    + ", " + MAPPING_90_PERCENT_FREQUENCY_COLUMN_NAME + " = " + freq90
+                    + ", " + MAPPING_99_PERCENT_FREQUENCY_COLUMN_NAME + " = " + freq99
+                    + ", " + MAPPING_MAX_FREQUENCY_COLUMN_NAME + " = " + targetFrequency
+                    + " where " + MAPPING_SET_ID_COLUMN_NAME + " = '" + mappingSetId + "'";
+            System.out.println(update);
+            try {
+                int updateCount = updateStatement.executeUpdate(update);
+                if (updateCount != 1){
+                    throw new BridgeDBException("Updated rows " + updateCount + " <> 1 when running " + update);
+                }
+            } catch (SQLException ex) {
+                    throw new BridgeDBException("Unable to run update. " + update, ex);
+            }
+            logger.info ("Updating frequency finished!");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new BridgeDBException("Unable to run query. " + query, ex);
+        }
+    }
 }
