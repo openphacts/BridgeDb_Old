@@ -80,6 +80,7 @@ public class ConfigReader {
     
     private static Properties addLocalProperties(Properties original) throws BridgeDBException{
         //Logger already configured
+        logger.info("Adding local properties");
         ConfigReader localReader = new ConfigReader(LOCAL_FILE_NAME); 
         localReader.properties = new Properties();           
         try {
@@ -304,7 +305,7 @@ public class ConfigReader {
             findMethod = "Loaded with class loader";
             foundAt = url.getPath();
             if (loggerSetup){
-                logger.info("Loaded " + url + " with class loader. ");    
+                logger.info("Loaded " + fileName + " from "+ url + " with class loader. ");    
             }
             return true;
         }

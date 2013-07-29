@@ -35,25 +35,43 @@ public class MappingSetInfo {
     private final String predicate;
     private final DataSetInfo target;
     private final String justification;
-    private final String mappingSource;
+    private final String mappingName;
+    private final String mappingUri;
     private final int symmetric;
     private Set<DataSetInfo> viaDataSets;
     private Set<Integer> chainIds;
     private Integer numberOfLinks;
+    private final Integer numberOfSources;
+    private final Integer numberOfTargets;
+    private final Integer frequencyMedium;
+    private final Integer frequency75;
+    private final Integer frequency90;
+    private final Integer frequency99;
+    private final Integer frequencyMax;
 
     public MappingSetInfo(int id, DataSetInfo source, String predicate, DataSetInfo target, String justification,
-            String mappingSource, int symmetric, Set<DataSetInfo> viaDataSets,  Set<Integer> chainIds, Integer numberOfLinks){
+            String mappingName, String mappingUri, int symmetric, Set<DataSetInfo> viaDataSets,  Set<Integer> chainIds, 
+            Integer numberOfLinks, Integer numberOfSources, Integer numberOfTargets, Integer frequencyMedium,
+            Integer frequency75, Integer frequency90, Integer frequency99, Integer frequencyMax){
         intId = id;
         stringId = null;
         this.predicate = predicate;
         this.source = source;
         this.target = target;
         this.justification = justification;
-        this.mappingSource = mappingSource;
+        this.mappingName = mappingName;
+        this.mappingUri = mappingUri;
         this.symmetric = symmetric;
         setViaDataSets(viaDataSets);
         setChainIds(chainIds);
         this.numberOfLinks = numberOfLinks;
+        this.numberOfSources = numberOfSources;
+        this.numberOfTargets = numberOfTargets;
+        this.frequencyMedium = frequencyMedium;
+        this.frequency75 = frequency75;
+        this.frequency90 = frequency90;
+        this.frequency99 = frequency99;
+        this.frequencyMax = frequencyMax;
     }
     
     /**
@@ -115,7 +133,9 @@ public class MappingSetInfo {
                 + "\n\tviaDataSets: " + this.getViaDataSets()
                 + "\n\tchainIds: " + this.chainIds
                 + "\n\tnumberOfLinks: " + this.numberOfLinks
-                + "\n\tmappingSource: " + this.mappingSource + "\n";
+                //+ "\n\tmappingName: " + this.mappingName 
+                //+ "\n\tmappingUri: " + this.mappingUri           
+                + "\n";
     }
 
     /**
@@ -135,7 +155,7 @@ public class MappingSetInfo {
     /**
      * @param chainIds the chainIds to set
      */
-    public void setChainIds(Set<Integer> chainIds) {
+    public final void setChainIds(Set<Integer> chainIds) {
         if (chainIds != null){
             this.chainIds = chainIds;
         } else {
@@ -174,7 +194,7 @@ public class MappingSetInfo {
     /**
      * @param viaDataSets the viaDataSets to set
      */
-    public void setViaDataSets(Set<DataSetInfo> viaDataSets) {
+    public final void setViaDataSets(Set<DataSetInfo> viaDataSets) {
         if (viaDataSets != null){
             this.viaDataSets = viaDataSets;
         } else {
@@ -189,8 +209,64 @@ public class MappingSetInfo {
     /**
      * @return the mappingSource
      */
-    public String getMappingSource() {
-        return mappingSource;
+    public String getMappingName() {
+        return mappingName;
+    }
+
+    /**
+     * @return the mappingUri
+     */
+    public String getMappingUri() {
+        return mappingUri;
+    }
+
+    /**
+     * @return the numberOfSources
+     */
+    public Integer getNumberOfSources() {
+        return numberOfSources;
+    }
+
+    /**
+     * @return the numberOfTargets
+     */
+    public Integer getNumberOfTargets() {
+        return numberOfTargets;
+    }
+
+    /**
+     * @return the frequencyMedium
+     */
+    public Integer getFrequencyMedium() {
+        return frequencyMedium;
+    }
+
+    /**
+     * @return the frequency75
+     */
+    public Integer getFrequency75() {
+        return frequency75;
+    }
+
+    /**
+     * @return the frequency90
+     */
+    public Integer getFrequency90() {
+        return frequency90;
+    }
+
+    /**
+     * @return the frequency99
+     */
+    public Integer getFrequency99() {
+        return frequency99;
+    }
+
+    /**
+     * @return the frequencyMax
+     */
+    public Integer getFrequencyMax() {
+        return frequencyMax;
     }
 
   }

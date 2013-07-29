@@ -1320,16 +1320,31 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         ArrayList<MappingSetInfo> results = new ArrayList<MappingSetInfo>();
         try {
             while (rs.next()){
-                Integer count = rs.getInt(MAPPING_LINK_COUNT_COLUMN_NAME);
                 int id = rs.getInt(ID_COLUMN_NAME);
                 Set<DataSetInfo> viaSysCodes = getViaCodes(id);
                 Set<Integer> chainIds = getChainIds(id);
                 DataSetInfo sourceInfo = findDataSetInfo(rs.getString(SOURCE_DATASOURCE_COLUMN_NAME));
                 DataSetInfo targetInfo = findDataSetInfo(rs.getString(TARGET_DATASOURCE_COLUMN_NAME));
-                results.add(new MappingSetInfo(id, sourceInfo, rs.getString(PREDICATE_COLUMN_NAME), targetInfo, 
-                        rs.getString(JUSTIFICATION_COLUMN_NAME), rs.getString(MAPPING_NAME_COLUMN_NAME), 
+                
+
+                results.add(new MappingSetInfo(id, 
+                        sourceInfo, 
+                        rs.getString(PREDICATE_COLUMN_NAME), 
+                        targetInfo, 
+                        rs.getString(JUSTIFICATION_COLUMN_NAME), 
+                        rs.getString(MAPPING_NAME_COLUMN_NAME), 
+                        rs.getString(MAPPING_URI_COLUMN_NAME), 
                         rs.getInt(SYMMETRIC_COLUMN_NAME), 
-                        viaSysCodes, chainIds, count));
+                        viaSysCodes, 
+                        chainIds, 
+                        rs.getInt(MAPPING_LINK_COUNT_COLUMN_NAME),
+                        rs.getInt(MAPPING_SOURCE_COUNT_COLUMN_NAME), 
+                        rs.getInt(MAPPING_TARGET_COUNT_COLUMN_NAME), 
+                        rs.getInt(MAPPING_MEDIUM_FREQUENCY_COLUMN_NAME),
+                        rs.getInt(MAPPING_75_PERCENT_FREQUENCY_COLUMN_NAME), 
+                        rs.getInt(MAPPING_90_PERCENT_FREQUENCY_COLUMN_NAME), 
+                        rs.getInt(MAPPING_99_PERCENT_FREQUENCY_COLUMN_NAME), 
+                        rs.getInt(MAPPING_MAX_FREQUENCY_COLUMN_NAME)));
             }
         } catch (SQLException ex) {
             throw new BridgeDBException("Unable to parse results.", ex);

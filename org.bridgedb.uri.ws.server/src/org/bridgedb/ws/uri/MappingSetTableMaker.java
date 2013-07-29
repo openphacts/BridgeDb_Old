@@ -403,7 +403,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         addMappingInfoLinkByLocation(sb, i);
         sb.append("</td>\n");  
         sb.append("\t\t<td>");
-        String mappingSource = infos[i].getMappingSource();
+        String mappingSource = infos[i].getMappingName();
         String shortSource = null;
         java.net.URI uri = null;
         try {

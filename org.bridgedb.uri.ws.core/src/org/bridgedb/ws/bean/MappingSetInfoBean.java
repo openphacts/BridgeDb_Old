@@ -21,6 +21,7 @@ package org.bridgedb.ws.bean;
 
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
 
 /**
@@ -34,11 +35,19 @@ public class MappingSetInfoBean {
     private String predicate;
     private DataSetInfoBean target;
     private String justification;
-    private String mappingSource;
     private Integer symmetric;
     private Integer numberOfLinks;
     private Set<DataSetInfoBean> viaDataSets;
     private Set<Integer> chainId;
+    private String mappingName;
+    private String mappingUri;    
+    private Integer numberOfSources;
+    private Integer numberOfTargets;
+    private Integer frequencyMedium;
+    private Integer frequency75;
+    private Integer frequency90;
+    private Integer frequency99;
+    private Integer frequencyMax;
 
     /**
      * WS Constructor
@@ -47,10 +56,24 @@ public class MappingSetInfoBean {
     }
     
     public static MappingSetInfo asMappingSetInfo(MappingSetInfoBean bean){
-       return new MappingSetInfo(bean.getId(), DataSetInfoBean.asDataSetInfo(bean.getSource()), bean.getPredicate(), 
-               DataSetInfoBean.asDataSetInfo(bean.getTarget()), bean.getJustification(), bean.getMappingSource(),
-               bean.getSymmetric(), DataSetInfoBean.asDataSetInfos(bean.getViaDataSets()), bean.getChainId(), 
-               bean.getNumberOfLinks());
+       return new MappingSetInfo(bean.getId(), 
+               DataSetInfoBean.asDataSetInfo(bean.getSource()), 
+               bean.getPredicate(), 
+               DataSetInfoBean.asDataSetInfo(bean.getTarget()), 
+               bean.getJustification(), 
+               bean.getMappingName(),
+               bean.getMappingUri(),
+               bean.getSymmetric(), 
+               DataSetInfoBean.asDataSetInfos(bean.getViaDataSets()), 
+               bean.getChainId(), 
+               bean.getNumberOfLinks(),
+               bean.getNumberOfSources(),
+               bean.getNumberOfTargets(),
+               bean.getFrequencyMedium(),
+               bean.getFrequency75(),
+               bean.getFrequency90(),
+               bean.getFrequency99(),
+               bean.getFrequencyMax());
     }
 
     public static MappingSetInfoBean asBean(MappingSetInfo info) {
@@ -61,11 +84,19 @@ public class MappingSetInfoBean {
             bean.predicate = info.getPredicate();
             bean.target = DataSetInfoBean.asBean(info.getTarget());
             bean.justification = info.getJustification();
-            bean.mappingSource = info.getMappingSource();
+            bean.mappingName = info.getMappingName();
+            bean.mappingUri = info.getMappingUri();
             bean.symmetric = info.getSymmetric();
-            bean.numberOfLinks = info.getNumberOfLinks();
             bean.viaDataSets = DataSetInfoBean.asBeans(info.getViaDataSets());
             bean.chainId = info.getChainIds();
+            bean.numberOfLinks = info.getNumberOfLinks();
+            bean.numberOfSources= info.getNumberOfSources();
+            bean.numberOfTargets = info.getNumberOfTargets();
+            bean.frequencyMedium = info.getFrequencyMedium();
+            bean.frequency75 = info.getFrequency75();
+            bean.frequency90 = info.getFrequency90();
+            bean.frequency99 = info.getFrequency99();
+            bean.frequencyMax = info.getFrequencyMax();
         }
         return bean;
     }
@@ -198,17 +229,129 @@ public class MappingSetInfoBean {
     }
 
     /**
-     * @return the mappingSource
+     * @return the mappingName
      */
-    public String getMappingSource() {
-        return mappingSource;
+    public String getMappingName() {
+        return mappingName;
     }
 
     /**
-     * @param mappingSource the mappingSource to set
+     * @param mappingName the mappingName to set
      */
-    public void setMappingSource(String mappingSource) {
-        this.mappingSource = mappingSource;
+    public void setMappingName(String mappingName) {
+        this.mappingName = mappingName;
     }
-    
+
+    /**
+     * @return the mappingUri
+     */
+    public String getMappingUri() {
+        return mappingUri;
+    }
+
+    /**
+     * @param mappingUri the mappingUri to set
+     */
+    public void setMappingUri(String mappingUri) {
+        this.mappingUri = mappingUri;
+    }
+
+    /**
+     * @return the numberOfSources
+     */
+    public Integer getNumberOfSources() {
+        return numberOfSources;
+    }
+
+    /**
+     * @param numberOfSources the numberOfSources to set
+     */
+    public void setNumberOfSources(Integer numberOfSources) {
+        this.numberOfSources = numberOfSources;
+    }
+
+    /**
+     * @return the numberOfTargets
+     */
+    public Integer getNumberOfTargets() {
+        return numberOfTargets;
+    }
+
+    /**
+     * @param numberOfTargets the numberOfTargets to set
+     */
+    public void setNumberOfTargets(Integer numberOfTargets) {
+        this.numberOfTargets = numberOfTargets;
+    }
+
+    /**
+     * @return the frequencyMedium
+     */
+    public Integer getFrequencyMedium() {
+        return frequencyMedium;
+    }
+
+    /**
+     * @param frequencyMedium the frequencyMedium to set
+     */
+    public void setFrequencyMedium(Integer frequencyMedium) {
+        this.frequencyMedium = frequencyMedium;
+    }
+
+    /**
+     * @return the frequency75
+     */
+    public Integer getFrequency75() {
+        return frequency75;
+    }
+
+    /**
+     * @param frequency75 the frequency75 to set
+     */
+    public void setFrequency75(Integer frequency75) {
+        this.frequency75 = frequency75;
+    }
+
+    /**
+     * @return the frequency90
+     */
+    public Integer getFrequency90() {
+        return frequency90;
+    }
+
+    /**
+     * @param frequency90 the frequency90 to set
+     */
+    public void setFrequency90(Integer frequency90) {
+        this.frequency90 = frequency90;
+    }
+
+    /**
+     * @return the frequency99
+     */
+    public Integer getFrequency99() {
+        return frequency99;
+    }
+
+    /**
+     * @param frequency99 the frequency99 to set
+     */
+    public void setFrequency99(Integer frequency99) {
+        this.frequency99 = frequency99;
+    }
+
+    /**
+     * @return the frequencyMax
+     */
+    public Integer getFrequencyMax() {
+        return frequencyMax;
+    }
+
+    /**
+     * @param frequencyMax the frequencyMax to set
+     */
+    public void setFrequencyMax(Integer frequencyMax) {
+        this.frequencyMax = frequencyMax;
+    }
+
 }
