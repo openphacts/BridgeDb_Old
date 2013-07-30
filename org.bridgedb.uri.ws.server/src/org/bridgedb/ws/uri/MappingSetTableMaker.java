@@ -70,6 +70,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
     
     private void tableMaker(StringBuilder sb) throws BridgeDBException{
         sb.append(SCRIPT);
+        sb.append(FREQUENCY_INFO);
         sb.append(TABLE_HEADER);
         newSource(sb, 0);
         logger.info("tableMaker");        
@@ -92,7 +93,38 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         logger.info("done");        
     }
     
+    private final String FREQUENCY_INFO = "<span id=\"showFrequency\" onclick=\"showFrequency()\">"
+            + "<h3>Click Here to show columns with the number of Targets per Source</h3></span>\n"
+            + "<span id=\"hideFrequency\" style=\"display: none;\" onclick=\"hideFrequency()\">"
+            + "  <h3>Click Here to hide columns with the number of Targets per Source</h3>\n"
+            + "  <p><dl>\n"
+            + "     <dt>Avg</dt>"
+            + "        <dd>Average number links per source (rounded down). </dd>\n"
+            + "     <dt>X % / Mean (50%)</dt>"
+            + "         <dd>At least X % of all unique sources map to this number or less targets.</dd>\n"
+            + "     <dt>Max</dt>"
+            + "         <dd>The largest number of targets a unique sources maps to.</dd>\n"
+            + " </dl></p>\n"
+            + "</span>\n";
+    
     private final String TABLE_HEADER = "<table border=\"1\">\n"
+            + "<col/>\n" //Level 1
+            + "<col/>\n" //level2
+            + "<col/>\n" //Source Data Source
+            + "<col/>\n" //Targets
+            + "<col/>\n" //Sum of Mappings
+            + "<col/>\n" //Summary
+            + "<col/>\n" //Name
+            + "<col/>\n" //Source Count
+            + "<col/>\n" //Target Count
+            + "<col/>\n" //Predicate
+            + "<col/>\n" //Justification
+            + "<col class=\"Frequency\" style=\"visibility:collapse\" />\n" //Avg
+		    + "<col class=\"Frequency\" style=\"visibility:collapse\" />\n" //Mean
+		    + "<col class=\"Frequency\" style=\"visibility:collapse\" />\n" //75%
+		    + "<col class=\"Frequency\" style=\"visibility:collapse\" />\n" //90%
+		    + "<col class=\"Frequency\" style=\"visibility:collapse\" />\n" //99%
+		    + "<col class=\"Frequency\" style=\"visibility:collapse\" />\n" //Max
             + "\t<tr>\n"
             + "\t\t<th></th>\n"
             + "\t\t<th></th>\n"
@@ -175,6 +207,22 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
     + "	}\n"
     + "}\n"
     + "\n"
+    + "function showFrequency() {\n"
+	+ "  freqCol=document.getElementsByClassName('Frequency')\n"
+	+ "  for (i=0;i<freqCol.length;i++){\n"
+	+ "    freqCol[i].style.visibility = 'visible';\n"
+	+ "  }\n"
+	+ "  document.getElementById('hideFrequency').style.display = '';\n"
+	+ "  document.getElementById('showFrequency').style.display = 'none';\n"
+    + "}\n"
+    + "function hideFrequency() {\n"
+	+ "  freqCol=document.getElementsByClassName('Frequency')\n"
+	+ "  for (i=0;i<freqCol.length;i++){\n"
+	+ "      freqCol[i].style.visibility = 'collapse';\n"
+	+ "  }\n"
+	+ "  document.getElementById('hideFrequency').style.display = 'none';\n"
+	+ "  document.getElementById('showFrequency').style.display = '';\n"
+    + "}\n"
     + "</script>\n";
     
     @Override
@@ -266,7 +314,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         addNumberCell(sb, info.getNumberOfTargets());
         addPredicateCell(sb, i);
         addJustificationCell(sb,i);
-        addNumberCell(sb, info.getNumberOfLinks() / info.getNumberOfTargets());
+        addNumberCell(sb, info.getNumberOfLinks() / info.getNumberOfSources());
         addNumberCell(sb, info.getFrequencyMedium());
         addNumberCell(sb, info.getFrequency75());
         addNumberCell(sb, info.getFrequency90());
