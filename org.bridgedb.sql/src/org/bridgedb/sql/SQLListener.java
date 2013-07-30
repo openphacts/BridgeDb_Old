@@ -233,19 +233,42 @@ public class SQLListener extends SQLBase implements MappingListener{
         query.append(" ("); 
         query.append(MAPPING_SET_ID_COLUMN_NAME);
         query.append(", "); 
+        query.append(SOURCE_DATASOURCE_COLUMN_NAME);
+        query.append(", ");
+        query.append(PREDICATE_COLUMN_NAME);
+        query.append(", "); 
+        query.append(JUSTIFICATION_COLUMN_NAME);
+        query.append(", ");
+        query.append(TARGET_DATASOURCE_COLUMN_NAME); 
+        if (mappingName != null && !mappingName.isEmpty()){
+            query.append(", ");
+            query.append(MAPPING_NAME_COLUMN_NAME); 
+        }
         if (mappingUri != null && !mappingUri.isEmpty()){
             query.append(MAPPING_URI_COLUMN_NAME);
             query.append(", ");
         }
+        query.append(", ");
         query.append(SYMMETRIC_COLUMN_NAME);
         query.append(") VALUES (");
         query.append(autoinc);
-        query.append(",");
-        if (mappingUri != null && !mappingUri.isEmpty()){
-            query.append(" '");
-            query.append(mappingUri);
-            query.append("', ");
+        query.append(", '");
+        query.append(getDataSourceKey(source));
+        query.append("', '");
+        query.append(predicate);
+        query.append("', '");
+        query.append(justification);
+        query.append("', '");
+        query.append(getDataSourceKey(target));
+        if (mappingName != null && !mappingName.isEmpty()){
+            query.append("', '");
+            query.append(mappingName);
         }
+        if (mappingUri != null && !mappingUri.isEmpty()){
+            query.append(", '");
+            query.append(mappingUri);
+        }
+        query.append("', ");
         query.append(symmetric);
         query.append(")");
         try {
@@ -508,7 +531,12 @@ public class SQLListener extends SQLBase implements MappingListener{
 					+ " ) "; 
             sh.execute(query);
          	query =	"CREATE TABLE " + MAPPING_STATS_TABLE_NAME 
-                    + " (" + MAPPING_SET_ID_COLUMN_NAME + " INT " + " PRIMARY KEY, " 
+                    + " (" + MAPPING_SET_ID_COLUMN_NAME + " INT, " 
+                        + SOURCE_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ") NOT NULL, "
+                        + PREDICATE_COLUMN_NAME         + " VARCHAR(" + PREDICATE_LENGTH + "), "
+                        + JUSTIFICATION_COLUMN_NAME     + " VARCHAR(" + JUSTIFICATION_LENGTH + "), "
+                        + TARGET_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + "), "
+                        + MAPPING_NAME_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + "), "
                         + MAPPING_URI_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + "), "
                         + SYMMETRIC_COLUMN_NAME + " INT, "
                         + MAPPING_LINK_COUNT_COLUMN_NAME     + " INT, "
@@ -954,30 +982,46 @@ public class SQLListener extends SQLBase implements MappingListener{
      * This allows the counts of the mappings in each Mapping Set to be quickly returned.
      * @throws BridgeDBException 
      */
-    private int countLinks (int mappingSetId) throws BridgeDBException{
+    private int countLinks (int mappingSetId ) throws BridgeDBException{
         logger.info ("Updating link count for " + mappingSetId + ". Please Wait!");
         Statement countStatement = this.createStatement();
         Statement updateStatement = this.createStatement();
-        String query = ("select count(distinct(" + SOURCE_ID_COLUMN_NAME + ")) as sources,"
-                + " count(distinct(" + TARGET_ID_COLUMN_NAME + ")) as targets,"
-                + " count(*) as mappings " 
-                + " from " + MAPPING_TABLE_NAME 
-                + " where " + MAPPING_SET_ID_COLUMN_NAME + " = " + mappingSetId);  
+        StringBuilder query = new StringBuilder("select count(distinct("); 
+        query.append(SOURCE_ID_COLUMN_NAME); 
+        query.append("))AS sources,");
+        query.append(" COUNT(distinct("); 
+        query.append(TARGET_ID_COLUMN_NAME); 
+        query.append(")) as targets,");
+        query.append(" COUNT(*) as mappings "); 
+        query.append(" FROM "); 
+        query.append(MAPPING_TABLE_NAME); 
+        addStatsConditions(query, mappingSetId);
         ResultSet rs;
         try {
-            rs = countStatement.executeQuery(query);    
+            rs = countStatement.executeQuery(query.toString());    
             logger.info ("Count query run. Updating link count now");
             while (rs.next()){
                 int sources = rs.getInt("sources");
                 int targets = rs.getInt("targets");
                 int mappings = rs.getInt("mappings");
-                String update = "update " + MAPPING_STATS_TABLE_NAME 
-                        + " set " + MAPPING_SOURCE_COUNT_COLUMN_NAME + " = " + sources 
-                        + ", " + MAPPING_TARGET_COUNT_COLUMN_NAME + " = " + targets 
-                        + ", " + MAPPING_LINK_COUNT_COLUMN_NAME + " = " + mappings 
-                        + " where " + MAPPING_SET_ID_COLUMN_NAME + " = '" + mappingSetId + "'";
+                StringBuilder update = new StringBuilder("UPDATE ");
+                update.append(MAPPING_STATS_TABLE_NAME); 
+                update.append(" SET "); 
+                update.append(MAPPING_SOURCE_COUNT_COLUMN_NAME); 
+                update.append(" = "); 
+                update.append(sources); 
+                update.append(", ");
+                update.append(MAPPING_TARGET_COUNT_COLUMN_NAME);
+                update.append(" = ");
+                update.append(targets); 
+                update.append(", ");
+                update.append(MAPPING_LINK_COUNT_COLUMN_NAME);
+                update.append(" = ");
+                update.append(mappings);
+                addStatsConditions(update, mappingSetId);
+                System.out.println(update);
                 try {
-                    int updateCount = updateStatement.executeUpdate(update);
+                    int updateCount = updateStatement.executeUpdate(update.toString());
                     if (updateCount != 1){
                         throw new BridgeDBException("Updated rows " + updateCount + " <> 1 when running " + update);
                     }
@@ -994,6 +1038,12 @@ public class SQLListener extends SQLBase implements MappingListener{
         }
     }
         
+    private void addStatsConditions(StringBuilder query, int mappingSetId){
+        query.append(" WHERE "); 
+        query.append(MAPPING_SET_ID_COLUMN_NAME); 
+        query.append(" = "); 
+        query.append(mappingSetId);          
+    }
     /**
      * Updates the count variable for each Mapping Sets.
      * <p>
@@ -1005,16 +1055,22 @@ public class SQLListener extends SQLBase implements MappingListener{
         logger.info ("Updating frequency count for " + mappingSetId + ". Please Wait!");
         Statement countStatement = this.createStatement();
         Statement updateStatement = this.createStatement();
-        String query = "SELECT targetFrequency, COUNT(" + SOURCE_ID_COLUMN_NAME + ") as frequency"
-                + " FROM (SELECT " + SOURCE_ID_COLUMN_NAME 
-                    + ", COUNT(DISTINCT(" + TARGET_ID_COLUMN_NAME + ")) as targetFrequency"
-                    + " from mapping"
-                    + " where " + MAPPING_SET_ID_COLUMN_NAME + " = " + mappingSetId 
-                    + " GROUP BY " + SOURCE_ID_COLUMN_NAME + ") AS innerQuery"
-                + " GROUP BY targetFrequency ORDER BY targetFrequency";
+        StringBuilder query = new StringBuilder("SELECT targetFrequency, COUNT("); 
+        query.append(SOURCE_ID_COLUMN_NAME + ") as frequency"); 
+        query.append(" FROM (SELECT ");  
+        query.append(SOURCE_ID_COLUMN_NAME);  
+        query.append(", COUNT(DISTINCT(");  
+        query.append(TARGET_ID_COLUMN_NAME);  
+        query.append(")) as targetFrequency"); 
+        query.append(" from mapping"); 
+        addStatsConditions(query, mappingSetId); 
+        query.append(" GROUP BY "); 
+        query.append(SOURCE_ID_COLUMN_NAME); 
+        query.append(") AS innerQuery"); 
+        query.append(" GROUP BY targetFrequency ORDER BY targetFrequency");
         ResultSet rs;
         try {
-            rs = countStatement.executeQuery(query);    
+            rs = countStatement.executeQuery(query.toString());    
             logger.info ("Count query run. Updating link count now");
             int frequencyTotal = 0;
             int freqMedium = -1;
@@ -1063,16 +1119,32 @@ public class SQLListener extends SQLBase implements MappingListener{
                     freqMedium = freq75;
                 }                                
             }
-            String update = "update " + MAPPING_STATS_TABLE_NAME 
-                    + " set " + MAPPING_MEDIUM_FREQUENCY_COLUMN_NAME + " = " + freqMedium 
-                    + ", " + MAPPING_75_PERCENT_FREQUENCY_COLUMN_NAME + " = " + freq75 
-                    + ", " + MAPPING_90_PERCENT_FREQUENCY_COLUMN_NAME + " = " + freq90
-                    + ", " + MAPPING_99_PERCENT_FREQUENCY_COLUMN_NAME + " = " + freq99
-                    + ", " + MAPPING_MAX_FREQUENCY_COLUMN_NAME + " = " + targetFrequency
-                    + " where " + MAPPING_SET_ID_COLUMN_NAME + " = '" + mappingSetId + "'";
+            StringBuilder update = new StringBuilder("update ");
+            update.append(MAPPING_STATS_TABLE_NAME); 
+            update.append(" set "); 
+            update.append(MAPPING_MEDIUM_FREQUENCY_COLUMN_NAME); 
+            update.append(" = "); 
+            update.append(freqMedium); 
+            update.append(", "); 
+            update.append(MAPPING_75_PERCENT_FREQUENCY_COLUMN_NAME); 
+            update.append(" = "); 
+            update.append(freq75); 
+            update.append(", "); 
+            update.append(MAPPING_90_PERCENT_FREQUENCY_COLUMN_NAME); 
+            update.append(" = "); 
+            update.append(freq90);
+            update.append(", "); 
+            update.append(MAPPING_99_PERCENT_FREQUENCY_COLUMN_NAME); 
+            update.append(" = "); 
+            update.append(freq99);
+            update.append(", "); 
+            update.append(MAPPING_MAX_FREQUENCY_COLUMN_NAME); 
+            update.append(" = "); 
+            update.append(targetFrequency);
+            addStatsConditions(update, mappingSetId);
             System.out.println(update);
             try {
-                int updateCount = updateStatement.executeUpdate(update);
+                int updateCount = updateStatement.executeUpdate(update.toString());
                 if (updateCount != 1){
                     throw new BridgeDBException("Updated rows " + updateCount + " <> 1 when running " + update);
                 }
