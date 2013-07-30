@@ -99,7 +99,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             + "\t\t<th>Source Data Source</th>\n"
             + "\t\t<th>Targets</th>\n"
             + "\t\t<th>Sum of Mappings</th>\n"
-            + "\t\t<th colspan=\"2\"> Mapping Set</th>\n"
+            + "\t\t<th colspan=\"4\"> Mapping Set</th>\n"
             + "\t\t<th>Predicate</th>\n"
             + "\t\t<th>Justification</th>\n"
             + "\t\t<th colspan=\"2\"> Transative</th>\n"
@@ -111,7 +111,9 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             + "\t\t<th></th>\n" //Targets
             + "\t\t<th></th>\n" //Sum of Mappings
             + "\t\t<th>Summary</th>\n"
-            + "\t\t<th>Source</th>\n"
+            + "\t\t<th>Name</th>\n"
+            + "\t\t<th>Source Count</th>\n"
+            + "\t\t<th>Target Count</th>\n"
             + "\t\t<th></th>\n" //Predicate
             + "\t\t<th></th>\n" //Justification
             + "\t\t<th>Data Source(s)</th>\n"
@@ -344,14 +346,18 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             sb.append(mappingCount);
             sb.append(" Mappings</td>\n");
         //rdf    
-        sb.append("\t\t<td>&nbsp</td>\n");
+        sb.append("\t\t<td>&nbsp</td>");
+        //Source Count   
+        sb.append("<td>&nbsp</td>");
+        //Target Count
+        sb.append("<td>&nbsp</td>");        
         //predicate    
-        sb.append("\t\t<td>&nbsp</td>\n");
+        sb.append("<td>&nbsp</td>");
         //Justification
-        sb.append("\t\t<td>&nbsp</td>\n");
+        sb.append("<td>&nbsp</td>");
         //Transative
-        sb.append("\t\t<td>&nbsp</td>\n");
-        sb.append("\t\t<td>&nbsp</td>\n");
+        sb.append("<td>&nbsp</td>");
+        sb.append("<td>&nbsp</td>\n");
         sb.append("\t</tr>\n");
     }
 
@@ -399,9 +405,11 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
    }
 
     private void addMappingSetCells(StringBuilder sb, int i) throws BridgeDBException {
+        //Summary
         sb.append("\t\t<td>");
         addMappingInfoLinkByLocation(sb, i);
         sb.append("</td>\n");  
+        //Name
         sb.append("\t\t<td>");
         String mappingSource = infos[i].getMappingName();
         String shortSource = null;
@@ -428,6 +436,9 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             sb.append("</a>");                    
         }
         sb.append("</td>\n");
+        //SourceCount
+        addNumberCell(sb, infos[i].getNumberOfSources());
+        addNumberCell(sb, infos[i].getNumberOfTargets());
     }
 
     private void addMappingInfoLinkByLocation(StringBuilder sb, int i) {
@@ -450,6 +461,14 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             sb.append("</a>");        
         } catch (Exception ex){
             sb.append(ex);
+        }
+    }
+    
+    private void addNumberCell(StringBuilder sb, Integer number) {
+        if (number == null){
+           sb.append("\t\t<td><td>"); 
+        } else {
+           addNumberOfLinksCell(sb, number); 
         }
     }
     
