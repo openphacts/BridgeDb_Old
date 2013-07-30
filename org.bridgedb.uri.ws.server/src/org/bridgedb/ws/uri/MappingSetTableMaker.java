@@ -102,6 +102,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             + "\t\t<th colspan=\"4\"> Mapping Set</th>\n"
             + "\t\t<th>Predicate</th>\n"
             + "\t\t<th>Justification</th>\n"
+            + "\t\t<th colspan=\"6\"> Target Frequency</th>\n"
             + "\t\t<th colspan=\"2\"> Transative</th>\n"
             + "\t</tr>\n"
             + "\t<tr>\n"
@@ -116,6 +117,12 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             + "\t\t<th>Target Count</th>\n"
             + "\t\t<th></th>\n" //Predicate
             + "\t\t<th></th>\n" //Justification
+            + "\t\t<th>Avg</th>\n"
+		    + "\t\t<th>Mean</th>\n"
+		    + "\t\t<th>75%</th>\n"
+		    + "\t\t<th>90%</th>\n"
+		    + "\t\t<th>99%</th>\n"
+		    + "\t\t<th>Max</th>\n"
             + "\t\t<th>Data Source(s)</th>\n"
             + "\t\t<th>Ids</th>\n"
             + "\t</tr>\n";
@@ -249,12 +256,22 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
 
     private void addInfo(StringBuilder sb, int i) 
             throws BridgeDBException {
-        addDataSourceCell(sb, infos[i].getSource());
-        addDataSourceCell(sb, infos[i].getTarget());
-        addNumberOfLinksCell(sb, infos[i].getNumberOfLinks());
+        MappingSetInfo info = infos[i];
+        addDataSourceCell(sb, info.getSource());
+        addDataSourceCell(sb, info.getTarget());
+        addNumberOfLinksCell(sb, info.getNumberOfLinks());
         addMappingSetCells(sb, i);
+                //SourceCount
+        addNumberCell(sb, info.getNumberOfSources());
+        addNumberCell(sb, info.getNumberOfTargets());
         addPredicateCell(sb, i);
         addJustificationCell(sb,i);
+        addNumberCell(sb, info.getNumberOfLinks() / info.getNumberOfTargets());
+        addNumberCell(sb, info.getFrequencyMedium());
+        addNumberCell(sb, info.getFrequency75());
+        addNumberCell(sb, info.getFrequency90());
+        addNumberCell(sb, info.getFrequency99());
+        addNumberCell(sb, info.getFrequencyMax());
         addTransatives(sb, i);
     }
 
@@ -355,6 +372,13 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         sb.append("<td>&nbsp</td>");
         //Justification
         sb.append("<td>&nbsp</td>");
+        //Frequency
+        sb.append("<td>&nbsp</td>");
+        sb.append("<td>&nbsp</td>");
+        sb.append("<td>&nbsp</td>");
+        sb.append("<td>&nbsp</td>");
+        sb.append("<td>&nbsp</td>");
+        sb.append("<td>&nbsp</td>");
         //Transative
         sb.append("<td>&nbsp</td>");
         sb.append("<td>&nbsp</td>\n");
@@ -436,9 +460,6 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             sb.append("</a>");                    
         }
         sb.append("</td>\n");
-        //SourceCount
-        addNumberCell(sb, infos[i].getNumberOfSources());
-        addNumberCell(sb, infos[i].getNumberOfTargets());
     }
 
     private void addMappingInfoLinkByLocation(StringBuilder sb, int i) {
