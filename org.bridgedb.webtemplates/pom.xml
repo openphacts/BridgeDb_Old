@@ -4,7 +4,6 @@
 
 	<groupId>uk.ac.manchester.cs.openphacts.bridgedb</groupId>
 	<artifactId>org.bridgedb.webtemplates</artifactId>
-	<version>1.0</version>
 	<packaging>jar</packaging>
 	<parent>
 		<artifactId>bridgedb-bundle</artifactId>
