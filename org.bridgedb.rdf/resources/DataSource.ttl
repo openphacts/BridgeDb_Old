@@ -4481,6 +4481,7 @@ bridgeDB:DataSource_WikiPathways a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "pathway" ;
 	bridgeDB:hasUrlPattern <http://www.wikipathways.org/index.php/Pathway:$id> ;
+	bridgeDB:hasUriPattern <http://www.wikipathways.org/instance/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/wikipathways/$id> ;
 	bridgeDB:hasSourceRdfPattern <http://rdf.wikipathways.org/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://rdf.wikipathways.org/$id> .
