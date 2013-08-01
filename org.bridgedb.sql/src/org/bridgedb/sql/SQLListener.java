@@ -546,7 +546,9 @@ public class SQLListener extends SQLBase implements MappingListener{
                         + MAPPING_75_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
                         + MAPPING_90_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
                         + MAPPING_99_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
-                        + MAPPING_MAX_FREQUENCY_COLUMN_NAME     + " INT "
+                        + MAPPING_MAX_FREQUENCY_COLUMN_NAME     + " INT, "
+                        + "UNIQUE KEY  (`" + MAPPING_SET_ID_COLUMN_NAME  + "`, `" + SOURCE_DATASOURCE_COLUMN_NAME 
+                        + "`, `" + TARGET_DATASOURCE_COLUMN_NAME + "`)"
 					+ " ) "; 
             sh.execute(query);
             sh.execute ("CREATE TABLE  "
