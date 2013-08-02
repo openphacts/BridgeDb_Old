@@ -1674,11 +1674,24 @@ bridgeDB:DataSource_GeneOntology a bridgeDB:DataSource ;
 	bridgeDB:mainUrl "http://www.ebi.ac.uk/QuickGO/" ;
 	bridgeDB:idExample "GO:0006915" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "probe" .
+	#bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/QuickGO/GTerm?id=$id> ;
+	#bridgeDB:hasUriPattern <http://identifiers.org/obo.go/$id> ; #Deprecated
+	#bridgeDB:hasUriPattern <http://purl.org/obo/owl/GO#$id> ;
+	#bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/go/$id> ;
+	#bridgeDB:hasWikiPathwaysPattern <http://www.ebi.ac.uk/QuickGO/GTerm?id=$id>
+
+bridgeDB:DataSource_GeneOntology_URI a bridgeDB:DataSource ;
+	bridgeDB:fullName "Gene Ontology URI" ;
+	bridgeDB:systemCode "go/GO:" ;
+	bridgeDB:mainUrl "http://www.ebi.ac.uk/QuickGO/" ;
+	bridgeDB:idExample "0006915" ; #GO: moved to nameSpace to support http://purl.org/obo/owl/GO which uses a _ instead of the :
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "probe" ;
-	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/QuickGO/GTerm?id=$id> ;
-	bridgeDB:hasUriPattern <http://identifiers.org/obo.go/$id> ; #Deprecated
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/go/$id> ;
-	bridgeDB:hasWikiPathwaysPattern <http://www.ebi.ac.uk/QuickGO/GTerm?id=$id> .
+	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:$id> ;
+	bridgeDB:hasUriPattern <http://identifiers.org/obo.go/GO:$id> ; #Deprecated
+	bridgeDB:hasUriPattern <http://purl.org/obo/owl/GO_#$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/go/GO:$id> .
 
 bridgeDB:DataSource_GeneTree a bridgeDB:DataSource ;
 	bridgeDB:fullName "GeneTree" ;
@@ -1965,6 +1978,17 @@ bridgeDB:DataSource_HGNC_Accession_number a bridgeDB:DataSource ;
 	bridgeDB:Organism bridgeDB:Organism_Hs ;
 	bridgeDB:hasBio2RdfPattern <http://bio2rdf.org/hgnc:$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://bio2rdf.org/hgnc:$id> .
+
+bridgeDB:DataSource_HGNC_Symbol a bridgeDB:DataSource ;
+	bridgeDB:fullName "HGNC Symbol Collection has restriction(s) logo" ;
+	bridgeDB:systemCode "hgnc.symbol" ;
+	bridgeDB:mainUrl "http://www.genenames.org" ;
+	bridgeDB:idExample "DAPK1" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "gene" ;
+	#Unused as shared with HGNC bridgeDB:hasUrlPattern <http://www.genenames.org/data/hgnc_data.php?match=$id> ;
+    bridgeDB:hasUrlPattern <http://identifiers.org/hgnc.symbol/$id>;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/hgnc.symbol/$id> .
 
 bridgeDB:DataSource_HMDB a bridgeDB:DataSource ;
 	bridgeDB:fullName "HMDB" ;
@@ -3020,15 +3044,6 @@ bridgeDB:DataSource_NuGO_wiki a bridgeDB:DataSource ;
 	bridgeDB:urnBase "Nw" ;
 	bridgeDB:hasWikiPathwaysPattern <http://wiki.nugo.org/index.php/$id> .
 
-bridgeDB:DataSource_OBO_GO a bridgeDB:DataSource ;
-	bridgeDB:fullName "OBO GO" ;
-	bridgeDB:systemCode "GO" ;
-	bridgeDB:idExample "GO_0046767" ;
-	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "unknown" ;
-	bridgeDB:hasUrlPattern <http://purl.org/obo/owl/GO#$id> ;
-	bridgeDB:hasWikiPathwaysPattern <http://purl.org/obo/owl/GO#$id> .
-
 bridgeDB:DataSource_OMA_Group a bridgeDB:DataSource ;
 	bridgeDB:fullName "OMA Group" ;
 	bridgeDB:mainUrl "http://omabrowser.org/cgi-bin/gateway.pl" ;
@@ -3102,6 +3117,15 @@ bridgeDB:DataSource_OPM a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/opm/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://opm.phar.umich.edu/protein.php?pdbid=$id> .
 
+bridgeDB:DataSource_OPS_Chemical_Registry_Service a bridgeDB:DataSource ;
+    bridgeDB:systemCode "OPS-CRS" ;
+	bridgeDB:fullName "OPS Chemical Registry Service" ;
+	bridgeDB:mainUrl "http://www.rsc.org/" ;
+	bridgeDB:idExample "OPS21009" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://ops.rsc-us.org/$id> .
+
 bridgeDB:DataSource_Orphanet a bridgeDB:DataSource ;
 	bridgeDB:fullName "Orphanet" ;
 	bridgeDB:mainUrl "http://www.orpha.net/consor/" ;
@@ -3173,13 +3197,16 @@ bridgeDB:DataSource_Pathway_Commons a bridgeDB:DataSource ;
 
 bridgeDB:DataSource_Pathway_Ontology a bridgeDB:DataSource ;
 	bridgeDB:fullName "Pathway Ontology" ;
+    bridgeDB:systemCode "obo.pw/PW:" ;
 	bridgeDB:mainUrl "http://rgd.mcw.edu/rgdweb/ontology/search.html" ;
-	bridgeDB:idExample "PW:0000208" ;
+	bridgeDB:idExample "0000208" ; #PW: moved to nameSpace due to http://purl.obolibrary.org/obo/PW_ using and underscore
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "unknown" ;
-	bridgeDB:hasUrlPattern <http://rgd.mcw.edu/rgdweb/ontology/annot.html?acc_id=$id> ;
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/obo.pw/$id> ;
-	bridgeDB:hasWikiPathwaysPattern <http://rgd.mcw.edu/rgdweb/ontology/annot.html?acc_id=$id> .
+	bridgeDB:hasUrlPattern <http://rgd.mcw.edu/rgdweb/ontology/annot.html?acc_id=PW:$id> ;
+	bridgeDB:hasUriPattern <http://purl.bioontology.org/ontology/PW/PW:$id> ;
+    bridgeDB:hasUriPattern <http://www.ebi.ac.uk/ontology-lookup/?termId=PW:$id> ;
+    bridgeDB:hasUriPattern <http://purl.obolibrary.org/obo/PW_$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/obo.pw/PW:$id> .
 
 bridgeDB:DataSource_PATO a bridgeDB:DataSource ;
 	bridgeDB:fullName "PATO" ;
