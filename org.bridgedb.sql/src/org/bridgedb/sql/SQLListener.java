@@ -59,7 +59,7 @@ public class SQLListener extends SQLBase implements MappingListener{
     private static final int LINK_SET_ID_LENGTH = 100;
     private static final int KEY_LENGTH= 100; 
     private static final int PROPERTY_LENGTH = 100;
-    private static final int MAX_BLOCK_SIZE = 10;
+    private static final int MAX_BLOCK_SIZE = 1000;
     private static final int MAPPING_URI_LENGTH = 200;
     
     //static final String DATASOURCE_TABLE_NAME = "DataSource";
