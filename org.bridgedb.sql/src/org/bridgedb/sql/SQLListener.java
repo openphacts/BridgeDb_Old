@@ -348,6 +348,12 @@ public class SQLListener extends SQLBase implements MappingListener{
     @Override
     public synchronized void closeInput() throws BridgeDBException {
         runInsert();
+        Statement statement = createStatement();
+        try {
+            statement.execute("analyze table mapping");
+        } catch (SQLException ex) {
+            throw new BridgeDBException ("Error analyze table mapping ", ex);
+        }        
         insertQuery = null;
         logger.info("Finished processing linkset");
         countLinks();
@@ -516,11 +522,12 @@ public class SQLListener extends SQLBase implements MappingListener{
             query = "CREATE TABLE " + MAPPING_TABLE_NAME 
                     + "( " + SOURCE_ID_COLUMN_NAME      + " VARCHAR(" + ID_LENGTH + ") NOT NULL, "
         			+ "  " + TARGET_ID_COLUMN_NAME      + " VARCHAR(" + ID_LENGTH + ") NOT NULL, " 
-                    + "  " + MAPPING_SET_ID_COLUMN_NAME + " INT(" + LINK_SET_ID_LENGTH + ") "
-                    + " ) ";
+                    + "  " + MAPPING_SET_ID_COLUMN_NAME + " INT(" + LINK_SET_ID_LENGTH + "), "
+                    + "INDEX `setFind` (" + MAPPING_SET_ID_COLUMN_NAME + "), " 
+                    + "INDEX `sourceFind` (" + SOURCE_ID_COLUMN_NAME + "), " 
+                    + "INDEX `sourceMappingSetFind` (" + MAPPING_SET_ID_COLUMN_NAME + ", " + SOURCE_ID_COLUMN_NAME + ") "
+                    + " ) " ;
 			sh.execute(query);
-            sh.execute("CREATE INDEX sourceFind ON " + MAPPING_TABLE_NAME + " (" + SOURCE_ID_COLUMN_NAME + ") ");
-            sh.execute("CREATE INDEX sourceMappingSetFind ON " + MAPPING_TABLE_NAME + " (" + MAPPING_SET_ID_COLUMN_NAME + ", " + SOURCE_ID_COLUMN_NAME + ") ");
          	query =	"CREATE TABLE " + MAPPING_SET_TABLE_NAME 
                     + " (" + ID_COLUMN_NAME                   + " INT " + autoIncrement + " PRIMARY KEY, " 
                         + SOURCE_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ") NOT NULL, "
@@ -963,7 +970,7 @@ public class SQLListener extends SQLBase implements MappingListener{
                 + " from " + MAPPING_STATS_TABLE_NAME 
                 + " where " + MAPPING_LINK_COUNT_COLUMN_NAME + " is NULL");  
         ResultSet rs;
-        System.out.println(query);
+        //ystem.out.println(query);
         try {
             rs = countStatement.executeQuery(query);    
             while (rs.next()){
@@ -1021,7 +1028,7 @@ public class SQLListener extends SQLBase implements MappingListener{
                 update.append(" = ");
                 update.append(mappings);
                 addStatsConditions(update, mappingSetId);
-                System.out.println(update);
+                //ystem.out.println(update);
                 try {
                     int updateCount = updateStatement.executeUpdate(update.toString());
                     if (updateCount != 1){
@@ -1053,7 +1060,8 @@ public class SQLListener extends SQLBase implements MappingListener{
      * @throws BridgeDBException 
      */
     private void countFrequency (int mappingSetId, int mappings) throws BridgeDBException{
-        System.out.println ("Updating frequency count for " + mappingSetId + ". Please Wait!");
+        float mappingsF = mappings;
+        //ystem.out.println ("Updating frequency count for " + mappingSetId + ". Please Wait!");
         logger.info ("Updating frequency count for " + mappingSetId + ". Please Wait!");
         Statement countStatement = this.createStatement();
         Statement updateStatement = this.createStatement();
@@ -1072,6 +1080,7 @@ public class SQLListener extends SQLBase implements MappingListener{
         query.append(" GROUP BY targetFrequency ORDER BY targetFrequency");
         ResultSet rs;
         try {
+            //ystem.out.println(query);
             rs = countStatement.executeQuery(query.toString());    
             logger.info ("Count query run. Updating link count now");
             int frequencyTotal = 0;
@@ -1083,12 +1092,12 @@ public class SQLListener extends SQLBase implements MappingListener{
             while (rs.next()){
                 targetFrequency = rs.getInt("targetFrequency");
                 int frequency = rs.getInt("frequency");
-                frequencyTotal+= frequency;
-                float frequencyPercent = frequencyTotal/ mappings;
-                if (frequencyPercent > 0.5){
-                    if (frequencyPercent > 0.75){
-                        if (frequencyPercent > 0.90){
-                            if (frequencyPercent > 0.99){
+                frequencyTotal+= frequency*targetFrequency;
+                float frequencyPercent = frequencyTotal/ mappingsF;
+                if (frequencyPercent >= 0.5){
+                    if (frequencyPercent >= 0.75){
+                        if (frequencyPercent >= 0.90){
+                            if (frequencyPercent >= 0.99){
                                 if (freq99 < 0){
                                     freq99 = targetFrequency;
                                 }
@@ -1108,19 +1117,19 @@ public class SQLListener extends SQLBase implements MappingListener{
                         }                    
                     }
                 }
-                if (freq99 < 0){
-                    freq99 = targetFrequency;
-                }                                
-                if (freq90 < 0){
-                    freq90 = freq99;
-                }                                
-                if (freq75 < 0){
-                    freq75 = freq90;
-                }                                
-                if (freqMedium < 0){
-                    freqMedium = freq75;
-                }                                
             }
+            if (freq99 < 0){
+                freq99 = targetFrequency;
+            }                                
+            if (freq90 < 0){
+                freq90 = freq99;
+            }                                
+            if (freq75 < 0){
+                freq75 = freq90;
+            }                                
+            if (freqMedium < 0){
+                freqMedium = freq75;
+            }                                
             StringBuilder update = new StringBuilder("update ");
             update.append(MAPPING_STATS_TABLE_NAME); 
             update.append(" set "); 
@@ -1144,7 +1153,7 @@ public class SQLListener extends SQLBase implements MappingListener{
             update.append(" = "); 
             update.append(targetFrequency);
             addStatsConditions(update, mappingSetId);
-            System.out.println(update);
+            //ystem.out.println(update);
             try {
                 int updateCount = updateStatement.executeUpdate(update.toString());
                 if (updateCount != 1){
