@@ -57,6 +57,7 @@ public class TransativeFinder extends SQLBase{
     
     private void computeTransatives(int lastTranstativeLoaded) throws BridgeDBException, RDFHandlerException, IOException{
         logger.info("Computing from " + lastTranstativeLoaded);
+        System.out.println("Computing from " + lastTranstativeLoaded);
         int maxMappingSet = getMaxMappingSet();
         if (maxMappingSet <= lastTranstativeLoaded){
             return;
@@ -86,12 +87,15 @@ public class TransativeFinder extends SQLBase{
 //        lastTranstativeLoaded = mappingSetId;
         List<MappingSetInfo> possibleInfos = findTransativeCandidates(info);
         for (MappingSetInfo possibleInfo:possibleInfos) {
-            HashSet<Integer> chainIds = this.getChain(possibleInfo, info);
-            if (checkValidTransative(possibleInfo, info, chainIds)){
-                int result = doTransative(possibleInfo, info, chainIds);
-            }
-            if (checkValidTransative(info, possibleInfo, chainIds)){
-                doTransative(info, possibleInfo, chainIds);
+            HashSet<Integer> chainIds = this.mergeChain(possibleInfo, info);
+            //if chainIds == null the same id is used three times
+            if (chainIds != null){
+                if (checkValidTransative(possibleInfo, info, chainIds)){
+                    int result = doTransative(possibleInfo, info, chainIds);
+                }
+                if (checkValidTransative(info, possibleInfo, chainIds)){
+                    doTransative(info, possibleInfo, chainIds);
+                }
             }
          }
     }
@@ -107,6 +111,7 @@ public class TransativeFinder extends SQLBase{
         query.append(info.getIntId());
         ResultSet rs;
         try {
+            System.out.println(query);
             rs = statement.executeQuery(query.toString());   
             List<MappingSetInfo> possibles = mapper.resultSetToMappingSetInfos(rs);
             List<MappingSetInfo> results = new ArrayList<MappingSetInfo>();
@@ -164,7 +169,7 @@ public class TransativeFinder extends SQLBase{
             }
         }
      
-        boolean repeatFound = false;
+       /*boolean repeatFound = false;
         Integer loopFound = null;
         for (Integer id:chainIds){
             if (id < 0){
@@ -192,7 +197,7 @@ public class TransativeFinder extends SQLBase{
                 }
             }
         }
-        if (!checkValidNoLoopTransative(left, right, chainIds)){
+       */ if (!checkValidNoLoopTransative(left, right, chainIds)){
             if (left.getSource().getSysCode().equals(right.getTarget().getSysCode())){
                 if (!checkValidLoopTransative(left, right, chainIds)){
                     return false;
@@ -284,12 +289,14 @@ public class TransativeFinder extends SQLBase{
     }
 
     private boolean chainAlreadyExists(Set<Integer> chainIds) throws BridgeDBException{
+        //ystem.out.println("chainAlreadyExists" +  chainIds);
         if (chainIds.size() < 2){
             return false;
         }
         Set<Integer> possibles = null;
         for (Integer chainId:chainIds){
             Set<Integer> newPossibles = getTransativesThatUseId(chainId);
+            //ystem.out.println(chainId + "" + newPossibles);
             if (possibles == null){
                 possibles = newPossibles;
             } else {
@@ -299,14 +306,24 @@ public class TransativeFinder extends SQLBase{
                 return false;
             }
         }
-        return true;
+        //ystem.out.println(possibles);
+        for (Integer possible:possibles){
+            MappingSetInfo possibleInfo = mapper.getMappingSetInfo(possible);
+            Set<Integer> check = getChain(possibleInfo);
+            if (check.size() == chainIds.size()){
+                return true;
+            //} else {
+            //    System.out.println ("Ignoring " + possible + " it has " + check);
+            }
+        }
+        return false;
     }
     
     private int doTransative(MappingSetInfo left, MappingSetInfo right, HashSet<Integer> chainIds) 
             throws RDFHandlerException, IOException, BridgeDBException {
         int leftId = left.getIntId();
         int rightId = right.getIntId();
-        Reporter.println("Creating tranasative from " + leftId + " to " + rightId);
+        Reporter.println("Creating tranasative from " + leftId + " to " + rightId + " chain: " + chainIds);
         if (logger.isDebugEnabled()){
             logger.debug(left);
             logger.debug(right);
@@ -345,7 +362,26 @@ public class TransativeFinder extends SQLBase{
         return TransativeCreator.doTransativeIfPossible(left, right);
     }
     
-    public static HashSet<Integer> getChain(MappingSetInfo left, MappingSetInfo right){
+    public static HashSet<Integer> mergeChain(MappingSetInfo left, MappingSetInfo right){
+        HashSet<Integer> leftChain = getChain(left);
+        HashSet<Integer> rightChain = getChain(right);
+        for (Integer id:rightChain){
+            if (leftChain.contains(id)){
+                if (leftChain.contains(0-id)){
+                    if (logger.isDebugEnabled()){
+                        logger.debug("Same set used three times " + leftChain + rightChain);
+                    }
+                    return null;
+                }
+                leftChain.add(0-id);
+            } else{
+                leftChain.add(id);            
+            }
+        }
+        return leftChain;
+    }
+    
+    public static HashSet<Integer> getChainOld(MappingSetInfo left, MappingSetInfo right){
         HashSet<Integer> chainIds = getChain(left);
         for (Integer id:getChain(right)){
             if (chainIds.contains(id)){
@@ -356,8 +392,8 @@ public class TransativeFinder extends SQLBase{
         }
         return chainIds;
     }
-    
-    private static HashSet<Integer> getChain(MappingSetInfo info){
+ 
+     private static HashSet<Integer> getChain(MappingSetInfo info){
         HashSet<Integer> chainIds = new HashSet<Integer>();
         if (info.getChainIds().isEmpty()){
             if (info.isSymmetric()){
