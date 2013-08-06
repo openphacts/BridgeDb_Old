@@ -18,6 +18,9 @@
 //
 package org.bridgedb.uri.loader.transative;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import org.bridgedb.uri.loader.transative.constant.ChemInf;
 import org.bridgedb.uri.loader.transative.constant.OboConstants;
 import org.bridgedb.utils.BridgeDBException;
@@ -27,6 +30,18 @@ import org.bridgedb.utils.BridgeDBException;
  * @author Christian
  */
 public class JustificationMaker {
+
+    public static Set<String> PARENT_CHILD = new HashSet<String>(Arrays.asList(
+            ChemInf.hasStereoundefinedParent, 
+            ChemInf.hasOPSNormalizedCounterpart, 
+            ChemInf.hasIsotopicallyUnspecifiedParent,
+            ChemInf.hasUnchargedCounterpart,
+            ChemInf.hasComponentWithUnchargedCounterpart,
+            ChemInf.hasMajorTautomerAtpH7point4,
+            OboConstants.HAS_PART,
+            OboConstants.IS_TAUTOMER_OF,
+            OboConstants.HAS_FUNCTIONAL_PARENT
+            ));
 
     public static String combine(String left, String right) throws BridgeDBException{
         String result = possibleCombine(left, right);
@@ -41,11 +56,24 @@ public class JustificationMaker {
             return left;
         }
         if (left.equals(ChemInf.INCHI_KEY)) {
-            if (right.startsWith(OboConstants.PREFIX)) return right;
+            if (right.equals(ChemInf.CHEMICAL_ENTITY)) {
+                return ChemInf.CHEMICAL_ENTITY;
+            }
+            if (PARENT_CHILD.contains(right)){
+                return right;
+            }
         }
-        if (left.startsWith(OboConstants.PREFIX)) {
+        if (left.equals(ChemInf.CHEMICAL_ENTITY)) {
+            if (right.equals(ChemInf.INCHI_KEY)) {
+                return ChemInf.CHEMICAL_ENTITY;
+            }
+            if (PARENT_CHILD.contains(right)){
+                return right;
+            }
+        }
+        if (PARENT_CHILD.contains(left)) {
          	if (right.equals(ChemInf.INCHI_KEY)) return left;
-            if (right.startsWith(OboConstants.PREFIX)) return OboConstants.PREFIX + "combined";
+            if (right.equals(ChemInf.CHEMICAL_ENTITY)) return left;
         }
         return null;
     }
