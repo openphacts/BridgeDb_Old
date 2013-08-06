@@ -34,9 +34,9 @@ public abstract class MappingListenerTest extends IDMapperTest{
     protected static final String TEST_PREDICATE = "http://www.bridgedb.org/test#testPredicate";
     protected static final String TEST_JUSTIFICATION1 = "http://www.bridgedb.org/test#testJustification1";
     protected static final String TEST_JUSTIFICATION2 = "http://www.bridgedb.org/test#testJustification2";
-    private static final boolean SYMETRIC = true;
-    private static final Set<String> NO_VIA = null;
-    private static final Set<Integer> NO_CHAIN = null;
+    protected static final boolean SYMETRIC = true;
+    protected static final Set<String> NO_VIA = null;
+    protected static final Set<Integer> NO_CHAIN = null;
     
     protected static MappingListener listener;
 

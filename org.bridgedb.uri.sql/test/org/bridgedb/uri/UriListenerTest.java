@@ -185,7 +185,7 @@ public abstract class UriListenerTest extends IDMapperTestBase{
      * 
      * @throws BridgeDBException
      */
-    public static void loadData() throws BridgeDBException{
+    public static void loadDataPart1() throws BridgeDBException{
         listener.registerUriPattern(DataSource1, uriSpace1 + "$id");
         listener.registerUriPattern(DataSource2, uriSpace2 + "$id");
         listener.registerUriPattern(DataSource2, uriSpace2a + "$id");
@@ -211,6 +211,7 @@ public abstract class UriListenerTest extends IDMapperTestBase{
         listener.insertUriMapping(map2Uri1, map2Uri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map3Uri1, map3Uri3, mappingSet, SYMETRIC);
 
+        listener.closeInput();
         mappingSet = listener.registerMappingSet(uriPattern1, TEST_PREDICATE, 
         		Lens.getTestJustifictaion(), uriPattern2, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
         listener.insertUriMapping(map1Uri1, map1AUri2, mappingSet, SYMETRIC);
@@ -229,12 +230,23 @@ public abstract class UriListenerTest extends IDMapperTestBase{
         listener.insertUriMapping(map2AUri2, map2Uri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map3AUri2, map3Uri3, mappingSet, SYMETRIC);
 
+    }
+    
+    /**
+     * Method for loading the Test data
+     * Should be called in a @beforeClass method after setting listener
+     * 
+     * @throws BridgeDBException
+     */
+    public static void loadData() throws BridgeDBException{
+        loadDataPart1();
+        
         HashSet<String> via = new HashSet<String>();
         via.add("test via");
         HashSet<Integer> chain = new HashSet<Integer>();
         chain.add(1);
         chain.add(2);
-        mappingSet = listener.registerMappingSet(uriPattern1, TEST_PREDICATE, 
+        int mappingSet = listener.registerMappingSet(uriPattern1, TEST_PREDICATE, 
         		Lens.getTestJustifictaion(), uriPattern3, "UriListenerTest.loadData()", SYMETRIC, via, chain);
         listener.insertUriMapping(map1Uri1, map1AUri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map2Uri1, map2AUri3, mappingSet, SYMETRIC);

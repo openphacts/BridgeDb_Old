@@ -1630,7 +1630,74 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             throw new BridgeDBException("Error retrieving justifications ", ex);
         }
         return justifications;
+    }
+
+    private int getMaxCounted() throws BridgeDBException {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT MAX(");
+        query.append(MAPPING_SET_ID_COLUMN_NAME);
+        query.append(") as maxCount FROM ");
+        query.append(MAPPING_STATS_TABLE_NAME);
+        query.append(" WHERE NOT(");
+        query.append(MAPPING_LINK_COUNT_COLUMN_NAME);
+        query.append(" is NULL)");
+        
+        Statement statement = this.createStatement();
+        try {
+            ResultSet rs = statement.executeQuery(query.toString());
+            if (rs.next()){
+                return (rs.getInt("maxCount"));
+            }
+            return 0;
+        } catch (SQLException ex) {
+            throw new BridgeDBException("Unable to run query. " + query, ex);
+        }    
+    }
+
+    @Override
+    public void recover() throws BridgeDBException {
+        int max = getMaxCounted();
+        deleteUncounted(MAPPING_STATS_TABLE_NAME, MAPPING_SET_ID_COLUMN_NAME, max);
+        deleteUncounted(MAPPING_TABLE_NAME, MAPPING_SET_ID_COLUMN_NAME, max);
+        deleteUncounted(MAPPING_SET_TABLE_NAME, ID_COLUMN_NAME, max);
+        deleteUncounted(CHAIN_TABLE_NAME, MAPPING_SET_ID_COLUMN_NAME, max);
+        deleteUncounted(VIA_TABLE_NAME, MAPPING_SET_ID_COLUMN_NAME, max);
+        resetAutoIncrement(max);
    }
+
+    private void deleteUncounted(String tableName, String idColumnName, int max) throws BridgeDBException {
+        StringBuilder update = new StringBuilder();
+        update.append("DELETE FROM ");
+        update.append(tableName);
+        update.append(" WHERE ");
+        update.append(idColumnName);
+        update.append(" > ");
+        update.append(max);
+        
+        System.out.println(update.toString());
+        Statement statement = this.createStatement();
+        try {
+            statement.executeUpdate(update.toString());
+        } catch (SQLException ex) {
+            throw new BridgeDBException("Unable to run update. " + update, ex);
+        }    
+    }
+
+    private void resetAutoIncrement(int max) throws BridgeDBException {
+        StringBuilder update = new StringBuilder();
+        update.append("ALTER TABLE ");
+        update.append(MAPPING_SET_TABLE_NAME);
+        update.append(" AUTO_INCREMENT = ");
+        update.append(max + 1);
+        System.out.println(update.toString());
+        
+        Statement statement = this.createStatement();
+        try {
+            statement.executeUpdate(update.toString());
+        } catch (SQLException ex) {
+            throw new BridgeDBException("Unable to run update. " + update, ex);
+        }    
+    }
    
 }
  
