@@ -22,6 +22,7 @@ package org.bridgedb.uri.loader.transative;
 import org.bridgedb.uri.loader.transative.constant.SkosConstants;
 import org.bridgedb.uri.loader.transative.constant.OwlConstants;
 import org.bridgedb.uri.loader.transative.constant.OboConstants;
+import org.bridgedb.uri.loader.transative.constant.RdfSchemaConstants;
 import org.bridgedb.utils.BridgeDBException;
 
 /**
@@ -38,6 +39,12 @@ public class PredicateMaker {
         right = cleanup(right);
         if (left.equals(right)){
             return left;
+        }
+        if (left.equals(RdfSchemaConstants.SEE_ALSO)) {
+            return RdfSchemaConstants.SEE_ALSO;
+        }
+        if (right.equals(RdfSchemaConstants.SEE_ALSO)) {
+            return RdfSchemaConstants.SEE_ALSO;
         }
         if (left.equals(OwlConstants.SAME_AS)) {
             if (right.equals(OwlConstants.EQUIVALENT_CLASS)) return OwlConstants.EQUIVALENT_CLASS;
