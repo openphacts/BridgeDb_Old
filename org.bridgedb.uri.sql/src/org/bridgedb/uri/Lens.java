@@ -227,7 +227,7 @@ public class Lens {
 	}
 
     public static String getDefaultJustifictaionString() {
-       return "http://www.w3.org/2000/01/rdf-schema#isDefinedBy"; 
+       return "http://semanticscience.org/resource/CHEMINF_000059"; 
     }
 
     public static String getTestJustifictaion() {

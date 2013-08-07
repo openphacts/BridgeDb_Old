@@ -17,7 +17,7 @@ import org.openrdf.model.impl.URIImpl;
  */
 public class SetupWithTestData {
     
-    static final String MAIN_JUSTIFCATION = "http://www.w3.org/2000/01/rdf-schema#isDefinedBy";
+    static final String MAIN_JUSTIFCATION = "http://semanticscience.org/resource/CHEMINF_000059";
     static final String LENS_JUSTIFCATION = "http://www.bridgedb.org/test#testJustification";
     static final URI linkPredicate = new URIImpl("http://www.w3.org/2004/02/skos/core#exactMatch");
     private SQLUriMapper uriListener;

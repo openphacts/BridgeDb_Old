@@ -22,6 +22,7 @@ package org.bridgedb.loader.transative;
 import java.io.File;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.statistics.MappingSetInfo;
+import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.loader.LinksetListener;
 import org.bridgedb.uri.loader.transative.TransativeCreator;
 import org.bridgedb.utils.BridgeDBException;
@@ -43,8 +44,6 @@ import org.openrdf.model.impl.URIImpl;
  */
 public class TransativeCreatorTest {
     
-    protected static final String MAIN_JUSTIFCATION = "http://www.w3.org/2000/01/rdf-schema#isDefinedBy";
-    static final String LENS_JUSTIFCATION = "http://www.bridgedb.org/test#testJustification";
     static final URI linkPredicate = new URIImpl("http://www.w3.org/2004/02/skos/core#exactMatch");
     static SQLUriMapper uriListener;
     static LinksetListener instance;
@@ -90,8 +89,8 @@ public class TransativeCreatorTest {
     @Test
     public void testLoadTestData() throws Exception {
         Reporter.println("LoadTestData");
-        loadFile("../org.bridgedb.uri.loader/test-data/cw-cs.ttl", MAIN_JUSTIFCATION);
-        loadFile("../org.bridgedb.uri.loader/test-data/cs-cm.ttl", MAIN_JUSTIFCATION);
+        loadFile("../org.bridgedb.uri.loader/test-data/cw-cs.ttl", Lens.getDefaultJustifictaionString());
+        loadFile("../org.bridgedb.uri.loader/test-data/cs-cm.ttl", Lens.getDefaultJustifictaionString());
         System.out.println("loaded");
         File transative = TransativeCreator.doTransativeIfPossible(1, 3);
         //assertTrue(transative.exists());
