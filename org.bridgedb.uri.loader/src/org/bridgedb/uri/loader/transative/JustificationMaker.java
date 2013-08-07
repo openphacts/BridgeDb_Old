@@ -43,6 +43,11 @@ public class JustificationMaker {
             OboConstants.HAS_FUNCTIONAL_PARENT
             ));
 
+    public static Set<String> CROSS_TYPE = new HashSet<String>(Arrays.asList(
+            ChemInf.PROTEIN_CODING_GENE,
+            ChemInf.FUNCTIONAL_RNA_CODING_GENE
+            ));
+    
     public static String combine(String left, String right) throws BridgeDBException{
         String result = possibleCombine(left, right);
         if (result != null){
@@ -53,27 +58,66 @@ public class JustificationMaker {
     
     public static String possibleCombine(String left, String right) {
         if (left.equals(right)){
-            return left;
-        }
-        if (left.equals(ChemInf.INCHI_KEY)) {
-            if (right.equals(ChemInf.CHEMICAL_ENTITY)) {
-                return ChemInf.CHEMICAL_ENTITY;
-            }
-            if (PARENT_CHILD.contains(right)){
-                return right;
-            }
-        }
-        if (left.equals(ChemInf.CHEMICAL_ENTITY)) {
+             if (CROSS_TYPE.contains(left)){
+                 return null; //We don't want to tranitive with two cross type even if they are the same.
+             }
+             return left;
+        } else if (left.equals(ChemInf.CHEMICAL_ENTITY)) {
             if (right.equals(ChemInf.INCHI_KEY)) {
                 return ChemInf.CHEMICAL_ENTITY;
-            }
-            if (PARENT_CHILD.contains(right)){
+            } else if (PARENT_CHILD.contains(right)){
                 return right;
+            } else {
+                return null;
             }
-        }
-        if (PARENT_CHILD.contains(left)) {
-         	if (right.equals(ChemInf.INCHI_KEY)) return left;
-            if (right.equals(ChemInf.CHEMICAL_ENTITY)) return left;
+        } else if (left.equals(ChemInf.FUNCTIONAL_RNA_CODING_GENE)) {
+            if (right.equals(ChemInf.PROTEIN)) {
+                return ChemInf.FUNCTIONAL_RNA_CODING_GENE;
+            } else if (right.equals(ChemInf.GENE)) {
+                return ChemInf.FUNCTIONAL_RNA_CODING_GENE;
+            } else {
+                return null;
+            }
+        } else if (left.equals(ChemInf.GENE)) {
+           if (right.equals(ChemInf.PROTEIN_CODING_GENE)) {
+                return ChemInf.PROTEIN_CODING_GENE;
+            } else if (right.equals(ChemInf.FUNCTIONAL_RNA_CODING_GENE)) {
+                return ChemInf.FUNCTIONAL_RNA_CODING_GENE;
+            } else {
+                return null;
+            }
+        } else if (left.equals(ChemInf.INCHI_KEY)) {
+            if (right.equals(ChemInf.CHEMICAL_ENTITY)) {
+                return ChemInf.CHEMICAL_ENTITY;
+            } else if (PARENT_CHILD.contains(right)){
+                return right;
+            } else {
+                return null;
+            }
+        } else if (left.equals(ChemInf.PROTEIN)) {
+            if (right.equals(ChemInf.PROTEIN_CODING_GENE)) {
+                return ChemInf.PROTEIN_CODING_GENE;
+            } else if (right.equals(ChemInf.FUNCTIONAL_RNA_CODING_GENE)) {
+                return ChemInf.FUNCTIONAL_RNA_CODING_GENE;
+            } else {
+                return null;
+            }
+        } else if (left.equals(ChemInf.PROTEIN_CODING_GENE)) {
+            if (right.equals(ChemInf.PROTEIN)) {
+                return ChemInf.PROTEIN_CODING_GENE;
+            } else if (right.equals(ChemInf.GENE)) {
+                return ChemInf.PROTEIN_CODING_GENE;
+            } else {
+                return null;
+            }
+         } else if (PARENT_CHILD.contains(left)) {
+         	if (right.equals(ChemInf.INCHI_KEY)) {
+                return left;
+            } else if (right.equals(ChemInf.CHEMICAL_ENTITY)) {
+                return left;
+            } else {
+                return null;
+            }
         }
         return null;
     }
