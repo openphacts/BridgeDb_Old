@@ -64,7 +64,7 @@ public class Lens {
     private static final String DEFAULT_LENS_NAME = "Default";
     private static final String TEST_LENS_NAME = "Test";
     private static final String ALL_LENS_NAME = "All";
-    
+      
     static final Logger logger = Logger.getLogger(Lens.class);
 
     /**
@@ -115,6 +115,7 @@ public class Lens {
         return result;       
     }
     
+    //Meathod currently not used but required if lens per justifcation is turned back on
     private static Lens findOrCreatedByName(String name) throws BridgeDBException{
         for (Lens lens:register.values()){
             if (lens.getName().equals(name)){
@@ -293,13 +294,14 @@ public class Lens {
     public static void init(SQLUriMapper mapper) throws BridgeDBException {
         init();      
         Lens all = byId(Lens.getAllLens());
-        Collection<String> justifications = mapper.getJustifications();
-        for (String justification:justifications){
-            all.addJustification(justification);
-            Lens byName = findOrCreatedByName(justification);
-            byName.setDescription("Lens with just the singgle jusification: " + justification);
-            byName.addJustification(justification);
-        }
+        //Code currently not used but allows lens per justifcation if turned back on
+            //Collection<String> justifications = mapper.getJustifications();
+            //for (String justification:justifications){
+            //    all.addJustification(justification);
+            //    Lens byName = findOrCreatedByName(justification);
+            //    byName.setDescription("Lens with just the single jusification: " + justification);
+            //    byName.addJustification(justification);
+            //}
         Lens defaultLens =  byId(Lens.getDefaultLens());
         if (defaultLens.getJustifications().isEmpty()){
             defaultLens.addJustifications(all.getJustifications());
