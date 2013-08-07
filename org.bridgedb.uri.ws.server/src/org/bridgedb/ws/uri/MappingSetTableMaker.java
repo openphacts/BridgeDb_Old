@@ -86,7 +86,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
                     newSource(sb, i);
                 }
             } catch (Exception ex){
-                throw new BridgeDBException ("i = " + i, ex);
+                throw new BridgeDBException ("info = " + i, ex);
             }
         }
         sb.append("</table>");
@@ -314,7 +314,11 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         addNumberCell(sb, info.getNumberOfTargets());
         addPredicateCell(sb, i);
         addJustificationCell(sb,i);
-        addNumberCell(sb, info.getNumberOfLinks() / info.getNumberOfSources());
+        if (info.getNumberOfSources() > 0){
+            addNumberCell(sb, info.getNumberOfLinks() / info.getNumberOfSources());
+        } else {
+            sb.append("\t\t<td><td>"); 
+        }
         addNumberCell(sb, info.getFrequencyMedium());
         addNumberCell(sb, info.getFrequency75());
         addNumberCell(sb, info.getFrequency90());
