@@ -25,6 +25,7 @@ import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.sql.SQLListener;
+import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
 import org.bridgedb.utils.BridgeDBException;
@@ -229,4 +230,15 @@ public abstract class UriMapperSpecialTest extends UriListenerTest{
         //ystem.out.println(end.getTime()-start.getTime());
      }
     
+    @Test
+    public void testGetSampleMappings() throws Exception {
+        //Date start = new Date();
+        report("GetSampleMappings");
+        if (uriMapper instanceof SQLUriMapper){
+            List<Mapping> mappings = uriMapper.getSampleMapping();
+        }
+        //Date end = new Date();
+        //ystem.out.println(end.getTime()-start.getTime());
+        
+    }
 }

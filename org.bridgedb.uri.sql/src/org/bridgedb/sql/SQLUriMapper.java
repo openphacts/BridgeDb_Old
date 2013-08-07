@@ -831,23 +831,12 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         appendMappingInfo(query);
         appendSourceInfo(query);
         appendMappingFrom(query);
-        query.append(", ");
-        query.append(URI_TABLE_NAME);
-        query.append(" as Uri1, ");
-        query.append(URI_TABLE_NAME);
-        query.append(" as Uri2 ");
         appendMappingJoinMapping(query);
-        query.append(" AND ");
-        query.append(SOURCE_DATASOURCE_COLUMN_NAME);
-        query.append(" = Uri1.");
-        query.append(DATASOURCE_COLUMN_NAME);
-        query.append(" AND  ");
-        query.append(TARGET_DATASOURCE_COLUMN_NAME);
-        query.append(" = Uri2.");
-        query.append(DATASOURCE_COLUMN_NAME);
         this.appendLimitConditions(query, 0, 5);
         Statement statement = this.createStatement();
         ResultSet rs;
+        System.out.println(query);
+        //if (true) throw new BridgeDBException(query.toString());
         try {
             rs = statement.executeQuery(query.toString());
         } catch (SQLException ex) {
