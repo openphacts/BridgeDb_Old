@@ -200,8 +200,6 @@ public class WSOtherservices extends WSAPI {
             @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
         List<Lens> lenses = getTheLens(lensUri);
         StringBuilder sb = topAndSide("Lens Summary",  httpServletRequest);
-        sb.append("lensUri=").append(lensUri).append("<br>");
-        sb.append("ContextPath=").append(httpServletRequest.getContextPath()).append("<br>");
         sb.append("\n<table border=\"1\">");
         sb.append("<tr>");
         sb.append("<th>Name</th>");
