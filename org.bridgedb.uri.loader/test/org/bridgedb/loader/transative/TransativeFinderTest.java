@@ -83,7 +83,6 @@ public class TransativeFinderTest {
     }
     
     @Test
-    @Ignore
 	public void testFinder1() throws BridgeDBException, RDFHandlerException, IOException {	
         Reporter.println("testFinder1");
         load("../org.bridgedb.uri.loader/test-data/sampleAToB.ttl");
@@ -98,7 +97,6 @@ public class TransativeFinderTest {
 	}
 	
     @Test
-    @Ignore
  	public void testFinder2() throws BridgeDBException, RDFHandlerException, IOException {	
         Reporter.println("testFinder2");
         load("../org.bridgedb.uri.loader/test-data/sampleAToB.ttl");
@@ -113,7 +111,6 @@ public class TransativeFinderTest {
 	}
 
     @Test
-    @Ignore
  	public void testFinder3() throws BridgeDBException, RDFHandlerException, IOException {	
         Reporter.println("testFinder3");
         load("../org.bridgedb.uri.loader/test-data/sampleAToB.ttl");
@@ -129,7 +126,6 @@ public class TransativeFinderTest {
 	}
 
     @Test
-    @Ignore
  	public void testFinder4() throws BridgeDBException, RDFHandlerException, IOException {	
         Reporter.println("testFinder4");
         load("../org.bridgedb.uri.loader/test-data/sampleAToB.ttl");
@@ -146,7 +142,6 @@ public class TransativeFinderTest {
 	}
 
     @Test
-    @Ignore
  	public void testFinder5() throws BridgeDBException, RDFHandlerException, IOException {	
         Reporter.println("testFinder5");
         load("../org.bridgedb.uri.loader/test-data/sampleAToB.ttl");
@@ -159,7 +154,6 @@ public class TransativeFinderTest {
 	}
 
     @Test
-    @Ignore
     public void testFinder6() throws BridgeDBException, RDFHandlerException, IOException {	
         Reporter.println("testFinder6");
         load("../org.bridgedb.uri.loader/test-data/sampleAToB.ttl");
@@ -174,7 +168,6 @@ public class TransativeFinderTest {
 	}
 
     @Test
-    @Ignore
  	public void testFinder7() throws BridgeDBException, RDFHandlerException, IOException {	
         Reporter.println("testFinder7");
         load("../org.bridgedb.uri.loader/test-data/sampleAToB.ttl");
@@ -189,7 +182,6 @@ public class TransativeFinderTest {
 	}
     
     @Test
-    @Ignore
  	public void testFinder8() throws BridgeDBException, RDFHandlerException, IOException {	
         Reporter.println("testFinder8");
         load("../org.bridgedb.uri.loader/test-data/sampleAToB.ttl");
