@@ -380,6 +380,9 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
             }
         }
         //Constructor registers with standard recource this register with used resource
+        if (pattern == null){
+            throw new BridgeDBException("Attempt to register null from " + uriPatternId);
+        }
         register.put((URI)uriPatternId, pattern);
         return pattern;
     }
