@@ -976,7 +976,7 @@ public class SQLListener extends SQLBase implements MappingListener{
             while (rs.next()){
                 int mappingSetId = rs.getInt(MAPPING_SET_ID_COLUMN_NAME);
                 int mappings = countLinks(mappingSetId);
-                countFrequency(mappingSetId, mappings);
+                countFrequency(mappingSetId);
             }
             logger.info ("Updating counts finished!");
         } catch (SQLException ex) {
@@ -1059,8 +1059,8 @@ public class SQLListener extends SQLBase implements MappingListener{
      * This allows the counts of the mappings in each Mapping Set to be quickly returned.
      * @throws BridgeDBException 
      */
-    private void countFrequency (int mappingSetId, int mappings) throws BridgeDBException{
-        float mappingsF = mappings;
+    private void countFrequency (int mappingSetId) throws BridgeDBException{
+        float mappingsF = 0;
         //ystem.out.println ("Updating frequency count for " + mappingSetId + ". Please Wait!");
         logger.info ("Updating frequency count for " + mappingSetId + ". Please Wait!");
         Statement countStatement = this.createStatement();
@@ -1083,7 +1083,11 @@ public class SQLListener extends SQLBase implements MappingListener{
             //ystem.out.println(query);
             rs = countStatement.executeQuery(query.toString());    
             logger.info ("Count query run. Updating link count now");
-            int frequencyTotal = 0;
+            while (rs.next()){
+                mappingsF++;
+            }
+            rs.first();
+            int frequencyCount = 0;
             int freqMedium = -1;
             int freq75 = -1;
             int freq90 = -1;
@@ -1092,8 +1096,8 @@ public class SQLListener extends SQLBase implements MappingListener{
             while (rs.next()){
                 targetFrequency = rs.getInt("targetFrequency");
                 int frequency = rs.getInt("frequency");
-                frequencyTotal+= frequency*targetFrequency;
-                float frequencyPercent = frequencyTotal/ mappingsF;
+                frequencyCount++;
+                float frequencyPercent = frequencyCount/ mappingsF;
                 if (frequencyPercent >= 0.5){
                     if (frequencyPercent >= 0.75){
                         if (frequencyPercent >= 0.90){
