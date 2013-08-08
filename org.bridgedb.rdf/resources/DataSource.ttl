@@ -1,6 +1,6 @@
 @prefix bridgeDB: <http://openphacts.cs.man.ac.uk:9090/ontology/DataSource.owl#> .
+@prefix ChemInf : <http://semanticscience.org/resource/> .
 @prefix : <http://no/BaseURI/Set/> .
-
 
 bridgeDB:DataSource_bysysCode_EnDn a bridgeDB:DataSource ;
 	bridgeDB:systemCode "EnDn" ;
@@ -536,6 +536,7 @@ bridgeDB:DataSource_CAS a bridgeDB:DataSource ;
 	bridgeDB:idExample "50-00-0" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "metabolite" ;
+    bridgeDB:hasDataType ChemInf:SIO_010004 ;
 	bridgeDB:hasUrlPattern <http://commonchemistry.org/ChemicalDetail.aspx?ref=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/cas/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://commonchemistry.org/ChemicalDetail.aspx?ref=$id> .
@@ -646,6 +647,7 @@ bridgeDB:DataSource_Chebi a bridgeDB:DataSource ;
 	bridgeDB:idExample "36927" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "metabolite" ;
+    bridgeDB:hasDataType ChemInf:SIO_010004 ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/obo.chebi/CHEBI:$id> ;
 	bridgeDB:hasBio2RdfPattern <http://bio2rdf.org/chebi:$id> ;
@@ -1997,6 +1999,7 @@ bridgeDB:DataSource_HMDB a bridgeDB:DataSource ;
 	bridgeDB:idExample "HMDB00001" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "metabolite" ;
+    bridgeDB:hasDataType ChemInf:SIO_010004 ;
 	bridgeDB:hasUrlPattern <http://www.hmdb.ca/metabolites/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/hmdb/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.hmdb.ca/metabolites/$id> .

@@ -61,6 +61,7 @@ public class BridgeDBConstants {
     public static final URI SYSTEM_CODE_URI = new URIImpl(PREFIX + SYSTEM_CODE);
     private static final String TYPE = "type";
     public static final URI TYPE_URI = new URIImpl(PREFIX + TYPE);
+    public static final URI HAS_DATA_TYPE_URI = new URIImpl(PREFIX + "hasDataType");
     public static final URI HAS_URL_PATTERN_URI = new URIImpl(PREFIX + "hasUrlPattern");
     public static final URI HAS_OUTPUT_URL_PATTERN_URI = new URIImpl(PREFIX + "hasOutputUrlPattern");
     public static final URI HAS_REGEX_URL_PATTERN_URI = new URIImpl(PREFIX + "hasRegexUrlPattern");
@@ -68,6 +69,7 @@ public class BridgeDBConstants {
     public static final URI HAS_OUTPUT_URI_PATTERN_URI = new URIImpl(PREFIX + "hasOutputUriPattern");
     public static final URI HAS_REGEX_URI_PATTERN_URI = new URIImpl(PREFIX + "hasRegexUriPattern");
     public static final URI IS_DEPRICATED_BY_URI = new URIImpl(PREFIX + "isDepricatedBy");
+    public static final String VARIOUS = PREFIX + "various";
     
     //old verions
     private static final String URN_BASE = "urnBase";

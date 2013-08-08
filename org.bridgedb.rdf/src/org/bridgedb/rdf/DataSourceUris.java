@@ -79,6 +79,7 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
         BridgeDBConstants.SOURCE_RDF_PATTERN_URI, //Old version
         BridgeDBConstants.SYSTEM_CODE_URI,
         BridgeDBConstants.TYPE_URI,
+        BridgeDBConstants.HAS_DATA_TYPE_URI,
         BridgeDBConstants.HAS_URI_PATTERN_URI,
         BridgeDBConstants.HAS_OUTPUT_URI_PATTERN_URI,
         BridgeDBConstants.HAS_REGEX_URI_PATTERN_URI,
@@ -220,6 +221,7 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
             register.put(dataSourceId, dataSourceUris);
         }
         dataSourceUris.readUriPatternsStatements(repositoryConnection, dataSourceId);
+        dataSourceUris.readDataType(repositoryConnection, dataSourceId);
         return dataSourceUris;
      }    
         
@@ -320,6 +322,12 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
             UriPattern identifersOrgUriPattern = UriPattern.byPattern(identifersOrgPattern);
             otherUriPatterns.remove(identifersOrgUriPattern);    
         }
+    }
+    
+    private void readDataType(RepositoryConnection repositoryConnection, Resource  dataSourceId) 
+            throws BridgeDBException, RepositoryException{
+        String dataType = getPossibleSingletonString(repositoryConnection, dataSourceId, BridgeDBConstants.HAS_DATA_TYPE_URI);
+        DataSourceTypeMapper.put(inner, dataType);
     }
     
     private final static void checkStatements(RepositoryConnection repositoryConnection, Resource dataSourceId) 
