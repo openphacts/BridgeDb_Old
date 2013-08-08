@@ -4,7 +4,6 @@ public class ChemInf {
 
 	private static final String PREFIX = "http://semanticscience.org/resource/";
 	
-    
     public static final String CHEMICAL_ENTITY = PREFIX + "SIO_010004";
     public static final String INCHI_KEY = PREFIX + "CHEMINF_000059";  
     
@@ -13,6 +12,7 @@ public class ChemInf {
     public static final String PROTEIN_CODING_GENE = PREFIX + "SIO_000985";
     public static final String FUNCTIONAL_RNA_CODING_GENE = PREFIX + "SIO_000986";
     public static final String PATHWAY = PREFIX + "SIO_001107";
+    public static final String TARGET = PREFIX + "SIO_010423";
 	public static final String hasStereoundefinedParent = PREFIX + "CHEMINF_000456";
     public static final String hasOPSNormalizedCounterpart = PREFIX + "CHEMINF_000458";
 	public static final String hasIsotopicallyUnspecifiedParent = PREFIX + "CHEMINF_000459";
