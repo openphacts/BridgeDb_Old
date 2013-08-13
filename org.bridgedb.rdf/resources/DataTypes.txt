@@ -1,0 +1,47 @@
+http://identifiers.org/cas/$id                              ChemInf:SIO_010004 (CHEMICAL_ENTITY) 
+http://identifiers.org/chemspider/$id                       ChemInf:SIO_010004 (CHEMICAL_ENTITY)
+http://identifiers.org/drugbank/$id                         ChemInf:SIO_010004 (CHEMICAL_ENTITY)
+http://identifiers.org/drugbank.target/$id                  ChemInf:SIO_010004 (CHEMICAL_ENTITY)
+http://identifiers.org/ensembl/$id                          ChemInf:SIO_010035 (Gene)
+http://identifiers.org/flybase/$id                          ChemInf:SIO_010035 (Gene)
+http://identifiers.org/go/$id                               ChemInf:SIO_001166 (Annotation)
+http://identifiers.org/hmdb/$id                             ChemInf:SIO_010004 (CHEMICAL_ENTITY) 
+http://identifiers.org/ipi/$id                              ChemInf:SIO_010043 (Protein)
+http://identifiers.org/kegg.compound/$id                    ChemInf:SIO_010004 ; (CHEMICAL_ENTITY)
+http://identifiers.org/pdb/$id                              ChemInf:SIO_010043 (Protein)
+http://identifiers.org/mgd/MGI:$id                          ChemInf:SIO_010035 (Gene)
+http://identifiers.org/ncbigene/$id                         ChemInf:SIO_010035 (Gene)
+http://identifiers.org/obo.chebi/CHEBI:$id  [2]             ChemInf:SIO_010004 (CHEMICAL_ENTITY)
+http://identifiers.org/obo.pw/PW:$id [2]                    ChemInf:SIO_001107 (Pathway)                
+http://identifiers.org/omim/$id                             ChemInf:SIO_010035 (Gene)
+http://identifiers.org/pubchem.compound/$id                 ChemInf:SIO_010004 (CHEMICAL_ENTITY)
+http://identifiers.org/refseq/$id                           BridgeDB:various
+http://identifiers.org/rgd/$id                              ChemInf:SIO_010035 (Gene)
+http://identifiers.org/sgd/$id                              ChemInf:SIO_010035 (Gene)
+http://purl.uniprot.org/uniprot/$id                         ChemInf:SIO_010043 (Protein)
+http://identifiers.org/wikipathways/$id                     ChemInf:SIO_001107 (Pathway)                
+http://identifiers.org/wikipedia.en/$id                     BridgeDB:various (Although currently we only have CHEMICAL_ENTITY)
+http://identifiers.org/zfin/$id                             ChemInf:SIO_010035 (Gene)
+//identifiers.org unknown
+http://aers.data2semantics.org/resource/drug/$id            ChemInf:SIO_010004 (CHEMICAL_ENTITY) 
+http://ops.rsc-us.org/$id                                   ChemInf:SIO_010004 (CHEMICAL_ENTITY)
+http://purl.bioontology.org/ontology/MSH/$id                ChemInf:SIO_010004 (CHEMICAL_ENTITY)
+http://purl.uniprot.org/unigene/$id [1]                     ChemInf:SIO_010035 (Gene)
+http://rdf.ebi.ac.uk/resource/chembl/molecule/$id           ChemInf:SIO_010004 (CHEMICAL_ENTITY) 
+http://rdf.ebi.ac.uk/resource/chembl/target/$id             ChemInf:SIO_010423 (Target) [3]
+http://rdf.ebi.ac.uk/resource/chembl/targetcomponent/$id    ChemInf:SIO_010423 (Target)
+
+    bridgeDB:hasDataType ChemInf:SIO_010004 ; (CHEMICAL_ENTITY)
+    bridgeDB:hasDataType ChemInf:SIO_010035 ; (Gene)
+    bridgeDB:hasDataType ChemInf:SIO_010423 ; (Target)
+    bridgeDB:hasDataType ChemInf:SIO_010043 ; (Protein)
+    bridgeDB:hasDataType ChemInf:SIO_001107 ; (Pathway)
+    bridgeDB:hasDataType ChemInf:SIO_001166 ; (Annotation)
+
+[1] The unigene URIs we have are in the Letter letter . number format such as http://purl.uniprot.org/unigene/Rn.57
+These do not match the http://identifiers.org/unigene/$id patter of digit
+
+[2] The patterns with something behind the last / is required because 
+http://purl.obolibrary.org/ uses an underscore where everyone else uses a semicoloum
+
+[3] These where added at the specific request of Paul who wanted usability over scientific correctness
