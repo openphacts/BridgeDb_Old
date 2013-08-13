@@ -40,8 +40,6 @@ import org.openrdf.model.impl.URIImpl;
  */
 public class DataSourceUrisTest extends TestUtils{
     
-    private static File file1 = new File("test-data/DataSourceMin.ttl");
-    
     public DataSourceUrisTest() {
     }
     
@@ -210,7 +208,7 @@ public class DataSourceUrisTest extends TestUtils{
     
     @Test
     public void testGetUriPatterns() throws BridgeDBException{
-        BridgeDBRdfHandler.parseRdfFile(file1);
+        BridgeDBRdfHandler.init();
         DataSource dataSource =  DataSource.getBySystemCode("Cs");
         DataSourceUris dataSourceUris = DataSourceUris.byDataSource(dataSource);
         Set<UriPattern> result = dataSourceUris.getUriPatterns();
