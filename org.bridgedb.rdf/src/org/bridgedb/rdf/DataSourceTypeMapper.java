@@ -57,4 +57,19 @@ public class DataSourceTypeMapper {
         }
         return type;
     }
+    
+    public static boolean isVarious(String type){
+        if (type == null || type.isEmpty()){
+            return true;
+        }
+        return type.equals(VARIOUS);
+    }
+    
+    public static boolean sameType(String type1, String type2){
+        if (type1 == null || type1.isEmpty()){
+            return (type2 == null || type2.isEmpty());
+        } else {
+            return type1.equals(type2);
+        }
+    }
 }

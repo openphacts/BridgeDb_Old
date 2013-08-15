@@ -69,17 +69,19 @@ public interface UriListener {
      *    boolean symetric, boolean isTransitive)
      * In fact implementations are encouraged to obtain the DataSources and call the MappingListener method.
      * @param sourceUriPattern A registered UriPattern used by the source UriS
+     * @param sourceDataType The type to store with the source (Optional if sourceUriPatterns has a single known type)
      * @param predicate The predicate to be associated. Can be null
      * @param justification The URI that states why the link holds. Can be null
      * @param targetUriPattern A registered UriPattern used by the source UriS
+     * @param targetDataType The type to store with the target (Optional if targetUriPatterns has a single known type)
      * @param symetric Flag to say if mapping should be loaded one way of both ways. 
      *     Creates two mapping sets this one and the inverse with one number higher.
      * @param transative Flag to indicate if the mapping was created using transativity
      * @return Id of the forward mappingSet.
      * @throws BridgeDBException Thrown if either UriSpace has not previously been registered using registerUriSpace
      */
-   public int registerMappingSet(UriPattern sourceUriPattern, String predicate, String justification, 
-           UriPattern targetUriPattern, String mappingSource, boolean symetric, Set<String> viaLabels, Set<Integer> chainedLinkSets) 
+   public int registerMappingSet(UriPattern sourceUriPattern, String sourceDataType, String predicate, String justification, 
+           UriPattern targetUriPattern, String targetDataType, String mappingSource, boolean symetric, Set<String> viaLabels, Set<Integer> chainedLinkSets) 
            throws  BridgeDBException;
 
    public UriPattern toUriPattern(String uri) throws BridgeDBException;

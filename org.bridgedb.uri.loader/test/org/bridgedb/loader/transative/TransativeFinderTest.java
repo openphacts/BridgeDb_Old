@@ -79,7 +79,7 @@ public class TransativeFinderTest {
         File file = new File(path);
         URI predicate = new URIImpl("http://www.bridgedb.org/test#testPredicate");
         String justification = "http://www.bridgedb.org/test#justification1";
-        listener.parse(file, predicate, justification);
+        listener.parse(file, TransativeFinder.TEMP, predicate, justification, TransativeFinder.TEMP);
     }
     
     @Test

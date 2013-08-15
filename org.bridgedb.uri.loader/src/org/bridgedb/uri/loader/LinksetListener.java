@@ -39,22 +39,25 @@ public class LinksetListener {
     
     static final Logger logger = Logger.getLogger(LinksetListener.class);
     
-    public int parse(File file, URI linkPredicate, String justification) throws BridgeDBException{
+    public int parse(File file, String sourceDataType, URI linkPredicate, String justification, String targetDataType) 
+            throws BridgeDBException{
         String source = RdfParser.fileToURI(file);
-        return parse(file, source, linkPredicate, justification, null, null);
+        return parse(file, source, sourceDataType, linkPredicate, justification, targetDataType, null, null);
     }
     
-    public int parse(File file, String mappingSource, URI linkPredicate, String justification, 
-            Set<String> viaLabels, Set<Integer> chainedLinkSets) throws BridgeDBException{
-        LinksetHandler handler = new LinksetHandler(uriListener, linkPredicate, justification, mappingSource, true, 
-                viaLabels, chainedLinkSets);
+    public int parse(File file, String mappingSource, String sourceDataType, URI linkPredicate, String justification, 
+            String targetDataType, Set<String> viaLabels, Set<Integer> chainedLinkSets) throws BridgeDBException{
+        LinksetHandler handler = new LinksetHandler(uriListener, sourceDataType, linkPredicate, justification, 
+                targetDataType, mappingSource, true, viaLabels, chainedLinkSets);
         RdfParser parser = getParser(handler);
         parser.parse(file);
         return handler.getMappingsetId();
     }
     
-    public int parse(String uri, String mappingSource, URI linkPredicate, String justification) throws BridgeDBException{
-        LinksetHandler handler = new LinksetHandler(uriListener, linkPredicate, justification, mappingSource, true);
+    public int parse(String uri, String mappingSource, String sourceDataType, URI linkPredicate, String justification, 
+            String targetDataType) throws BridgeDBException{
+        LinksetHandler handler = new LinksetHandler(uriListener, sourceDataType, linkPredicate, justification, 
+                targetDataType, mappingSource, true);
         RdfParser parser = getParser(handler);
         parser.parse(uri);
         return handler.getMappingsetId();

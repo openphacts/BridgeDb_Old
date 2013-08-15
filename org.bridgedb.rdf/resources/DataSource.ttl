@@ -236,6 +236,7 @@ bridgeDB:DataSource_ArrayExpress a bridgeDB:DataSource ;
 	bridgeDB:idExample "E-MEXP-1712" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "experiment" ;
+    bridgeDB:hasDataType ChemInf:SIO_010035 ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/arrayexpress/experiments/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/arrayexpress/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.ebi.ac.uk/arrayexpress/experiments/$id> .
@@ -358,6 +359,7 @@ bridgeDB:DataSource_BioGrid a bridgeDB:DataSource ;
 	bridgeDB:idExample "31623" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "probe" ;
+    bridgeDB:hasDataType ChemInf:SIO_010043 ; 
 	bridgeDB:hasUrlPattern <http://thebiogrid.org/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/biogrid/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://thebiogrid.org/$id> .
@@ -1224,6 +1226,7 @@ bridgeDB:DataSource_EMBL a bridgeDB:DataSource ;
 	bridgeDB:idExample "X58356" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
+    bridgeDB:hasDataType "RNA" ;
 	bridgeDB:hasUrlPattern <http://srs.ebi.ac.uk/srsbin/cgi-bin/wgetz?-page+EntryPage+-e+[EMBL:$id]+-view+EmblEntry> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/insdc/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://srs.ebi.ac.uk/srsbin/cgi-bin/wgetz?-page+EntryPage+-e+[EMBL:$id]+-view+EmblEntry> .
@@ -1233,6 +1236,7 @@ bridgeDB:DataSource_Ena a bridgeDB:DataSource ;
 	bridgeDB:systemCode "Ena" ;
 	bridgeDB:mainUrl "http://www.ebi.ac.uk/ena/" ;
 	bridgeDB:idExample "DAAA02031803" ;
+    bridgeDB:hasDataType "Nucleotide" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/ena/data/view/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/ena.embl/$id> .
@@ -1565,6 +1569,7 @@ bridgeDB:DataSource_Enzyme_Nomenclature a bridgeDB:DataSource ;
 	bridgeDB:idExample "1.1.1.1" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
+    bridgeDB:hasDataType "Enzyme" ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/intenz/query?cmd=SearchEC&ec=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/ec-code/$id> ;
 	bridgeDB:hasUriPattern <http://bio2rdf.org/ec:$id> .
@@ -1704,7 +1709,7 @@ bridgeDB:DataSource_GeneOntology_URI a bridgeDB:DataSource ;
     bridgeDB:hasDataType ChemInf:SIO_001166 ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:$id> ;
 	bridgeDB:hasUriPattern <http://identifiers.org/obo.go/GO:$id> ; #Deprecated
-	bridgeDB:hasUriPattern <http://purl.org/obo/owl/GO_#$id> ;
+	bridgeDB:hasUriPattern <http://purl.org/obo/owl/GO#GO_$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/go/GO:$id> .
 
 bridgeDB:DataSource_GeneTree a bridgeDB:DataSource ;
@@ -1769,6 +1774,7 @@ bridgeDB:DataSource_GOA a bridgeDB:DataSource ;
 	bridgeDB:idExample "P12345" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "unknown" ;
+    bridgeDB:hasDataType ChemInf:SIO_001166 ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/QuickGO/GProtein?ac=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/goa/$id> ;
 	bridgeDB:hasBio2RdfPattern <http://bio2rdf.org/goa:$id> ;
@@ -1987,6 +1993,7 @@ bridgeDB:DataSource_HGNC_Accession_number a bridgeDB:DataSource ;
 	bridgeDB:idExample "HGNC:2674" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
+   bridgeDB:hasDataType ChemInf:SIO_010035 ;
 	bridgeDB:hasUrlPattern <http://www.genenames.org/data/hgnc_data.php?hgnc_id=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/hgnc/$id> ;
 	bridgeDB:Organism bridgeDB:Organism_Hs ;
@@ -2000,6 +2007,7 @@ bridgeDB:DataSource_HGNC_Symbol a bridgeDB:DataSource ;
 	bridgeDB:idExample "DAPK1" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
+    bridgeDB:hasDataType ChemInf:SIO_010035 ;
 	#Unused as shared with HGNC bridgeDB:hasUrlPattern <http://www.genenames.org/data/hgnc_data.php?match=$id> ;
     bridgeDB:hasUrlPattern <http://identifiers.org/hgnc.symbol/$id>;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/hgnc.symbol/$id> .
@@ -2212,6 +2220,7 @@ bridgeDB:DataSource_InterPro a bridgeDB:DataSource ;
 	bridgeDB:idExample "IPR000100" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "protein" ;
+    bridgeDB:hasDataType ChemInf:SIO_010043 ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/interpro/DisplayIproEntry?ac=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/interpro/$id> ;
 	bridgeDB:hasBio2RdfPattern <http://bio2rdf.org/interpro:$id> ;
@@ -2528,6 +2537,7 @@ bridgeDB:DataSource_LRG a bridgeDB:DataSource ;
 	bridgeDB:fullName "Locus Reference Genomic" ;
 	bridgeDB:mainUrl "http://www.lrg-sequence.org/" ;
 	bridgeDB:idExample "LRG_258" ;
+    bridgeDB:hasDataType "Nucleotide" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:hasUrlPattern <ftp://ftp.ebi.ac.uk/pub/databases/lrgex/$id.xml> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/lrg/$id> .
@@ -2599,6 +2609,7 @@ bridgeDB:DataSource_MEROPS a bridgeDB:DataSource ;
 	bridgeDB:idExample "S01.001" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "protein" ;
+    bridgeDB:hasDataType ChemInf:SIO_010043 ;
 	bridgeDB:hasUrlPattern <http://merops.sanger.ac.uk/cgi-bin/merops.cgi?id=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/merops/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://merops.sanger.ac.uk/cgi-bin/merops.cgi?id=$id> .
@@ -2742,6 +2753,7 @@ bridgeDB:DataSource_miRBase_Sequence a bridgeDB:DataSource ;
 	bridgeDB:idExample "MI0000001" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
+    bridgeDB:hasDataType "MRNA" ;
 	bridgeDB:hasUrlPattern <http://microrna.sanger.ac.uk/cgi-bin/sequences/mirna_entry.pl?acc=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/mirbase/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://microrna.sanger.ac.uk/cgi-bin/sequences/mirna_entry.pl?acc=$id> .
@@ -3152,6 +3164,7 @@ bridgeDB:DataSource_Orphanet a bridgeDB:DataSource ;
 	bridgeDB:idExample "85163" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "unknown" ;
+    bridgeDB:hasDataType ChemInf:SIO_010299 ; 
 	bridgeDB:hasUrlPattern <http://www.orpha.net/consor/cgi-bin/OC_Exp.php?Lng=EN&Expert=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/orphanet/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.orpha.net/consor/cgi-bin/OC_Exp.php?Lng=EN&Expert=$id> .
@@ -3255,7 +3268,7 @@ bridgeDB:DataSource_PDB a bridgeDB:DataSource ;
 	bridgeDB:idExample "2gc4" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "protein" ;
-    bridgeDB:hasDataType ChemInf:SIO_010043 ; 
+    bridgeDB:hasDataType Structure ; 
 	bridgeDB:hasUrlPattern <http://www.rcsb.org/pdb/explore/explore.do?structureId=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/pdb/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.rcsb.org/pdb/explore/explore.do?structureId=$id> ;
@@ -3711,6 +3724,7 @@ bridgeDB:DataSource_Rfam a bridgeDB:DataSource ;
 	bridgeDB:idExample "RF00066" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
+    bridgeDB:hasDataType "RNA" ;
 	bridgeDB:hasUrlPattern <http://www.sanger.ac.uk/cgi-bin/Rfam/getacc?$id> ; #not working 7/7/2013
     bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/rfam/$id> ;
     bridgeDB:hasUriPattern <http://rfam.sanger.ac.uk/family/$id>;
@@ -4356,6 +4370,7 @@ bridgeDB:DataSource_UniGene a bridgeDB:DataSource ;
 	bridgeDB:idExample "4900" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "unknown" ;
+    bridgeDB:hasDataType ChemInf:SIO_010035 ; 
 	bridgeDB:hasUrlPattern <http://www.ncbi.nlm.nih.gov/unigene?term=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/unigene/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.ncbi.nlm.nih.gov/unigene?term=$id> .
@@ -4377,6 +4392,7 @@ bridgeDB:DataSource_UniParc a bridgeDB:DataSource ;
 	bridgeDB:idExample "UPI000000000A" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "protein" ;
+    bridgeDB:hasDataType ChemInf:SIO_010043 ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/cgi-bin/dbfetch?db=uniparc&id=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/uniparc/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.ebi.ac.uk/cgi-bin/dbfetch?db=uniparc&id=$id> .
@@ -4617,6 +4633,7 @@ bridgeDB:DataSource_ZFIN a bridgeDB:DataSource ;
 	bridgeDB:idExample "ZDB-GENE-041118-11" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
+    bridgeDB:hasDataType ChemInf:SIO_010035 ;
 	bridgeDB:hasUrlPattern <http://zfin.org/action/marker/view/$id> ;
 	bridgeDB:hasUriPattern <http://purl.uniprot.org/zfin/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/zfin/$id> ;

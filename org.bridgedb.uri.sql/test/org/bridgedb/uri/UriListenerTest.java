@@ -38,7 +38,8 @@ public abstract class UriListenerTest extends IDMapperTestBase{
         
     protected static UriListener listener;
     protected static final String TEST_PREDICATE = "http://www.w3.org/2004/02/skos/core#exactMatch";
-        
+    protected static final String TEST_TYPE = "TEST_TYPE";
+
     public static final boolean SYMETRIC = true;
     public static final Set<String> NO_VIA = null;
     public static final Set<Integer> NO_CHAIN = null;
@@ -192,28 +193,28 @@ public abstract class UriListenerTest extends IDMapperTestBase{
         listener.registerUriPattern(DataSource3, uriSpace3 + "$id");
         listener.registerUriPattern(DataSource3, uriSpace3a + "$id");
 
-        int mappingSet = listener.registerMappingSet(uriPattern1, TEST_PREDICATE, 
-                Lens.getDefaultJustifictaionString(), uriPattern2, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
+        int mappingSet = listener.registerMappingSet(uriPattern1, TEST_TYPE, TEST_PREDICATE, 
+                Lens.getDefaultJustifictaionString(), uriPattern2, TEST_TYPE, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
         listener.insertUriMapping(map1Uri1, map1Uri2, mappingSet, SYMETRIC);
         listener.insertUriMapping(map2Uri1, map2Uri2, mappingSet, SYMETRIC);
         listener.insertUriMapping(map3Uri1, map3Uri2, mappingSet, SYMETRIC);
         
-        mappingSet = listener.registerMappingSet(uriPattern2, TEST_PREDICATE, 
-                Lens.getDefaultJustifictaionString(), uriPattern3, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
+        mappingSet = listener.registerMappingSet(uriPattern2, TEST_TYPE, TEST_PREDICATE, 
+                Lens.getDefaultJustifictaionString(), uriPattern3, TEST_TYPE, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
         assertEquals(mappingSet2_3, mappingSet);
         listener.insertUriMapping(map1Uri2, map1Uri3, mappingSet2_3, SYMETRIC);
         listener.insertUriMapping(map2Uri2, map2Uri3, mappingSet2_3, SYMETRIC);
         listener.insertUriMapping(map3Uri2, map3Uri3, mappingSet2_3, SYMETRIC);
 
-        mappingSet = listener.registerMappingSet(uriPattern1, TEST_PREDICATE, 
-                Lens.getDefaultJustifictaionString(), uriPattern3, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
+        mappingSet = listener.registerMappingSet(uriPattern1, TEST_TYPE, TEST_PREDICATE, 
+                Lens.getDefaultJustifictaionString(), uriPattern3, TEST_TYPE, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
         listener.insertUriMapping(map1Uri1, map1Uri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map2Uri1, map2Uri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map3Uri1, map3Uri3, mappingSet, SYMETRIC);
 
         listener.closeInput();
-        mappingSet = listener.registerMappingSet(uriPattern1, TEST_PREDICATE, 
-        		Lens.getTestJustifictaion(), uriPattern2, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
+        mappingSet = listener.registerMappingSet(uriPattern1, TEST_TYPE, TEST_PREDICATE, 
+        		Lens.getTestJustifictaion(), uriPattern2, TEST_TYPE, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
         listener.insertUriMapping(map1Uri1, map1AUri2, mappingSet, SYMETRIC);
         listener.insertUriMapping(map2Uri1, map2AUri2, mappingSet, SYMETRIC);
         listener.insertUriMapping(map3Uri1, map3AUri2, mappingSet, SYMETRIC);
@@ -221,8 +222,8 @@ public abstract class UriListenerTest extends IDMapperTestBase{
         listener.insertUriMapping(map2AUri1, map2Uri2, mappingSet, SYMETRIC);
         listener.insertUriMapping(map3AUri1, map3Uri2, mappingSet, SYMETRIC);
 
-        mappingSet = listener.registerMappingSet(uriPattern2, TEST_PREDICATE, 
-        		Lens.getTestJustifictaion(), uriPattern3, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
+        mappingSet = listener.registerMappingSet(uriPattern2, TEST_TYPE, TEST_PREDICATE, 
+        		Lens.getTestJustifictaion(), uriPattern3, TEST_TYPE, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
         listener.insertUriMapping(map1Uri2, map1AUri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map2Uri2, map2AUri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map3Uri2, map3AUri3, mappingSet, SYMETRIC);
@@ -246,8 +247,8 @@ public abstract class UriListenerTest extends IDMapperTestBase{
         HashSet<Integer> chain = new HashSet<Integer>();
         chain.add(1);
         chain.add(2);
-        int mappingSet = listener.registerMappingSet(uriPattern1, TEST_PREDICATE, 
-        		Lens.getTestJustifictaion(), uriPattern3, "UriListenerTest.loadData()", SYMETRIC, via, chain);
+        int mappingSet = listener.registerMappingSet(uriPattern1, TEST_TYPE, TEST_PREDICATE, 
+        		Lens.getTestJustifictaion(), uriPattern3, TEST_TYPE, "UriListenerTest.loadData()", SYMETRIC, via, chain);
         listener.insertUriMapping(map1Uri1, map1AUri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map2Uri1, map2AUri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map3Uri1, map3AUri3, mappingSet, SYMETRIC);

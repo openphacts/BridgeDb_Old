@@ -25,6 +25,7 @@ import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.loader.LinksetListener;
 import org.bridgedb.uri.loader.transative.TransativeCreator;
+import org.bridgedb.uri.loader.transative.TransativeFinder;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.utils.Reporter;
@@ -77,7 +78,7 @@ public class TransativeCreatorTest {
     
     protected void loadFile(File file, String justification) throws BridgeDBException{
         Reporter.println("parsing " + file.getAbsolutePath());
-        int mappingSetId = instance.parse(file, linkPredicate, justification);
+        int mappingSetId = instance.parse(file, TransativeFinder.TEMP, linkPredicate, justification, TransativeFinder.TEMP);
         MappingSetInfo mapping = uriListener.getMappingSetInfo(mappingSetId);
         int numberOfLinks = mapping.getNumberOfLinks();
         assertThat(numberOfLinks, greaterThanOrEqualTo(3));      

@@ -42,6 +42,7 @@ public class UriMapperRecoverTest extends UriListenerTest {
     private static final String CREATOR1 = "testCreator";
     private static final String PREDICATE1 = "testMapping";
     private static final long CREATION1 = new Date().getTime();
+    private static final String TEST_TYPE = "TEST_TYPE";
 
     @Test 
     public void testRecover()throws BridgeDBException{
@@ -56,8 +57,8 @@ public class UriMapperRecoverTest extends UriListenerTest {
         listener.recover();
         stats = uriMapper.getOverallStatistics(Lens.getAllLens());
         assertEquals(6, stats.getNumberOfMappingSets());
-        int mappingSet = listener.registerMappingSet(uriPattern1, TEST_PREDICATE, 
-        		Lens.getTestJustifictaion(), uriPattern2, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
+        int mappingSet = listener.registerMappingSet(uriPattern1, TEST_TYPE, TEST_PREDICATE, 
+        		Lens.getTestJustifictaion(), uriPattern2, TEST_TYPE, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
         assertEquals(7, mappingSet);
     }
             

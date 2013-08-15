@@ -37,6 +37,8 @@ public class TransativeFinder extends SQLBase{
   
     private final static String LAST_TRANSATIVE_LOADED_KEY = "LastMappingLoadedTransatively";
         
+    public static String TEMP = "temp";
+    
     static final Logger logger = Logger.getLogger(TransativeFinder.class);
 
     public TransativeFinder() throws BridgeDBException{
@@ -349,7 +351,7 @@ public class TransativeFinder extends SQLBase{
             return -1;
         } else {
             Reporter.println("Created " + fileName);
-            int dataSet =  loadLinkset(fileName.getAbsolutePath(), predicate, justification, viaLabels, chainIds);
+            int dataSet =  loadLinkset(fileName.getAbsolutePath(), TEMP, predicate, justification,  TEMP, viaLabels, chainIds);
             if (logger.isDebugEnabled()){
                 logger.debug("Loaded " + dataSet);
             }
@@ -498,7 +500,8 @@ public class TransativeFinder extends SQLBase{
         return true;
     }
 
-    protected int loadLinkset(String absolutePath, String predicate, String justification, Set<String> viaLabels, 
+    protected int loadLinkset(String absolutePath, String sourceDataType, String predicate, String justification, 
+            String targetDataType, Set<String> viaLabels, 
             HashSet<Integer> chainIds) throws BridgeDBException {
         UriListener uriListener = SQLUriMapper.getExisting();
         LinksetListener loader = new LinksetListener(uriListener);
@@ -506,7 +509,7 @@ public class TransativeFinder extends SQLBase{
         File file = new File(absolutePath);
         String mappingSource = RdfParser.fileToURL(file);
         URI linkPredicate = new URIImpl(predicate);
-        return loader.parse(file, mappingSource, linkPredicate, justification, viaLabels, chainIds);
+        return loader.parse(file, mappingSource, sourceDataType, linkPredicate, justification, targetDataType, viaLabels, chainIds);
     }
 
 }

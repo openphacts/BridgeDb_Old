@@ -34,6 +34,7 @@ import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
+import org.bridgedb.rdf.DataSourceTypeMapper;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
@@ -1048,13 +1049,15 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized int registerMappingSet(UriPattern sourceUriPattern, String predicate, String justification, 
-            UriPattern targetUriPattern, String mappingSource, boolean symetric, Set<String> viaLabels, 
+    public synchronized int registerMappingSet(UriPattern sourceUriPattern, String sourceDataType, String predicate, String justification, 
+            UriPattern targetUriPattern, String targetDataType, String mappingSource, boolean symetric, Set<String> viaLabels, 
             Set<Integer> chainedLinkSets) throws BridgeDBException {
         checkUriPattern(sourceUriPattern);
         checkUriPattern(targetUriPattern);
         DataSource source = sourceUriPattern.getDataSource();
+        sourceDataType = checkDataType(sourceDataType, source);
         DataSource target = targetUriPattern.getDataSource();      
+        targetDataType = checkDataType(targetDataType, target);
         int mappingSetId = registerMappingSet(source, predicate, justification, target, mappingSource, symetric, 
                 viaLabels, chainedLinkSets);
         subjectUriPatterns.put(mappingSetId, sourceUriPattern);
@@ -1062,6 +1065,17 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return mappingSetId;
     }
 
+    private String checkDataType(String type, DataSource ds) throws BridgeDBException{
+        if (type == null || type.isEmpty()){
+            return DataSourceTypeMapper.getType(ds);
+        } else {
+            if (DataSourceTypeMapper.isVarious(type)){
+                throw new BridgeDBException("Illegal various type " + type);
+            }
+            return type;
+        }
+    }
+    
     private void checkUriPattern(UriPattern pattern) throws BridgeDBException{
         String postfix = pattern.getPostfix();
         if (postfix == null){

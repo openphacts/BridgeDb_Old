@@ -20,6 +20,7 @@ public class SetupWithTestData {
     static final String MAIN_JUSTIFCATION = "http://semanticscience.org/resource/CHEMINF_000059";
     static final String LENS_JUSTIFCATION = "http://www.bridgedb.org/test#testJustification";
     static final URI linkPredicate = new URIImpl("http://www.w3.org/2004/02/skos/core#exactMatch");
+   protected static final String TEST_TYPE = "TEST_TYPE";
     private SQLUriMapper uriListener;
     private LinksetListener instance;
 
@@ -31,7 +32,7 @@ public class SetupWithTestData {
     private void loadFile(String fileName, String justification) throws BridgeDBException{
         Reporter.println("parsing " + fileName);
         File file = new File(fileName);
-        int mappingSetId = instance.parse(file, linkPredicate, justification);
+        int mappingSetId = instance.parse(file, TEST_TYPE, linkPredicate, justification, TEST_TYPE);
         Reporter.println("       Loaded as mappingSet " + mappingSetId);
      }
     /**

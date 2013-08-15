@@ -1,0 +1,10 @@
+Target - Protein - Gene ok
+Target - Protein - Rna ok 
+Target - Protein - Mrna ok
+Target - Gene  - Rna ok
+     so Target - Protein - Gene - Rna allowed
+Target - Gene  - Mrna ok
+    SO Target - Protein - Gene  - Mrna ok
+
+All  other 
+X - Y - any not y not allowed!
