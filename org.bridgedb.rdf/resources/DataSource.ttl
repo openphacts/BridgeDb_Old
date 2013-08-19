@@ -1692,7 +1692,7 @@ bridgeDB:DataSource_GeneOntology_URI a bridgeDB:DataSource ;
 	bridgeDB:type "probe" ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:$id> ;
 	bridgeDB:hasUriPattern <http://identifiers.org/obo.go/GO:$id> ; #Deprecated
-	bridgeDB:hasUriPattern <http://purl.org/obo/owl/GO_#$id> ;
+	bridgeDB:hasUriPattern <http://purl.org/obo/owl/GO#GO_$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/go/GO:$id> .
 
 bridgeDB:DataSource_GeneTree a bridgeDB:DataSource ;
