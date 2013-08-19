@@ -835,7 +835,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         this.appendLimitConditions(query, 0, 5);
         Statement statement = this.createStatement();
         ResultSet rs;
-        System.out.println(query);
         //if (true) throw new BridgeDBException(query.toString());
         try {
             rs = statement.executeQuery(query.toString());
@@ -876,7 +875,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         query.append(MAPPING_STATS_TABLE_NAME);
         this.appendLensClause(query, lensId, false);
         Statement statement = this.createStatement();
-        System.out.println(query.toString());
         try {
             ResultSet rs = statement.executeQuery(query.toString());
 			if (rs.next()){
@@ -1663,7 +1661,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         update.append(" > ");
         update.append(max);
         
-        System.out.println(update.toString());
         Statement statement = this.createStatement();
         try {
             statement.executeUpdate(update.toString());
@@ -1678,7 +1675,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         update.append(MAPPING_SET_TABLE_NAME);
         update.append(" AUTO_INCREMENT = ");
         update.append(max + 1);
-        System.out.println(update.toString());
         
         Statement statement = this.createStatement();
         try {

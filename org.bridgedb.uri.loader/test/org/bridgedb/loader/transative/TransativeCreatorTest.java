@@ -91,7 +91,6 @@ public class TransativeCreatorTest {
         Reporter.println("LoadTestData");
         loadFile("../org.bridgedb.uri.loader/test-data/cw-cs.ttl", Lens.getDefaultJustifictaionString());
         loadFile("../org.bridgedb.uri.loader/test-data/cs-cm.ttl", Lens.getDefaultJustifictaionString());
-        System.out.println("loaded");
         File transative = TransativeCreator.doTransativeIfPossible(1, 3);
         //assertTrue(transative.exists());
         //loadFile(transative, MAIN_JUSTIFCATION);
