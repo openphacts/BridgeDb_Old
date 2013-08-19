@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import org.apache.log4j.Logger;
+import org.bridgedb.DataSource;
 import org.bridgedb.sql.SQLBase;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.statistics.DataSetInfo;
@@ -23,6 +24,7 @@ import org.bridgedb.uri.UriListener;
 import org.bridgedb.uri.loader.LinksetListener;
 import org.bridgedb.uri.loader.RdfParser;
 import org.bridgedb.utils.BridgeDBException;
+import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.utils.Reporter;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
@@ -33,18 +35,22 @@ import org.openrdf.rio.RDFHandlerException;
  * @author Christian
  */
 public class TransativeFinder extends SQLBase{
-    private SQLUriMapper mapper;
+
+   private SQLUriMapper mapper;
   
     private final static String LAST_TRANSATIVE_LOADED_KEY = "LastMappingLoadedTransatively";
         
     public static String TEMP = "temp";
+    private final static boolean LIMITED_VIA = true;    
+    private static Set<String> limitedSysCodes;
     
     static final Logger logger = Logger.getLogger(TransativeFinder.class);
 
     public TransativeFinder() throws BridgeDBException{
         super();
         mapper = SQLUriMapper.getExisting();  
-    }
+        getLimited();
+     }
     
     public void UpdateTransative() throws BridgeDBException, RDFHandlerException, IOException{
         String lastIdString = mapper.getProperty(LAST_TRANSATIVE_LOADED_KEY);
@@ -59,7 +65,6 @@ public class TransativeFinder extends SQLBase{
     
     private void computeTransatives(int lastTranstativeLoaded) throws BridgeDBException, RDFHandlerException, IOException{
         logger.info("Computing from " + lastTranstativeLoaded);
-        System.out.println("Computing from " + lastTranstativeLoaded);
         int maxMappingSet = getMaxMappingSet();
         if (maxMappingSet <= lastTranstativeLoaded){
             return;
@@ -113,7 +118,6 @@ public class TransativeFinder extends SQLBase{
         query.append(info.getIntId());
         ResultSet rs;
         try {
-            System.out.println(query);
             rs = statement.executeQuery(query.toString());   
             List<MappingSetInfo> possibles = mapper.resultSetToMappingSetInfos(rs);
             List<MappingSetInfo> results = new ArrayList<MappingSetInfo>();
@@ -145,6 +149,15 @@ public class TransativeFinder extends SQLBase{
     }
     
     private boolean checkValidTransative(MappingSetInfo left, MappingSetInfo right, HashSet<Integer> chainIds) throws BridgeDBException {
+        if(LIMITED_VIA){
+            if (!getLimited().contains(left.getTarget().getSysCode())){
+                if (logger.isDebugEnabled()){
+                    logger.debug("Not allowed middle " + left.getStringId() + " -> " + right.getStringId());
+                    logger.debug ("    " + left.getTarget());
+                }
+                return false;
+            }
+        }
         //Must match in the middle
         if (!left.getTarget().getSysCode().equals(right.getSource().getSysCode())){
             if (logger.isDebugEnabled()){
@@ -314,8 +327,6 @@ public class TransativeFinder extends SQLBase{
             Set<Integer> check = getChain(possibleInfo);
             if (check.size() == chainIds.size()){
                 return true;
-            //} else {
-            //    System.out.println ("Ignoring " + possible + " it has " + check);
             }
         }
         return false;
@@ -512,4 +523,25 @@ public class TransativeFinder extends SQLBase{
         return loader.parse(file, mappingSource, sourceDataType, linkPredicate, justification, targetDataType, viaLabels, chainIds);
     }
 
-}
+    /**
+     * This allows tests tp 
+     * @param dataSource 
+     */
+    public static void addAcceptableVai(DataSource dataSource) {
+        getLimited().add(dataSource.getSystemCode());
+    }
+
+    private static Set<String> getLimited() {
+        if (limitedSysCodes == null){
+            limitedSysCodes = new HashSet<String>();
+            limitedSysCodes.add(DataSource.getByFullName("Chemspider").getSystemCode());
+            limitedSysCodes.add(DataSource.getByFullName("OPS Chemical Registry Service").getSystemCode());
+            limitedSysCodes.add(DataSource.getByFullName("ChEMBL target component").getSystemCode());
+            limitedSysCodes.add(DataSource.getByFullName("Uniprot").getSystemCode());
+            limitedSysCodes.add(DataSource.getByFullName("Ensembl").getSystemCode());
+            limitedSysCodes.add(DataSource.getByFullName("Drugbank Drugs").getSystemCode());
+            limitedSysCodes.add(DataSource.getByFullName("HMDB").getSystemCode());
+        }
+        return limitedSysCodes;
+    }
+ }

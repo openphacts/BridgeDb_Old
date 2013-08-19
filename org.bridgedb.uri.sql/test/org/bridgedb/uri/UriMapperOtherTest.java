@@ -50,7 +50,6 @@ public abstract class UriMapperOtherTest extends UriListenerTest{
         Lens result = Lens.byId(Lens.getAllLens());
         assertEquals(Lens.getAllLens(), result.getId());
         //assertNotNull(result.getCreatedBy());
-        System.out.println(result);
         assertNotNull(result.getDescription());
         assertNotNull(result.getName());
         assertThat(result.getJustifications().size(), greaterThanOrEqualTo(1));

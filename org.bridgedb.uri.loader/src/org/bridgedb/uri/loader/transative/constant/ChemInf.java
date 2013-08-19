@@ -19,5 +19,5 @@ public class ChemInf {
 	public static final String hasUnchargedCounterpart = PREFIX + "CHEMINF_000460";
 	public static final String hasComponentWithUnchargedCounterpart = PREFIX + "CHEMINF_000480";
 	public static final String hasMajorTautomerAtpH7point4 = PREFIX + "CHEMINF_000486";
-
+    public static final String DATABASE_CROSS_REFERENCE = PREFIX + "SIO_001171";
 }

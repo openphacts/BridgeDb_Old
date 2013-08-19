@@ -140,7 +140,6 @@ public abstract class UriMapperSimpleTest extends UriListenerTest{
         sourceUris.add(map3Uri1);
         String lensId = Lens.getDefaultLens();
         MappingsBySet lensMapping = uriMapper.mapBySet(sourceUris, lensId, uriPattern2, uriPattern3);
-        System.out.println(lensMapping);
         Set<String> results = lensMapping.getTargetUris();
         assertFalse(results.contains(map3Uri1));
         assertTrue(results.contains(map3Uri2));
@@ -240,8 +239,6 @@ public abstract class UriMapperSimpleTest extends UriListenerTest{
         assertFalse(results.contains(map2Uri2));
         assertFalse(results.contains(map1Uri3));
         checkForNoOtherlensId(results);
-        System.out.println(lensMapping.asRDF(null));
-        System.out.println(lensMapping.toRDF(null, null));
     }
     
     /**

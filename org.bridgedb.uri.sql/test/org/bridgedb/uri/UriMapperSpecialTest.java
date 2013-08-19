@@ -152,7 +152,6 @@ public abstract class UriMapperSpecialTest extends UriListenerTest{
         MappingSetInfo result = uriMapper.getMappingSetInfo(mappingSet2_3);
         assertEquals(DataSource2.getSystemCode(), result.getSource().getSysCode());
         assertEquals(DataSource3.getSystemCode(), result.getTarget().getSysCode());
-        System.out.println(result);
         assertFalse(result.isSymmetric());
         result = uriMapper.getMappingSetInfo(mappingSet2_3+1);
         assertEquals(DataSource3.getSystemCode(), result.getSource().getSysCode());

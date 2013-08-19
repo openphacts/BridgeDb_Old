@@ -27,10 +27,7 @@ public abstract class UriMapperNullLensTest extends UriListenerTest{
         report("MapID_sourceXref_lensId_tgtDataSources");
         Xref sourceXref = map2xref2;
         String lensId = null;
-        System.out.println(DataSource2);
-        System.out.println(DataSource3);
         Set results = uriMapper.mapID(sourceXref, lensId, DataSource2, DataSource3);
-        System.out.println(results);
         assertFalse(results.contains(map2xref1));
         assertTrue(results.contains(map2xref2));
         assertTrue(results.contains(map2xref3));
