@@ -34,7 +34,7 @@ import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WsUriConstants;
 
 /**
- * This class provides the Reposnse Frame including Top and Sidebar 
+ * This class provides the Response Frame including Top and Sidebar 
  * 
  * @author Christian
  */
