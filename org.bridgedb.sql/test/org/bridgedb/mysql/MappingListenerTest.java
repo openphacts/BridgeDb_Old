@@ -47,7 +47,7 @@ public class MappingListenerTest extends org.bridgedb.mapping.MappingListenerTes
     @BeforeClass
     public static void setupIDMapper() throws BridgeDBException{
         connectionOk = false;
-        TestSqlFactory.checkMySQLAccess();
+        TestSqlFactory.checkSQLAccess();
         ConfigReader.useTest();
         listener = new SQLListener(true);
         loadData();

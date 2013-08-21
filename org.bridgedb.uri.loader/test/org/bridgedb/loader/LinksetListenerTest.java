@@ -6,6 +6,7 @@ package org.bridgedb.loader;
 
 import java.io.File;
 import org.bridgedb.sql.SQLUriMapper;
+import org.bridgedb.sql.TestSqlFactory;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.loader.LinksetListener;
@@ -38,6 +39,7 @@ public class LinksetListenerTest {
     
     @BeforeClass
     public static void setUpClass() throws BridgeDBException {
+        TestSqlFactory.checkSQLAccess();
         ConfigReader.useTest();
         uriListener = SQLUriMapper.createNew();
         instance = new LinksetListener(uriListener);

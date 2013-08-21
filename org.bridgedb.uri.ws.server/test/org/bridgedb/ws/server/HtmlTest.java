@@ -6,6 +6,7 @@ package org.bridgedb.ws.server;
 
 import java.io.UnsupportedEncodingException;
 import javax.ws.rs.core.Response;
+import org.bridgedb.sql.TestSqlFactory;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.utils.Reporter;
@@ -25,6 +26,7 @@ public class HtmlTest {
     @BeforeClass
     public static void setupIDMapper() throws BridgeDBException{
         ConfigReader.useTest();
+        TestSqlFactory.checkSQLAccess();
         server = new WSUriServer();
     }
 

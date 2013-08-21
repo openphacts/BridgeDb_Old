@@ -19,9 +19,16 @@
 //
 package org.bridgedb.ws.uri;
 
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -30,7 +37,11 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import org.apache.log4j.Logger;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
@@ -40,6 +51,8 @@ import org.bridgedb.uri.SetMappings;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WsUriConstants;
 
+import uk.ac.manchester.cs.openphacts.bridgedb.webtemplates.WebTemplates;
+
 /**
  * This class adds the extra services not part of WSUriInterface
  * 
@@ -47,38 +60,29 @@ import org.bridgedb.ws.WsUriConstants;
  * 
  * @author Christian
  */
-public class WSOtherservices extends WSAPI {
+public class WSOtherservices extends WSAPI implements ServletContextListener {
             
     static final Logger logger = Logger.getLogger(WSOtherservices.class);
+	private ServletContext context;
 
     public WSOtherservices()  throws BridgeDBException   {
         super();
     }
         
     private void uriMappingForm(StringBuilder sb, HttpServletRequest httpServletRequest) throws BridgeDBException {
-    	sb.append("<form method=\"get\" action=\"");
-        sb.append(httpServletRequest.getContextPath());
-    	sb.append("/");
-    	sb.append(WsUriConstants.MAP_URI);
-    	sb.append("\">");
-    	sb.append("<fieldset>");
-    	sb.append("<legend>Mapper</legend>");
-    	sb.append("<p><label for=\"");
-    	sb.append(WsUriConstants.URI);
-    	sb.append("\">Input URI</label>");
-    	sb.append("<input type=\"text\" id=\"");
-    	sb.append(WsUriConstants.URI);
-    	sb.append("\" name=\"");
-    	sb.append(WsUriConstants.URI);
-    	sb.append("\" style=\"width:80%\"/></p>");
-    	generateLensSelector(sb, httpServletRequest);
-    	sb.append("<p><input type=\"submit\" value=\"Submit\"/></p>");
-    	sb.append("<p>Note: If the new page does not open click on the address bar and press enter</p>");
-    	sb.append("</fieldset></form>\n");
+        VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("contextPath", httpServletRequest.getContextPath());
+        velocityContext.put("mapURI", WsUriConstants.MAP_URI);
+        velocityContext.put("URI", WsUriConstants.URI);
+        velocityContext.put("lensURI", WsUriConstants.LENS_URI);
+        velocityContext.put("lenses", Lens.getLens());
+
+        WebTemplates webTemplates = new WebTemplates();
+        sb.append(webTemplates.getUriMappingForm(velocityContext));
     }
 
     /**
-     * Welcome page for the Serivce.
+     * Welcome page for the Service.
      * 
      * Expected to be overridden by the QueryExpander
      * 
@@ -95,36 +99,17 @@ public class WSOtherservices extends WSAPI {
             logger.debug("bridgeDbHome called");
         }
         StringBuilder sb = topAndSide ("Identity Mapping Service", httpServletRequest);
-        
-        sb.append("<p>Welcome to the Identity Mapping Service. </p>");        
-                
-        sb.append("\n<p>A List of which mappings we current have can be found at ");
-        sb.append("<a href=\"/");
-        sb.append(httpServletRequest.getContextPath());
-        sb.append("/getMappingInfo\">Mapping Info Page</a></p>");
-        
-        uriMappingForm(sb, httpServletRequest);
-        
-        sb.append("<h2>Usage Information</h2>");
-        sb.append("\n<p>The Main OPS method are: <ul>");
-        sb.append("\n<dt><a href=\"/");
-        sb.append(httpServletRequest.getContextPath());
-        sb.append("/api/#");
-        sb.append(WsUriConstants.MAP_URI);
-        sb.append("\">");
-        sb.append(WsUriConstants.MAP_URI);
-        sb.append("<dt><dd>List the URIs that map to this/these URI(s)</dd>");
-        sb.append("\n<dt><a href=\"/");
-        sb.append(httpServletRequest.getContextPath());
-        sb.append("/api/#");
-        sb.append(WsUriConstants.MAP);
-        sb.append("\">");
-        sb.append(WsUriConstants.MAP);
-        sb.append("<dt><dd>List the full Mappings to this URI/Xref</dd>");
-        sb.append("</ul>");
-        sb.append("\n<p><a href=\"/");
-        sb.append(httpServletRequest.getContextPath());
-        sb.append("/api\">API Page</a></p>");
+        VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("contextPath", httpServletRequest.getContextPath());
+        velocityContext.put("mapURI", WsUriConstants.MAP_URI);
+        velocityContext.put("URI", WsUriConstants.URI);
+        velocityContext.put("lensURI", WsUriConstants.LENS_URI);
+        velocityContext.put("lenses", Lens.getLens());
+        velocityContext.put("map",WsUriConstants.MAP);
+
+        WebTemplates webTemplates = new WebTemplates();
+        sb.append(webTemplates.getBridgeDBHome(velocityContext));
+
         footerAndEnd(sb);
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
     }
@@ -297,6 +282,20 @@ public class WSOtherservices extends WSAPI {
          footerAndEnd(sb);
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
     }
+
+	@Override
+	public void contextDestroyed(ServletContextEvent servletContextEvent) {
+		// TODO Auto-generated method stub
+		
+	}
+    /**
+     * Listen for servlet initialization in web.xml and set the context for use in
+     * the velocity templates
+     */
+	@Override
+	public void contextInitialized(ServletContextEvent servletContextEvent) {
+		this.context = servletContextEvent.getServletContext();
+	}
 
 }
 

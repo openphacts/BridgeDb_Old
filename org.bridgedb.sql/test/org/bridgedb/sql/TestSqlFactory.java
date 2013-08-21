@@ -41,45 +41,18 @@ public abstract class TestSqlFactory {
             SQLAccess sqlAccess = SqlFactory.createTheSQLAccess();
             sqlAccess.getConnection();
         } catch (BridgeDBException ex) {
-            logger.error("Unable to connect to SQL", ex);
             logger.fatal("SKIPPPING tests due to Connection error.");
             System.err.println("**** SKIPPPING tests due to Connection error.");
-            System.err.println("To run these test you must have the following:");
-            System.err.println("1. A SQL server running as configured in " + ConfigReader.CONFIG_FILE_NAME);
-            org.junit.Assume.assumeTrue(false);        
+            System.err.print("To run these test you must have ");
+            if (SqlFactory.inSQLMode()){
+                System.err.println(" A SQL server running ");
+            } else {
+                System.err.println(" A Virtuoso server running ");                
+            }
+            System.err.println("Configuration read from: " + ConfigReader.CONFIG_FILE_NAME + "  " + SqlFactory.configs());
+            logger.fatal("Configuration read from: " + ConfigReader.CONFIG_FILE_NAME + "  " + SqlFactory.configs());
+           org.junit.Assume.assumeTrue(false);        
          }
     } 
 
-    public static void checkVirtuosoAccess() {
-        SqlFactory.setUseMySQL(false);
-        ConfigReader.useTest();
-        try {
-            SQLAccess sqlAccess = SqlFactory.createTheSQLAccess();
-            sqlAccess.getConnection();
-        } catch (BridgeDBException ex) {
-            logger.error("Unable to connect to Virtuoso", ex);
-            logger.fatal("SKIPPPING tests due to Connection error.");
-            System.err.println("**** SKIPPPING tests due to Connection error.");
-            System.err.println("To run these test you must have the following:");
-            System.err.println("1. A Virtusos server running as configured in " + ConfigReader.CONFIG_FILE_NAME);
-            org.junit.Assume.assumeTrue(false);        
-         }
-    }
-
-    public static void checkMySQLAccess() {
-        SqlFactory.setUseMySQL(true);
-        ConfigReader.useTest();
-        try {
-            SQLAccess sqlAccess = SqlFactory.createTheSQLAccess();
-            sqlAccess.getConnection();
-        } catch (BridgeDBException ex) {
-            logger.error("Unable to connect to Virtuoso", ex);
-            logger.fatal("SKIPPPING tests due to Connection error.");
-            System.err.println("**** SKIPPPING tests due to Connection error.");
-            System.err.println("To run these test you must have the following:");
-            System.err.println("1. A MYSQL server running as configured in " + ConfigReader.CONFIG_FILE_NAME);
-            org.junit.Assume.assumeTrue(false);        
-         }
-    }
-    
 }

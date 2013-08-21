@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.bridgedb.sql.SQLAccess;
 import org.bridgedb.sql.SQLIdMapper;
 import org.bridgedb.sql.SQLListener;
+import org.bridgedb.sql.SqlFactory;
 import org.bridgedb.sql.TestSqlFactory;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
@@ -40,7 +41,8 @@ public class MappingListenerTest extends org.bridgedb.mapping.MappingListenerTes
     @BeforeClass
     public static void setupIDMapper() throws BridgeDBException{
         connectionOk = false;
-        TestSqlFactory.checkVirtuosoAccess();
+        SqlFactory.setUseMySQL(false);
+        TestSqlFactory.checkSQLAccess();
         ConfigReader.useTest();
         listener = new SQLListener(true);
         loadData();

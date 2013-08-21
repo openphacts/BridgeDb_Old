@@ -19,6 +19,7 @@
 //
 package org.bridgedb.sql;
 
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.bridgedb.mysql.MySQLAccess;
 import org.bridgedb.utils.BridgeDBException;
@@ -223,5 +224,20 @@ public class SqlFactory extends ConfigReader{
             return true;
         }        
     }
-          
+     
+    public static String configs() {
+        try {
+            if (useTest){
+                return "TEST: " + sqlPort() + "/" + sqlTestDatabase() + " user:" + testSqlUser() + " password: " + testSqlPassword();
+            } else {
+                return sqlPort() + "/" + sqlDatabase() + " user:" + sqlUser() + " password:" + sqlPassword();
+            }
+        } catch (BridgeDBException ex) {
+            return ex.getMessage();
+        }
+    }
+
+    static boolean inSQLMode() {
+        return useMySQL;
+    }
 }
