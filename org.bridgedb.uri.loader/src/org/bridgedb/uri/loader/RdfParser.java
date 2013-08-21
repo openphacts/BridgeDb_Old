@@ -22,6 +22,7 @@ package org.bridgedb.uri.loader;
 import info.aduna.lang.FileFormat;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -49,19 +50,33 @@ public class RdfParser {
     
     static final Logger logger = Logger.getLogger(RdfParser.class);
      
-    public void parse(File file) throws BridgeDBException{
-        parse(file, GET_FORMAT_FROM_ADDRESS);
+    public void parse(String baseURI, File file) throws BridgeDBException{
+        parse(baseURI, file, GET_FORMAT_FROM_ADDRESS);
     }
     
-    public void parse(File file, String rdfFormatName) throws BridgeDBException{
-        String uri = fileToURI(file);
-        InputStream inputStream;
+    public void parse(String baseURI, File file, String rdfFormatName) throws BridgeDBException{
+        logger.info("Parsing: " + file.getAbsolutePath());
+        FileReader reader = null;
         try {
-            inputStream = new FileInputStream(file);
+            reader = new FileReader(file);
+            RDFParser parser = getParser(file.getName(), rdfFormatName);
+            parser.setRDFHandler(handler);
+            parser.setParseErrorListener(new LinksetParserErrorListener());
+            parser.setVerifyData(true);
+            parser.parse (reader, baseURI);
         } catch (IOException ex) {
-            throw new BridgeDBException("Unable to open File as a stream.",ex);
+            throw new BridgeDBException("Error reading " + file.getAbsolutePath() + " " + ex.getMessage(), ex);
+        } catch (OpenRDFException ex) {
+            throw new BridgeDBException("Error parsing " + file.getAbsolutePath() + " " + ex.getMessage(), ex);
+        } finally {
+            try {
+                if (reader != null){
+                    reader.close();
+                }
+            } catch (IOException ex) {
+                throw new BridgeDBException("Error closing inputStream ", ex);
+            }
         }
-        parse(inputStream, uri, rdfFormatName);
     }
     
     public void parse(String uri) throws BridgeDBException {

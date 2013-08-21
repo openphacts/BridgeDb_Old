@@ -1,4 +1,4 @@
-Configuration - This file is out of date.
+Configuration 
 -------------
 Properties File Location:
 BridgeDB looks for the configuration files in the following locations. 
@@ -12,10 +12,11 @@ Once it finds a configuration file the other locations are ignored.
 ======================
 The configuration files used (and described below are)
 BridgeDB.properties
-log4j.properties
+log4j.properties (can be shared with other projects)
 DataSource.ttl 
 lens.properties
-local.properties
+local.properties (Shared with projects that extend or work with BridgeDB)
+
 ======================
 local.properties
 
@@ -36,15 +37,15 @@ To remove all properties from a properties file you will need to.
 3. Any additions to the original properties file will have to be manual added as required
 
 ======================
-BridgeDB.properties  (Must be checked with local values saved to local.properties)
+BridgeDB.properties  (Can be overwritten with your specific values saved to local.properties)
 ------------
 
-This file contain the local setup information which MUST be checked and ideally changed to match the local setup.
+This file contain the local setup information which MUST be checked and ideally overwritten in local.properties to match the specific local setup.
 
 The default configuration BridgeDB.properties file can be found at
 	$BRIDGEDB_HOME/org.bridgedb.utils/resources
 		
-You must either supply local values matching your local setup 
+You must either supply local.properties values matching your local setup 
 or setup your data stores to use the defaults. 
 
 Database Dependency
@@ -65,12 +66,11 @@ point of failure, if any of the user accounts or databases already exist.
 
 RDF Repository and Transitive Directory Dependency
 -------------------------
-The RDF engine is automatically included by maven
+The RDF engine is automatically included by Maven
 
 WARNING: All directories MUST exists and the (linux) user running tomcat MUST have READ/WRITE permission set!
 Some of the OpenRDF error message are unclear if this is not the case.
 
-See: Config.txt 
 SailNativeStore(s) will be created automatically as long as loader can create/find the directory,
 
 We recommend changing the relative directories to absolute directories.
@@ -92,7 +92,7 @@ Please refer to the log4j documentation for more information.
 
 DataSource.ttl 
 --------------
-RDF format of all the BridgeDB DataSource(s) and Registered UriPatterns,
+RDF format of all the BridgeDB DataSource(s),
 Found in $BRIDGEDB_HOME/org.bridgedb.rdf/resources
 
 This file defines all the URI patterns that will match every BridgeDB DataSource.
@@ -134,17 +134,8 @@ Bio Project: These are out of date. Please see Original BridgeDB project for lat
 These do not form part of the current code and could be removed without notice.
 They are from ideas that have been discarded or not implemented yet.
 These include:
-AndraDataSource.ttl
-BioDataSource.ttl
-BioDataSourceWithPrimary.ttl
-BridgeDBDataSource.ttl
-ChristianDataSource.ttl
-ExportDataSource.ttl
-ImsDataSources.ttl
-mediaTypes.ttl
-MergedDataSource.ttl
-MergedDataSourceWithPrimary.ttl
-PrimaryDataSource.ttl
+mediaTypes.ttl   This is underdevolpement
+catalog-v001.xml  NetBeans file
 
 ------------------------------------------------------------------------------
 Data Loading
