@@ -49,7 +49,7 @@ public class LinksetListener {
         LinksetHandler handler = new LinksetHandler(uriListener, linkPredicate, justification, mappingSource, true, 
                 viaLabels, chainedLinkSets);
         RdfParser parser = getParser(handler);
-        parser.parse(file);
+        parser.parse(mappingSource, file);
         return handler.getMappingsetId();
     }
     
