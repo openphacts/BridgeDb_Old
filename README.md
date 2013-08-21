@@ -148,17 +148,7 @@ Bio Project: These are out of date. Please see Original BridgeDB project for lat
 These do not form part of the current code and could be removed without notice.
 They are from ideas that have been discarded or not implemented yet.
 These include:
-* AndraDataSource.ttl
-* BioDataSource.ttl
-* BioDataSourceWithPrimary.ttl
-* BridgeDBDataSource.ttl
-* ChristianDataSource.ttl
-* ExportDataSource.ttl
-* ImsDataSources.ttl
 * mediaTypes.ttl
-* MergedDataSource.ttl
-* MergedDataSourceWithPrimary.ttl
-* PrimaryDataSource.ttl
 
 Data Loading
 ============
