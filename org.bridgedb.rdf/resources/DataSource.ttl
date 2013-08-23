@@ -649,7 +649,9 @@ bridgeDB:DataSource_Chebi a bridgeDB:DataSource ;
 	bridgeDB:type "metabolite" ;
     bridgeDB:hasDataType ChemInf:SIO_010004 ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:$id> ;
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/obo.chebi/CHEBI:$id> ;
+    bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/chebi/CHEBI:$id> ;
+	bridgeDB:hasUriPattern <http://identifiers.org/obo.chebi/CHEBI:$id> ;
+	bridgeDB:hasUriPattern <http://purl.org/obo/owl/CHEBI#CHEBI_$id> ;
 	bridgeDB:hasBio2RdfPattern <http://bio2rdf.org/chebi:$id> ;
     bridgeDB:hasUriPattern <http://purl.obolibrary.org/obo/CHEBI_$id> .
 
