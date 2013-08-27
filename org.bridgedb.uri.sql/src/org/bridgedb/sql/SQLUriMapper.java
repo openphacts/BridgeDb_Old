@@ -62,13 +62,16 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     private static final int MIMETYPE_LENGTH = 50;
     private static final int CREATED_BY_LENGTH = 150;
     
-    private static final String URI_TABLE_NAME = "uri";
+    public static final String CHAIN_TABLE_NAME = "chain";
+    private static final String VIA_TABLE_NAME = "via";
     public static final String MAPPING_STATS_TABLE_NAME = "mappingStats";
     private static final String MIMETYPE_TABLE_NAME = "mimeType";
+    private static final String URI_TABLE_NAME = "uri";
 
 //    private static final String LENS_JUSTIFICATIONS_TABLE_NAME = "lensJustifications";
 //    private static final String LENS_TABLE_NAME = "lens";
     
+    public static final String CHAIN_ID_COLUMN_NAME = "chainId";
     private static final String CREATED_BY_COLUMN_NAME = "createdBy";
     private static final String CREATED_ON_COLUMN_NAME = "createdOn";
     private static final String DATASOURCE_COLUMN_NAME = "dataSource";
@@ -87,7 +90,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     static final String MAPPING_URI_COLUMN_NAME = "mappingUri";
     private static final String MIMETYPE_COLUMN_NAME = "mimetype";
     private static final String NAME_COLUMN_NAME = "name";
-   
+    static final String VIA_DATASOURCE_COLUMN_NAME = "viaDataSource";
+    
     private static SQLUriMapper mapper = null;
     private HashMap<Integer,UriPattern> subjectUriPatterns;
     private HashMap<Integer,UriPattern> targetUriPatterns;
@@ -137,6 +141,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
  		dropTable(URI_TABLE_NAME);
         dropTable(MAPPING_STATS_TABLE_NAME);
  		dropTable(MIMETYPE_TABLE_NAME);
+        dropTable(VIA_TABLE_NAME);
+        dropTable(CHAIN_TABLE_NAME);
 // 		dropTable(LENS_TABLE_NAME);
 // 		dropTable(LENS_JUSTIFICATIONS_TABLE_NAME);
     }
@@ -178,7 +184,15 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                         + "UNIQUE KEY  (`" + MAPPING_SET_ID_COLUMN_NAME  + "`, `" + SOURCE_DATASOURCE_COLUMN_NAME 
                         + "`, `" + TARGET_DATASOURCE_COLUMN_NAME + "`)"
 					+ " ) "); 
-/*            sh.execute("CREATE TABLE " + LENS_TABLE_NAME + " ( " 
+         	sh.execute("CREATE TABLE " + VIA_TABLE_NAME 
+                    + " (" + MAPPING_SET_ID_COLUMN_NAME + " INT NOT NULL, "
+                    + "     " + VIA_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ")  NOT NULL "
+					+ " ) "); 
+         	sh.execute("CREATE TABLE " + CHAIN_TABLE_NAME 
+                    + " (" + MAPPING_SET_ID_COLUMN_NAME + " INT NOT NULL, "
+                    + "     " + CHAIN_ID_COLUMN_NAME + " INT NOT NULL"
+					+ " ) "); 
+ /*            sh.execute("CREATE TABLE " + LENS_TABLE_NAME + " ( " 
             		+ LENS_ID_COLUMN_NAME + " INT " + autoIncrement + " PRIMARY KEY, " 
                     + LENS_URI_COLUMN_NAME + " VARCHAR(" + LENS_URI_LENGTH + "), "
             		+ NAME_COLUMN_NAME + " VARCHAR(" + FULLNAME_LENGTH + ") NOT NULL, " 
@@ -1187,6 +1201,70 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 		}        
     }
     
+    private void registerChain(int mappingSetId, Set<Integer> chainedLinkSets) throws BridgeDBException {
+        if (chainedLinkSets == null || chainedLinkSets.isEmpty() ){
+            return;
+        }
+        Iterator<Integer> chainLinkSetId = chainedLinkSets.iterator(); 
+        StringBuilder insert = new StringBuilder("INSERT INTO ");
+        insert.append(CHAIN_TABLE_NAME);
+        insert.append(" (");
+        insert.append(MAPPING_SET_ID_COLUMN_NAME);
+        insert.append(", ");
+        insert.append(CHAIN_ID_COLUMN_NAME);
+        insert.append(") VALUES ");
+        insert.append("('");
+        insert.append(mappingSetId);
+        insert.append("', ");
+        insert.append(chainLinkSetId.next());
+        insert.append(")");
+        while (chainLinkSetId.hasNext()){
+            insert.append(", ('");
+            insert.append(mappingSetId);
+            insert.append("', ");
+            insert.append(chainLinkSetId.next());
+            insert.append(")");        
+        }
+        Statement statement = createStatement();
+        try {
+            statement.executeUpdate(insert.toString());
+        } catch (SQLException ex) {
+            throw new BridgeDBException ("Error inserting via with " +  insert, ex);
+        }
+    }
+
+    private void registerVia(int mappingSetId, Set<String> viaLabels) throws BridgeDBException {
+        if (viaLabels == null || viaLabels.isEmpty() ){
+            return;
+        }
+        Iterator<String> labels = viaLabels.iterator(); 
+        StringBuilder insert = new StringBuilder("INSERT INTO ");
+        insert.append(VIA_TABLE_NAME);
+        insert.append(" (");
+        insert.append(MAPPING_SET_ID_COLUMN_NAME);
+        insert.append(", ");
+        insert.append(VIA_DATASOURCE_COLUMN_NAME);
+        insert.append(") VALUES ");
+        insert.append("('");
+        insert.append(mappingSetId);
+        insert.append("', '");
+        insert.append(labels.next());
+        insert.append("')");
+        while (labels.hasNext()){
+            insert.append(", ('");
+            insert.append(mappingSetId);
+            insert.append("', '");
+            insert.append(labels.next());
+            insert.append("')");        
+        }
+        Statement statement = createStatement();
+        try {
+            statement.executeUpdate(insert.toString());
+        } catch (SQLException ex) {
+            throw new BridgeDBException ("Error inserting via with " +  insert, ex);
+        }
+    }
+
     @Override
     public synchronized void insertUriMapping(String sourceUri, String targetUri, int mappingSetId, boolean symetric) throws BridgeDBException {
         UriPattern uriPattern = subjectUriPatterns.get(mappingSetId);

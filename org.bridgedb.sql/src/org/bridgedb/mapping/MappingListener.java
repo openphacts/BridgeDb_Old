@@ -44,8 +44,7 @@ public interface MappingListener {
      */
 	//XXX-AG: Assuming justification can be null since predicate can be null
     public int registerMappingSet(DataSource source, String predicate, String justification, DataSource target, 
-            String mappingSource, boolean symetric, Set<String> viaLabels, Set<Integer> chainedLinkSets) 
-            throws BridgeDBException;
+            String mappingSource, boolean symetric) throws BridgeDBException;
     
     /**
      * Inserts a mapping into the system.

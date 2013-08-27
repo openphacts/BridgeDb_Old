@@ -56,21 +56,17 @@ public class SQLListener extends SQLBase implements MappingListener{
     protected static final int PREDICATE_LENGTH = 100;
     protected static final int JUSTIFICATION_LENGTH = 150;
 
-    private static final int LINK_SET_ID_LENGTH = 100;
     private static final int KEY_LENGTH= 100; 
     private static final int PROPERTY_LENGTH = 100;
     private static final int MAX_BLOCK_SIZE = 1000;
 protected static final int MAPPING_URI_LENGTH = 200;
     
     //static final String DATASOURCE_TABLE_NAME = "DataSource";
-    public static final String CHAIN_TABLE_NAME = "chain";
     static final String INFO_TABLE_NAME = "info";  //Do not change as used by RDG packages as well
     static final String MAPPING_TABLE_NAME = "mapping";
     public static final String MAPPING_SET_TABLE_NAME = "mappingSet";
     static final String PROPERTIES_TABLE_NAME = "properties";
-    static final String VIA_TABLE_NAME = "via";
 
-    public static final String CHAIN_ID_COLUMN_NAME = "chainId";
     public static final String ID_COLUMN_NAME = "id";
     static final String IS_PUBLIC_COLUMN_NAME = "isPublic";
     public static final String JUSTIFICATION_COLUMN_NAME = "justification";
@@ -92,8 +88,7 @@ protected static final int MAPPING_URI_LENGTH = 200;
     static final String URL_PATTERN_COLUMN_NAME = "urlPattern";
     static final String URN_BASE_COLUMN_NAME = "urnBase";
     static final String LAST_UDPATES = "LastUpdates";
-    static final String VIA_DATASOURCE_COLUMN_NAME = "viaDataSource";
-    
+   
     static final String FULL_NAME_PREFIX = "_";
     
     private final int blockSize;
@@ -131,16 +126,12 @@ protected static final int MAPPING_URI_LENGTH = 200;
         
     @Override
     public synchronized int registerMappingSet(DataSource source, String predicate, String justification, 
-            DataSource target, String mappingName, boolean symetric, Set<String> viaLabels, Set<Integer> chainedLinkSets) throws BridgeDBException {
+            DataSource target, String mappingName, boolean symetric) throws BridgeDBException {
         //checkDataSourceInDatabase(source);
         //checkDataSourceInDatabase(target);
         int forwardId = registerMappingSet(source, target, predicate, justification, mappingName, 0);
-        registerVia(forwardId, viaLabels);
-        registerChain(forwardId, chainedLinkSets);
         if (symetric){
             int symetricId = registerMappingSet(target, source, predicate, justification, mappingName, forwardId);
-            registerVia(symetricId, viaLabels);
-            registerChain(symetricId, chainedLinkSets);
         }
         return forwardId;
     }
@@ -220,72 +211,7 @@ protected static final int MAPPING_URI_LENGTH = 200;
         logger.info("Registered new Mapping " + autoinc + " from " + getDataSourceKey(source) + " to " + getDataSourceKey(target));
         return autoinc;
     }
-
-protected void registerVia(int mappingSetId, Set<String> viaLabels) throws BridgeDBException {
-        if (viaLabels == null || viaLabels.isEmpty() ){
-            return;
-        }
-        Iterator<String> labels = viaLabels.iterator(); 
-        StringBuilder insert = new StringBuilder("INSERT INTO ");
-        insert.append(VIA_TABLE_NAME);
-        insert.append(" (");
-        insert.append(MAPPING_SET_ID_COLUMN_NAME);
-        insert.append(", ");
-        insert.append(VIA_DATASOURCE_COLUMN_NAME);
-        insert.append(") VALUES ");
-        insert.append("('");
-        insert.append(mappingSetId);
-        insert.append("', '");
-        insert.append(labels.next());
-        insert.append("')");
-        while (labels.hasNext()){
-            insert.append(", ('");
-            insert.append(mappingSetId);
-            insert.append("', '");
-            insert.append(labels.next());
-            insert.append("')");        
-        }
-        Statement statement = createStatement();
-        try {
-            statement.executeUpdate(insert.toString());
-        } catch (SQLException ex) {
-            throw new BridgeDBException ("Error inserting via with " +  insert, ex);
-        }
-    }
-
     
-protected void registerChain(int mappingSetId, Set<Integer> chainedLinkSets) throws BridgeDBException {
-        if (chainedLinkSets == null || chainedLinkSets.isEmpty() ){
-            return;
-        }
-        Iterator<Integer> chainLinkSetId = chainedLinkSets.iterator(); 
-        StringBuilder insert = new StringBuilder("INSERT INTO ");
-        insert.append(CHAIN_TABLE_NAME);
-        insert.append(" (");
-        insert.append(MAPPING_SET_ID_COLUMN_NAME);
-        insert.append(", ");
-        insert.append(CHAIN_ID_COLUMN_NAME);
-        insert.append(") VALUES ");
-        insert.append("('");
-        insert.append(mappingSetId);
-        insert.append("', ");
-        insert.append(chainLinkSetId.next());
-        insert.append(")");
-        while (chainLinkSetId.hasNext()){
-            insert.append(", ('");
-            insert.append(mappingSetId);
-            insert.append("', ");
-            insert.append(chainLinkSetId.next());
-            insert.append(")");        
-        }
-        Statement statement = createStatement();
-        try {
-            statement.executeUpdate(insert.toString());
-        } catch (SQLException ex) {
-            throw new BridgeDBException ("Error inserting via with " +  insert, ex);
-        }
-    }
-
     @Override
     public synchronized void closeInput() throws BridgeDBException {
         runInsert();
@@ -395,9 +321,7 @@ protected void registerChain(int mappingSetId, Set<Integer> chainedLinkSets) thr
  		dropTable(MAPPING_TABLE_NAME);
  		dropTable(MAPPING_SET_TABLE_NAME);
  		dropTable(PROPERTIES_TABLE_NAME);
-        dropTable(VIA_TABLE_NAME);
-        dropTable(CHAIN_TABLE_NAME);
-     }
+    }
     
     /**
      * Drops a single table if it exists.
@@ -461,7 +385,7 @@ protected void registerChain(int mappingSetId, Set<Integer> chainedLinkSets) thr
             query = "CREATE TABLE " + MAPPING_TABLE_NAME 
                     + "( " + SOURCE_ID_COLUMN_NAME      + " VARCHAR(" + ID_LENGTH + ") NOT NULL, "
         			+ "  " + TARGET_ID_COLUMN_NAME      + " VARCHAR(" + ID_LENGTH + ") NOT NULL, " 
-                    + "  " + MAPPING_SET_ID_COLUMN_NAME + " INT(" + LINK_SET_ID_LENGTH + "), "
+                    + "  " + MAPPING_SET_ID_COLUMN_NAME + " INT, "
                     + "INDEX `setFind` (" + MAPPING_SET_ID_COLUMN_NAME + "), " 
                     + "INDEX `sourceFind` (" + SOURCE_ID_COLUMN_NAME + "), " 
                     + "INDEX `sourceMappingSetFind` (" + MAPPING_SET_ID_COLUMN_NAME + ", " + SOURCE_ID_COLUMN_NAME + ") "
@@ -482,16 +406,6 @@ protected void registerChain(int mappingSetId, Set<Integer> chainedLinkSets) thr
                     + "    " + PROPERTY_COLUMN_NAME + "    VARCHAR(" + PROPERTY_LENGTH + ") NOT NULL, "
                     + "    " + IS_PUBLIC_COLUMN_NAME + "    SMALLINT "
 					+ " ) "); 
-         	query =	"CREATE TABLE " + VIA_TABLE_NAME 
-                    + " (" + MAPPING_SET_ID_COLUMN_NAME + " INT(" + LINK_SET_ID_LENGTH + ") NOT NULL, "
-                    + "     " + VIA_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ")  NOT NULL "
-					+ " ) "; 
-            sh.execute(query);
-         	query =	"CREATE TABLE " + CHAIN_TABLE_NAME 
-                    + " (" + MAPPING_SET_ID_COLUMN_NAME + " INT(" + LINK_SET_ID_LENGTH + ") NOT NULL, "
-                    + "     " + CHAIN_ID_COLUMN_NAME + " INT(" + LINK_SET_ID_LENGTH + ") NOT NULL"
-					+ " ) "; 
-            sh.execute(query);
             sh.close();
 		} catch (SQLException e){
  			throw new BridgeDBException ("Error creating the tables using " + query, e);
