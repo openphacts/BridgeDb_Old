@@ -517,9 +517,9 @@ public class TransativeFinder extends SQLBase{
         LinksetListener loader = new LinksetListener(uriListener);
         //(File file, String mappingSource, URI linkPredicate, String justification)
         File file = new File(absolutePath);
-        String mappingSource = RdfParser.fileToURL(file);
+        URI mappingUri = RdfParser.fileToURL(file);
         URI linkPredicate = new URIImpl(predicate);
-        return loader.parse(file, mappingSource, linkPredicate, justification, viaLabels, chainIds);
+        return loader.parse(file, mappingUri, mappingUri, linkPredicate, justification, viaLabels, chainIds);
     }
 
     /**

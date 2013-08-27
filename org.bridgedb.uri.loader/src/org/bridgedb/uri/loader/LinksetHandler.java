@@ -45,7 +45,8 @@ public class LinksetHandler extends RDFHandlerBase{
     boolean processingFirstStatement = true;
     private final URI linkPredicate;
     private final String justification;
-    private final String mappingSource;
+    private final Resource mappingResource;
+    private final Resource mappingSource;
     private final boolean symetric;
     private final UriListener uriListener;
     private final Set<String> viaLabels;
@@ -54,22 +55,24 @@ public class LinksetHandler extends RDFHandlerBase{
     private int mappingSet;
     private int noneLinkStatements;
     
-    public LinksetHandler(UriListener uriListener, URI linkPredicate, String justification, String mappingSource, 
-            boolean symetric, Set<String> viaLabels, Set<Integer> chainedLinkSets){
+    public LinksetHandler(UriListener uriListener, URI linkPredicate, String justification, Resource mappingResource, 
+            Resource mappingSource, boolean symetric, Set<String> viaLabels, Set<Integer> chainedLinkSets){
         this.uriListener = uriListener;
         this.linkPredicate = linkPredicate;
         this.justification = justification;
+        this.mappingResource = mappingResource;
         this.mappingSource = mappingSource;
         this.symetric = symetric;
         this.viaLabels = viaLabels;
         this.chainedLinkSets = chainedLinkSets;
     }
     
-    public LinksetHandler(UriListener uriListener, URI linkPredicate, String justification, String mappingSource, 
-            boolean symetric){
+    public LinksetHandler(UriListener uriListener, URI linkPredicate, String justification, Resource mappingResource, 
+            Resource mappingSource, boolean symetric){
         this.uriListener = uriListener;
         this.linkPredicate = linkPredicate;
         this.justification = justification;
+        this.mappingResource = mappingResource;
         this.mappingSource = mappingSource;
         this.symetric = symetric;
         this.viaLabels = null;
@@ -123,7 +126,7 @@ public class LinksetHandler extends RDFHandlerBase{
                     throw new RDFHandlerException("Unable to get a pattern for " + object.stringValue());
                 }
                 mappingSet = uriListener.registerMappingSet(sourcePattern, linkPredicate.stringValue(), justification, targetPattern, 
-                        mappingSource, symetric, this.viaLabels, this.chainedLinkSets);
+                        mappingResource, mappingSource, symetric, this.viaLabels, this.chainedLinkSets);
             } catch (BridgeDBException ex) {
                 throw new RDFHandlerException("Error registering mappingset from " + st, ex);
             }

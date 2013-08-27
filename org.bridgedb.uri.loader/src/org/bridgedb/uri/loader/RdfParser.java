@@ -21,7 +21,6 @@ package org.bridgedb.uri.loader;
 
 import info.aduna.lang.FileFormat;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +30,8 @@ import org.apache.log4j.Logger;
 import org.bridgedb.uri.loader.transative.TransativeConfig;
 import org.bridgedb.utils.BridgeDBException;
 import org.openrdf.OpenRDFException;
+import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFParser;
@@ -124,22 +125,22 @@ public class RdfParser {
         }
     }
 
-    public static String fileToURL(File file) throws BridgeDBException{
+    public static URI fileToURL(File file) throws BridgeDBException{
         String baseURI = TransativeConfig.getTransitiveBaseUri();
         if (baseURI == null || baseURI.isEmpty()){
             return fileToURI(file); 
         }
         if (file.getParent().equals(TransativeConfig.getTransativeDirectory())){
-            return baseURI + file.getName();
+            return new URIImpl(baseURI + file.getName());
         } else {
             return RdfParser.fileToURI(file);
         }
     }
     
-    public static String fileToURI(File file) throws BridgeDBException{
-        String uri;
+    private static URI fileToURI(File file) throws BridgeDBException{
         try {
-            return file.toURI().toURL().toExternalForm();
+            String uri = file.toURI().toURL().toExternalForm();
+            return new URIImpl(uri);
         } catch (MalformedURLException ex) {
             throw new BridgeDBException("Unable to convert file to URI", ex);
         }

@@ -35,8 +35,8 @@ public class MappingSetInfo {
     private final String predicate;
     private final DataSetInfo target;
     private final String justification;
-    private final String mappingName;
-    private final String mappingUri;
+    private final String mappingResource;
+    private final String mappingSource;
     private final int symmetric;
     private Set<DataSetInfo> viaDataSets;
     private Set<Integer> chainIds;
@@ -50,7 +50,7 @@ public class MappingSetInfo {
     private final Integer frequencyMax;
 
     public MappingSetInfo(int id, DataSetInfo source, String predicate, DataSetInfo target, String justification,
-            String mappingName, String mappingUri, int symmetric, Set<DataSetInfo> viaDataSets,  Set<Integer> chainIds, 
+            String mappingResource, String mappingSource, int symmetric, Set<DataSetInfo> viaDataSets,  Set<Integer> chainIds, 
             Integer numberOfLinks, Integer numberOfSources, Integer numberOfTargets, Integer frequencyMedium,
             Integer frequency75, Integer frequency90, Integer frequency99, Integer frequencyMax){
         intId = id;
@@ -59,8 +59,8 @@ public class MappingSetInfo {
         this.source = source;
         this.target = target;
         this.justification = justification;
-        this.mappingName = mappingName;
-        this.mappingUri = mappingUri;
+        this.mappingResource = mappingResource;
+        this.mappingSource = mappingSource;
         this.symmetric = symmetric;
         setViaDataSets(viaDataSets);
         setChainIds(chainIds);
@@ -209,15 +209,15 @@ public class MappingSetInfo {
     /**
      * @return the mappingSource
      */
-    public String getMappingName() {
-        return mappingName;
+    public String getMappingResource() {
+        return mappingResource;
     }
 
     /**
      * @return the mappingUri
      */
-    public String getMappingUri() {
-        return mappingUri;
+    public String getMappingSource() {
+        return mappingSource;
     }
 
     /**

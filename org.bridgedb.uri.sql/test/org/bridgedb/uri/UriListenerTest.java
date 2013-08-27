@@ -27,6 +27,8 @@ import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.IDMapperTestBase;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
+import org.openrdf.model.Resource;
+import org.openrdf.model.impl.URIImpl;
 
 /**
  * Base class of all Test using Uris
@@ -192,28 +194,33 @@ public abstract class UriListenerTest extends IDMapperTestBase{
         listener.registerUriPattern(DataSource3, uriSpace3 + "$id");
         listener.registerUriPattern(DataSource3, uriSpace3a + "$id");
 
+        Resource resource = new URIImpl("http://example.com/1to2");
         int mappingSet = listener.registerMappingSet(uriPattern1, TEST_PREDICATE, 
-                Lens.getDefaultJustifictaionString(), uriPattern2, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
+                Lens.getDefaultJustifictaionString(), uriPattern2, resource, resource, SYMETRIC, NO_VIA, NO_CHAIN);
         listener.insertUriMapping(map1Uri1, map1Uri2, mappingSet, SYMETRIC);
         listener.insertUriMapping(map2Uri1, map2Uri2, mappingSet, SYMETRIC);
         listener.insertUriMapping(map3Uri1, map3Uri2, mappingSet, SYMETRIC);
         
+        resource = new URIImpl("http://example.com/2to3");
         mappingSet = listener.registerMappingSet(uriPattern2, TEST_PREDICATE, 
-                Lens.getDefaultJustifictaionString(), uriPattern3, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
+                Lens.getDefaultJustifictaionString(), uriPattern3, resource, resource, SYMETRIC, NO_VIA, NO_CHAIN);
         assertEquals(mappingSet2_3, mappingSet);
         listener.insertUriMapping(map1Uri2, map1Uri3, mappingSet2_3, SYMETRIC);
         listener.insertUriMapping(map2Uri2, map2Uri3, mappingSet2_3, SYMETRIC);
         listener.insertUriMapping(map3Uri2, map3Uri3, mappingSet2_3, SYMETRIC);
 
+        resource = new URIImpl("http://example.com/1to3");
         mappingSet = listener.registerMappingSet(uriPattern1, TEST_PREDICATE, 
-                Lens.getDefaultJustifictaionString(), uriPattern3, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
+                Lens.getDefaultJustifictaionString(), uriPattern3, resource, resource, SYMETRIC, NO_VIA, NO_CHAIN);
         listener.insertUriMapping(map1Uri1, map1Uri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map2Uri1, map2Uri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map3Uri1, map3Uri3, mappingSet, SYMETRIC);
 
         listener.closeInput();
+        
+        resource = new URIImpl("http://example.com/1to2Lensed");
         mappingSet = listener.registerMappingSet(uriPattern1, TEST_PREDICATE, 
-        		Lens.getTestJustifictaion(), uriPattern2, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
+        		Lens.getTestJustifictaion(), uriPattern2, resource, resource, SYMETRIC, NO_VIA, NO_CHAIN);
         listener.insertUriMapping(map1Uri1, map1AUri2, mappingSet, SYMETRIC);
         listener.insertUriMapping(map2Uri1, map2AUri2, mappingSet, SYMETRIC);
         listener.insertUriMapping(map3Uri1, map3AUri2, mappingSet, SYMETRIC);
@@ -221,8 +228,9 @@ public abstract class UriListenerTest extends IDMapperTestBase{
         listener.insertUriMapping(map2AUri1, map2Uri2, mappingSet, SYMETRIC);
         listener.insertUriMapping(map3AUri1, map3Uri2, mappingSet, SYMETRIC);
 
+        resource = new URIImpl("http://example.com/2to3Lensed");
         mappingSet = listener.registerMappingSet(uriPattern2, TEST_PREDICATE, 
-        		Lens.getTestJustifictaion(), uriPattern3, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
+        		Lens.getTestJustifictaion(), uriPattern3, resource, resource, SYMETRIC, NO_VIA, NO_CHAIN);
         listener.insertUriMapping(map1Uri2, map1AUri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map2Uri2, map2AUri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map3Uri2, map3AUri3, mappingSet, SYMETRIC);
@@ -246,8 +254,9 @@ public abstract class UriListenerTest extends IDMapperTestBase{
         HashSet<Integer> chain = new HashSet<Integer>();
         chain.add(1);
         chain.add(2);
+        Resource resource = new URIImpl("http://example.com/1to3Lensed");
         int mappingSet = listener.registerMappingSet(uriPattern1, TEST_PREDICATE, 
-        		Lens.getTestJustifictaion(), uriPattern3, "UriListenerTest.loadData()", SYMETRIC, via, chain);
+        		Lens.getTestJustifictaion(), uriPattern3, resource, resource, SYMETRIC, via, chain);
         listener.insertUriMapping(map1Uri1, map1AUri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map2Uri1, map2AUri3, mappingSet, SYMETRIC);
         listener.insertUriMapping(map3Uri1, map3AUri3, mappingSet, SYMETRIC);

@@ -21,7 +21,6 @@ package org.bridgedb.ws.bean;
 
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
 
 /**
@@ -39,8 +38,8 @@ public class MappingSetInfoBean {
     private Integer numberOfLinks;
     private Set<DataSetInfoBean> viaDataSets;
     private Set<Integer> chainId;
-    private String mappingName;
-    private String mappingUri;    
+    private String mappingResource;
+    private String mappingSource;    
     private Integer numberOfSources;
     private Integer numberOfTargets;
     private Integer frequencyMedium;
@@ -61,8 +60,8 @@ public class MappingSetInfoBean {
                bean.getPredicate(), 
                DataSetInfoBean.asDataSetInfo(bean.getTarget()), 
                bean.getJustification(), 
-               bean.getMappingName(),
-               bean.getMappingUri(),
+               bean.getMappingResource(),
+               bean.getMappingSource(),
                bean.getSymmetric(), 
                DataSetInfoBean.asDataSetInfos(bean.getViaDataSets()), 
                bean.getChainId(), 
@@ -84,8 +83,8 @@ public class MappingSetInfoBean {
             bean.predicate = info.getPredicate();
             bean.target = DataSetInfoBean.asBean(info.getTarget());
             bean.justification = info.getJustification();
-            bean.mappingName = info.getMappingName();
-            bean.mappingUri = info.getMappingUri();
+            bean.mappingResource = info.getMappingResource();
+            bean.mappingSource = info.getMappingSource();
             bean.symmetric = info.getSymmetric();
             bean.viaDataSets = DataSetInfoBean.asBeans(info.getViaDataSets());
             bean.chainId = info.getChainIds();
@@ -229,34 +228,6 @@ public class MappingSetInfoBean {
     }
 
     /**
-     * @return the mappingName
-     */
-    public String getMappingName() {
-        return mappingName;
-    }
-
-    /**
-     * @param mappingName the mappingName to set
-     */
-    public void setMappingName(String mappingName) {
-        this.mappingName = mappingName;
-    }
-
-    /**
-     * @return the mappingUri
-     */
-    public String getMappingUri() {
-        return mappingUri;
-    }
-
-    /**
-     * @param mappingUri the mappingUri to set
-     */
-    public void setMappingUri(String mappingUri) {
-        this.mappingUri = mappingUri;
-    }
-
-    /**
      * @return the numberOfSources
      */
     public Integer getNumberOfSources() {
@@ -352,6 +323,34 @@ public class MappingSetInfoBean {
      */
     public void setFrequencyMax(Integer frequencyMax) {
         this.frequencyMax = frequencyMax;
+    }
+
+    /**
+     * @return the mappingResource
+     */
+    public String getMappingResource() {
+        return mappingResource;
+    }
+
+    /**
+     * @param mappingResource the mappingResource to set
+     */
+    public void setMappingResource(String mappingResource) {
+        this.mappingResource = mappingResource;
+    }
+
+    /**
+     * @return the mappingSource
+     */
+    public String getMappingSource() {
+        return mappingSource;
+    }
+
+    /**
+     * @param mappingSource the mappingSource to set
+     */
+    public void setMappingSource(String mappingSource) {
+        this.mappingSource = mappingSource;
     }
 
 }

@@ -43,7 +43,7 @@ import org.bridgedb.utils.BridgeDBException;
 public class SQLListener extends SQLBase implements MappingListener{
 
     //Numbering should not clash with any GDB_COMPAT_VERSION;
-	public static final int SQL_COMPAT_VERSION = 23;
+	public static final int SQL_COMPAT_VERSION = 24;
   
     //Maximumn size in database
     protected static final int SYSCODE_LENGTH = 100;

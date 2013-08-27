@@ -29,6 +29,8 @@ import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.openrdf.model.Resource;
+import org.openrdf.model.impl.URIImpl;
 
 /**
  * Runs the UriMapper interface tests over SQLUriMapper class
@@ -56,8 +58,9 @@ public class UriMapperRecoverTest extends UriListenerTest {
         listener.recover();
         stats = uriMapper.getOverallStatistics(Lens.getAllLens());
         assertEquals(6, stats.getNumberOfMappingSets());
+        Resource resource = new URIImpl("http://example.com/1to2Another");
         int mappingSet = listener.registerMappingSet(uriPattern1, TEST_PREDICATE, 
-        		Lens.getTestJustifictaion(), uriPattern2, "UriListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
+        		Lens.getTestJustifictaion(), uriPattern2, resource, resource, SYMETRIC, NO_VIA, NO_CHAIN);
         assertEquals(7, mappingSet);
     }
             

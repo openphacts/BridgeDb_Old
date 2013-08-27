@@ -114,7 +114,8 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             + "<col/>\n" //Targets
             + "<col/>\n" //Sum of Mappings
             + "<col/>\n" //Summary
-            + "<col/>\n" //Name
+            + "<col/>\n" //Mapping Resource
+            + "<col/>\n" //Mapping Source
             + "<col/>\n" //Source Count
             + "<col/>\n" //Target Count
             + "<col/>\n" //Predicate
@@ -131,7 +132,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             + "\t\t<th>Source Data Source</th>\n"
             + "\t\t<th>Targets</th>\n"
             + "\t\t<th>Sum of Mappings</th>\n"
-            + "\t\t<th colspan=\"4\"> Mapping Set</th>\n"
+            + "\t\t<th colspan=\"5\"> Mapping Set</th>\n"
             + "\t\t<th>Predicate</th>\n"
             + "\t\t<th>Justification</th>\n"
             + "\t\t<th colspan=\"6\"> Target Frequency</th>\n"
@@ -144,7 +145,8 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             + "\t\t<th></th>\n" //Targets
             + "\t\t<th></th>\n" //Sum of Mappings
             + "\t\t<th>Summary</th>\n"
-            + "\t\t<th>Name</th>\n"
+            + "\t\t<th>Mapping Resource</th>\n"
+            + "\t\t<th>Mapping Source</th>\n"
             + "\t\t<th>Source Count</th>\n"
             + "\t\t<th>Target Count</th>\n"
             + "\t\t<th></th>\n" //Predicate
@@ -308,7 +310,12 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         addDataSourceCell(sb, info.getSource());
         addDataSourceCell(sb, info.getTarget());
         addNumberOfLinksCell(sb, info.getNumberOfLinks());
-        addMappingSetCells(sb, i);
+        //Summary
+        sb.append("\t\t<td>");
+        addMappingInfoLinkByLocation(sb, i);
+        sb.append("</td>\n");  
+        addLinkCell(sb, infos[i].getMappingResource());
+        addLinkCell(sb, infos[i].getMappingSource());
                 //SourceCount
         addNumberCell(sb, info.getNumberOfSources());
         addNumberCell(sb, info.getNumberOfTargets());
@@ -414,7 +421,9 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         sb.append("\t\t<td align=\"right\">");
             sb.append(mappingCount);
             sb.append(" Mappings</td>\n");
-        //rdf    
+        //resource   
+        sb.append("\t\t<td>&nbsp</td>");
+        //source
         sb.append("\t\t<td>&nbsp</td>");
         //Source Count   
         sb.append("<td>&nbsp</td>");
@@ -479,40 +488,6 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         sb.append(info.getFullName());
         sb.append("</a>");
    }
-
-    private void addMappingSetCells(StringBuilder sb, int i) throws BridgeDBException {
-        //Summary
-        sb.append("\t\t<td>");
-        addMappingInfoLinkByLocation(sb, i);
-        sb.append("</td>\n");  
-        //Name
-        sb.append("\t\t<td>");
-        String mappingSource = infos[i].getMappingName();
-        String shortSource = null;
-        java.net.URI uri = null;
-        try {
-            uri = new java.net.URI(mappingSource);
-            int index = mappingSource.lastIndexOf("/");
-            if (index > 0){
-                shortSource = mappingSource.substring(index + 1, mappingSource.length());
-             }
-        } catch (URISyntaxException ex) {
-            shortSource = ex.getMessage();
-        }
-        if (shortSource == null || shortSource.isEmpty()){ 
-            sb.append(mappingSource);
-        } else if (mappingSource.trim().toLowerCase().startsWith("file")){
-            //Dont expose full file path
-            sb.append(shortSource);
-        } else {
-            sb.append("<a href=\"");
-                sb.append(uri.toASCIIString());
-            sb.append("\">");
-            sb.append(shortSource);
-            sb.append("</a>");                    
-        }
-        sb.append("</td>\n");
-    }
 
     private void addMappingInfoLinkByLocation(StringBuilder sb, int i) {
         int id;

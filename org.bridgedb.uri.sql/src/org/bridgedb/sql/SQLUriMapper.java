@@ -45,6 +45,7 @@ import org.bridgedb.uri.UriListener;
 import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
+import org.openrdf.model.Resource;
 import org.openrdf.rio.RDFHandlerException;
 
 /**
@@ -85,9 +86,10 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     static final String MAPPING_LINK_COUNT_COLUMN_NAME = "mappingLinkCount";
     static final String MAPPING_MAX_FREQUENCY_COLUMN_NAME = "mappingMaxFrequency";
     static final String MAPPING_MEDIUM_FREQUENCY_COLUMN_NAME = "mappingMediumFrequency";
+    static final String MAPPING_RESOURCE_COLUMN_NAME = "resource";
+    static final String MAPPING_SOURCE_COLUMN_NAME = "source";
     static final String MAPPING_SOURCE_COUNT_COLUMN_NAME = "mappingSourceCount";
     static final String MAPPING_TARGET_COUNT_COLUMN_NAME = "mappingTargetCount";
-    static final String MAPPING_URI_COLUMN_NAME = "mappingUri";
     private static final String MIMETYPE_COLUMN_NAME = "mimetype";
     private static final String NAME_COLUMN_NAME = "name";
     static final String VIA_DATASOURCE_COLUMN_NAME = "viaDataSource";
@@ -170,8 +172,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                         + PREDICATE_COLUMN_NAME         + " VARCHAR(" + PREDICATE_LENGTH + "), "
                         + JUSTIFICATION_COLUMN_NAME     + " VARCHAR(" + JUSTIFICATION_LENGTH + "), "
                         + TARGET_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + "), "
-                        + MAPPING_NAME_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + "), "
-                        + MAPPING_URI_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + "), "
+                        + MAPPING_RESOURCE_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + "), "
+                        + MAPPING_SOURCE_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + "), "
                         + SYMMETRIC_COLUMN_NAME + " INT, "
                         + MAPPING_LINK_COUNT_COLUMN_NAME     + " INT, "
                         + MAPPING_SOURCE_COUNT_COLUMN_NAME     + " INT, "
@@ -239,8 +241,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
      * 
      */
     private void registerMappingStats(int mappingsetId, DataSource source, DataSource target, String predicate, 
-            String justification, String mappingName, int symmetric) throws BridgeDBException {
-        String mappingUri = null;
+            String justification, Resource mappingResource, Resource mappingSource, int symmetric) throws BridgeDBException {
         StringBuilder query = new StringBuilder("INSERT INTO ");
         query.append(MAPPING_STATS_TABLE_NAME);
         query.append(" ("); 
@@ -253,14 +254,10 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         query.append(JUSTIFICATION_COLUMN_NAME);
         query.append(", ");
         query.append(TARGET_DATASOURCE_COLUMN_NAME); 
-        if (mappingName != null && !mappingName.isEmpty()){
-            query.append(", ");
-            query.append(MAPPING_NAME_COLUMN_NAME); 
-        }
-        if (mappingUri != null && !mappingUri.isEmpty()){
-            query.append(MAPPING_URI_COLUMN_NAME);
-            query.append(", ");
-        }
+        query.append(", ");
+        query.append(MAPPING_RESOURCE_COLUMN_NAME); 
+        query.append(", ");
+        query.append(MAPPING_SOURCE_COLUMN_NAME); 
         query.append(", ");
         query.append(SYMMETRIC_COLUMN_NAME);
         query.append(") VALUES (");
@@ -273,14 +270,10 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         query.append(justification);
         query.append("', '");
         query.append(getDataSourceKey(target));
-        if (mappingName != null && !mappingName.isEmpty()){
-            query.append("', '");
-            query.append(mappingName);
-        }
-        if (mappingUri != null && !mappingUri.isEmpty()){
-            query.append(", '");
-            query.append(mappingUri);
-        }
+        query.append("', '");
+        query.append(mappingResource);
+        query.append("', '");
+        query.append(mappingSource);
         query.append("', ");
         query.append(symmetric);
         query.append(")");
@@ -1152,19 +1145,19 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 
     @Override
     public synchronized int registerMappingSet(UriPattern sourceUriPattern, String predicate, String justification, 
-            UriPattern targetUriPattern, String mappingSource, boolean symetric, Set<String> viaLabels, 
+            UriPattern targetUriPattern, Resource mappingResource, Resource mappingSource, boolean symetric, Set<String> viaLabels, 
             Set<Integer> chainedLinkSets) throws BridgeDBException {
         checkUriPattern(sourceUriPattern);
         checkUriPattern(targetUriPattern);
         DataSource source = sourceUriPattern.getDataSource();
         DataSource target = targetUriPattern.getDataSource();      
-        int mappingSetId = registerMappingSet(source, target, predicate, justification, mappingSource, 0);
-        registerMappingStats(mappingSetId, source, target, predicate, justification, mappingSource, 0);
+        int mappingSetId = registerMappingSet(source, target, predicate, justification, mappingResource.stringValue(), 0);
+        registerMappingStats(mappingSetId, source, target, predicate, justification, mappingResource, mappingSource, 0);
         registerVia(mappingSetId, viaLabels);
         registerChain(mappingSetId, chainedLinkSets);
         if (symetric){
-            int symetricId = registerMappingSet(target, source, predicate, justification, mappingSource, mappingSetId);
-            registerMappingStats(symetricId, target, source, predicate, justification, mappingSource, mappingSetId);
+            int symetricId = registerMappingSet(target, source, predicate, justification, mappingResource.stringValue(), mappingSetId);
+            registerMappingStats(symetricId, target, source, predicate, justification, mappingResource, mappingSource, mappingSetId);
             registerVia(symetricId, viaLabels);
             registerChain(symetricId, chainedLinkSets);
         }
@@ -1500,8 +1493,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                         rs.getString(PREDICATE_COLUMN_NAME), 
                         targetInfo, 
                         rs.getString(JUSTIFICATION_COLUMN_NAME), 
-                        rs.getString(MAPPING_NAME_COLUMN_NAME), 
-                        rs.getString(MAPPING_URI_COLUMN_NAME), 
+                        rs.getString(MAPPING_RESOURCE_COLUMN_NAME), 
+                        rs.getString(MAPPING_SOURCE_COLUMN_NAME), 
                         rs.getInt(SYMMETRIC_COLUMN_NAME), 
                         viaSysCodes, 
                         chainIds, 
