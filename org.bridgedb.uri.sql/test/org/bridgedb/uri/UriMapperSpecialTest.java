@@ -22,6 +22,7 @@ package org.bridgedb.uri;
 import java.util.List;
 import java.util.Set;
 import org.bridgedb.DataSource;
+import org.bridgedb.IDMapperException;
 import org.bridgedb.Xref;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.sql.SQLListener;
@@ -139,6 +140,7 @@ public abstract class UriMapperSpecialTest extends UriListenerTest{
     public void testGetOverallStatistics() throws BridgeDBException {
         report("GetOverallStatistics()");
         OverallStatistics results = uriMapper.getOverallStatistics(Lens.getDefaultLens());
+        System.out.println(results);
         assertThat (results.getNumberOfMappings(), greaterThanOrEqualTo(18));
         assertThat (results.getNumberOfMappingSets(), greaterThanOrEqualTo(6));
         assertThat (results.getNumberOfSourceDataSources(), greaterThanOrEqualTo(3));
@@ -240,4 +242,42 @@ public abstract class UriMapperSpecialTest extends UriListenerTest{
         //ystem.out.println(end.getTime()-start.getTime());
         
     }
+    
+ /*       @Test
+    public void testFrequency() throws IDMapperException{
+        report("Frequency");
+        String TEST_JUSTIFICATION1 = "http://www.bridgedb.org/test#testJustification1";
+        DataSource DataSourceA = DataSource.register("testFrequencyA", "testFrequencyA").asDataSource();
+        DataSource DataSourceB = DataSource.register("testFrequencyB", "testFrequencyB").asDataSource();
+        SQLUriMapper sqlUriMapper = (SQLUriMapper)uriMapper;
+        int mappingSet = sqlUriMapper.registerMappingSet(DataSourceA, TEST_PREDICATE, TEST_JUSTIFICATION1, "testFrequency()", DataSourceB, 
+                SYMETRIC, NO_VIA, NO_CHAIN);
+        listener.insertLink("1", "A", mappingSet, SYMETRIC);
+        listener.insertLink("1", "B", mappingSet, SYMETRIC);
+        listener.insertLink("1", "C", mappingSet, SYMETRIC);
+        listener.insertLink("1", "D", mappingSet, SYMETRIC);
+        listener.insertLink("1", "E", mappingSet, SYMETRIC);
+        listener.insertLink("11", "A1", mappingSet, SYMETRIC);
+        listener.insertLink("11", "B1", mappingSet, SYMETRIC);
+        listener.insertLink("11", "C1", mappingSet, SYMETRIC);
+        listener.insertLink("11", "D1", mappingSet, SYMETRIC);
+        listener.insertLink("11", "E1", mappingSet, SYMETRIC);
+        listener.insertLink("12", "A1", mappingSet, SYMETRIC);
+        listener.insertLink("12", "B1", mappingSet, SYMETRIC);
+        listener.insertLink("12", "C1", mappingSet, SYMETRIC);
+        listener.insertLink("12", "D1", mappingSet, SYMETRIC);
+        listener.insertLink("2", "A", mappingSet, SYMETRIC);
+        listener.insertLink("2", "B", mappingSet, SYMETRIC);
+        listener.insertLink("2", "C", mappingSet, SYMETRIC);
+        listener.insertLink("2", "D", mappingSet, SYMETRIC);
+        listener.insertLink("3", "A", mappingSet, SYMETRIC);
+        listener.insertLink("3", "B", mappingSet, SYMETRIC);
+        listener.insertLink("3", "C", mappingSet, SYMETRIC);
+        listener.insertLink("4", "A", mappingSet, SYMETRIC);
+        listener.insertLink("4", "B", mappingSet, SYMETRIC);
+        listener.insertLink("5", "B", mappingSet, SYMETRIC);
+        listener.closeInput();
+     }
+ */     
+
 }

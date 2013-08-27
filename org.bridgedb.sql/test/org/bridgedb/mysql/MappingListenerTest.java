@@ -69,38 +69,4 @@ public class MappingListenerTest extends org.bridgedb.mapping.MappingListenerTes
         assertFalse(results.contains(map2xref2));
     }
    
-    @Test
-    public void testFrequency() throws IDMapperException{
-        report("Frequency");
-        DataSource DataSourceA = DataSource.register("testFrequencyA", "testFrequencyA").asDataSource();
-        DataSource DataSourceB = DataSource.register("testFrequencyB", "testFrequencyB").asDataSource();
-        int mappingSet = listener.registerMappingSet(DataSourceA, TEST_PREDICATE, TEST_JUSTIFICATION1, DataSourceB, 
-                "MappingListenerTest.loadData()", SYMETRIC, NO_VIA, NO_CHAIN);
-        listener.insertLink("1", "A", mappingSet, SYMETRIC);
-        listener.insertLink("1", "B", mappingSet, SYMETRIC);
-        listener.insertLink("1", "C", mappingSet, SYMETRIC);
-        listener.insertLink("1", "D", mappingSet, SYMETRIC);
-        listener.insertLink("1", "E", mappingSet, SYMETRIC);
-        listener.insertLink("11", "A1", mappingSet, SYMETRIC);
-        listener.insertLink("11", "B1", mappingSet, SYMETRIC);
-        listener.insertLink("11", "C1", mappingSet, SYMETRIC);
-        listener.insertLink("11", "D1", mappingSet, SYMETRIC);
-        listener.insertLink("11", "E1", mappingSet, SYMETRIC);
-        listener.insertLink("12", "A1", mappingSet, SYMETRIC);
-        listener.insertLink("12", "B1", mappingSet, SYMETRIC);
-        listener.insertLink("12", "C1", mappingSet, SYMETRIC);
-        listener.insertLink("12", "D1", mappingSet, SYMETRIC);
-        listener.insertLink("2", "A", mappingSet, SYMETRIC);
-        listener.insertLink("2", "B", mappingSet, SYMETRIC);
-        listener.insertLink("2", "C", mappingSet, SYMETRIC);
-        listener.insertLink("2", "D", mappingSet, SYMETRIC);
-        listener.insertLink("3", "A", mappingSet, SYMETRIC);
-        listener.insertLink("3", "B", mappingSet, SYMETRIC);
-        listener.insertLink("3", "C", mappingSet, SYMETRIC);
-        listener.insertLink("4", "A", mappingSet, SYMETRIC);
-        listener.insertLink("4", "B", mappingSet, SYMETRIC);
-        listener.insertLink("5", "B", mappingSet, SYMETRIC);
-        listener.closeInput();
-     }
-      
 }

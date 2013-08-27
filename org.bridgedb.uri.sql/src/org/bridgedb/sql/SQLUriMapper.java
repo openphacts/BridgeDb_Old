@@ -63,7 +63,9 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     private static final int CREATED_BY_LENGTH = 150;
     
     private static final String URI_TABLE_NAME = "uri";
+    public static final String MAPPING_STATS_TABLE_NAME = "mappingStats";
     private static final String MIMETYPE_TABLE_NAME = "mimeType";
+
 //    private static final String LENS_JUSTIFICATIONS_TABLE_NAME = "lensJustifications";
 //    private static final String LENS_TABLE_NAME = "lens";
     
@@ -74,9 +76,18 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
  //   private static final String LENS_ID_COLUMN_NAME = "lensId";
 //    private static final String LENS_URI_COLUMN_NAME = "lensUri";
     private static final String POSTFIX_COLUMN_NAME = "postfix";
+    static final String MAPPING_75_PERCENT_FREQUENCY_COLUMN_NAME = "mapping75Frequency";
+    static final String MAPPING_90_PERCENT_FREQUENCY_COLUMN_NAME = "mapping90Frequency";
+    static final String MAPPING_99_PERCENT_FREQUENCY_COLUMN_NAME = "mapping99Frequency";
+    static final String MAPPING_LINK_COUNT_COLUMN_NAME = "mappingLinkCount";
+    static final String MAPPING_MAX_FREQUENCY_COLUMN_NAME = "mappingMaxFrequency";
+    static final String MAPPING_MEDIUM_FREQUENCY_COLUMN_NAME = "mappingMediumFrequency";
+    static final String MAPPING_SOURCE_COUNT_COLUMN_NAME = "mappingSourceCount";
+    static final String MAPPING_TARGET_COUNT_COLUMN_NAME = "mappingTargetCount";
+    static final String MAPPING_URI_COLUMN_NAME = "mappingUri";
     private static final String MIMETYPE_COLUMN_NAME = "mimetype";
     private static final String NAME_COLUMN_NAME = "name";
-    
+   
     private static SQLUriMapper mapper = null;
     private HashMap<Integer,UriPattern> subjectUriPatterns;
     private HashMap<Integer,UriPattern> targetUriPatterns;
@@ -124,6 +135,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 	{
         super.dropSQLTables();
  		dropTable(URI_TABLE_NAME);
+        dropTable(MAPPING_STATS_TABLE_NAME);
  		dropTable(MIMETYPE_TABLE_NAME);
 // 		dropTable(LENS_TABLE_NAME);
 // 		dropTable(LENS_JUSTIFICATIONS_TABLE_NAME);
@@ -146,6 +158,26 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                     + "     " + POSTFIX_COLUMN_NAME + " VARCHAR(" + POSTFIX_LENGTH + ") NOT NULL, "
                     + "     mimeType VARCHAR(" + MIMETYPE_LENGTH + ") NOT NULL "
                     + "  ) ");
+         	sh.execute("CREATE TABLE " + MAPPING_STATS_TABLE_NAME 
+                    + " (" + MAPPING_SET_ID_COLUMN_NAME + " INT, " 
+                        + SOURCE_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ") NOT NULL, "
+                        + PREDICATE_COLUMN_NAME         + " VARCHAR(" + PREDICATE_LENGTH + "), "
+                        + JUSTIFICATION_COLUMN_NAME     + " VARCHAR(" + JUSTIFICATION_LENGTH + "), "
+                        + TARGET_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + "), "
+                        + MAPPING_NAME_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + "), "
+                        + MAPPING_URI_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + "), "
+                        + SYMMETRIC_COLUMN_NAME + " INT, "
+                        + MAPPING_LINK_COUNT_COLUMN_NAME     + " INT, "
+                        + MAPPING_SOURCE_COUNT_COLUMN_NAME     + " INT, "
+                        + MAPPING_TARGET_COUNT_COLUMN_NAME     + " INT, "
+                        + MAPPING_MEDIUM_FREQUENCY_COLUMN_NAME     + " INT, "
+                        + MAPPING_75_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
+                        + MAPPING_90_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
+                        + MAPPING_99_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
+                        + MAPPING_MAX_FREQUENCY_COLUMN_NAME     + " INT, "
+                        + "UNIQUE KEY  (`" + MAPPING_SET_ID_COLUMN_NAME  + "`, `" + SOURCE_DATASOURCE_COLUMN_NAME 
+                        + "`, `" + TARGET_DATASOURCE_COLUMN_NAME + "`)"
+					+ " ) "); 
 /*            sh.execute("CREATE TABLE " + LENS_TABLE_NAME + " ( " 
             		+ LENS_ID_COLUMN_NAME + " INT " + autoIncrement + " PRIMARY KEY, " 
                     + LENS_URI_COLUMN_NAME + " VARCHAR(" + LENS_URI_LENGTH + "), "
@@ -184,6 +216,65 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 }
                 replaceSysCode (toCheckName, code);
             }
+        }
+    }
+
+    /**
+     * One way registration of Mapping Set.
+     * @param justification 
+     * 
+     */
+    private void registerMappingStats(int mappingsetId, DataSource source, DataSource target, String predicate, 
+            String justification, String mappingName, int symmetric) throws BridgeDBException {
+        String mappingUri = null;
+        StringBuilder query = new StringBuilder("INSERT INTO ");
+        query.append(MAPPING_STATS_TABLE_NAME);
+        query.append(" ("); 
+        query.append(MAPPING_SET_ID_COLUMN_NAME);
+        query.append(", "); 
+        query.append(SOURCE_DATASOURCE_COLUMN_NAME);
+        query.append(", ");
+        query.append(PREDICATE_COLUMN_NAME);
+        query.append(", "); 
+        query.append(JUSTIFICATION_COLUMN_NAME);
+        query.append(", ");
+        query.append(TARGET_DATASOURCE_COLUMN_NAME); 
+        if (mappingName != null && !mappingName.isEmpty()){
+            query.append(", ");
+            query.append(MAPPING_NAME_COLUMN_NAME); 
+        }
+        if (mappingUri != null && !mappingUri.isEmpty()){
+            query.append(MAPPING_URI_COLUMN_NAME);
+            query.append(", ");
+        }
+        query.append(", ");
+        query.append(SYMMETRIC_COLUMN_NAME);
+        query.append(") VALUES (");
+        query.append(mappingsetId);
+        query.append(", '");
+        query.append(getDataSourceKey(source));
+        query.append("', '");
+        query.append(predicate);
+        query.append("', '");
+        query.append(justification);
+        query.append("', '");
+        query.append(getDataSourceKey(target));
+        if (mappingName != null && !mappingName.isEmpty()){
+            query.append("', '");
+            query.append(mappingName);
+        }
+        if (mappingUri != null && !mappingUri.isEmpty()){
+            query.append(", '");
+            query.append(mappingUri);
+        }
+        query.append("', ");
+        query.append(symmetric);
+        query.append(")");
+        Statement statement = createStatement();
+        try {
+            statement.executeUpdate(query.toString());
+        } catch (SQLException ex) {
+            throw new BridgeDBException ("Error inserting mapping stats with " + query.toString(), ex);
         }
     }
 
@@ -1053,8 +1144,16 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         checkUriPattern(targetUriPattern);
         DataSource source = sourceUriPattern.getDataSource();
         DataSource target = targetUriPattern.getDataSource();      
-        int mappingSetId = registerMappingSet(source, predicate, justification, target, mappingSource, symetric, 
-                viaLabels, chainedLinkSets);
+        int mappingSetId = registerMappingSet(source, target, predicate, justification, mappingSource, 0);
+        registerMappingStats(mappingSetId, source, target, predicate, justification, mappingSource, 0);
+        registerVia(mappingSetId, viaLabels);
+        registerChain(mappingSetId, chainedLinkSets);
+        if (symetric){
+            int symetricId = registerMappingSet(target, source, predicate, justification, mappingSource, mappingSetId);
+            registerMappingStats(symetricId, target, source, predicate, justification, mappingSource, mappingSetId);
+            registerVia(symetricId, viaLabels);
+            registerChain(symetricId, chainedLinkSets);
+        }
         subjectUriPatterns.put(mappingSetId, sourceUriPattern);
         targetUriPatterns.put(mappingSetId, targetUriPattern);
         return mappingSetId;
@@ -1120,6 +1219,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     @Override
     public synchronized void closeInput() throws BridgeDBException {
         super.closeInput();
+        countLinks();
         subjectUriPatterns.clear();
         targetUriPatterns.clear();
     }
@@ -1683,6 +1783,221 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             throw new BridgeDBException("Unable to run update. " + update, ex);
         }    
     }
-   
+       /**
+     * Updates the count variable for each Mapping Sets.
+     * <p>
+     * This allows the counts of the mappings in each Mapping Set to be quickly returned.
+     * @throws BridgeDBException 
+     */
+    private void countLinks () throws BridgeDBException{
+        logger.info ("Updating link counts. Please Wait!");
+        Statement countStatement = this.createStatement();
+        String query = ("select " + MAPPING_SET_ID_COLUMN_NAME
+                + " from " + MAPPING_STATS_TABLE_NAME 
+                + " where " + MAPPING_LINK_COUNT_COLUMN_NAME + " is NULL");  
+        ResultSet rs;
+        //ystem.out.println(query);
+        try {
+            rs = countStatement.executeQuery(query);    
+            while (rs.next()){
+                int mappingSetId = rs.getInt(MAPPING_SET_ID_COLUMN_NAME);
+                int mappings = countLinks(mappingSetId);
+                countFrequency(mappingSetId);
+            }
+            logger.info ("Updating counts finished!");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new BridgeDBException("Unable to run query. " + query, ex);
+        }
+    }
+    
+    /**
+     * Updates the count variable for each Mapping Sets.
+     * <p>
+     * This allows the counts of the mappings in each Mapping Set to be quickly returned.
+     * @throws BridgeDBException 
+     */
+    private int countLinks (int mappingSetId ) throws BridgeDBException{
+        logger.info ("Updating link count for " + mappingSetId + ". Please Wait!");
+        Statement countStatement = this.createStatement();
+        Statement updateStatement = this.createStatement();
+        StringBuilder query = new StringBuilder("select count(distinct("); 
+        query.append(SOURCE_ID_COLUMN_NAME); 
+        query.append("))AS sources,");
+        query.append(" COUNT(distinct("); 
+        query.append(TARGET_ID_COLUMN_NAME); 
+        query.append(")) as targets,");
+        query.append(" COUNT(*) as mappings "); 
+        query.append(" FROM "); 
+        query.append(MAPPING_TABLE_NAME); 
+        addStatsConditions(query, mappingSetId);
+        ResultSet rs;
+        try {
+            rs = countStatement.executeQuery(query.toString());    
+            logger.info ("Count query run. Updating link count now");
+            while (rs.next()){
+                int sources = rs.getInt("sources");
+                int targets = rs.getInt("targets");
+                int mappings = rs.getInt("mappings");
+                StringBuilder update = new StringBuilder("UPDATE ");
+                update.append(MAPPING_STATS_TABLE_NAME); 
+                update.append(" SET "); 
+                update.append(MAPPING_SOURCE_COUNT_COLUMN_NAME); 
+                update.append(" = "); 
+                update.append(sources); 
+                update.append(", ");
+                update.append(MAPPING_TARGET_COUNT_COLUMN_NAME);
+                update.append(" = ");
+                update.append(targets); 
+                update.append(", ");
+                update.append(MAPPING_LINK_COUNT_COLUMN_NAME);
+                update.append(" = ");
+                update.append(mappings);
+                addStatsConditions(update, mappingSetId);
+                //ystem.out.println(update);
+                try {
+                    int updateCount = updateStatement.executeUpdate(update.toString());
+                    if (updateCount != 1){
+                        throw new BridgeDBException("Updated rows " + updateCount + " <> 1 when running " + update);
+                    }
+                    logger.info ("Updating counts finished!");
+                    return mappings;
+                } catch (SQLException ex) {
+                     throw new BridgeDBException("Unable to run update. " + update, ex);
+                }
+            }
+            throw new BridgeDBException("No results for " + query);            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new BridgeDBException("Unable to run query. " + query, ex);
+        }
+    }
+        
+    private void addStatsConditions(StringBuilder query, int mappingSetId){
+        query.append(" WHERE "); 
+        query.append(MAPPING_SET_ID_COLUMN_NAME); 
+        query.append(" = "); 
+        query.append(mappingSetId);          
+    }
+    /**
+     * Updates the count variable for each Mapping Sets.
+     * <p>
+     * This allows the counts of the mappings in each Mapping Set to be quickly returned.
+     * @throws BridgeDBException 
+     */
+    private void countFrequency (int mappingSetId) throws BridgeDBException{
+        float mappingsF = 0;
+        //ystem.out.println ("Updating frequency count for " + mappingSetId + ". Please Wait!");
+        logger.info ("Updating frequency count for " + mappingSetId + ". Please Wait!");
+        Statement countStatement = this.createStatement();
+        Statement updateStatement = this.createStatement();
+        StringBuilder query = new StringBuilder("SELECT targetFrequency, COUNT("); 
+        query.append(SOURCE_ID_COLUMN_NAME + ") as frequency"); 
+        query.append(" FROM (SELECT ");  
+        query.append(SOURCE_ID_COLUMN_NAME);  
+        query.append(", COUNT(DISTINCT(");  
+        query.append(TARGET_ID_COLUMN_NAME);  
+        query.append(")) as targetFrequency"); 
+        query.append(" from mapping"); 
+        addStatsConditions(query, mappingSetId); 
+        query.append(" GROUP BY "); 
+        query.append(SOURCE_ID_COLUMN_NAME); 
+        query.append(") AS innerQuery"); 
+        query.append(" GROUP BY targetFrequency ORDER BY targetFrequency");
+        ResultSet rs;
+        try {
+            //ystem.out.println(query);
+            rs = countStatement.executeQuery(query.toString());    
+            logger.info ("Count query run. Updating link count now");
+            while (rs.next()){
+                mappingsF++;
+            }
+            rs.first();
+            int frequencyCount = 0;
+            int freqMedium = -1;
+            int freq75 = -1;
+            int freq90 = -1;
+            int freq99 = -1;
+            int targetFrequency = -1;
+            while (rs.next()){
+                targetFrequency = rs.getInt("targetFrequency");
+                int frequency = rs.getInt("frequency");
+                frequencyCount++;
+                float frequencyPercent = frequencyCount/ mappingsF;
+                if (frequencyPercent >= 0.5){
+                    if (frequencyPercent >= 0.75){
+                        if (frequencyPercent >= 0.90){
+                            if (frequencyPercent >= 0.99){
+                                if (freq99 < 0){
+                                    freq99 = targetFrequency;
+                                }
+                            } else {
+                                if (freq90 < 0){
+                                    freq90 = targetFrequency;
+                                }                                
+                            }
+                        } else {
+                            if (freq75 < 0){
+                                freq75 = targetFrequency;
+                            }
+                        }
+                    } else {
+                        if (freqMedium < 0){
+                            freqMedium = targetFrequency;
+                        }                    
+                    }
+                }
+            }
+            if (freq99 < 0){
+                freq99 = targetFrequency;
+            }                                
+            if (freq90 < 0){
+                freq90 = freq99;
+            }                                
+            if (freq75 < 0){
+                freq75 = freq90;
+            }                                
+            if (freqMedium < 0){
+                freqMedium = freq75;
+            }                                
+            StringBuilder update = new StringBuilder("update ");
+            update.append(MAPPING_STATS_TABLE_NAME); 
+            update.append(" set "); 
+            update.append(MAPPING_MEDIUM_FREQUENCY_COLUMN_NAME); 
+            update.append(" = "); 
+            update.append(freqMedium); 
+            update.append(", "); 
+            update.append(MAPPING_75_PERCENT_FREQUENCY_COLUMN_NAME); 
+            update.append(" = "); 
+            update.append(freq75); 
+            update.append(", "); 
+            update.append(MAPPING_90_PERCENT_FREQUENCY_COLUMN_NAME); 
+            update.append(" = "); 
+            update.append(freq90);
+            update.append(", "); 
+            update.append(MAPPING_99_PERCENT_FREQUENCY_COLUMN_NAME); 
+            update.append(" = "); 
+            update.append(freq99);
+            update.append(", "); 
+            update.append(MAPPING_MAX_FREQUENCY_COLUMN_NAME); 
+            update.append(" = "); 
+            update.append(targetFrequency);
+            addStatsConditions(update, mappingSetId);
+            //ystem.out.println(update);
+            try {
+                int updateCount = updateStatement.executeUpdate(update.toString());
+                if (updateCount != 1){
+                    throw new BridgeDBException("Updated rows " + updateCount + " <> 1 when running " + update);
+                }
+            } catch (SQLException ex) {
+                    throw new BridgeDBException("Unable to run update. " + update, ex);
+            }
+            logger.info ("Updating frequency finished!");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new BridgeDBException("Unable to run query. " + query, ex);
+        }
+    }
+
 }
  
