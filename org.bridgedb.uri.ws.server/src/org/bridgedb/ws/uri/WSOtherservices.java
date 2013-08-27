@@ -159,10 +159,16 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
             sb.append("\n<p>Warning summary lines are just a sum of the mappings from all mapping files.");
             sb.append("So if various sources include the same mapping it will be counted multiple times. </p>");
             sb.append("\n<p>Click on the plus in the firsts column to expand or minus to contract the table.</p>");
-            MappingSetTableMaker.addTable(sb, mappingSetInfos, httpServletRequest);
+            addMappingTable(sb, mappingSetInfos, httpServletRequest);
         }
         footerAndEnd(sb);
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
+    }
+    
+    protected void addMappingTable(StringBuilder sb, List<MappingSetInfo> mappingSetInfos, HttpServletRequest httpServletRequest) 
+            throws BridgeDBException{
+        MappingSetTableMaker maker = new MappingSetTableMaker(mappingSetInfos, httpServletRequest);
+        maker.tableMaker(sb);
     }
     
      /**

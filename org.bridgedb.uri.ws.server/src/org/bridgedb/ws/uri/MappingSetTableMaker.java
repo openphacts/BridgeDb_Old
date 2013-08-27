@@ -19,7 +19,6 @@
 //
 package org.bridgedb.ws.uri;
 
-import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -33,7 +32,6 @@ import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.uri.SetMappings;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.ws.WsUriConstants;
 import org.openrdf.model.impl.URIImpl;
 
 /**
@@ -44,19 +42,13 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
     
     private MappingSetInfo[] infos = new MappingSetInfo[0];
     private MappingSetInfo previous;
-    private final HttpServletRequest httpServletRequest;
+    protected final HttpServletRequest httpServletRequest;
     
     protected final NumberFormat formatter;
     
     static final Logger logger = Logger.getLogger(MappingSetTableMaker.class);
 
-    public static void addTable(StringBuilder sb, List<MappingSetInfo> mappingSetInfos, 
-            HttpServletRequest httpServletRequest) throws BridgeDBException{
-        MappingSetTableMaker maker = new MappingSetTableMaker(mappingSetInfos, httpServletRequest);
-        maker.tableMaker(sb);
-    }
-    
-    private MappingSetTableMaker(List<MappingSetInfo> mappingSetInfos, HttpServletRequest httpServletRequest){
+    public MappingSetTableMaker(List<MappingSetInfo> mappingSetInfos, HttpServletRequest httpServletRequest){
         this.httpServletRequest = httpServletRequest;
         infos = mappingSetInfos.toArray(infos);
         Arrays.sort(infos, this);
@@ -68,7 +60,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         }
     }
     
-    private void tableMaker(StringBuilder sb) throws BridgeDBException{
+    public void tableMaker(StringBuilder sb) throws BridgeDBException{
         sb.append(SCRIPT);
         sb.append(FREQUENCY_INFO);
         sb.append(TABLE_HEADER);
@@ -314,7 +306,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
         sb.append("\t\t<td>");
         addMappingInfoLinkByLocation(sb, i);
         sb.append("</td>\n");  
-        addLinkCell(sb, infos[i].getMappingResource());
+        addResourceLinkCell(sb, infos[i].getMappingResource());
         addLinkCell(sb, infos[i].getMappingSource());
                 //SourceCount
         addNumberCell(sb, info.getNumberOfSources());
@@ -526,7 +518,18 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
             sb.append("</td>\n");
    }
 
-    private void addLinkCell(StringBuilder sb, String uri) throws BridgeDBException {
+    /**
+     * This allows project extentions that store information on resources to change the link.
+     * 
+     * @param sb
+     * @param resource
+     * @throws BridgeDBException 
+     */
+   protected void addResourceLinkCell(StringBuilder sb, String resource) throws BridgeDBException{
+       addLinkCell(sb, resource);
+   } 
+   
+   private void addLinkCell(StringBuilder sb, String uri) throws BridgeDBException {
         sb.append("\t\t<td><a href=\"");
         sb.append(uri);
         sb.append("\">");
