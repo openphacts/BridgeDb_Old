@@ -110,7 +110,8 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         } catch (SQLException ex) {
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }    
-        Set<Xref> results = resultSetToXrefSet(rs);
+        Set<IdSysCodePair> pairs = resultSetToIdSysCodePairSet(rs);
+        Set<Xref> results = IdSysCodePair.toXrefs(pairs);
         if (tgtDataSources.length == 0){
            results.add(ref); 
         } else {
@@ -185,7 +186,8 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         } catch (SQLException ex) {
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }    
-        return resultSetToXrefSet(rs);
+        Set<IdSysCodePair> pairs = resultSetToIdSysCodePairSet(rs);
+        return IdSysCodePair.toXrefs(pairs);
     }
 
     @Override
@@ -252,11 +254,11 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         } catch (SQLException ex) {
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }    
-        Set<Xref> results = resultSetToXrefSet(rs);
+        Set<IdSysCodePair> pairs = resultSetToIdSysCodePairSet(rs);
         if (logger.isDebugEnabled()){
-            logger.debug("Freesearch for " + text + " gave " + results.size() + " results");
+            logger.debug("Freesearch for " + text + " gave " + pairs.size() + " results");
         }
-        return results;
+        return IdSysCodePair.toXrefs(pairs);
     }
 
     @Override
@@ -482,15 +484,14 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
      * Converts a ResultSet to a Set of individual Xrefs.
      * @throws BridgeDBException 
      */
-    final Set<Xref> resultSetToXrefSet(ResultSet rs) throws BridgeDBException {
-        HashSet<Xref> results = new HashSet<Xref>();
+    final Set<IdSysCodePair> resultSetToIdSysCodePairSet(ResultSet rs) throws BridgeDBException {
+        HashSet<IdSysCodePair> results = new HashSet<IdSysCodePair>();
         try {
             while (rs.next()){
                 String id = rs.getString(TARGET_ID_COLUMN_NAME);
                 String sysCode = rs.getString(TARGET_DATASOURCE_COLUMN_NAME);
-                DataSource dataSource = findDataSource(sysCode);
-                Xref xref = new Xref(id, dataSource);
-                results.add(xref);
+                IdSysCodePair pair = new IdSysCodePair(id, sysCode);
+                results.add(pair);
             }
             return results;
        } catch (SQLException ex) {
@@ -498,22 +499,6 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
        }
     }
 
-    final DataSource findDataSource(String code){
-        if (code.startsWith("_")){
-            String fullName = code.substring(1);
-            try {
-                return DataSource.getByFullName(fullName);
-            } catch (IllegalArgumentException ex){
-                return DataSource.register(null, fullName).asDataSource();
-            }
-        } else {
-            try {
-                return DataSource.getBySystemCode(code);
-            } catch (IllegalArgumentException ex){
-                return DataSource.register(code, code).asDataSource();
-            }
-        }
-    }
     /**
      * Converts a ResultSet to a Set of BridgeDB DataSources by obtaining the SysCode from the ResultsSet a
      * and looking the DataSource up in the DataSource Registry.
@@ -528,7 +513,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         try {
             while (rs.next()){
                 String sysCode = rs.getString(SYSCODE_COLUMN_NAME);
-                results.add(findDataSource(sysCode));
+                results.add(IdSysCodePair.findDataSource(sysCode));
             }
             return results;
        } catch (SQLException ex) {

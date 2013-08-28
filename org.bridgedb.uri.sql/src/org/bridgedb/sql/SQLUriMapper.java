@@ -319,8 +319,9 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         } catch (SQLException ex) {
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }    
-        Set<Xref> results = resultSetToXrefSet(rs);
-        //Add mapping to self
+        Set<IdSysCodePair> pairs = resultSetToIdSysCodePairSet(rs);
+        Set<Xref> results = IdSysCodePair.toXrefs(pairs);
+         //Add mapping to self
         if (sourceXref.getDataSource().equals(tgtDataSource)){
              results.add(sourceXref);
         }
@@ -342,8 +343,9 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         } catch (SQLException ex) {
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }    
-        Set<Xref> results = resultSetToXrefSet(rs);
-        //Add mapping to self
+        Set<IdSysCodePair> pairs = resultSetToIdSysCodePairSet(rs);
+        Set<Xref> results = IdSysCodePair.toXrefs(pairs);
+         //Add mapping to self
         results.add(sourceXref);
         return results;
     }
@@ -853,7 +855,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                         postfix = newPostfix;
                     }
                 }
-                DataSource dataSource = findDataSource(sysCode);
+                DataSource dataSource = IdSysCodePair.findDataSource(sysCode);
                 String id = uri.substring(prefix.length(), uri.length()-postfix.length());
                 Xref result =  new Xref(id, dataSource);
                 if (logger.isDebugEnabled()){
@@ -1371,7 +1373,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     private DataSetInfo findDataSetInfo(String sysCode){
-        DataSource ds = this.findDataSource(sysCode);
+        DataSource ds = IdSysCodePair.findDataSource(sysCode);
         return new DataSetInfo(sysCode, ds.getFullName());
     }
     
@@ -1627,7 +1629,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         try {
             if (rs.next()){
                 String sysCode = rs.getString("dataSource");
-                return findDataSource(sysCode);
+                return IdSysCodePair.findDataSource(sysCode);
             }
             DataSource.Builder builder = DataSource.register(uriSpace, uriSpace).urlPattern(uriSpace+"$id");
             return builder.asDataSource();
