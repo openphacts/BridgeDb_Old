@@ -175,7 +175,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     private void checkDataSources(String columnName) throws BridgeDBException{
         Set<String> toCheckNames = getPatternDataSources(columnName);
         for (String toCheckName:toCheckNames){
-            UriPattern pattern = UriPattern.existingByPattern(toCheckName);
+            UriPattern pattern = UriPattern.possibleExistingByPattern(toCheckName);
             if (pattern != null){
                 DataSource ds = pattern.getDataSource();
                 String code;
@@ -525,7 +525,9 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     @Override
     public synchronized Set<Mapping> mapFull (Xref sourceXref, String lensUri, String graph, UriPattern... tgtUriPatterns) 
             throws BridgeDBException{
+        System.out.println(graph);
         Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
+        System.out.println(targetUriPatterns);
         if (targetUriPatterns.isEmpty()){
             return mapFull (sourceXref, lensUri);
         } else {

@@ -246,7 +246,7 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
     public String mapBySetText(@QueryParam(WsUriConstants.URI) List<String> uris,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
             @QueryParam(WsUriConstants.GRAPH) String graph,
-            @QueryParam(WsUriConstants.TARGET_URI_PATTERNX) List<String> targetUriPatterns,
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
             @QueryParam(WsUriConstants.RDF_FORMAT) String formatName
             ) throws BridgeDBException {
         HashSet<String> uriSet = new HashSet<String>(uris);
@@ -271,7 +271,7 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
     public Response mapBySetTexthtml(@QueryParam(WsUriConstants.URI) List<String> uris,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
             @QueryParam(WsUriConstants.GRAPH) String graph,
-            @QueryParam(WsUriConstants.TARGET_URI_PATTERNX) List<String> targetUriPatterns,
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
             @QueryParam(WsUriConstants.RDF_FORMAT) String formatName,
             @Context HttpServletRequest httpServletRequest
             ) throws BridgeDBException {

@@ -103,8 +103,9 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
             @QueryParam(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE) List<String> targetCodes,
             @QueryParam(WsUriConstants.GRAPH) String graph,
-            @QueryParam(WsUriConstants.TARGET_URI_PATTERNX) List<String> targetUriPatterns) throws BridgeDBException {
-       if (logger.isDebugEnabled()){
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns) throws BridgeDBException {
+        System.out.println("map entered");
+        if (logger.isDebugEnabled()){
             logger.debug("map called! ");
             if (id != null){
                 logger.debug("id = " + id);
@@ -155,7 +156,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     		@QueryParam(WsUriConstants.URI) List<String> uris,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
             @QueryParam(WsUriConstants.GRAPH) String graph,
-            @QueryParam(WsUriConstants.TARGET_URI_PATTERNX) List<String> targetUriPatterns) throws BridgeDBException {
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns) throws BridgeDBException {
        if (logger.isDebugEnabled()){
             logger.debug("map called! ");
             logger.debug("   uri = " + uris);             
@@ -190,7 +191,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     public MappingsBySetBean mapBySet(@QueryParam(WsUriConstants.URI) List<String> uris,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
             @QueryParam(WsUriConstants.GRAPH) String graph,
-            @QueryParam(WsUriConstants.TARGET_URI_PATTERNX) List<String> targetUriPatterns) throws BridgeDBException {
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns) throws BridgeDBException {
         HashSet<String> uriSet = new HashSet<String>(uris);
         UriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
         MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, graph, targetPatterns);
@@ -199,10 +200,11 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
 
     private List<MappingBean> map(String uri, String lensUri, DataSource[] targetDataSources, 
             String graph, UriPattern[] targetPatterns) throws BridgeDBException {
+        System.out.println("in list method " + targetPatterns);
         Set<Mapping> mappings;
         if (targetDataSources == null){
             if (targetPatterns == null){
-                mappings = uriMapper.mapFull(uri, lensUri);
+                mappings = uriMapper.mapFull(uri, lensUri, graph);
             } else {
                 mappings = mapByTargetUriPattern(uri, lensUri, graph, targetPatterns);
             }
@@ -226,7 +228,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         Set<Mapping> mappings;
         if (targetDataSources == null){
             if (targetPatterns == null){
-                mappings = uriMapper.mapFull(sourceXref, lensUri);
+                mappings = uriMapper.mapFull(sourceXref, lensUri, graph);
             } else {
                 mappings = mapByTargetUriPattern(sourceXref, lensUri, graph, targetPatterns);
             }
@@ -259,13 +261,13 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         return targets.toArray(new DataSource[0]);        
     }
             
-    final UriPattern[] getUriPatterns(List<String> targetUriPatterns){
+    final UriPattern[] getUriPatterns(List<String> targetUriPatterns) throws BridgeDBException{
         if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
             return null;
         }
         HashSet<UriPattern> targets = new HashSet<UriPattern>();
         for (String targetUriPattern:targetUriPatterns){
-            UriPattern pattern = UriPattern.existingByPattern(targetUriPattern);
+            UriPattern pattern = UriPattern.alreadyExistingByPattern(targetUriPattern);
             if (pattern != null){
                 targets.add(pattern);
             }

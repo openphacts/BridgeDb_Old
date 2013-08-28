@@ -169,12 +169,10 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     @Override
     public Set<Mapping> mapFull(Xref sourceXref, String lensUri, DataSource... tgtDataSources) 
             throws BridgeDBException {
-        System.out.println("map full called");
         if (sourceXref == null){
             return new HashSet<Mapping>();
         }
         if (tgtDataSources == null || tgtDataSources.length == 0){
-            System.out.println("to no targets");
             return mapFull(sourceXref, lensUri);
         }
         ArrayList<String> tgtSysCodes = new ArrayList<String>();
@@ -290,10 +288,15 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
 
     @Override
     public Set<Mapping> mapFull(String sourceUri, String lensUri) throws BridgeDBException {
+        return mapFull(sourceUri, lensUri, NULL_GRAPH);
+    }
+
+    private Set<Mapping> mapFull(String sourceUri, String lensUri, String graph) throws BridgeDBException {
         if (sourceUri == null){
             return new HashSet<Mapping>();
         }
-        List<MappingBean> beans = uriService.map(NO_ID, NO_SYSCODE, sourceUri, lensUri, NO_SYSCODES, NULL_GRAPH, NO_URI_PATTERNS);
+        System.out.println("calling with graph " + graph);
+        List<MappingBean> beans = uriService.map(NO_ID, NO_SYSCODE, sourceUri, lensUri, NO_SYSCODES, graph, NO_URI_PATTERNS);
         HashSet<Mapping> results = new HashSet<Mapping>();
         for (MappingBean bean:beans){
             results.add(MappingBean.asMapping(bean)) ;   
@@ -311,7 +314,7 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     @Override
     public Set<Mapping> mapFull(String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException {
         if (tgtUriPatterns == null || tgtUriPatterns.length == 0){
-            return mapFull(sourceUri, lensUri);
+            return mapFull(sourceUri, lensUri, graph);
         }
         if (sourceUri == null){
             return new HashSet<Mapping>();

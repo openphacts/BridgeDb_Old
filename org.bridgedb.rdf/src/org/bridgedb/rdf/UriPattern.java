@@ -135,17 +135,50 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         return result;
     }
                 
-    public static UriPattern byPattern(String urlPattern) throws BridgeDBException{
+    public static UriPattern existingOrCreateByPattern(String urlPattern) throws BridgeDBException{
+        UriPattern result = possibleExistingByPattern(urlPattern);
+        if (result != null){
+            return result;
+        }
         int pos = urlPattern.indexOf("$id");
         if (pos == -1) {
-            throw new BridgeDBException("Urlpattern " + urlPattern + " does not have $id in it.");
+            throw new BridgeDBException("Urlpattern " + urlPattern + " does not have $id in it and is not known.");
         }
         String nameSpace = urlPattern.substring(0, pos);
         String postfix = urlPattern.substring(pos + 3);
         return byPrefixAndPostFix(nameSpace, postfix);
     }
 
-    public static UriPattern existingByPattern(String uriPattern) {
+    public static UriPattern alreadyExistingByPattern(String uriPattern) throws BridgeDBException {
+        if (uriPattern == null || uriPattern.isEmpty()){
+            throw new BridgeDBException ("Illegal empty or null uriPattern: " + uriPattern);
+        }
+        String prefixOrNameSpace;
+        String postfix;
+        String cleanPattern = uriPattern.trim();
+        if (cleanPattern.startsWith("<") && cleanPattern.endsWith(">")){
+            cleanPattern = cleanPattern.substring(1, cleanPattern.length()-1);
+        }
+        int idPos = cleanPattern.indexOf("$id");
+        if (idPos == -1) {
+            prefixOrNameSpace = cleanPattern;
+            postfix = "";
+        } else {
+            prefixOrNameSpace = cleanPattern.substring(0, idPos);
+            postfix = cleanPattern.substring(idPos + 3);
+        } 
+        if (postfix.isEmpty()){
+            return byPrefixOrNameSpaceOnly.get(prefixOrNameSpace);
+        } else {
+            HashMap<String,UriPattern> postFixMap = byPrefixAndPostFix.get(prefixOrNameSpace);
+            if (postFixMap == null){
+                throw new BridgeDBException("UriPattern " + uriPattern + " is not known");
+            }
+            return postFixMap.get(postfix);
+        }        
+    }
+    
+    public static UriPattern possibleExistingByPattern(String uriPattern) {
         if (uriPattern == null || uriPattern.isEmpty()){
             return null;
         }
@@ -370,7 +403,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         UriPattern pattern;      
         String prefix = getPossibleSingletonString(repositoryConnection, uriPatternId, BridgeDBConstants.HAS_PREFIX_URI);
         if (prefix == null){
-            pattern = byPattern(uriPatternId.stringValue());
+            pattern = existingOrCreateByPattern(uriPatternId.stringValue());
         } else {
             String postfix = getPossibleSingletonString(repositoryConnection, uriPatternId, BridgeDBConstants.HAS_POSTFIX_URI);
             if (postfix == null){

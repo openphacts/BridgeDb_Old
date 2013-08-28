@@ -14,7 +14,7 @@ import org.bridgedb.utils.ConfigReader;
  */
 public class GraphResolver {
 
-    private HashMap<String,Set<UriPattern>> allowedUriPattern;
+   private HashMap<String,Set<UriPattern>> allowedUriPattern;
     
     private final static String PROPERTIES_FILE = "graph.properties";
     private final static String PROPERTY_PREFIX = "context.";
@@ -52,18 +52,22 @@ public class GraphResolver {
     }
     
     private void addPattern(String graph, String pattern) throws BridgeDBException{
+        UriPattern uriPattern = UriPattern.alreadyExistingByPattern(pattern);
+        if (uriPattern == null){
+            throw new BridgeDBException("no UriPattern known for " + pattern);
+        }
+        addPattern(graph, uriPattern);
+    }
+    
+    private void addPattern(String graph, UriPattern uriPattern) throws BridgeDBException{
         Set<UriPattern> patterns = allowedUriPattern.get(graph);
         if (patterns == null){
             patterns = new HashSet<UriPattern>();
         }
-        UriPattern uriPattern = UriPattern.byPattern(pattern);
-        if (uriPattern == null){
-            throw new BridgeDBException("no UriPattern known for " + pattern);
-        }
         patterns.add(uriPattern);
         allowedUriPattern.put(graph, patterns);
     }
-    
+
     /**
      * @return the allowedNamespaces
      */
@@ -72,14 +76,27 @@ public class GraphResolver {
     }
 
     public static Set<UriPattern> getUriPatternsForGraph(String graph) throws BridgeDBException {
+        if (graph == null || graph.isEmpty()){
+            return new HashSet<UriPattern>();
+        }
         GraphResolver resolver = getInstance();
         Set<UriPattern> results = resolver.allowedUriPattern.get(graph);
         if (results == null){
-            results = new HashSet<UriPattern>();
+            throw new BridgeDBException("Unknown graph " + graph);
         }
         return results;
     }
 
+    public static void addMapping(String graph, String pattern) throws BridgeDBException{
+        GraphResolver gr = getInstance();
+        gr.addPattern(graph, pattern); 
+    }
+    
+    public static void addMapping(String graph, UriPattern uriPattern) throws BridgeDBException{
+        GraphResolver gr = getInstance();
+        gr.addPattern(graph, uriPattern);        
+    }
+    
     public static void addTestMappings() throws BridgeDBException{
         GraphResolver gr = getInstance();
         gr.addPattern("http://larkc.eu#Fixedcontext", "http://www.conceptwiki.org/concept/$id");
@@ -88,4 +105,4 @@ public class GraphResolver {
         gr.addPattern("http://data.kasabi.com/dataset/chembl-rdf","http://data.kasabi.com/dataset/chembl-rdf/target/t$id");
     }
 
-}
+ }

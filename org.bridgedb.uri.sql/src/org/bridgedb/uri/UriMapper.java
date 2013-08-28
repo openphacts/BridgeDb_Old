@@ -69,6 +69,11 @@ import org.bridgedb.utils.BridgeDBException;
  * The parameters UriPattern... tgtUriPatterns and UriPattern tgtUriPattern refer to the target pattern. 
  * Only Uris with this/these Patterns are returned.
  * See below of action on nulls and empty arrays.
+ *
+ * <p>
+ * The parameter graph is an alternative to tgtUriPattern(s). 
+ * Instead of suppling the UriPatterns the OpenRdf context/graph name is supplied instead.
+ * The UriPatterns specified in graph.properties are then used.
  * 
  * <p> Setting the optional array parameters DataSource... tgtDataSources and UriPattern... tgtUriPatterns to null
  *     is the same as calling the method which does not include this parameter.

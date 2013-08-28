@@ -33,6 +33,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.bridgedb.Xref;
+import org.bridgedb.uri.GraphResolver;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.MappingsBySet;
@@ -57,7 +58,10 @@ public class WSAPI extends WSFrame {
     private final static String LIMIT5_PARAMETER = "&" + WsConstants.LIMIT + "=5";
     private final static String FIRST_URI_PARAMETER = "?" + WsUriConstants.URI + "=";
     private final static String TARGET_DATASOURCE_SYSTEM_CODE_PARAMETER = "&" + WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE + "=";
-    private final static String TARGET_URI_PATTERN_PARAMETER = "&" + WsUriConstants.TARGET_URI_PATTERNX + "=";
+    private final static String GRAPH_PARAMETER = "&" + WsUriConstants.GRAPH + "=";
+    private final static String TARGET_URI_PATTERN_PARAMETERX = "&" + WsUriConstants.TARGET_URI_PATTERN + "=";
+    private final static String EXAMPLE_GRAPH = "ApiExampleGraph"; 
+
     
     private HashMap<String,String> apiStrings = new HashMap<String,String>();
     
@@ -151,9 +155,10 @@ public class WSAPI extends WSFrame {
         Mapping mapping2 = mappings.get(2);
         Xref sourceXref2 =  mapping2.getSource();
         String sourceUri2 = mapping2.getSourceUri().iterator().next();
-        String targetUri2 = mapping2.getTargetUri().iterator().next();    
+        String targetUri2 = mapping2.getTargetUri().iterator().next(); 
         Xref targetXref2 = mapping2.getTarget();
         String targetUriSpace2 = targetUri2.substring(0, targetUri2.length()- targetXref2.getId().length());
+        GraphResolver.addMapping(EXAMPLE_GRAPH, targetUriSpace2);
         boolean freeSearchSupported = idMapper.getCapabilities().isFreeSearchSupported(); 
         Set<String> keys = idMapper.getCapabilities().getKeys();
 
@@ -310,13 +315,29 @@ public class WSAPI extends WSFrame {
             sb.append("<li>It it not recommended to use this parameter except for testing until farther notice.</li>");
             sb.append("</ul>\n");        
         sb.append("<dt><a name=\"");
-                sb.append(WsUriConstants.TARGET_URI_PATTERNX);
+                sb.append(WsUriConstants.GRAPH);
                 sb.append("\">");
-                sb.append(WsUriConstants.TARGET_URI_PATTERNX);
+                sb.append(WsUriConstants.GRAPH);
+                sb.append("</a></dt>");
+            sb.append("<ul>");
+            sb.append("<li>Limits the results to ones required for this OpenRdf context/graph.</li>");
+            sb.append("<li>This works by looking up the required ");
+            sb.append(WsUriConstants.TARGET_URI_PATTERN);
+            sb.append("(s) in the graph.properties configuration file.<li>");
+            sb.append("<li>There can only one parameter ");
+            sb.append(WsUriConstants.GRAPH);
+            sb.append(" and ONLY if NO paramters ");
+            sb.append(WsUriConstants.TARGET_URI_PATTERN);
+            sb.append(" are supplied.</li>");
+            sb.append("</ul>\n");       
+        sb.append("<dt><a name=\"");
+                sb.append(WsUriConstants.TARGET_URI_PATTERN);
+                sb.append("\">");
+                sb.append(WsUriConstants.TARGET_URI_PATTERN);
                 sb.append("</a></dt>");
             sb.append("<ul>");
             sb.append("<li>Limits the results to ones with URIs with this pattern.</li>");
-            sb.append("<li>The URISpace of a URI is one defined when the mapping is loaded, not any with which the URI startWith.</li>");
+            sb.append("<li>The URI pattern must match on of the Patterns specified in the System. It will not with just any the URI startWith.</li>");
             sb.append("<li>String Format</li>");
             sb.append("<li>Do NOT include the @gt and @lt seen arround URIs in RDF</li>");
             sb.append("<li>Typically there can but need not be more than one.</li>");
@@ -329,7 +350,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>Acts in exactly the same way as non URI based methods.</li>");
             sb.append("<li>Note: If both ");
-                sb.append(WsUriConstants.TARGET_URI_PATTERNX);
+                sb.append(WsUriConstants.TARGET_URI_PATTERN);
                 sb.append(" and  ");
                 sb.append(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE);
                 sb.append(" are specified the result is the union of results of running this method twice with each paramteter individually.");
@@ -817,10 +838,19 @@ public class WSAPI extends WSFrame {
                 sb.append("\">");
                 sb.append(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE);
                 sb.append("</a> and <a href=\"#");
-                sb.append(WsUriConstants.TARGET_URI_PATTERNX);
+                sb.append(WsUriConstants.TARGET_URI_PATTERN);
                 sb.append("\">");
-                sb.append(WsUriConstants.TARGET_URI_PATTERNX);
+                sb.append(WsUriConstants.TARGET_URI_PATTERN);
                 sb.append("</a>. If both are supplied the result is the union of the calls with each individually.</li> ");
+            sb.append("<li>Note: it is not allowed to use both <a href=\"#");
+                sb.append(WsUriConstants.GRAPH);
+                sb.append("\">");
+                sb.append(WsUriConstants.GRAPH);
+                sb.append("</a> and <a href=\"#");
+                sb.append(WsUriConstants.TARGET_URI_PATTERN);
+                sb.append("\">");
+                sb.append(WsUriConstants.TARGET_URI_PATTERN);
+                sb.append("</a>. If both are supplied an error is thrown.</li> ");
             sb.append("<li>Required arguements:</li>");
                 sb.append("<ul>");
                 sb.append("<li>URI based</li>");
@@ -835,7 +865,8 @@ public class WSAPI extends WSFrame {
             sb.append("<li>Optional arguments</li>");
                 sb.append("<ul>");
                 parameterLens(sb);
-                parameterTargetPattern(sb);
+                parameterGraph(sb);
+                parameterTargetPatternX(sb);
                 parameterTargetCode(sb);
                 sb.append("</ul>");
         mapExamplesXrefbased(sb, contextPath, WsUriConstants.MAP, sourceXref1, tragetSysCode1, sourceXref2);
@@ -852,6 +883,15 @@ public class WSAPI extends WSFrame {
                 sb.append("</a></h3>");
         sb.append("<ul>");
             sb.append("<li>List the URIs that map to this URI(s)</li>");
+            sb.append("<li>Note: it is not allowed to use both <a href=\"#");
+                sb.append(WsUriConstants.GRAPH);
+                sb.append("\">");
+                sb.append(WsUriConstants.GRAPH);
+                sb.append("</a> and <a href=\"#");
+                sb.append(WsUriConstants.TARGET_URI_PATTERN);
+                sb.append("\">");
+                sb.append(WsUriConstants.TARGET_URI_PATTERN);
+                sb.append("</a>. If both are supplied an error is thrown.</li> ");
             sb.append("<li>Required arguements:</li>");
             sb.append("<ul>");
                 parameterUri(sb);
@@ -859,7 +899,8 @@ public class WSAPI extends WSFrame {
                 sb.append("</ul>");
             sb.append("<li>Optional arguments</li><ul>");
                 parameterLens(sb);
-                parameterTargetPattern(sb);
+                parameterGraph(sb);
+                parameterTargetPatternX(sb);
                 sb.append("</ul>");
             mapExamplesUriBased(sb, contextPath, WsUriConstants.MAP_URI, sourceUri1, sourceUri2, targetUriSpace2);
             sb.append("</ul>\n");
@@ -1163,11 +1204,19 @@ public class WSAPI extends WSFrame {
         sb.append("</a></li> ");
     }
 
-    private void parameterTargetPattern(StringBuilder sb){
+    private void parameterGraph(StringBuilder sb){
         sb.append("<li><a href=\"#");
-        sb.append(WsUriConstants.TARGET_URI_PATTERNX);
+        sb.append(WsUriConstants.GRAPH);
         sb.append("\">");
-        sb.append(WsUriConstants.TARGET_URI_PATTERNX);
+        sb.append(WsUriConstants.GRAPH);
+        sb.append("</a></li> ");
+    }
+
+    private void parameterTargetPatternX(StringBuilder sb){
+        sb.append("<li><a href=\"#");
+        sb.append(WsUriConstants.TARGET_URI_PATTERN);
+        sb.append("\">");
+        sb.append(WsUriConstants.TARGET_URI_PATTERN);
         sb.append("</a></li> ");
     }
 
@@ -1252,7 +1301,8 @@ public class WSAPI extends WSFrame {
             throws UnsupportedEncodingException, BridgeDBException{
         mapExamplesUriBased1(sb, contextPath, methodName, sourceUri1);
         mapExamplesUriBased2(sb, contextPath, methodName, sourceUri1, sourceUri2);
-        mapExamplesUriBased3(sb, contextPath, methodName, sourceUri2, targetUriSpace2);
+        mapExamplesUriBasedWithGraph(sb, contextPath, methodName, sourceUri2, targetUriSpace2);
+        mapExamplesUriBasedWithTarget(sb, contextPath, methodName, sourceUri2, targetUriSpace2);
         mapExamplesUriBased4(sb, contextPath, methodName, sourceUri1);
     }
     
@@ -1292,20 +1342,38 @@ public class WSAPI extends WSFrame {
         sb.append("</a></li>");    
     }
     
-    private void mapExamplesUriBased3(StringBuilder sb, String contextPath, String methodName, String sourceUri2, String targetUriSpace2) 
+    private void mapExamplesUriBasedWithGraph(StringBuilder sb, String contextPath, String methodName, 
+            String sourceUri2, String targetUriSpace) throws UnsupportedEncodingException, BridgeDBException{
+        sb.append("<li>Example: <a href=\"");
+        sb.append(contextPath);
+        sb.append(methodName);
+        sb.append(FIRST_URI_PARAMETER);
+        sb.append(URLEncoder.encode(sourceUri2, "UTF-8"));
+        sb.append(GRAPH_PARAMETER);
+        sb.append(URLEncoder.encode(EXAMPLE_GRAPH, "UTF-8"));
+        sb.append("\">");
+        sb.append(methodName);
+        sb.append(FIRST_URI_PARAMETER);
+        sb.append(sourceUri2);
+        sb.append(GRAPH_PARAMETER);
+        sb.append(EXAMPLE_GRAPH);
+        sb.append("</a></li>");    
+    }
+
+   private void mapExamplesUriBasedWithTarget(StringBuilder sb, String contextPath, String methodName, String sourceUri2, String targetUriSpace2) 
             throws UnsupportedEncodingException, BridgeDBException{
         sb.append("<li>Example: <a href=\"");
         sb.append(contextPath);
         sb.append(methodName);
         sb.append(FIRST_URI_PARAMETER);
         sb.append(URLEncoder.encode(sourceUri2, "UTF-8"));
-        sb.append(TARGET_URI_PATTERN_PARAMETER);
+        sb.append(TARGET_URI_PATTERN_PARAMETERX);
         sb.append(URLEncoder.encode(targetUriSpace2, "UTF-8"));
         sb.append("\">");
         sb.append(methodName);
         sb.append(FIRST_URI_PARAMETER);
         sb.append(sourceUri2);
-        sb.append(TARGET_URI_PATTERN_PARAMETER);
+        sb.append(TARGET_URI_PATTERN_PARAMETERX);
         sb.append(targetUriSpace2);
         sb.append("</a></li>");    
     }

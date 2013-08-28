@@ -86,7 +86,7 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
         }
         if (targetUriPattern != null){
             for (String target:targetUriPattern){
-                params.add(WsUriConstants.TARGET_URI_PATTERNX, target);
+                params.add(WsUriConstants.TARGET_URI_PATTERN, target);
             }
         }
         System.out.println(params);
@@ -115,7 +115,7 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
         }
         if (targetUriPattern != null){
             for (String target:targetUriPattern){
-                params.add(WsUriConstants.TARGET_URI_PATTERNX, target);
+                params.add(WsUriConstants.TARGET_URI_PATTERN, target);
             }
         }
         MappingsBySetBean result = 

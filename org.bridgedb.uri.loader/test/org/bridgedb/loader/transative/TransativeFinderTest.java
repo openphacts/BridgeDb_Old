@@ -70,7 +70,7 @@ public class TransativeFinderTest {
     private void setupPattern (String name, String pattern) throws BridgeDBException{
         DataSource dataSource = DataSource.register(name, name).asDataSource();
         TransativeFinder.addAcceptableVai(dataSource);
-        UriPattern uriPattern = UriPattern.byPattern(pattern);
+        UriPattern uriPattern = UriPattern.existingOrCreateByPattern(pattern);
         uriPattern.setPrimaryDataSource(DataSourceUris.byDataSource(dataSource));
         mapper.registerUriPattern(dataSource, pattern);     
     }

@@ -47,7 +47,7 @@ public class WsUriConstants extends WsConstants{
     public static final String RDF = "RDF";
     public static final String RDF_FORMAT = "rdfFormat";
     public static final String SQL_COMPAT_VERSION = "SqlCompatVersion";
-    public static final String TARGET_URI_PATTERNX = "targetUriPattern";
+    public static final String TARGET_URI_PATTERN = "targetUriPattern";
 
     /** @deprecated */
     public static final String TARGET_URI_SPACE = "targetURISpace";

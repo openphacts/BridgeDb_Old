@@ -169,7 +169,7 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
                 repositoryConnection.add(id, BridgeDBConstants.URN_BASE_URI, urnBase);
             }
         } else {            
-            UriPattern identifersOrgUriPattern = UriPattern.byPattern(identifersOrgPattern);
+            UriPattern identifersOrgUriPattern = UriPattern.existingOrCreateByPattern(identifersOrgPattern);
             writeUriPattern(repositoryConnection, BridgeDBConstants.HAS_IDENTIFERS_ORG_PATTERN_URI, identifersOrgUriPattern);
         }
 
@@ -319,7 +319,7 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
         otherUriPatterns.remove(wikiPathwaysPattern);
         String identifersOrgPattern = inner.getIdentifiersOrgUri("$id");
         if (identifersOrgPattern != null){
-            UriPattern identifersOrgUriPattern = UriPattern.byPattern(identifersOrgPattern);
+            UriPattern identifersOrgUriPattern = UriPattern.existingOrCreateByPattern(identifersOrgPattern);
             otherUriPatterns.remove(identifersOrgUriPattern);    
         }
     }
@@ -375,7 +375,7 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
         if (pattern == null || pattern.isEmpty() || pattern.equals("$id") || pattern.equals("null")){
             return null;
         }
-        UriPattern uriPattern =  UriPattern.byPattern(pattern);
+        UriPattern uriPattern =  UriPattern.existingOrCreateByPattern(pattern);
         uriPattern.setPrimaryDataSource(this);
         return uriPattern;
     }
@@ -384,7 +384,7 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
         if (pattern == null || pattern.isEmpty() || pattern.equals("$id") || pattern.equals("null")){
             return null;
         }
-        UriPattern uriPattern =  UriPattern.byPattern(pattern);
+        UriPattern uriPattern =  UriPattern.existingOrCreateByPattern(pattern);
         uriPattern.setDataSource(this);
         return uriPattern;
     }
@@ -401,7 +401,7 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
         results.add(bio2RdfPattern);
         String identifersOrgPattern = inner.getIdentifiersOrgUri("$id");
         if (identifersOrgPattern != null){
-            UriPattern identifersOrgUriPattern = UriPattern.byPattern(identifersOrgPattern);
+            UriPattern identifersOrgUriPattern = UriPattern.existingOrCreateByPattern(identifersOrgPattern);
             results.add(identifersOrgUriPattern);
         }
         results.addAll(otherUriPatterns);
@@ -427,7 +427,7 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
     private UriPattern getDataSourceUrl() throws BridgeDBException {
         String urlPattern = inner.getUrl("$id");
         if (urlPattern.length() > 3){
-            return UriPattern.byPattern(urlPattern);
+            return UriPattern.existingOrCreateByPattern(urlPattern);
         }
         return null;
     }
