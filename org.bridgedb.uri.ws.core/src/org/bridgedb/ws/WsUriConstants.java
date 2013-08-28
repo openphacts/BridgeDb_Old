@@ -37,6 +37,7 @@ public class WsUriConstants extends WsConstants{
      */
     public static final String GET_MAPPING_INFO = "getMappingInfo";
     public static final String GET_SAMPLE_MAPPINGS = "getSampleMappings";
+    public static final String GRAPH = "graph";
     public static final String GRAPHVIZ = "graphviz";
     public static final String MAP = "map";
     public static final String MAP_URI = "mapUri";
@@ -46,7 +47,7 @@ public class WsUriConstants extends WsConstants{
     public static final String RDF = "RDF";
     public static final String RDF_FORMAT = "rdfFormat";
     public static final String SQL_COMPAT_VERSION = "SqlCompatVersion";
-    public static final String TARGET_URI_PATTERN = "targetUriPattern";
+    public static final String TARGET_URI_PATTERNX = "targetUriPattern";
 
     /** @deprecated */
     public static final String TARGET_URI_SPACE = "targetURISpace";

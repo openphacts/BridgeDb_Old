@@ -63,11 +63,21 @@ public class GraphResolver {
         patterns.add(uriPattern);
         allowedUriPattern.put(graph, patterns);
     }
+    
     /**
      * @return the allowedNamespaces
      */
     public HashMap<String,Set<UriPattern>> getAllowedUriPatterns() {
         return allowedUriPattern;
+    }
+
+    public static Set<UriPattern> getUriPatternsForGraph(String graph) throws BridgeDBException {
+        GraphResolver resolver = getInstance();
+        Set<UriPattern> results = resolver.allowedUriPattern.get(graph);
+        if (results == null){
+            results = new HashSet<UriPattern>();
+        }
+        return results;
     }
 
     public static void addTestMappings() throws BridgeDBException{

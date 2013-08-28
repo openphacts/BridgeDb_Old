@@ -61,7 +61,8 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
     }
     
     @Override
-    public List<MappingBean> map(String id, String scrCode, String uri, String lensUri, List<String> targetCodes, List<String> targetUriPattern) throws BridgeDBException {
+    public List<MappingBean> map(String id, String scrCode, String uri, String lensUri, List<String> targetCodes, 
+        String graph, List<String> targetUriPattern) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         if (id != null){
             params.add(WsConstants.ID, id);
@@ -80,11 +81,15 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
                 params.add(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE, target);
             }
         }
+        if (graph != null){
+            params.add(WsUriConstants.GRAPH, graph); 
+        }
         if (targetUriPattern != null){
             for (String target:targetUriPattern){
-                params.add(WsUriConstants.TARGET_URI_PATTERN, target);
+                params.add(WsUriConstants.TARGET_URI_PATTERNX, target);
             }
         }
+        System.out.println(params);
         //Make service call
         List<MappingBean> result = 
                 webResource.path(WsUriConstants.MAP)
@@ -95,7 +100,7 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
     }
 
     @Override
-    public MappingsBySetBean mapBySet(List<String> uris, String lensUri, List<String> targetUriPattern) throws BridgeDBException {
+    public MappingsBySetBean mapBySet(List<String> uris, String lensUri, String graph, List<String> targetUriPattern) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         for (String uri:uris){
             if (uri != null){
@@ -105,9 +110,12 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
         if (lensUri != null){
             params.add(WsUriConstants.LENS_URI, lensUri);        
         }
+        if (graph != null){
+            params.add(WsUriConstants.GRAPH, graph); 
+        }
         if (targetUriPattern != null){
             for (String target:targetUriPattern){
-                params.add(WsUriConstants.TARGET_URI_PATTERN, target);
+                params.add(WsUriConstants.TARGET_URI_PATTERNX, target);
             }
         }
         MappingsBySetBean result = 

@@ -57,7 +57,7 @@ public class WSAPI extends WSFrame {
     private final static String LIMIT5_PARAMETER = "&" + WsConstants.LIMIT + "=5";
     private final static String FIRST_URI_PARAMETER = "?" + WsUriConstants.URI + "=";
     private final static String TARGET_DATASOURCE_SYSTEM_CODE_PARAMETER = "&" + WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE + "=";
-    private final static String TARGET_URI_PATTERN_PARAMETER = "&" + WsUriConstants.TARGET_URI_PATTERN + "=";
+    private final static String TARGET_URI_PATTERN_PARAMETER = "&" + WsUriConstants.TARGET_URI_PATTERNX + "=";
     
     private HashMap<String,String> apiStrings = new HashMap<String,String>();
     
@@ -310,9 +310,9 @@ public class WSAPI extends WSFrame {
             sb.append("<li>It it not recommended to use this parameter except for testing until farther notice.</li>");
             sb.append("</ul>\n");        
         sb.append("<dt><a name=\"");
-                sb.append(WsUriConstants.TARGET_URI_PATTERN);
+                sb.append(WsUriConstants.TARGET_URI_PATTERNX);
                 sb.append("\">");
-                sb.append(WsUriConstants.TARGET_URI_PATTERN);
+                sb.append(WsUriConstants.TARGET_URI_PATTERNX);
                 sb.append("</a></dt>");
             sb.append("<ul>");
             sb.append("<li>Limits the results to ones with URIs with this pattern.</li>");
@@ -329,7 +329,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>Acts in exactly the same way as non URI based methods.</li>");
             sb.append("<li>Note: If both ");
-                sb.append(WsUriConstants.TARGET_URI_PATTERN);
+                sb.append(WsUriConstants.TARGET_URI_PATTERNX);
                 sb.append(" and  ");
                 sb.append(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE);
                 sb.append(" are specified the result is the union of results of running this method twice with each paramteter individually.");
@@ -817,9 +817,9 @@ public class WSAPI extends WSFrame {
                 sb.append("\">");
                 sb.append(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE);
                 sb.append("</a> and <a href=\"#");
-                sb.append(WsUriConstants.TARGET_URI_PATTERN);
+                sb.append(WsUriConstants.TARGET_URI_PATTERNX);
                 sb.append("\">");
-                sb.append(WsUriConstants.TARGET_URI_PATTERN);
+                sb.append(WsUriConstants.TARGET_URI_PATTERNX);
                 sb.append("</a>. If both are supplied the result is the union of the calls with each individually.</li> ");
             sb.append("<li>Required arguements:</li>");
                 sb.append("<ul>");
@@ -1165,9 +1165,9 @@ public class WSAPI extends WSFrame {
 
     private void parameterTargetPattern(StringBuilder sb){
         sb.append("<li><a href=\"#");
-        sb.append(WsUriConstants.TARGET_URI_PATTERN);
+        sb.append(WsUriConstants.TARGET_URI_PATTERNX);
         sb.append("\">");
-        sb.append(WsUriConstants.TARGET_URI_PATTERN);
+        sb.append(WsUriConstants.TARGET_URI_PATTERNX);
         sb.append("</a></li> ");
     }
 

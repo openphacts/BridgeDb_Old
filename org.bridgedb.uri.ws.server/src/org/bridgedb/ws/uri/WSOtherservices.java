@@ -245,12 +245,13 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
     @Path("/" + WsUriConstants.MAP_BY_SET + WsUriConstants.RDF)
     public String mapBySetText(@QueryParam(WsUriConstants.URI) List<String> uris,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
-            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
+            @QueryParam(WsUriConstants.GRAPH) String graph,
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERNX) List<String> targetUriPatterns,
             @QueryParam(WsUriConstants.RDF_FORMAT) String formatName
             ) throws BridgeDBException {
         HashSet<String> uriSet = new HashSet<String>(uris);
         UriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
-        MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, targetPatterns);
+        MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, graph, targetPatterns);
         return mappingsBySet.toRDF(null, formatName);
     }
     
@@ -269,13 +270,14 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
     @Path("/" + WsUriConstants.MAP_BY_SET + WsUriConstants.RDF)
     public Response mapBySetTexthtml(@QueryParam(WsUriConstants.URI) List<String> uris,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
-            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
+            @QueryParam(WsUriConstants.GRAPH) String graph,
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERNX) List<String> targetUriPatterns,
             @QueryParam(WsUriConstants.RDF_FORMAT) String formatName,
             @Context HttpServletRequest httpServletRequest
             ) throws BridgeDBException {
         HashSet<String> uriSet = new HashSet<String>(uris);
         UriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
-        MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, targetPatterns);
+        MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, graph, targetPatterns);
         StringBuilder sb = topAndSide("HTML friendly " + WsUriConstants.MAP_BY_SET + WsUriConstants.RDF + " Output",  httpServletRequest);
         sb.append("<h1>Use MediaType.TEXT_PLAIN to remove HTML stuff</h1>");
         generateTextarea(sb, "RDF", mappingsBySet.toRDF(null, formatName));
