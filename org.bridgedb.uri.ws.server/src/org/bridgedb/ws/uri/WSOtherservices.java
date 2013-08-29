@@ -243,7 +243,7 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
     @GET
     @Produces({MediaType.TEXT_PLAIN})
     @Path("/" + WsUriConstants.MAP_BY_SET + WsUriConstants.RDF)
-    public String mapBySetText(@QueryParam(WsUriConstants.URI) List<String> uris,
+    public Response mapBySetRDFText(@QueryParam(WsUriConstants.URI) List<String> uris,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
             @QueryParam(WsUriConstants.GRAPH) String graph,
             @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
@@ -252,7 +252,12 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         HashSet<String> uriSet = new HashSet<String>(uris);
         UriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
         MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, graph, targetPatterns);
-        return mappingsBySet.toRDF(null, formatName);
+        if (mappingsBySet.isEmpty()){
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } else {
+            String rdf = mappingsBySet.toRDF(null, formatName);     
+            return Response.ok(rdf, MediaType.TEXT_PLAIN_TYPE).build();
+        }
     }
     
     private void generateTextarea(StringBuilder sb, String fieldName, String text) {
@@ -279,9 +284,10 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         UriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
         MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, graph, targetPatterns);
         StringBuilder sb = topAndSide("HTML friendly " + WsUriConstants.MAP_BY_SET + WsUriConstants.RDF + " Output",  httpServletRequest);
-        sb.append("<h1>Use MediaType.TEXT_PLAIN to remove HTML stuff</h1>");
+        sb.append("<h4>Use MediaType.TEXT_PLAIN to remove HTML stuff</h4>");
+        sb.append("<p>Warning MediaType.TEXT_PLAIN version returns status 204 if not mappings found.</p>");
         generateTextarea(sb, "RDF", mappingsBySet.toRDF(null, formatName));
-         footerAndEnd(sb);
+        footerAndEnd(sb);
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
     }
 

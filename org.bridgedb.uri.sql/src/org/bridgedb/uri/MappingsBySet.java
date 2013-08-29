@@ -252,4 +252,7 @@ public class MappingsBySet {
         Reporter.println(getAvaiableWriters().toString());
     }
 
+    public boolean isEmpty(){
+        return mappings.isEmpty();
+    }
 }
