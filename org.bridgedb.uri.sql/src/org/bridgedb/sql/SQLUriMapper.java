@@ -256,7 +256,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     public synchronized Set<String> mapUri (Xref sourceXref, String lensUri, String graph, UriPattern... tgtUriPatterns) 
             throws BridgeDBException {
         Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
-        if (targetUriPatterns.isEmpty()){
+        if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
             return mapUri (sourceXref, lensUri);
         }
         Set<String> results = new HashSet<String>();
@@ -298,7 +298,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
-        if (targetUriPatterns.isEmpty()){
+        if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
             return mapUri (sourceUri, lensUri);
         }
         Set<String> results = new HashSet<String>();
@@ -342,7 +342,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     @Override
     public synchronized MappingsBySet mapBySet(String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException {
         Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
-         if (targetUriPatterns.isEmpty()){
+        if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
            return mapBySet (sourceUri, lensUri);
         }
         MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
@@ -379,7 +379,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
         MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
         for (String sourceUri:sourceUris) {
-            if (targetUriPatterns.isEmpty()){
+            if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
                 mapBySet(sourceUri, mappingsBySet, lensUri);
             } else {
                 for (UriPattern tgtUriPattern:targetUriPatterns) {
@@ -528,7 +528,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         System.out.println(graph);
         Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
         System.out.println(targetUriPatterns);
-        if (targetUriPatterns.isEmpty()){
+        if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
             return mapFull (sourceXref, lensUri);
         } else {
             Set<Mapping> results = new HashSet<Mapping>();
