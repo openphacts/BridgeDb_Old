@@ -194,10 +194,14 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
             @QueryParam(WsUriConstants.GRAPH) String graph,
             @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns) throws BridgeDBException {
+        MappingsBySet mappingsBySet = mapBySetInner(uris, lensUri, graph, targetUriPatterns);
+        return new MappingsBySetBean(mappingsBySet);
+    }
+
+    public MappingsBySet mapBySetInner(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns) throws BridgeDBException {
         HashSet<String> uriSet = new HashSet<String>(uris);
         UriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
-        MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, graph, targetPatterns);
-        return new MappingsBySetBean(mappingsBySet);
+        return uriMapper.mapBySet(uriSet, lensUri, graph, targetPatterns);
     }
 
     private List<MappingBean> map(String uri, String lensUri, DataSource[] targetDataSources, 

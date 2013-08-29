@@ -243,15 +243,13 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
     @GET
     @Produces({MediaType.TEXT_PLAIN})
     @Path("/" + WsUriConstants.MAP_BY_SET + WsUriConstants.RDF)
-    public Response mapBySetRDFText(@QueryParam(WsUriConstants.URI) List<String> uris,
+    public Response mapBySetRdfText(@QueryParam(WsUriConstants.URI) List<String> uris,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
             @QueryParam(WsUriConstants.GRAPH) String graph,
             @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
             @QueryParam(WsUriConstants.RDF_FORMAT) String formatName
             ) throws BridgeDBException {
-        HashSet<String> uriSet = new HashSet<String>(uris);
-        UriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
-        MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, graph, targetPatterns);
+        MappingsBySet mappingsBySet = mapBySetInner(uris, lensUri, graph, targetUriPatterns);
         if (mappingsBySet.isEmpty()){
             return Response.status(Response.Status.NO_CONTENT).build();
         } else {
@@ -273,19 +271,20 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
     @GET
     @Produces({MediaType.TEXT_HTML})
     @Path("/" + WsUriConstants.MAP_BY_SET + WsUriConstants.RDF)
-    public Response mapBySetTexthtml(@QueryParam(WsUriConstants.URI) List<String> uris,
+    public Response mapBySetRdfHtml(@QueryParam(WsUriConstants.URI) List<String> uris,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
             @QueryParam(WsUriConstants.GRAPH) String graph,
             @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
             @QueryParam(WsUriConstants.RDF_FORMAT) String formatName,
             @Context HttpServletRequest httpServletRequest
             ) throws BridgeDBException {
-        HashSet<String> uriSet = new HashSet<String>(uris);
-        UriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
-        MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, graph, targetPatterns);
+        MappingsBySet mappingsBySet = mapBySetInner(uris, lensUri, graph, targetUriPatterns);
         StringBuilder sb = topAndSide("HTML friendly " + WsUriConstants.MAP_BY_SET + WsUriConstants.RDF + " Output",  httpServletRequest);
+        sb.append("<h2>Warning unlike ");
+        sb.append(WsUriConstants.MAP_BY_SET);
+        sb.append(" this method does not include any protential mapping to self.</h2>");
         sb.append("<h4>Use MediaType.TEXT_PLAIN to remove HTML stuff</h4>");
-        sb.append("<p>Warning MediaType.TEXT_PLAIN version returns status 204 if not mappings found.</p>");
+        sb.append("<p>Warning MediaType.TEXT_PLAIN version returns status 204 if no mappings found.</p>");
         generateTextarea(sb, "RDF", mappingsBySet.toRDF(null, formatName));
         footerAndEnd(sb);
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
