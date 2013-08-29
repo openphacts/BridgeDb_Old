@@ -33,6 +33,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.bridgedb.Xref;
+import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.uri.GraphResolver;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.Mapping;
@@ -157,7 +158,13 @@ public class WSAPI extends WSFrame {
         String sourceUri2 = mapping2.getSourceUri().iterator().next();
         String targetUri2 = mapping2.getTargetUri().iterator().next(); 
         Xref targetXref2 = mapping2.getTarget();
-        String targetUriSpace2 = targetUri2.substring(0, targetUri2.length()- targetXref2.getId().length());
+        String targetUriSpace2;
+        if (uriListener != null){
+            UriPattern pattern = uriListener.toUriPattern(sourceUri2);
+            targetUriSpace2 = pattern.toString();
+        } else {
+            targetUriSpace2 = targetUri2.substring(0, targetUri2.length()- targetXref2.getId().length());
+        }
         GraphResolver.addMapping(EXAMPLE_GRAPH, targetUriSpace2);
         boolean freeSearchSupported = idMapper.getCapabilities().isFreeSearchSupported(); 
         Set<String> keys = idMapper.getCapabilities().getKeys();
@@ -1301,7 +1308,18 @@ public class WSAPI extends WSFrame {
             throws UnsupportedEncodingException, BridgeDBException{
         mapExamplesUriBased1(sb, contextPath, methodName, sourceUri1);
         mapExamplesUriBased2(sb, contextPath, methodName, sourceUri1, sourceUri2);
-        mapExamplesUriBasedWithGraph(sb, contextPath, methodName, sourceUri2, targetUriSpace2);
+        sb.append("<li>The by ");
+        sb.append(WsUriConstants.GRAPH);
+        sb.append(" and by ");
+        sb.append(WsUriConstants.TARGET_URI_PATTERN);
+        sb.append(" methods provide the same result as ");
+        sb.append(EXAMPLE_GRAPH);
+        sb.append(" has been set to the just the single ");
+        sb.append(WsUriConstants.TARGET_URI_PATTERN);
+        sb.append(" ");
+        sb.append(targetUriSpace2);
+        sb.append("</li>");
+        mapExamplesUriBasedWithGraph(sb, contextPath, methodName, sourceUri2);
         mapExamplesUriBasedWithTarget(sb, contextPath, methodName, sourceUri2, targetUriSpace2);
         mapExamplesUriBased4(sb, contextPath, methodName, sourceUri1);
     }
@@ -1343,7 +1361,7 @@ public class WSAPI extends WSFrame {
     }
     
     private void mapExamplesUriBasedWithGraph(StringBuilder sb, String contextPath, String methodName, 
-            String sourceUri2, String targetUriSpace) throws UnsupportedEncodingException, BridgeDBException{
+            String sourceUri2) throws UnsupportedEncodingException, BridgeDBException{
         sb.append("<li>Example: <a href=\"");
         sb.append(contextPath);
         sb.append(methodName);
@@ -1398,7 +1416,7 @@ public class WSAPI extends WSFrame {
         sb.append(FIRST_URI_PARAMETER);
         sb.append(sourceUri1);
         addDefaultLens(sb);
-        sb.append("\">");
+        sb.append(">");
         sb.append("</a></li>");    
     }           
 

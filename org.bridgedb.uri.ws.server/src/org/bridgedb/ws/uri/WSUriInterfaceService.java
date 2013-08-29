@@ -41,6 +41,7 @@ import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.SetMappings;
+import org.bridgedb.uri.UriListener;
 import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WSCoreService;
@@ -62,6 +63,7 @@ import org.bridgedb.ws.bean.XrefBean;
 public class WSUriInterfaceService extends WSCoreService implements WSUriInterface {
 
     protected UriMapper uriMapper;
+    protected UriListener uriListener;
 //    protected LinksetInterfaceMinimal linksetInterface;
 //    private String validationTypeString;
     public final String MIME_TYPE = "mimeType";
@@ -82,6 +84,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         super();
 //        this.linksetInterface = new LinksetLoader();
         uriMapper = SQLUriMapper.getExisting();
+        uriListener = SQLUriMapper.getExisting();
         idMapper = uriMapper;
     }
 
