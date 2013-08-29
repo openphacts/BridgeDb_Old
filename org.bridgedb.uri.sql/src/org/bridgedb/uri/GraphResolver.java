@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
@@ -25,6 +26,7 @@ public class GraphResolver {
     
     public static GraphResolver getInstance() throws BridgeDBException{
         if (instance == null){
+            BridgeDBRdfHandler.init();
             instance = new GraphResolver();
         }
         return instance;
@@ -81,9 +83,6 @@ public class GraphResolver {
         }
         GraphResolver resolver = getInstance();
         Set<UriPattern> results = resolver.allowedUriPattern.get(graph);
-        if (results == null){
-            throw new BridgeDBException("Unknown graph " + graph);
-        }
         return results;
     }
 
