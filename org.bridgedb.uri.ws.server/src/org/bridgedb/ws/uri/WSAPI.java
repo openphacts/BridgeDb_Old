@@ -160,7 +160,7 @@ public class WSAPI extends WSFrame {
         Xref targetXref2 = mapping2.getTarget();
         String targetUriSpace2;
         if (uriListener != null){
-            UriPattern pattern = uriListener.toUriPattern(sourceUri2);
+            UriPattern pattern = uriListener.toUriPattern(targetUri2);
             targetUriSpace2 = pattern.toString();
         } else {
             targetUriSpace2 = targetUri2.substring(0, targetUri2.length()- targetXref2.getId().length());
