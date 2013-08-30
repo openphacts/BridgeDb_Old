@@ -107,7 +107,7 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
     }
 
     @Override
-    public MappingsBySetBean mapBySet(List<String> uris, String lensUri, String graph, List<String> targetUriPattern) throws BridgeDBException {
+    public Response mapBySet(List<String> uris, String lensUri, String graph, List<String> targetUriPattern) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         for (String uri:uris){
             if (uri != null){
@@ -125,12 +125,16 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
                 params.add(WsUriConstants.TARGET_URI_PATTERN, target);
             }
         }
-        MappingsBySetBean result = 
+        try {
+            MappingsBySetBean result = 
                 webResource.path(WsUriConstants.MAP_BY_SET)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<MappingsBySetBean>() {});
-        return result;        
+            return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
 
 
@@ -164,6 +168,7 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
     private String encode (String original){
         return original.replaceAll("%", "%20");
     }
+    
     @Override
     public XrefBean toXref(String uri) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();

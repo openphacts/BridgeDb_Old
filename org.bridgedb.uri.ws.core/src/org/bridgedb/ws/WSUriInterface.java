@@ -40,7 +40,7 @@ public interface WSUriInterface extends WSCoreInterface{
     public Response map(String id, String scrCode, String uri, String lensUri, List<String> targetCodes, 
             String graph, List<String> targetUriPattern) throws BridgeDBException;
 
-    public MappingsBySetBean mapBySet(List<String> uri, String lensUri, String graph, List<String> targetUriPattern) 
+    public Response mapBySet(List<String> uri, String lensUri, String graph, List<String> targetUriPattern) 
             throws BridgeDBException;
 
     public UriExistsBean UriExists(String Uri) throws BridgeDBException;

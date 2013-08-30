@@ -164,7 +164,11 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
                 tgtUriPatternStrings.add(tgtUriPattern.getUriPattern());
             }
         }
-        MappingsBySetBean bean = uriService.mapBySet(soureUrisList, lensUri, graph,  tgtUriPatternStrings);
+        Response response =  uriService.mapBySet(soureUrisList, lensUri, graph,  tgtUriPatternStrings);
+        if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()){
+            return new MappingsBySet(null);
+        }    
+        MappingsBySetBean bean = (MappingsBySetBean) response.getEntity();
         return bean.asMappingsBySet();
     }
 
