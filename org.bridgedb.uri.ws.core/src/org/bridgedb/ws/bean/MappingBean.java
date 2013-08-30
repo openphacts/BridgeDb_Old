@@ -33,7 +33,7 @@ import org.bridgedb.uri.Mapping;
  * <li>UriSpace: 
  * @author Christian
  */
-@XmlRootElement(name="Mapping")
+@XmlRootElement(name="mapping")
 public class MappingBean {
  
     private XrefBean source;

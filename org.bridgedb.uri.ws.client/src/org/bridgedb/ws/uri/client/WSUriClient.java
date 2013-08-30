@@ -20,10 +20,12 @@
 package org.bridgedb.ws.uri.client;
 
 import com.sun.jersey.api.client.GenericType;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import org.bridgedb.DataSource;
 import org.bridgedb.DataSourceOverwriteLevel;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
@@ -40,6 +42,7 @@ import org.bridgedb.ws.bean.MappingBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
 import org.bridgedb.ws.bean.LensBean;
+import org.bridgedb.ws.bean.MappingsBean;
 import org.bridgedb.ws.bean.MappingsBySetBean;
 import org.bridgedb.ws.bean.UriExistsBean;
 import org.bridgedb.ws.bean.UriSearchBean;
@@ -61,7 +64,7 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
     }
     
     @Override
-    public List<MappingBean> map(String id, String scrCode, String uri, String lensUri, List<String> targetCodes, 
+    public Response map(String id, String scrCode, String uri, String lensUri, List<String> targetCodes, 
         String graph, List<String> targetUriPattern) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         if (id != null){
@@ -90,13 +93,17 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
             }
         }
         System.out.println(params);
-        //Make service call
-        List<MappingBean> result = 
-                webResource.path(WsUriConstants.MAP)
-                .queryParams(params)
-                .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<List<MappingBean>>() {});
-         return result;
+        try{
+            //Make service call
+            MappingsBean result = 
+                    webResource.path(WsUriConstants.MAP)
+                    .queryParams(params)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<MappingsBean>() {});
+            return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
 
     @Override

@@ -19,12 +19,8 @@
 //
 package org.bridgedb.ws.uri;
 
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Properties;
-import java.util.logging.Level;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -39,10 +35,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
-import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.uri.Lens;
@@ -251,7 +244,7 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
             ) throws BridgeDBException {
         MappingsBySet mappingsBySet = mapBySetInner(uris, lensUri, graph, targetUriPatterns);
         if (mappingsBySet.isEmpty()){
-            return Response.status(Response.Status.NO_CONTENT).build();
+            return Response.noContent().build();
         } else {
             String rdf = mappingsBySet.toRDF(null, formatName);     
             return Response.ok(rdf, MediaType.TEXT_PLAIN_TYPE).build();

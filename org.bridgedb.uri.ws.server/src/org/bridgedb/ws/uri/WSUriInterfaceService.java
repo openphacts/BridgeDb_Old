@@ -30,6 +30,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
@@ -52,6 +53,7 @@ import org.bridgedb.ws.bean.DataSourceUriPatternBean;
 import org.bridgedb.ws.bean.LensBean;
 import org.bridgedb.ws.bean.MappingBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
+import org.bridgedb.ws.bean.MappingsBean;
 import org.bridgedb.ws.bean.MappingsBySetBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
 import org.bridgedb.ws.bean.UriExistsBean;
@@ -96,10 +98,10 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + WsUriConstants.MAP)
     @Override
-    public List<MappingBean> map(
+    public Response map(
             @QueryParam(WsConstants.ID) String id,
             @QueryParam(WsConstants.DATASOURCE_SYSTEM_CODE) String scrCode,
     		@QueryParam(WsUriConstants.URI) String uri,
@@ -107,6 +109,33 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             @QueryParam(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE) List<String> targetCodes,
             @QueryParam(WsUriConstants.GRAPH) String graph,
             @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns) throws BridgeDBException {
+        MappingsBean result = mapInternal (id, scrCode, uri, lensUri, targetCodes, graph, targetUriPatterns);
+        if (result.asMappings().isEmpty()){
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } 
+        return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+    }
+    
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/" + WsUriConstants.MAP)
+    public Response mapJson(
+            @QueryParam(WsConstants.ID) String id,
+            @QueryParam(WsConstants.DATASOURCE_SYSTEM_CODE) String scrCode,
+    		@QueryParam(WsUriConstants.URI) String uri,
+     		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
+            @QueryParam(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE) List<String> targetCodes,
+            @QueryParam(WsUriConstants.GRAPH) String graph,
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns) throws BridgeDBException {
+        MappingsBean result = mapInternal (id, scrCode, uri, lensUri, targetCodes, graph, targetUriPatterns);
+        if (result.asMappings().isEmpty()){
+            return Response.noContent().build();
+        } 
+        return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
+    }
+ 
+    public MappingsBean mapInternal(String id, String scrCode, String uri, String lensUri, List<String> targetCodes,
+            String graph, List<String> targetUriPatterns) throws BridgeDBException {
         if (logger.isDebugEnabled()){
             logger.debug("map called! ");
             if (id != null){
@@ -175,18 +204,6 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
        return UriMappings.asBean(results);
     }
 
-    /**
-     * @deprecated
-     */
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/" + WsUriConstants.MAP_URL)
-    public List<MappingBean> mapUrl(
-    		@QueryParam(WsUriConstants.URL) String url,
-            @QueryParam(WsUriConstants.TARGET_URI_SPACE) List<String> targetUriPatterns) throws BridgeDBException {
-        return this.map(null, null, url, null, null, null, targetUriPatterns);
-    }
-
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsUriConstants.MAP_BY_SET)
@@ -204,7 +221,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         return uriMapper.mapBySet(uriSet, lensUri, graph, targetPatterns);
     }
 
-    private List<MappingBean> map(String uri, String lensUri, DataSource[] targetDataSources, 
+    private MappingsBean map(String uri, String lensUri, DataSource[] targetDataSources, 
             String graph, UriPattern[] targetPatterns) throws BridgeDBException {
         System.out.println("in list method " + targetPatterns);
         Set<Mapping> mappings;
@@ -220,14 +237,10 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
                 mappings.addAll(mapByTargetUriPattern(uri, lensUri, graph, targetPatterns));                
             } 
         }
-        ArrayList<MappingBean> results = new ArrayList<MappingBean>();
-        for (Mapping mapping:mappings){
-            results.add(MappingBean.asBean(mapping));
-        }
-        return results; 
+        return new MappingsBean(mappings); 
     }
     
-    private List<MappingBean> map(String id, String scrCode, String lensUri, DataSource[] targetDataSources, 
+    private MappingsBean map(String id, String scrCode, String lensUri, DataSource[] targetDataSources, 
             String graph, UriPattern[] targetPatterns) throws BridgeDBException {
         DataSource dataSource = DataSource.getBySystemCode(scrCode);
         Xref sourceXref = new Xref(id, dataSource);
@@ -244,11 +257,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
                 mappings.addAll(mapByTargetUriPattern(sourceXref, lensUri, graph, targetPatterns));                
             } 
         }
-        ArrayList<MappingBean> results = new ArrayList<MappingBean>();
-        for (Mapping mapping:mappings){
-            results.add(MappingBean.asBean(mapping));
-        }
-        return results; 
+        return new MappingsBean(mappings); 
     }
 
     private DataSource[] getDataSources(List<String> targetCodes){

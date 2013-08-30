@@ -49,12 +49,8 @@ public class WsUriConstants extends WsConstants{
     public static final String SQL_COMPAT_VERSION = "SqlCompatVersion";
     public static final String TARGET_URI_PATTERN = "targetUriPattern";
 
-    /** @deprecated */
-    public static final String TARGET_URI_SPACE = "targetURISpace";
     public static final String TO_XREF = "toXref";
     public static final String URI = "Uri";
-    /** @deprecated */
-    public static final String URL = "Url";
     public static final String URI_EXISTS = "UriExists";
     public static final String URI_SEARCH = "UriSearch";
     public static final String XML = "XML";

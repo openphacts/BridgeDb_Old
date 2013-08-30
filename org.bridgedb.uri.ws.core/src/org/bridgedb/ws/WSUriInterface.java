@@ -20,6 +20,7 @@
 package org.bridgedb.ws;
 
 import java.util.List;
+import javax.ws.rs.core.Response;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.bean.DataSourceUriPatternBean;
 import org.bridgedb.ws.bean.MappingBean;
@@ -36,7 +37,7 @@ import org.bridgedb.ws.bean.XrefBean;
  */
 public interface WSUriInterface extends WSCoreInterface{
 
-    public List<MappingBean> map(String id, String scrCode, String uri, String lensUri, List<String> targetCodes, 
+    public Response map(String id, String scrCode, String uri, String lensUri, List<String> targetCodes, 
             String graph, List<String> targetUriPattern) throws BridgeDBException;
 
     public MappingsBySetBean mapBySet(List<String> uri, String lensUri, String graph, List<String> targetUriPattern) 
