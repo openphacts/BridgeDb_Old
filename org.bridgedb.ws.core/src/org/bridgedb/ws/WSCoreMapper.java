@@ -33,6 +33,7 @@ import org.bridgedb.Xref;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.bean.CapabilitiesBean;
 import org.bridgedb.ws.bean.DataSourceBean;
+import org.bridgedb.ws.bean.DataSourcesBean;
 import org.bridgedb.ws.bean.PropertyBean;
 import org.bridgedb.ws.bean.XrefBean;
 import org.bridgedb.ws.bean.XrefMapBean;
@@ -157,22 +158,14 @@ public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
 
     @Override
     public Set<DataSource> getSupportedSrcDataSources() throws BridgeDBException {
-        List<DataSourceBean> beans = webService.getSupportedSrcDataSources();
-        HashSet<DataSource> results = new HashSet<DataSource>();
-        for (DataSourceBean bean:beans){
-            results.add(DataSourceBean.asDataSource(bean));
-        }
-        return results;
+        DataSourcesBean beans = webService.getSupportedSrcDataSources();
+        return beans.getDataSources();
     }
 
     @Override
     public Set<DataSource> getSupportedTgtDataSources() throws BridgeDBException {
-        List<DataSourceBean> beans = webService.getSupportedTgtDataSources();
-        HashSet<DataSource> results = new HashSet<DataSource>();
-        for (DataSourceBean bean:beans){
-            results.add(DataSourceBean.asDataSource(bean));
-        }
-        return results;
+        DataSourcesBean beans = webService.getSupportedTgtDataSources();
+        return beans.getDataSources();
     }
 
     @Override

@@ -31,6 +31,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.bean.CapabilitiesBean;
 import org.bridgedb.ws.bean.DataSourceBean;
+import org.bridgedb.ws.bean.DataSourcesBean;
 import org.bridgedb.ws.bean.FreeSearchSupportedBean;
 import org.bridgedb.ws.bean.MappingSupportedBean;
 import org.bridgedb.ws.bean.PropertyBean;
@@ -115,26 +116,26 @@ public class WSCoreClient implements WSCoreInterface{
     }
 
     @Override
-    public List<DataSourceBean> getSupportedSrcDataSources() throws BridgeDBException {
+    public DataSourcesBean getSupportedSrcDataSources() throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         //Make service call
-        List<DataSourceBean> result = 
+        DataSourcesBean result = 
                 webResource.path(WsConstants.GET_SUPPORTED_SOURCE_DATA_SOURCES)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<List<DataSourceBean>>() {});
+                .get(new GenericType<DataSourcesBean>() {});
         return result;
     }
 
     @Override
-    public List<DataSourceBean> getSupportedTgtDataSources() throws BridgeDBException {
+    public DataSourcesBean getSupportedTgtDataSources() throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         //Make service call
-        List<DataSourceBean> result = 
+        DataSourcesBean result = 
                 webResource.path(WsConstants.GET_SUPPORTED_TARGET_DATA_SOURCES)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<List<DataSourceBean>>() {});
+                .get(new GenericType<DataSourcesBean>() {});
         return result;
     }
 

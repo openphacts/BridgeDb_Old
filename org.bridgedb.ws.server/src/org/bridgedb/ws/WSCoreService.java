@@ -39,6 +39,7 @@ import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.ws.bean.CapabilitiesBean;
 import org.bridgedb.ws.bean.DataSourceBean;
+import org.bridgedb.ws.bean.DataSourcesBean;
 import org.bridgedb.ws.bean.FreeSearchSupportedBean;
 import org.bridgedb.ws.bean.MappingSupportedBean;
 import org.bridgedb.ws.bean.PropertyBean;
@@ -79,20 +80,15 @@ public class WSCoreService implements WSCoreInterface {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsConstants.GET_SUPPORTED_SOURCE_DATA_SOURCES)
     @Override
-    public List<DataSourceBean> getSupportedSrcDataSources() throws BridgeDBException {
-        ArrayList<DataSourceBean> sources = new ArrayList<DataSourceBean>();
+    public DataSourcesBean getSupportedSrcDataSources() throws BridgeDBException {
         System.err.println(idMapper);
         IDMapperCapabilities capabilities = idMapper.getCapabilities();
         try {
             Set<DataSource> dataSources = capabilities.getSupportedSrcDataSources();
-            for (DataSource dataSource:dataSources){
-                DataSourceBean bean = DataSourceBean.asBean(dataSource);
-                sources.add(bean);
-            }
+            return new DataSourcesBean (dataSources);
         } catch (IDMapperException e){
             throw BridgeDBException.convertToBridgeDB(e);
         }
-        return sources;
     } 
 
     
@@ -183,19 +179,13 @@ public class WSCoreService implements WSCoreInterface {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsConstants.GET_SUPPORTED_TARGET_DATA_SOURCES)
     @Override
-    public List<DataSourceBean> getSupportedTgtDataSources() throws BridgeDBException {
-        ArrayList<DataSourceBean> targets = new ArrayList<DataSourceBean>();
+    public DataSourcesBean getSupportedTgtDataSources() throws BridgeDBException {
         try {
             Set<DataSource> dataSources = idMapper.getCapabilities().getSupportedSrcDataSources();
-            for (DataSource dataSource:dataSources){
-                DataSourceBean bean = DataSourceBean.asBean(dataSource);
-                targets.add(bean);
-            }
+            return new DataSourcesBean(dataSources);
         } catch (IDMapperException e){
             throw BridgeDBException.convertToBridgeDB(e);
         }
-
-        return targets;
     }
 
     @GET

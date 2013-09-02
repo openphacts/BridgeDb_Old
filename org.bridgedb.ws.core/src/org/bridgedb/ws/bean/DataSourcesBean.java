@@ -20,42 +20,42 @@
 package org.bridgedb.ws.bean;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.bridgedb.Xref;
+import javax.xml.bind.annotation.XmlType;
+import org.bridgedb.DataSource;
 
-@XmlRootElement(name="XrefMappings")
-public class XrefMapsBean {
+@XmlRootElement(name="DataSources")
+public class DataSourcesBean {
 
-    private Set<XrefMapBean> XrefMapBean;
+    private Set<DataSourceBean> DataSource;
     
-    public XrefMapsBean(){
-        XrefMapBean = new HashSet<XrefMapBean>();
+    //Webservice constructor
+    public DataSourcesBean(){
     }
 
-    public XrefMapsBean(Map<Xref, Set<Xref>>  mappings){
-        XrefMapBean = new HashSet<XrefMapBean>();
-        for (Xref source:mappings.keySet()){
-            for (Xref target:mappings.get(source)){
-                XrefMapBean.add(org.bridgedb.ws.bean.XrefMapBean.asBean(source, target));
-            }
+    public Set<DataSource> getDataSources(){
+        HashSet<DataSource> results = new HashSet<DataSource>();
+        for (DataSourceBean bean:DataSource){
+            results.add(DataSourceBean.asDataSource(bean));
         }
-   }
-    
+        return results;
+    }
     
     /**
-     * @return the XrefMapBean
+     * @return the DataSource
      */
-    public Set<XrefMapBean> getXrefMapBean() {
-        return XrefMapBean;
+    public Set<DataSourceBean> getDataSource() {
+        return DataSource;
     }
 
     /**
-     * @param XrefMapBean the XrefMapBean to set
+     * @param DataSource the DataSource to set
      */
-    public void setXrefMapBean(Set<XrefMapBean> XrefMapBean) {
-        this.setXrefMapBean(XrefMapBean);
+    public void setDataSource(Set<DataSourceBean> DataSource) {
+        this.DataSource = DataSource;
     }
+
+    
 
 }

@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
 
-@XmlRootElement(name="Xref")
+@XmlRootElement(name="Xrefs")
 public class XrefsBean {
 
     private Set<XrefBean> Xref;

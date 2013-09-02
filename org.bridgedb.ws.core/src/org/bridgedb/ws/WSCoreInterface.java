@@ -23,6 +23,7 @@ import java.util.List;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.bean.CapabilitiesBean;
 import org.bridgedb.ws.bean.DataSourceBean;
+import org.bridgedb.ws.bean.DataSourcesBean;
 import org.bridgedb.ws.bean.FreeSearchSupportedBean;
 import org.bridgedb.ws.bean.MappingSupportedBean;
 import org.bridgedb.ws.bean.PropertyBean;
@@ -46,9 +47,9 @@ public interface WSCoreInterface {
 
     FreeSearchSupportedBean isFreeSearchSupported();
 
-    List<DataSourceBean> getSupportedSrcDataSources() throws BridgeDBException;
+    DataSourcesBean getSupportedSrcDataSources() throws BridgeDBException;
 
-    List<DataSourceBean> getSupportedTgtDataSources() throws BridgeDBException;
+    DataSourcesBean getSupportedTgtDataSources() throws BridgeDBException;
 
     MappingSupportedBean isMappingSupported( String sourceCode, String targetCode) throws BridgeDBException;
 
