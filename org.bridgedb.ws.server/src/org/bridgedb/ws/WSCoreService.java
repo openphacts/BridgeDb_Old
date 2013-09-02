@@ -35,6 +35,7 @@ import org.bridgedb.IDMapper;
 import org.bridgedb.IDMapperCapabilities;
 import org.bridgedb.IDMapperException;
 import org.bridgedb.Xref;
+import org.bridgedb.sql.SQLIdMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.ws.bean.CapabilitiesBean;
@@ -69,6 +70,7 @@ public class WSCoreService implements WSCoreInterface {
      */
     protected WSCoreService() throws BridgeDBException{
         ConfigReader.configureLogger();
+        idMapper = new SQLIdMapper(false);
     }
     
     public WSCoreService(IDMapper idMapper) throws BridgeDBException {
