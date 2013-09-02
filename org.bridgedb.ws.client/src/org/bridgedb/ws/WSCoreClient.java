@@ -38,6 +38,7 @@ import org.bridgedb.ws.bean.XrefBean;
 import org.bridgedb.ws.bean.XrefExistsBean;
 import org.bridgedb.ws.bean.XrefMapBean;
 import org.bridgedb.ws.bean.XrefMapsBean;
+import org.bridgedb.ws.bean.XrefsBean;
 
 /**
  *
@@ -78,16 +79,16 @@ public class WSCoreClient implements WSCoreInterface{
     }
         
     @Override
-    public List<XrefBean> freeSearch(String text, String limit) throws BridgeDBException {
+    public XrefsBean freeSearch(String text, String limit) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         params.add(WsConstants.TEXT, text);
         params.add(WsConstants.LIMIT, limit);
         //Make service call
-        List<XrefBean> result = 
+        XrefsBean result = 
                 webResource.path(WsConstants.FREE_SEARCH)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<List<XrefBean>>() {});
+                .get(new GenericType<XrefsBean>() {});
         return result;
     }
 

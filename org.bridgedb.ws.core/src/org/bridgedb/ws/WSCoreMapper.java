@@ -37,6 +37,7 @@ import org.bridgedb.ws.bean.PropertyBean;
 import org.bridgedb.ws.bean.XrefBean;
 import org.bridgedb.ws.bean.XrefMapBean;
 import org.bridgedb.ws.bean.XrefMapsBean;
+import org.bridgedb.ws.bean.XrefsBean;
 
 /**
  *
@@ -116,12 +117,8 @@ public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
 
     @Override
     public Set<Xref> freeSearch(String text, int limit) throws BridgeDBException {
-        List<XrefBean>  beans = webService.freeSearch(text, "" + limit);
-        HashSet<Xref> results = new HashSet<Xref>();
-        for (XrefBean bean:beans){
-            results.add(XrefBean.asXref(bean));
-        }
-        return results;
+        XrefsBean beans = webService.freeSearch(text, "" + limit);
+        return beans.asXrefs();
     }
 
     @Override

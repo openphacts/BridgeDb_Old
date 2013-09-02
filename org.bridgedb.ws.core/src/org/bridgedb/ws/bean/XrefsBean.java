@@ -19,52 +19,37 @@
 //
 package org.bridgedb.ws.bean;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
 
-@XmlRootElement(name="XrefMapping")
-public class XrefMapBean {
-    XrefBean source;
-    XrefBean target;
+@XmlRootElement(name="Xref")
+public class XrefsBean {
+
+    private Set<XrefBean> Xref;
     
-    public XrefMapBean(){}
-
-    public static XrefMapBean asBean(Xref source, Xref target) {
-        XrefMapBean bean = new XrefMapBean();
-        bean.source = XrefBean.asBean(source);
-        bean.target = XrefBean.asBean(target);
-        return bean;
-    }
- 
-    /**
-     * @return the source
-     */
-    public XrefBean getSource() {
-        return source;
+    public XrefsBean(){
+        Xref = new HashSet<XrefBean>();
     }
 
-    /**
-     * @param source the source to set
-     */
-    public void setSource(XrefBean source) {
-        this.source = source;
+    public XrefsBean(Set<Xref> xrefs){
+        Xref = new HashSet<XrefBean>();
+        for (Xref xref:xrefs){
+            if (xref != null){
+                Xref.add(new XrefBean(xref));
+            }
+        }
     }
 
-    /**
-     * @return the target
-     */
-    public XrefBean getTarget() {
-        return target;
+    public Set<Xref> asXrefs() {
+        HashSet<Xref> results = new HashSet<Xref>();
+        for (XrefBean bean:Xref){
+            results.add(XrefBean.asXref(bean));
+        }
+        return results;
     }
-
-    /**
-     * @param target the target to set
-     */
-    public void setTarget(XrefBean target) {
-        this.target = target;
-    }
-
-    public String toString(){
-        return source + " -> " + target;
-    }
+        
+  
 }

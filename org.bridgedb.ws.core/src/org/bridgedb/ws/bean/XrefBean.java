@@ -33,6 +33,11 @@ public class XrefBean {
         dataSource = null;
     }
         
+    public XrefBean (Xref xref){
+        id = xref.getId();
+        dataSource = DataSourceBean.asBean(xref.getDataSource());
+    }
+
     public String getId() {
         return id;
     }

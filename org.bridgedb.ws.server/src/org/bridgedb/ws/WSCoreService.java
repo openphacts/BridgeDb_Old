@@ -45,6 +45,7 @@ import org.bridgedb.ws.bean.PropertyBean;
 import org.bridgedb.ws.bean.XrefBean;
 import org.bridgedb.ws.bean.XrefExistsBean;
 import org.bridgedb.ws.bean.XrefMapsBean;
+import org.bridgedb.ws.bean.XrefsBean;
 
 /**
  * Webservice server code, that uses the ws.core
@@ -99,31 +100,23 @@ public class WSCoreService implements WSCoreInterface {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsConstants.FREE_SEARCH)
     @Override
-    public List<XrefBean> freeSearch(
+    public XrefsBean freeSearch(
             @QueryParam(WsConstants.TEXT) String text,
             @QueryParam(WsConstants.LIMIT) String limitString) throws BridgeDBException {
         if (text == null) throw new BridgeDBException(WsConstants.TEXT + " parameter missing");
         try {
             if (limitString == null || limitString.isEmpty()){
                 Set<Xref> mappings = idMapper.freeSearch(text, Integer.MAX_VALUE);
-                return setXrefToListXrefBeans(mappings);
+                return new XrefsBean(mappings);
             } else {
                 int limit = Integer.parseInt(limitString);
                 Set<Xref> mappings = idMapper.freeSearch(text,limit);
-                return setXrefToListXrefBeans(mappings);
+                return new XrefsBean(mappings);
             }
         } catch (IDMapperException e){
             throw BridgeDBException.convertToBridgeDB(e);
         }
     } 
-
-    protected List<XrefBean> setXrefToListXrefBeans(Set<Xref> xrefs){
-       ArrayList<XrefBean> results = new ArrayList<XrefBean>();
-        for (Xref xref:xrefs){
-           results.add(XrefBean.asBean(xref));
-        }
-        return results;        
-    }
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

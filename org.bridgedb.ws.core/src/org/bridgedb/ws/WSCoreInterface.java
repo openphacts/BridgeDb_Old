@@ -26,7 +26,7 @@ import org.bridgedb.ws.bean.DataSourceBean;
 import org.bridgedb.ws.bean.FreeSearchSupportedBean;
 import org.bridgedb.ws.bean.MappingSupportedBean;
 import org.bridgedb.ws.bean.PropertyBean;
-import org.bridgedb.ws.bean.XrefBean;
+import org.bridgedb.ws.bean.XrefsBean;
 import org.bridgedb.ws.bean.XrefExistsBean;
 import org.bridgedb.ws.bean.XrefMapsBean;
 
@@ -40,7 +40,7 @@ public interface WSCoreInterface {
 
     XrefExistsBean xrefExists(String id, String scrCode) throws BridgeDBException;
 
-    List<XrefBean> freeSearch(String text, String limit) throws BridgeDBException;
+    XrefsBean freeSearch(String text, String limit) throws BridgeDBException;
 
     CapabilitiesBean getCapabilities();
 
