@@ -34,6 +34,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
 import org.bridgedb.rdf.UriPattern;
@@ -62,6 +63,7 @@ import org.bridgedb.ws.bean.UriExistsBean;
 import org.bridgedb.ws.bean.UriMappings;
 import org.bridgedb.ws.bean.UriSearchBean;
 import org.bridgedb.ws.bean.XrefBean;
+import uk.ac.manchester.cs.openphacts.bridgedb.webtemplates.WebTemplates;
 
 @Path("/")
 public class WSUriInterfaceService extends WSCoreService implements WSUriInterface {
@@ -221,17 +223,6 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
     }
 
-/*    @GET
-    @Produces({MediaType.APPLICATION_XML})
-    @Path("/" + WsUriConstants.MAP_BY_SET)
-    public MappingsBySet mapBySet(@QueryParam(WsUriConstants.URI) List<String> uris,
-     		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
-            @QueryParam(WsUriConstants.GRAPH) String graph,
-            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
-            @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
-        return mapBySetInner(uris, lensUri, graph, targetUriPatterns);
-    }
-*/
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/" + WsUriConstants.MAP_BY_SET)

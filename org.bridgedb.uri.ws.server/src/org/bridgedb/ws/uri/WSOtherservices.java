@@ -297,6 +297,30 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
 		this.context = servletContextEvent.getServletContext();
 	}
 
+    @GET
+    @Produces({MediaType.TEXT_HTML})
+    @Path("/" + WsUriConstants.MAP_BY_SET)
+    public Response mapBySetHtml(@QueryParam(WsUriConstants.URI) List<String> uris,
+     		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
+            @QueryParam(WsUriConstants.GRAPH) String graph,
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
+            @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
+        Response result = mapBySet(uris, lensUri, graph, targetUriPatterns);
+        if (result.getStatus() == Response.Status.NO_CONTENT.getStatusCode()){
+            return noContectWrapper(httpServletRequest);
+        }
+        return result;
+    }
+
+    private Response noContectWrapper(HttpServletRequest httpServletRequest) throws BridgeDBException {
+        StringBuilder sb = topAndSide ("Empty Reply", httpServletRequest);
+        sb.append("<h1>Reply is an Empty Set or Empty Object</h1>\n");
+        sb.append("<h2>Note: The XML and Json versions of this request simply return status 204 (No Context)</h2>");
+        footerAndEnd(sb);
+        return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
+   }
+
+
 }
 
 
