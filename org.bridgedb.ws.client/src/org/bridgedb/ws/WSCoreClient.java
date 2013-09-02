@@ -28,6 +28,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.bean.CapabilitiesBean;
 import org.bridgedb.ws.bean.DataSourceBean;
@@ -52,8 +53,15 @@ public class WSCoreClient implements WSCoreInterface{
 
     protected final WebResource webResource;
 
+    public WSCoreClient(String serviceAddress) {
+        this.serviceAddress = serviceAddress;
+        ClientConfig config = new DefaultClientConfig();
+        Client client = Client.create(config);
+        webResource = client.resource(serviceAddress);        
+    }
+        
     @Override
-    public XrefMapsBean mapID(List<String> id, List<String> scrCode, List<String> targetCodes) throws BridgeDBException {
+    public Response mapID(List<String> id, List<String> scrCode, List<String> targetCodes) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         for (String one:id){
             params.add(WsConstants.ID, one);
@@ -65,131 +73,124 @@ public class WSCoreClient implements WSCoreInterface{
             params.add(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE, target);
         }
         //Make service call
-        XrefMapsBean result = 
+        XrefMapsBean bean = 
                 webResource.path(WsConstants.MAP_ID)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<XrefMapsBean>() {});
-         return result;
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
-    public WSCoreClient(String serviceAddress) {
-        this.serviceAddress = serviceAddress;
-        ClientConfig config = new DefaultClientConfig();
-        Client client = Client.create(config);
-        webResource = client.resource(serviceAddress);        
-    }
-        
     @Override
-    public XrefsBean freeSearch(String text, String limit) throws BridgeDBException {
+    public Response freeSearch(String text, String limit) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         params.add(WsConstants.TEXT, text);
         params.add(WsConstants.LIMIT, limit);
         //Make service call
-        XrefsBean result = 
+        XrefsBean bean = 
                 webResource.path(WsConstants.FREE_SEARCH)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<XrefsBean>() {});
-        return result;
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
     @Override
-    public PropertiesBean getKeys() {
+    public Response getKeys() {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         //Make service call
-        PropertiesBean result = 
+        PropertiesBean bean = 
                 webResource.path(WsConstants.GET_KEYS)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<PropertiesBean>() {});
-        return result;
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
     @Override
-    public PropertyBean getProperty(String key) {
+    public Response getProperty(String key) {
         //Make service call
-        PropertyBean result = 
+        PropertyBean bean = 
                 webResource.path(WsConstants.PROPERTY + "/" + key)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<PropertyBean>() {});
-        return result;
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
     @Override
-    public DataSourcesBean getSupportedSrcDataSources() throws BridgeDBException {
+    public Response getSupportedSrcDataSources() throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         //Make service call
-        DataSourcesBean result = 
+        DataSourcesBean bean = 
                 webResource.path(WsConstants.GET_SUPPORTED_SOURCE_DATA_SOURCES)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<DataSourcesBean>() {});
-        return result;
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
     @Override
-    public DataSourcesBean getSupportedTgtDataSources() throws BridgeDBException {
+    public Response getSupportedTgtDataSources() throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         //Make service call
-        DataSourcesBean result = 
+        DataSourcesBean bean = 
                 webResource.path(WsConstants.GET_SUPPORTED_TARGET_DATA_SOURCES)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<DataSourcesBean>() {});
-        return result;
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
     @Override
-    public FreeSearchSupportedBean isFreeSearchSupported() {
+    public Response isFreeSearchSupported() {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         //Make service call
-        FreeSearchSupportedBean result = 
+        FreeSearchSupportedBean bean = 
                 webResource.path(WsConstants.IS_FREE_SEARCH_SUPPORTED)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<FreeSearchSupportedBean>() {});
-        return result;
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
     @Override
-    public MappingSupportedBean isMappingSupported(String sourceCode, String targetCode) throws BridgeDBException {
+    public Response isMappingSupported(String sourceCode, String targetCode) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         params.add(WsConstants.SOURCE_DATASOURCE_SYSTEM_CODE, sourceCode);
         params.add(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE, targetCode);
         //Make service call
-        MappingSupportedBean result = 
+        MappingSupportedBean bean = 
                 webResource.path(WsConstants.IS_MAPPING_SUPPORTED)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<MappingSupportedBean>() {});
-        return result;
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
     @Override
-    public XrefExistsBean xrefExists(String id, String scrCode) throws BridgeDBException {
+    public Response xrefExists(String id, String scrCode) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         params.add(WsConstants.ID, id);
         params.add(WsConstants.DATASOURCE_SYSTEM_CODE, scrCode);
         //Make service call
-        XrefExistsBean result = 
+        XrefExistsBean bean = 
                 webResource.path(WsConstants.XREF_EXISTS)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<XrefExistsBean>() {});
-        return result;
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
     @Override
-    public CapabilitiesBean getCapabilities() {
+    public Response getCapabilities() {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         //Make service call
-        CapabilitiesBean result = 
+        CapabilitiesBean bean = 
                 webResource.path(WsConstants.GET_CAPABILITIES)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<CapabilitiesBean>() {});
-        return result;
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
 }

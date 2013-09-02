@@ -29,6 +29,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.IDMapper;
@@ -83,12 +84,13 @@ public class WSCoreService implements WSCoreInterface {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsConstants.GET_SUPPORTED_SOURCE_DATA_SOURCES)
     @Override
-    public DataSourcesBean getSupportedSrcDataSources() throws BridgeDBException {
+    public Response getSupportedSrcDataSources() throws BridgeDBException {
         System.err.println(idMapper);
         IDMapperCapabilities capabilities = idMapper.getCapabilities();
         try {
             Set<DataSource> dataSources = capabilities.getSupportedSrcDataSources();
-            return new DataSourcesBean (dataSources);
+            DataSourcesBean bean = new DataSourcesBean (dataSources);
+            return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
         } catch (IDMapperException e){
             throw BridgeDBException.convertToBridgeDB(e);
         }
@@ -99,29 +101,30 @@ public class WSCoreService implements WSCoreInterface {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsConstants.FREE_SEARCH)
     @Override
-    public XrefsBean freeSearch(
+    public Response freeSearch(
             @QueryParam(WsConstants.TEXT) String text,
             @QueryParam(WsConstants.LIMIT) String limitString) throws BridgeDBException {
         if (text == null) throw new BridgeDBException(WsConstants.TEXT + " parameter missing");
+        Set<Xref> mappings;
         try {
             if (limitString == null || limitString.isEmpty()){
-                Set<Xref> mappings = idMapper.freeSearch(text, Integer.MAX_VALUE);
-                return new XrefsBean(mappings);
-            } else {
+                mappings = idMapper.freeSearch(text, Integer.MAX_VALUE);
+           } else {
                 int limit = Integer.parseInt(limitString);
-                Set<Xref> mappings = idMapper.freeSearch(text,limit);
-                return new XrefsBean(mappings);
+                mappings = idMapper.freeSearch(text,limit);
             }
         } catch (IDMapperException e){
             throw BridgeDBException.convertToBridgeDB(e);
         }
+        XrefsBean bean = new XrefsBean(mappings);
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     } 
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsConstants.MAP_ID)
     @Override
-    public XrefMapsBean mapID(
+    public Response mapID(
             @QueryParam(WsConstants.ID) List<String> id,
             @QueryParam(WsConstants.DATASOURCE_SYSTEM_CODE) List<String> scrCode,
             @QueryParam(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE) List<String> targetCodes) throws BridgeDBException {
@@ -148,7 +151,8 @@ public class WSCoreService implements WSCoreInterface {
         
         try {
             Map<Xref, Set<Xref>>  mappings = idMapper.mapID(srcXrefs, targetDataSources);
-            return new XrefMapsBean(mappings);
+            XrefMapsBean bean = new XrefMapsBean(mappings);
+            return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
         } catch (IDMapperException e){
             throw BridgeDBException.convertToBridgeDB(e);
         }
@@ -158,7 +162,7 @@ public class WSCoreService implements WSCoreInterface {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsConstants.XREF_EXISTS)
     @Override
-    public XrefExistsBean xrefExists( 
+    public Response xrefExists( 
             @QueryParam(WsConstants.ID) String id,
             @QueryParam(WsConstants.DATASOURCE_SYSTEM_CODE) String scrCode) throws BridgeDBException {
         if (id == null) throw new BridgeDBException (WsConstants.ID + " parameter can not be null");
@@ -168,11 +172,14 @@ public class WSCoreService implements WSCoreInterface {
             dataSource = DataSource.getBySystemCode(scrCode);
         } catch (IllegalArgumentException ex){
              logger.error(ex.getMessage());
-             return XrefExistsBean.asBean(id, scrCode, false);
+             XrefExistsBean bean = XrefExistsBean.asBean(id, scrCode, false);
+             return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
+            
         }
         Xref source = new Xref(id, dataSource);
         try {
-            return XrefExistsBean.asBean(source, idMapper.xrefExists(source));
+            XrefExistsBean bean = XrefExistsBean.asBean(source, idMapper.xrefExists(source));
+            return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
         } catch (IDMapperException e){
             throw BridgeDBException.convertToBridgeDB(e);
         }
@@ -182,10 +189,11 @@ public class WSCoreService implements WSCoreInterface {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsConstants.GET_SUPPORTED_TARGET_DATA_SOURCES)
     @Override
-    public DataSourcesBean getSupportedTgtDataSources() throws BridgeDBException {
+    public Response getSupportedTgtDataSources() throws BridgeDBException {
         try {
             Set<DataSource> dataSources = idMapper.getCapabilities().getSupportedSrcDataSources();
-            return new DataSourcesBean(dataSources);
+            DataSourcesBean bean = new DataSourcesBean(dataSources);
+            return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
         } catch (IDMapperException e){
             throw BridgeDBException.convertToBridgeDB(e);
         }
@@ -195,15 +203,16 @@ public class WSCoreService implements WSCoreInterface {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path(WsConstants.IS_FREE_SEARCH_SUPPORTED)
     @Override
-    public FreeSearchSupportedBean isFreeSearchSupported() {
-        return new FreeSearchSupportedBean(idMapper.getCapabilities().isFreeSearchSupported());
+    public Response isFreeSearchSupported() {
+        FreeSearchSupportedBean bean = new FreeSearchSupportedBean(idMapper.getCapabilities().isFreeSearchSupported());
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsConstants.IS_MAPPING_SUPPORTED)
     @Override
-    public MappingSupportedBean isMappingSupported(
+    public Response isMappingSupported(
             @QueryParam(WsConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String sourceCode, 
             @QueryParam(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode) throws BridgeDBException {
         if (sourceCode == null) throw new BridgeDBException (WsConstants.SOURCE_DATASOURCE_SYSTEM_CODE + " parameter can not be null");
@@ -211,42 +220,45 @@ public class WSCoreService implements WSCoreInterface {
         DataSource src = DataSource.getBySystemCode(sourceCode);
         DataSource tgt = DataSource.getBySystemCode(targetCode);
         try {
-            return MappingSupportedBean.asBean(src, tgt, idMapper.getCapabilities().isMappingSupported(src, tgt));
+            MappingSupportedBean bean = MappingSupportedBean.asBean(src, tgt, idMapper.getCapabilities().isMappingSupported(src, tgt));
+            return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
         } catch (IDMapperException e){
             throw BridgeDBException.convertToBridgeDB(e);
         }
-
+        
     }
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsConstants.PROPERTY + "/{key}")
     @Override
-    public PropertyBean getProperty(@PathParam("key")String key) {
+    public Response getProperty(@PathParam("key")String key) {
         String property = idMapper.getCapabilities().getProperty(key);
-        return new PropertyBean(key, property);
+        PropertyBean bean = new PropertyBean(key, property);
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
     
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsConstants.GET_KEYS)
     @Override
-    public PropertiesBean getKeys() {
-        PropertiesBean results = new PropertiesBean();
+    public Response getKeys() {
+        PropertiesBean bean = new PropertiesBean();
         Set<String> keys = idMapper.getCapabilities().getKeys();
         IDMapperCapabilities idMapperCapabilities = idMapper.getCapabilities();
         for (String key:keys){
-            results.addProperty(key, idMapperCapabilities.getProperty(key));
+            bean.addProperty(key, idMapperCapabilities.getProperty(key));
         }
-        return results;
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsConstants.GET_CAPABILITIES)
     @Override
-    public CapabilitiesBean getCapabilities()  {
-        return new CapabilitiesBean(idMapper.getCapabilities());
+    public Response getCapabilities()  {
+        CapabilitiesBean bean = new CapabilitiesBean(idMapper.getCapabilities());
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
 

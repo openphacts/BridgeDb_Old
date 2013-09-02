@@ -19,8 +19,10 @@
 //
 package org.bridgedb.ws;
 
+import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.bridgedb.utils.BridgeDBException;
+import org.bridgedb.ws.bean.MappingSupportedBean;
 
 /**
  *
@@ -46,7 +48,15 @@ public class WSCoreClientFactory extends org.bridgedb.utils.IDMapperTestBase{
             org.junit.Assume.assumeTrue(false);        
         }
         //ystem.out.println("in WSCoreInterface 4");
-        if (!webService.isMappingSupported(DataSource1.getSystemCode(), DataSource2.getSystemCode()).isMappingSupported()){
+        boolean ok;
+        try{
+            Response response = webService.isMappingSupported(DataSource1.getSystemCode(), DataSource2.getSystemCode());
+            MappingSupportedBean bean = (MappingSupportedBean)response.getEntity();
+            ok = bean.isMappingSupported();
+        } catch (Exception ex){
+            ok = false;
+        }
+        if (!ok){
             logger.error("Unable to get test data from WS Client");
             logger.fatal("***** SKIPPING BridgeDB WSClientTest ******");
             System.err.println("***** SKIPPING WSClientTest ******");

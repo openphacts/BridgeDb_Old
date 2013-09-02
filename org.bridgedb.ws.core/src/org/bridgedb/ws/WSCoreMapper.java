@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.ws.rs.core.Response;
 import org.bridgedb.DataSource;
 import org.bridgedb.IDMapper;
 import org.bridgedb.IDMapperCapabilities;
@@ -32,8 +33,11 @@ import org.bridgedb.Xref;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.bean.CapabilitiesBean;
 import org.bridgedb.ws.bean.DataSourcesBean;
+import org.bridgedb.ws.bean.FreeSearchSupportedBean;
+import org.bridgedb.ws.bean.MappingSupportedBean;
 import org.bridgedb.ws.bean.PropertiesBean;
 import org.bridgedb.ws.bean.PropertyBean;
+import org.bridgedb.ws.bean.XrefExistsBean;
 import org.bridgedb.ws.bean.XrefMapsBean;
 import org.bridgedb.ws.bean.XrefsBean;
 
@@ -65,8 +69,9 @@ public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
             targetCodes.add(tgtDataSources[i].getSystemCode());
         }
         if (codes.isEmpty()) return new HashMap<Xref, Set<Xref>>(); //No valid srcrefs so return empty set
-        XrefMapsBean  beans = webService.mapID(ids, codes, targetCodes);
-        return beans.asMappings();
+        Response response = webService.mapID(ids, codes, targetCodes);
+        XrefMapsBean bean = (XrefMapsBean)response.getEntity();
+        return bean.asMappings();
     }
 
     @Override
@@ -80,8 +85,9 @@ public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
         for (int i = 0 ; i < tgtDataSources.length; i++){
             targetCodes.add(tgtDataSources[i].getSystemCode());
         }
-        XrefMapsBean  beans = webService.mapID(ids, codes, targetCodes);
-        return beans.getTargetXrefs();
+        Response response = webService.mapID(ids, codes, targetCodes);
+        XrefMapsBean bean = (XrefMapsBean)response.getEntity();
+        return bean.getTargetXrefs();
     }
 
     @Override
@@ -90,18 +96,22 @@ public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
         if (xref.getDataSource() == null) return false;
         String id = xref.getId();
         String code = xref.getDataSource().getSystemCode();
-        return webService.xrefExists(id,code).exists();
+        Response response = webService.xrefExists(id,code);
+        XrefExistsBean bean = (XrefExistsBean)response.getEntity();
+        return bean.exists();
     }
 
     @Override
     public Set<Xref> freeSearch(String text, int limit) throws BridgeDBException {
-        XrefsBean beans = webService.freeSearch(text, "" + limit);
-        return beans.asXrefs();
+        Response response = webService.freeSearch(text, "" + limit);
+        XrefsBean bean =  (XrefsBean)response.getEntity();
+        return bean.asXrefs();
     }
 
     @Override
     public IDMapperCapabilities getCapabilities() {
-        CapabilitiesBean bean = webService.getCapabilities();
+        Response response = webService.getCapabilities();
+        CapabilitiesBean bean = (CapabilitiesBean)response.getEntity(); 
         return bean.asIDMapperCapabilities();
     }
 
@@ -130,36 +140,44 @@ public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
 
     @Override
     public boolean isFreeSearchSupported() {
-        return webService.isFreeSearchSupported().isFreeSearchSupported();
+        Response response = webService.isFreeSearchSupported();
+        FreeSearchSupportedBean bean = (FreeSearchSupportedBean)response.getEntity();
+        return bean.isFreeSearchSupported();
     }
 
     @Override
     public Set<DataSource> getSupportedSrcDataSources() throws BridgeDBException {
-        DataSourcesBean beans = webService.getSupportedSrcDataSources();
+        Response response = webService.getSupportedSrcDataSources();
+        DataSourcesBean beans = (DataSourcesBean)response.getEntity();
         return beans.getDataSources();
     }
 
     @Override
     public Set<DataSource> getSupportedTgtDataSources() throws BridgeDBException {
-        DataSourcesBean beans = webService.getSupportedTgtDataSources();
+        Response response = webService.getSupportedTgtDataSources();
+        DataSourcesBean beans = (DataSourcesBean)response.getEntity();
         return beans.getDataSources();
     }
 
     @Override
     public boolean isMappingSupported(DataSource src, DataSource tgt) throws BridgeDBException {
-        return webService.isMappingSupported(src.getSystemCode(), tgt.getSystemCode()).isMappingSupported();
+        Response response = webService.isMappingSupported(src.getSystemCode(), tgt.getSystemCode());
+        MappingSupportedBean bean = (MappingSupportedBean)response.getEntity();
+        return bean.isMappingSupported();
     }
 
     @Override
     public String getProperty(String key) {
-        PropertyBean bean = webService.getProperty(key);
+        Response response = webService.getProperty(key);
+        PropertyBean bean = (PropertyBean)response.getEntity();
         if (bean == null) return null;
         return bean.getValue();
     }
 
     @Override
     public Set<String> getKeys() {
-        PropertiesBean beans = webService.getKeys();
+        Response response = webService.getKeys();
+        PropertiesBean beans = (PropertiesBean)response.getEntity();
         return beans.getKeys();
     }
 
