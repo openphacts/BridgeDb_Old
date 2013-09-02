@@ -22,12 +22,15 @@ package org.bridgedb.ws.bean;
 import java.util.HashSet;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
 
 @XmlRootElement(name="Xrefs")
 public class XrefsBean {
 
+    static final Logger logger = Logger.getLogger(XrefsBean.class);
+    
     private Set<XrefBean> Xref;
     
     public XrefsBean(){
@@ -37,6 +40,7 @@ public class XrefsBean {
     public XrefsBean(Set<Xref> xrefs){
         Xref = new HashSet<XrefBean>();
         for (Xref xref:xrefs){
+            logger.info(xref);
             if (xref != null){
                 Xref.add(new XrefBean(xref));
             }
@@ -45,11 +49,24 @@ public class XrefsBean {
 
     public Set<Xref> asXrefs() {
         HashSet<Xref> results = new HashSet<Xref>();
-        for (XrefBean bean:Xref){
+        for (XrefBean bean:getXref()){
             results.add(bean.asXref());
         }
         return results;
     }
+
+    /**
+     * @return the Xref
+     */
+    public Set<XrefBean> getXref() {
+        return Xref;
+    }
+
+    /**
+     * @param Xref the Xref to set
+     */
+    public void setXref(Set<XrefBean> Xref) {
+        this.Xref = Xref;
+    }
         
-  
 }

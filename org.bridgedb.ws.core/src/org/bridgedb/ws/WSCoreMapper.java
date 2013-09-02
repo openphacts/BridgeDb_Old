@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.bridgedb.DataSource;
@@ -32,12 +31,9 @@ import org.bridgedb.IDMapperCapabilities;
 import org.bridgedb.Xref;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.bean.CapabilitiesBean;
-import org.bridgedb.ws.bean.DataSourceBean;
 import org.bridgedb.ws.bean.DataSourcesBean;
 import org.bridgedb.ws.bean.PropertiesBean;
 import org.bridgedb.ws.bean.PropertyBean;
-import org.bridgedb.ws.bean.XrefBean;
-import org.bridgedb.ws.bean.XrefMapBean;
 import org.bridgedb.ws.bean.XrefMapsBean;
 import org.bridgedb.ws.bean.XrefsBean;
 
@@ -85,13 +81,7 @@ public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
             targetCodes.add(tgtDataSources[i].getSystemCode());
         }
         XrefMapsBean  beans = webService.mapID(ids, codes, targetCodes);
-        HashSet<Xref> results = new HashSet<Xref>();
-        for (XrefMapBean bean:beans.getXrefMapBean()){
-            if (bean.getTarget() != null){
-                results.add(bean.getTarget().asXref());
-            }
-        }
-        return results;
+        return beans.getTargetXrefs();
     }
 
     @Override

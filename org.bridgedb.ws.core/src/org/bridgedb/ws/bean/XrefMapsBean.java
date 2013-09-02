@@ -29,24 +29,24 @@ import org.bridgedb.Xref;
 @XmlRootElement(name="XrefMappings")
 public class XrefMapsBean {
 
-    private Set<XrefMapBean> XrefMapBean;
+    private Set<XrefMapBean> XrefMapping;
     
     public XrefMapsBean(){
-        XrefMapBean = new HashSet<XrefMapBean>();
+        XrefMapping = new HashSet<XrefMapBean>();
     }
 
     public XrefMapsBean(Map<Xref, Set<Xref>>  mappings){
-        XrefMapBean = new HashSet<XrefMapBean>();
+        this.XrefMapping = new HashSet<XrefMapBean>();
         for (Xref source:mappings.keySet()){
             for (Xref target:mappings.get(source)){
-                XrefMapBean.add(org.bridgedb.ws.bean.XrefMapBean.asBean(source, target));
+                this.XrefMapping.add(org.bridgedb.ws.bean.XrefMapBean.asBean(source, target));
             }
         }
     }
     
     public  Map<Xref, Set<Xref>> asMappings(){
         HashMap<Xref, Set<Xref>> results = new HashMap<Xref, Set<Xref>>();
-        for (XrefMapBean bean:XrefMapBean){
+        for (XrefMapBean bean:XrefMapping){
             Xref source = bean.getSource().asXref();
             Set<Xref>targets = results.get(source);
             if (targets == null){
@@ -59,18 +59,36 @@ public class XrefMapsBean {
         return results;
    }
     
-    /**
-     * @return the XrefMapBean
-     */
-    public Set<XrefMapBean> getXrefMapBean() {
-        return XrefMapBean;
+    public String toString(){
+        StringBuffer buffer = new StringBuffer("XrefMapsBean: \n\t");
+        for (XrefMapBean bean:XrefMapping){
+            buffer.append(bean.toString());
+            buffer.append("\n\t");
+        }
+        buffer.append("number of mappings: ");
+        buffer.append(XrefMapping.size());
+        return buffer.toString();
+    }
+
+    public Set<Xref> getTargetXrefs() {
+        HashSet<Xref> results = new HashSet<Xref>();
+        for (XrefMapBean bean:getXrefMapping()){
+            results.add(bean.getTarget().asXref());
+        }
+        return results;
     }
 
     /**
-     * @param XrefMapBean the XrefMapBean to set
+     * @return the XrefMapping
      */
-    public void setXrefMapBean(Set<XrefMapBean> XrefMapBean) {
-        this.setXrefMapBean(XrefMapBean);
+    public Set<XrefMapBean> getXrefMapping() {
+        return XrefMapping;
     }
 
+    /**
+     * @param XrefMapping the XrefMapping to set
+     */
+    public void setXrefMapping(Set<XrefMapBean> XrefMapping) {
+        this.XrefMapping = XrefMapping;
+    }
 }
