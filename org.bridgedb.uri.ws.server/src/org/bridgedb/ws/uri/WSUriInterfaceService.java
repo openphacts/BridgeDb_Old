@@ -24,11 +24,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
@@ -205,14 +207,44 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + WsUriConstants.MAP_BY_SET)
-    public MappingsBySetBean mapBySet(@QueryParam(WsUriConstants.URI) List<String> uris,
+    public Response mapBySet(@QueryParam(WsUriConstants.URI) List<String> uris,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
             @QueryParam(WsUriConstants.GRAPH) String graph,
             @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns) throws BridgeDBException {
         MappingsBySet mappingsBySet = mapBySetInner(uris, lensUri, graph, targetUriPatterns);
-        return new MappingsBySetBean(mappingsBySet);
+        if (mappingsBySet.isEmpty()){
+            return Response.noContent().build();
+        } 
+        MappingsBySetBean result = new MappingsBySetBean(mappingsBySet);
+        return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+    }
+
+/*    @GET
+    @Produces({MediaType.APPLICATION_XML})
+    @Path("/" + WsUriConstants.MAP_BY_SET)
+    public MappingsBySet mapBySet(@QueryParam(WsUriConstants.URI) List<String> uris,
+     		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
+            @QueryParam(WsUriConstants.GRAPH) String graph,
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
+            @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
+        return mapBySetInner(uris, lensUri, graph, targetUriPatterns);
+    }
+*/
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/" + WsUriConstants.MAP_BY_SET)
+    public Response mapBySetJson(@QueryParam(WsUriConstants.URI) List<String> uris,
+     		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
+            @QueryParam(WsUriConstants.GRAPH) String graph,
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns) throws BridgeDBException {
+        MappingsBySet mappingsBySet = mapBySetInner(uris, lensUri, graph, targetUriPatterns);
+        if (mappingsBySet.isEmpty()){
+            return Response.noContent().build();
+        } 
+        MappingsBySetBean result = new MappingsBySetBean(mappingsBySet);
+        return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
     }
 
     public MappingsBySet mapBySetInner(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns) throws BridgeDBException {
@@ -223,7 +255,6 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
 
     private MappingsBean map(String uri, String lensUri, DataSource[] targetDataSources, 
             String graph, UriPattern[] targetPatterns) throws BridgeDBException {
-        System.out.println("in list method " + targetPatterns);
         Set<Mapping> mappings;
         if (targetDataSources == null){
             if (targetPatterns == null){

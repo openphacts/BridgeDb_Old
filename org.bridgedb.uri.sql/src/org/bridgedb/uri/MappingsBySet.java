@@ -266,6 +266,6 @@ public class MappingsBySet {
     }
 
     public boolean isEmpty(){
-        return mappings.isEmpty();
+        return mappings.isEmpty() && setMappings.isEmpty();
     }
 }
