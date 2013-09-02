@@ -44,7 +44,8 @@ import org.bridgedb.ws.bean.MappingSupportedBean;
 import org.bridgedb.ws.bean.PropertyBean;
 import org.bridgedb.ws.bean.XrefBean;
 import org.bridgedb.ws.bean.XrefExistsBean;
-import org.bridgedb.ws.bean.XrefMapBean;
+import org.bridgedb.ws.bean.XrefMapsBean;
+
 /**
  * Webservice server code, that uses the ws.core
  * functionality to expose BridgeDB data
@@ -128,7 +129,7 @@ public class WSCoreService implements WSCoreInterface {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsConstants.MAP_ID)
     @Override
-    public List<XrefMapBean> mapID(
+    public XrefMapsBean mapID(
             @QueryParam(WsConstants.ID) List<String> id,
             @QueryParam(WsConstants.DATASOURCE_SYSTEM_CODE) List<String> scrCode,
             @QueryParam(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE) List<String> targetCodes) throws BridgeDBException {
@@ -153,18 +154,12 @@ public class WSCoreService implements WSCoreInterface {
              targetDataSources[i] = DataSource.getBySystemCode(targetCodes.get(i));
         }
         
-        ArrayList<XrefMapBean> results = new ArrayList<XrefMapBean>();
         try {
             Map<Xref, Set<Xref>>  mappings = idMapper.mapID(srcXrefs, targetDataSources);
-            for (Xref source:mappings.keySet()){
-                for (Xref target:mappings.get(source)){
-                    results.add(XrefMapBean.asBean(source, target));
-                }
-            }
+            return new XrefMapsBean(mappings);
         } catch (IDMapperException e){
             throw BridgeDBException.convertToBridgeDB(e);
         }
-        return results;
     } 
 
     @GET

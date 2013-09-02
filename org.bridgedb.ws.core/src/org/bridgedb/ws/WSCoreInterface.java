@@ -28,7 +28,7 @@ import org.bridgedb.ws.bean.MappingSupportedBean;
 import org.bridgedb.ws.bean.PropertyBean;
 import org.bridgedb.ws.bean.XrefBean;
 import org.bridgedb.ws.bean.XrefExistsBean;
-import org.bridgedb.ws.bean.XrefMapBean;
+import org.bridgedb.ws.bean.XrefMapsBean;
 
 /**
  *
@@ -36,7 +36,7 @@ import org.bridgedb.ws.bean.XrefMapBean;
  */
 public interface WSCoreInterface {
 
-    List<XrefMapBean> mapID(List<String> id, List<String> scrCode, List<String> targetCodes) throws BridgeDBException;
+    XrefMapsBean mapID(List<String> id, List<String> scrCode, List<String> targetCodes) throws BridgeDBException;
 
     XrefExistsBean xrefExists(String id, String scrCode) throws BridgeDBException;
 

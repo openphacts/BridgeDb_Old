@@ -37,6 +37,7 @@ import org.bridgedb.ws.bean.PropertyBean;
 import org.bridgedb.ws.bean.XrefBean;
 import org.bridgedb.ws.bean.XrefExistsBean;
 import org.bridgedb.ws.bean.XrefMapBean;
+import org.bridgedb.ws.bean.XrefMapsBean;
 
 /**
  *
@@ -49,7 +50,7 @@ public class WSCoreClient implements WSCoreInterface{
     protected final WebResource webResource;
 
     @Override
-    public List<XrefMapBean> mapID(List<String> id, List<String> scrCode, List<String> targetCodes) throws BridgeDBException {
+    public XrefMapsBean mapID(List<String> id, List<String> scrCode, List<String> targetCodes) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         for (String one:id){
             params.add(WsConstants.ID, one);
@@ -61,11 +62,11 @@ public class WSCoreClient implements WSCoreInterface{
             params.add(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE, target);
         }
         //Make service call
-        List<XrefMapBean> result = 
+        XrefMapsBean result = 
                 webResource.path(WsConstants.MAP_ID)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<List<XrefMapBean>>() {});
+                .get(new GenericType<XrefMapsBean>() {});
          return result;
     }
 
