@@ -86,9 +86,6 @@ public abstract class UriMapperNullTargetTest extends UriListenerTest{
         String lensId = Lens.getDefaultLens();
         DataSource[] tragets = null;
         Set results = uriMapper.mapID(sourceXref, lensId, tragets);
-        System.out.println(map2xref2);
-        System.out.println(results);
-        System.out.println(map2xref1);
         assertTrue(results.contains(map2xref1));
         assertTrue(results.contains(map2xref2));
         assertTrue(results.contains(map2xref3));

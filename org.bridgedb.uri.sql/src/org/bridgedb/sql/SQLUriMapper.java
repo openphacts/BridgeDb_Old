@@ -525,9 +525,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     @Override
     public synchronized Set<Mapping> mapFull (Xref sourceXref, String lensUri, String graph, UriPattern... tgtUriPatterns) 
             throws BridgeDBException{
-        System.out.println(graph);
         Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
-        System.out.println(targetUriPatterns);
         if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
             return mapFull (sourceXref, lensUri);
         } else {

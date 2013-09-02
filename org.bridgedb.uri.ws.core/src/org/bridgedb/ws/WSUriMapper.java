@@ -303,7 +303,6 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
         if (sourceUri == null){
             return new HashSet<Mapping>();
         }
-        System.out.println("calling with graph " + graph);
         return map(NO_ID, NO_SYSCODE, sourceUri, lensUri, NO_SYSCODES, graph, NO_URI_PATTERNS);
     }
 

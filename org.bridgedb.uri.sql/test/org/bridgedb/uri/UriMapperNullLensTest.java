@@ -542,7 +542,6 @@ public abstract class UriMapperNullLensTest extends UriListenerTest{
     @Test
     public void testMapFull_sourceUri_lensId_graph() throws Exception {
         report("MapFull_sourceUri_lensId_graph");
-        System.out.println("******");
         String sourceUri = map3Uri2;
         Xref sourceXref = map3xref2;
         String lensId = null;
@@ -563,13 +562,6 @@ public abstract class UriMapperNullLensTest extends UriListenerTest{
             targetUris.addAll(mapping.getTargetUri());
             targetXrefs.add(mapping.getTarget());
         }
-        System.out.println("******");
-        System.out.println(uriPattern3);
-        System.out.println(GraphResolver.getUriPatternsForGraph(graph));
-        System.out.println(sourceUri);
-        System.out.println(results);
-        System.out.println(targetUris);
-        System.out.println(map3Uri1);
         assertFalse(targetUris.contains(map3Uri1));
         assertFalse(targetUris.contains(map3Uri2));
         assertFalse(targetUris.contains(map3Uri2a));

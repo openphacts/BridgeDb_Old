@@ -92,7 +92,6 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
                 params.add(WsUriConstants.TARGET_URI_PATTERN, target);
             }
         }
-        System.out.println(params);
         try{
             //Make service call
             MappingsBean result = 
@@ -102,6 +101,7 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
                     .get(new GenericType<MappingsBean>() {});
             return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
         } catch (UniformInterfaceException ex){
+            //throw new BridgeDBException ("Error", ex); 
             return Response.noContent().build();
         }
     }
