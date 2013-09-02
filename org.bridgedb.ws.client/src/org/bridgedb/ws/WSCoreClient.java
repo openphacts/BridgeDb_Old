@@ -34,6 +34,7 @@ import org.bridgedb.ws.bean.DataSourceBean;
 import org.bridgedb.ws.bean.DataSourcesBean;
 import org.bridgedb.ws.bean.FreeSearchSupportedBean;
 import org.bridgedb.ws.bean.MappingSupportedBean;
+import org.bridgedb.ws.bean.PropertiesBean;
 import org.bridgedb.ws.bean.PropertyBean;
 import org.bridgedb.ws.bean.XrefBean;
 import org.bridgedb.ws.bean.XrefExistsBean;
@@ -94,14 +95,14 @@ public class WSCoreClient implements WSCoreInterface{
     }
 
     @Override
-    public List<PropertyBean> getKeys() {
+    public PropertiesBean getKeys() {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         //Make service call
-        List<PropertyBean> result = 
+        PropertiesBean result = 
                 webResource.path(WsConstants.GET_KEYS)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<List<PropertyBean>>() {});
+                .get(new GenericType<PropertiesBean>() {});
         return result;
     }
 

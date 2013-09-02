@@ -26,6 +26,7 @@ import org.bridgedb.ws.bean.DataSourceBean;
 import org.bridgedb.ws.bean.DataSourcesBean;
 import org.bridgedb.ws.bean.FreeSearchSupportedBean;
 import org.bridgedb.ws.bean.MappingSupportedBean;
+import org.bridgedb.ws.bean.PropertiesBean;
 import org.bridgedb.ws.bean.PropertyBean;
 import org.bridgedb.ws.bean.XrefsBean;
 import org.bridgedb.ws.bean.XrefExistsBean;
@@ -55,7 +56,7 @@ public interface WSCoreInterface {
 
     PropertyBean getProperty(String key);
 
-    List<PropertyBean> getKeys();
+    PropertiesBean getKeys();
    
     /*DataSourceBean getDataSoucre(String code) throws BridgeDBException;
 

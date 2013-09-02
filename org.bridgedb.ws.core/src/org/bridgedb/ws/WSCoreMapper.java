@@ -34,6 +34,7 @@ import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.bean.CapabilitiesBean;
 import org.bridgedb.ws.bean.DataSourceBean;
 import org.bridgedb.ws.bean.DataSourcesBean;
+import org.bridgedb.ws.bean.PropertiesBean;
 import org.bridgedb.ws.bean.PropertyBean;
 import org.bridgedb.ws.bean.XrefBean;
 import org.bridgedb.ws.bean.XrefMapBean;
@@ -168,12 +169,8 @@ public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
 
     @Override
     public Set<String> getKeys() {
-        List<PropertyBean> beans = webService.getKeys();
-        HashSet<String> results = new HashSet<String>();
-        for (PropertyBean bean: beans){
-            results.add(bean.getKey());
-        }
-        return results;
+        PropertiesBean beans = webService.getKeys();
+        return beans.getKeys();
     }
 
 }

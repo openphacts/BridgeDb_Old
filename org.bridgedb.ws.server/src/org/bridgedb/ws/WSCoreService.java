@@ -42,6 +42,7 @@ import org.bridgedb.ws.bean.DataSourceBean;
 import org.bridgedb.ws.bean.DataSourcesBean;
 import org.bridgedb.ws.bean.FreeSearchSupportedBean;
 import org.bridgedb.ws.bean.MappingSupportedBean;
+import org.bridgedb.ws.bean.PropertiesBean;
 import org.bridgedb.ws.bean.PropertyBean;
 import org.bridgedb.ws.bean.XrefBean;
 import org.bridgedb.ws.bean.XrefExistsBean;
@@ -228,12 +229,12 @@ public class WSCoreService implements WSCoreInterface {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsConstants.GET_KEYS)
     @Override
-    public List<PropertyBean> getKeys() {
+    public PropertiesBean getKeys() {
+        PropertiesBean results = new PropertiesBean();
         Set<String> keys = idMapper.getCapabilities().getKeys();
-        ArrayList<PropertyBean> results = new ArrayList<PropertyBean>();
         IDMapperCapabilities idMapperCapabilities = idMapper.getCapabilities();
         for (String key:keys){
-            results.add(new PropertyBean(key, idMapperCapabilities.getProperty(key)));
+            results.addProperty(key, idMapperCapabilities.getProperty(key));
         }
         return results;
     }
