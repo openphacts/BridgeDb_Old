@@ -60,10 +60,10 @@ public class CapabilitiesBean implements IDMapperCapabilities{
             Set<DataSource> sources = capabilities.getSupportedSrcDataSources();
             Set<DataSource> targets = capabilities.getSupportedTgtDataSources();
             for (DataSource dataSource:targets){
-                targetDataSource.add(DataSourceBean.asBean(dataSource));
+                targetDataSource.add(new DataSourceBean(dataSource));
             }
             for (DataSource source:sources){
-                sourceDataSource.add(DataSourceBean.asBean(source));
+                sourceDataSource.add(new DataSourceBean(source));
                 HashSet<DataSource> mappedTargets = new HashSet<DataSource>();
                 for (DataSource target:targets){
                     if (capabilities.isMappingSupported(source, target)){

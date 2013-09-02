@@ -19,6 +19,7 @@
 //
 package org.bridgedb.ws.bean;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -41,8 +42,22 @@ public class XrefMapsBean {
                 XrefMapBean.add(org.bridgedb.ws.bean.XrefMapBean.asBean(source, target));
             }
         }
-   }
+    }
     
+    public  Map<Xref, Set<Xref>> asMappings(){
+        HashMap<Xref, Set<Xref>> results = new HashMap<Xref, Set<Xref>>();
+        for (XrefMapBean bean:XrefMapBean){
+            Xref source = bean.getSource().asXref();
+            Set<Xref>targets = results.get(source);
+            if (targets == null){
+                targets = new HashSet<Xref>();
+            }
+            Xref target = bean.getTarget().asXref();
+            targets.add(target);
+            results.put(source, targets);
+        }
+        return results;
+   }
     
     /**
      * @return the XrefMapBean

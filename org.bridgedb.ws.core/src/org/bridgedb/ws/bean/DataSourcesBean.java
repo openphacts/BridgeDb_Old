@@ -32,6 +32,14 @@ public class DataSourcesBean {
     
     //Webservice constructor
     public DataSourcesBean(){
+        DataSource = new HashSet<DataSourceBean>();
+    }
+
+    public DataSourcesBean(Set<DataSource> dataSources) {
+        DataSource = new HashSet<DataSourceBean>();
+        for (DataSource ds:dataSources){
+            DataSource.add(new DataSourceBean(ds));
+        }
     }
 
     public Set<DataSource> getDataSources(){

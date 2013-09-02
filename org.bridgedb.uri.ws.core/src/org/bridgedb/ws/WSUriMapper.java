@@ -350,7 +350,7 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
         if (bean == null){
             return null;
         }
-        return XrefBean.asXref(bean);
+        return bean.asXref();
     }
 
     //@Override Too slow

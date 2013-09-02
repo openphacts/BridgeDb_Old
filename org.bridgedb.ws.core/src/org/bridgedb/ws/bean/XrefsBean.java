@@ -46,7 +46,7 @@ public class XrefsBean {
     public Set<Xref> asXrefs() {
         HashSet<Xref> results = new HashSet<Xref>();
         for (XrefBean bean:Xref){
-            results.add(XrefBean.asXref(bean));
+            results.add(bean.asXref());
         }
         return results;
     }

@@ -389,7 +389,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         if (xref == null){
             return new XrefBean();  //Returns an empty bean
         }
-        return XrefBean.asBean(xref);
+        return new XrefBean(xref);
     }
 
     /*@Override

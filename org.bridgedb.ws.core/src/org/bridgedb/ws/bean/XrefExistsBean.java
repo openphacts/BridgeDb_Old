@@ -38,14 +38,14 @@ public class XrefExistsBean {
     public static XrefExistsBean asBean(Xref xref, boolean exists){
         XrefExistsBean bean = new XrefExistsBean();
         bean.exists = exists;
-        bean.Xref = XrefBean.asBean(xref);
+        bean.Xref = new XrefBean(xref);
         return bean;
     }
     
     public static XrefExistsBean asBean(String id, String scrCode, boolean exists){
         XrefExistsBean bean = new XrefExistsBean();
         bean.exists = exists;
-        bean.Xref = XrefBean.asBean(id, scrCode);
+        bean.Xref = new XrefBean(id, scrCode);
         return bean;
     }
 

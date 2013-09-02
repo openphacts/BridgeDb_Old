@@ -67,23 +67,9 @@ public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
         for (int i = 0 ; i < tgtDataSources.length; i++){
             targetCodes.add(tgtDataSources[i].getSystemCode());
         }
-        HashMap<Xref, Set<Xref>> results = new HashMap<Xref, Set<Xref>>();
-        if (codes.isEmpty()) return results; //No valid srcrefs so return empty set
+        if (codes.isEmpty()) return new HashMap<Xref, Set<Xref>>(); //No valid srcrefs so return empty set
         XrefMapsBean  beans = webService.mapID(ids, codes, targetCodes);
-        for (XrefMapBean bean:beans.getXrefMapBean()){
-            Xref source = null;
-            Set<Xref> targets = null;
-            if (bean.getSource() != null){
-                source = XrefBean.asXref(bean.getSource());
-                targets = results.get(source);
-            }
-            if (targets == null){
-                targets = new HashSet<Xref>(); 
-            }
-            targets.add(XrefBean.asXref(bean.getTarget()));
-            results.put(source, targets);
-        }
-        return results;
+        return beans.asMappings();
     }
 
     @Override
@@ -101,7 +87,7 @@ public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
         HashSet<Xref> results = new HashSet<Xref>();
         for (XrefMapBean bean:beans.getXrefMapBean()){
             if (bean.getTarget() != null){
-                results.add(XrefBean.asXref(bean.getTarget()));
+                results.add(bean.getTarget().asXref());
             }
         }
         return results;
