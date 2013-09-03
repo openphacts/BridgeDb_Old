@@ -37,6 +37,7 @@ import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.bean.DataSourceUriPatternBean;
 import org.bridgedb.ws.bean.MappingBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
+import org.bridgedb.ws.bean.MappingSetInfosBean;
 import org.bridgedb.ws.bean.MappingsBean;
 import org.bridgedb.ws.bean.MappingsBySetBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
@@ -367,17 +368,13 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     @Override
     public MappingSetInfo getMappingSetInfo(int mappingSetId) throws BridgeDBException {
         MappingSetInfoBean bean = uriService.getMappingSetInfo("" + mappingSetId);
-        return MappingSetInfoBean.asMappingSetInfo(bean);
+        return bean.asMappingSetInfo();
     }
 
     @Override
     public List<MappingSetInfo> getMappingSetInfos(String sourceSysCode, String targetSysCode, String lensUri) throws BridgeDBException {
-        List<MappingSetInfoBean> beans = uriService.getMappingSetInfos(sourceSysCode, targetSysCode, lensUri);
-        ArrayList<MappingSetInfo> results = new ArrayList<MappingSetInfo>(); 
-        for (MappingSetInfoBean bean:beans){
-            results.add(MappingSetInfoBean.asMappingSetInfo(bean));
-        }
-        return results;  
+        MappingSetInfosBean bean = uriService.getMappingSetInfos(sourceSysCode, targetSysCode, lensUri);
+        return bean.getMappingSetInfos();
     }
    
     @Override

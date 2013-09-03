@@ -56,6 +56,7 @@ import org.bridgedb.ws.bean.DataSourceUriPatternBean;
 import org.bridgedb.ws.bean.LensBean;
 import org.bridgedb.ws.bean.MappingBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
+import org.bridgedb.ws.bean.MappingSetInfosBean;
 import org.bridgedb.ws.bean.MappingsBean;
 import org.bridgedb.ws.bean.MappingsBySetBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
@@ -414,7 +415,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + SetMappings.METHOD_NAME + WsUriConstants.XML) 
-    public List<MappingSetInfoBean> getMappingSetInfosXML(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
+    public MappingSetInfosBean getMappingSetInfosXML(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
             @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
         return getMappingSetInfos(scrCode, targetCode, lensUri);
@@ -424,37 +425,15 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + SetMappings.METHOD_NAME) 
-    public List<MappingSetInfoBean> getMappingSetInfos(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
+    public MappingSetInfosBean getMappingSetInfos(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
             @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
         List<MappingSetInfo> infos = uriMapper.getMappingSetInfos(scrCode, targetCode, lensUri);
-        ArrayList<MappingSetInfoBean> results = new ArrayList<MappingSetInfoBean>();
+        MappingSetInfosBean bean = new MappingSetInfosBean();
         for (MappingSetInfo info:infos){
-            results.add(MappingSetInfoBean.asBean(info));
+            bean.addMappingSetInfo(info);
         }
-        return results;
-    }
-
-    /**
-    * @deprecated 
-    */
-   @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/" + WsUriConstants.GET_MAPPING_INFO + WsUriConstants.XML) 
-    public List<MappingSetInfoBean> getMappingSetInfosXML(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
-            @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode) throws BridgeDBException {
-        return getMappingSetInfos(scrCode, targetCode, null);
-    }
-    
-    /**
-     * @deprecated 
-     */
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/" + WsUriConstants.GET_MAPPING_INFO) 
-    public List<MappingSetInfoBean> getMappingSetInfos(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
-            @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode) throws BridgeDBException {
-        return getMappingSetInfos(scrCode, targetCode, null);       
+        return bean;
     }
 
 	@GET
@@ -501,11 +480,15 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsUriConstants.GET_MAPPING_INFO + "/{id}")
     public MappingSetInfoBean getMappingSetInfo(@PathParam("id") String idString) throws BridgeDBException {
-        if (idString == null) throw new BridgeDBException("Path parameter missing.");
-        if (idString.isEmpty()) throw new BridgeDBException("Path parameter may not be null.");
+        if (idString == null) {
+            throw new BridgeDBException("Path parameter missing.");
+        }
+        if (idString.isEmpty()) {
+            throw new BridgeDBException("Path parameter may not be null.");
+        }
         int id = Integer.parseInt(idString);
         MappingSetInfo info = uriMapper.getMappingSetInfo(id);
-        return MappingSetInfoBean.asBean(info);
+        return new MappingSetInfoBean(info);
     }
 
     /**

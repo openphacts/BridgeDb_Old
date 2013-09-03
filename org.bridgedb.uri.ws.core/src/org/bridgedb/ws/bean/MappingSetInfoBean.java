@@ -55,53 +55,48 @@ public class MappingSetInfoBean {
     public MappingSetInfoBean(){
     }
     
-    public static MappingSetInfo asMappingSetInfo(MappingSetInfoBean bean){
-       return new MappingSetInfo(bean.getId(), 
-               DataSetInfoBean.asDataSetInfo(bean.getSource()), 
-               bean.getPredicate(), 
-               DataSetInfoBean.asDataSetInfo(bean.getTarget()), 
-               bean.getJustification(), 
-               bean.getMappingName(),
-               bean.getMappingUri(),
-               bean.getSymmetric(), 
-               DataSetInfoBean.asDataSetInfos(bean.getViaDataSets()), 
-               bean.getChainId(), 
-               bean.getNumberOfLinks(),
-               bean.getNumberOfSources(),
-               bean.getNumberOfTargets(),
-               bean.getFrequencyMedium(),
-               bean.getFrequency75(),
-               bean.getFrequency90(),
-               bean.getFrequency99(),
-               bean.getFrequencyMax());
-    }
-
-    public static MappingSetInfoBean asBean(MappingSetInfo info) {
-        MappingSetInfoBean bean = new MappingSetInfoBean();
-        if (bean != null){
-            bean.id = info.getIntId();
-            bean.source = DataSetInfoBean.asBean(info.getSource());
-            bean.predicate = info.getPredicate();
-            bean.target = DataSetInfoBean.asBean(info.getTarget());
-            bean.justification = info.getJustification();
-            bean.mappingName = info.getMappingName();
-            bean.mappingUri = info.getMappingUri();
-            bean.symmetric = info.getSymmetric();
-            bean.viaDataSets = DataSetInfoBean.asBeans(info.getViaDataSets());
-            bean.chainId = info.getChainIds();
-            bean.numberOfLinks = info.getNumberOfLinks();
-            bean.numberOfSources= info.getNumberOfSources();
-            bean.numberOfTargets = info.getNumberOfTargets();
-            bean.frequencyMedium = info.getFrequencyMedium();
-            bean.frequency75 = info.getFrequency75();
-            bean.frequency90 = info.getFrequency90();
-            bean.frequency99 = info.getFrequency99();
-            bean.frequencyMax = info.getFrequencyMax();
-        }
-        return bean;
+    public MappingSetInfoBean(MappingSetInfo info) {
+        id = info.getIntId();
+        source = DataSetInfoBean.asBean(info.getSource());
+        predicate = info.getPredicate();
+        target = DataSetInfoBean.asBean(info.getTarget());
+        justification = info.getJustification();
+        mappingName = info.getMappingName();
+        mappingUri = info.getMappingUri();
+        symmetric = info.getSymmetric();
+        viaDataSets = DataSetInfoBean.asBeans(info.getViaDataSets());
+        chainId = info.getChainIds();
+        numberOfLinks = info.getNumberOfLinks();
+        numberOfSources= info.getNumberOfSources();
+        numberOfTargets = info.getNumberOfTargets();
+        frequencyMedium = info.getFrequencyMedium();
+        frequency75 = info.getFrequency75();
+        frequency90 = info.getFrequency90();
+        frequency99 = info.getFrequency99();
+        frequencyMax = info.getFrequencyMax();
     }
     
-    
+    public MappingSetInfo asMappingSetInfo(){
+       return new MappingSetInfo(getId(), 
+               DataSetInfoBean.asDataSetInfo(getSource()), 
+               getPredicate(), 
+               DataSetInfoBean.asDataSetInfo(getTarget()), 
+               getJustification(), 
+               getMappingName(),
+               getMappingUri(),
+               getSymmetric(), 
+               DataSetInfoBean.asDataSetInfos(getViaDataSets()), 
+               getChainId(), 
+               getNumberOfLinks(),
+               getNumberOfSources(),
+               getNumberOfTargets(),
+               getFrequencyMedium(),
+               getFrequency75(),
+               getFrequency90(),
+               getFrequency99(),
+               getFrequencyMax());
+    }
+  
     /**
      * @return the id
      */
@@ -353,5 +348,6 @@ public class MappingSetInfoBean {
     public void setFrequencyMax(Integer frequencyMax) {
         this.frequencyMax = frequencyMax;
     }
+
 
 }

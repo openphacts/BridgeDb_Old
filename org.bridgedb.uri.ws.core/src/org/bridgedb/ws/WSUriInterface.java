@@ -25,6 +25,7 @@ import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.bean.DataSourceUriPatternBean;
 import org.bridgedb.ws.bean.MappingBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
+import org.bridgedb.ws.bean.MappingSetInfosBean;
 import org.bridgedb.ws.bean.MappingsBySetBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
 import org.bridgedb.ws.bean.UriExistsBean;
@@ -53,7 +54,7 @@ public interface WSUriInterface extends WSCoreInterface{
 
     public OverallStatisticsBean getOverallStatistics(String lensUri) throws BridgeDBException;
 
-    public List<MappingSetInfoBean> getMappingSetInfos(String sourceSysCode, String targetSysCode, String lensUri) 
+    public MappingSetInfosBean getMappingSetInfos(String sourceSysCode, String targetSysCode, String lensUri) 
             throws BridgeDBException;
 
     public MappingSetInfoBean getMappingSetInfo(String mappingSetId) throws BridgeDBException;
