@@ -40,6 +40,7 @@ import org.bridgedb.ws.bean.DataSourceUriPatternBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
 import org.bridgedb.ws.bean.LensBean;
+import org.bridgedb.ws.bean.LensesBean;
 import org.bridgedb.ws.bean.MappingSetInfosBean;
 import org.bridgedb.ws.bean.MappingsBean;
 import org.bridgedb.ws.bean.MappingsBySetBean;
@@ -343,8 +344,24 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
    }
 
     @Override
-    public List<LensBean> getLenses(String lensUri) throws BridgeDBException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public LensesBean getLenses(String lensUri) throws BridgeDBException {
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        if (lensUri != null){
+            params.add(WsUriConstants.LENS_URI, lensUri);        
+        }
+        try{
+            //Make service call
+            LensesBean result = 
+                    webResource.path(WsUriConstants.MAP_URI)
+                    .queryParams(params)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<LensesBean>() {});
+            return result;
+             //return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return new LensesBean();
+            //return Response.noContent().build();
+        }
     }
 
 }

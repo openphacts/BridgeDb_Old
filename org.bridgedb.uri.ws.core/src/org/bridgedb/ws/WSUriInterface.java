@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.bean.DataSourceUriPatternBean;
 import org.bridgedb.ws.bean.LensBean;
+import org.bridgedb.ws.bean.LensesBean;
 import org.bridgedb.ws.bean.MappingBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
 import org.bridgedb.ws.bean.MappingSetInfosBean;
@@ -143,6 +144,6 @@ public interface WSUriInterface extends WSCoreInterface{
     
     public LensBean getLens(@PathParam("id") String id) throws BridgeDBException;
 
- 	public List<LensBean> getLenses(String lensUri) throws BridgeDBException;
+ 	public LensesBean getLenses(String lensUri) throws BridgeDBException;
 
  }

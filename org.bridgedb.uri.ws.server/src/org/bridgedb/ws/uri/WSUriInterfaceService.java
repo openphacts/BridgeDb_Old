@@ -51,6 +51,7 @@ import org.bridgedb.ws.WsConstants;
 import org.bridgedb.ws.WsUriConstants;
 import org.bridgedb.ws.bean.DataSourceUriPatternBean;
 import org.bridgedb.ws.bean.LensBean;
+import org.bridgedb.ws.bean.LensesBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
 import org.bridgedb.ws.bean.MappingSetInfosBean;
 import org.bridgedb.ws.bean.MappingsBean;
@@ -438,14 +439,14 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     @Override
 	public LensBean getLens(@PathParam("id") String id) throws BridgeDBException {
  		Lens lens = Lens.byId(id);
-		LensBean result = LensBean.asBean(lens, null);
+		LensBean result = new LensBean(lens, null);
 		return result;
 	}
     
     @GET
     @Produces({MediaType.APPLICATION_XML})
     @Path("/" + Lens.METHOD_NAME + WsUriConstants.XML) 
-    public List<LensBean> getLensesXML(@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
+    public LensesBean getLensesXML(@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
         return getLenses(lensUri);
     }
 
@@ -464,13 +465,9 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     @Produces({MediaType.APPLICATION_XML})
     @Path("/" + Lens.METHOD_NAME) 
     @Override
-	public List<LensBean> getLenses(@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
- 		List<LensBean> results = new ArrayList<LensBean>();
+	public LensesBean getLenses(@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
         List<Lens> lenses = getTheLens(lensUri);
-        for (Lens lens:lenses) {
-            results.add(LensBean.asBean(lens, null));
-        }
-		return results;
+		return new LensesBean(lenses, null);
 	}
     
     @Override
