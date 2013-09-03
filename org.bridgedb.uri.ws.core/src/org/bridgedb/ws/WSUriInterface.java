@@ -20,15 +20,18 @@
 package org.bridgedb.ws;
 
 import java.util.List;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.bean.DataSourceUriPatternBean;
+import org.bridgedb.ws.bean.LensBean;
 import org.bridgedb.ws.bean.MappingBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
 import org.bridgedb.ws.bean.MappingSetInfosBean;
 import org.bridgedb.ws.bean.MappingsBySetBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
 import org.bridgedb.ws.bean.UriExistsBean;
+import org.bridgedb.ws.bean.UriMappings;
 import org.bridgedb.ws.bean.UriSearchBean;
 import org.bridgedb.ws.bean.XrefBean;
 
@@ -135,4 +138,11 @@ public interface WSUriInterface extends WSCoreInterface{
      */
     public Response getSqlCompatVersion() throws BridgeDBException;
      
+    public UriMappings mapUri(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns) 
+            throws BridgeDBException;
+    
+    public LensBean getLens(@PathParam("id") String id) throws BridgeDBException;
+
+ 	public List<LensBean> getLenses(String lensUri) throws BridgeDBException;
+
  }

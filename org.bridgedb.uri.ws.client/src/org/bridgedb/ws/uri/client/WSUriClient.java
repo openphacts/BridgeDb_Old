@@ -29,7 +29,6 @@ import javax.ws.rs.core.Response;
 import org.bridgedb.DataSource;
 import org.bridgedb.DataSourceOverwriteLevel;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
-import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.SetMappings;
 import org.bridgedb.utils.BridgeDBException;
@@ -38,7 +37,6 @@ import org.bridgedb.ws.WSUriInterface;
 import org.bridgedb.ws.WsConstants;
 import org.bridgedb.ws.WsUriConstants;
 import org.bridgedb.ws.bean.DataSourceUriPatternBean;
-import org.bridgedb.ws.bean.MappingBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
 import org.bridgedb.ws.bean.LensBean;
@@ -46,6 +44,7 @@ import org.bridgedb.ws.bean.MappingSetInfosBean;
 import org.bridgedb.ws.bean.MappingsBean;
 import org.bridgedb.ws.bean.MappingsBySetBean;
 import org.bridgedb.ws.bean.UriExistsBean;
+import org.bridgedb.ws.bean.UriMappings;
 import org.bridgedb.ws.bean.UriSearchBean;
 import org.bridgedb.ws.bean.XrefBean;
 
@@ -307,6 +306,45 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
         } catch (UniformInterfaceException ex){
             return Response.noContent().build();
         }
+    }
+
+    @Override
+    public UriMappings mapUri(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns) throws BridgeDBException {
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        for (String uri:uris){
+            if (uri != null){
+                params.add(WsUriConstants.URI, uri);            
+            }
+        }
+        if (lensUri != null){
+            params.add(WsUriConstants.LENS_URI, lensUri);        
+        }
+         if (graph != null){
+            params.add(WsUriConstants.GRAPH, graph); 
+        }
+        if (targetUriPatterns != null){
+            for (String target:targetUriPatterns){
+                params.add(WsUriConstants.TARGET_URI_PATTERN, target);
+            }
+        }
+        try{
+            //Make service call
+            UriMappings result = 
+                    webResource.path(WsUriConstants.MAP_URI)
+                    .queryParams(params)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<UriMappings>() {});
+            return result;
+             //return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return new UriMappings();
+            //return Response.noContent().build();
+        }
+   }
+
+    @Override
+    public List<LensBean> getLenses(String lensUri) throws BridgeDBException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

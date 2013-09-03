@@ -41,6 +41,7 @@ import org.bridgedb.ws.bean.MappingsBean;
 import org.bridgedb.ws.bean.MappingsBySetBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
 import org.bridgedb.ws.bean.UriExistsBean;
+import org.bridgedb.ws.bean.UriMappings;
 import org.bridgedb.ws.bean.UriSearchBean;
 import org.bridgedb.ws.bean.XrefBean;
 
@@ -124,15 +125,26 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     }
 
     @Override
-    public Set<String> mapUri(String sourceUri, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
-        Collection<Mapping> beans = mapFull(sourceUri, lensUri, tgtUriPattern);
-        return extractUris(beans);
+    public Set<String> mapUri(String sourceUri, String lensUri, UriPattern targetUriPattern) throws BridgeDBException {
+        List<String> sourceUris = new ArrayList<String>();
+        sourceUris.add(sourceUri);
+        List<String> targetUriPatterns = new ArrayList<String>();
+        if (targetUriPattern == null){
+            return new HashSet<String>();
+        } else {
+            targetUriPatterns.add(targetUriPattern.getUriPattern());
+        }
+        UriMappings mappings = uriService.mapUri(sourceUris, lensUri, NULL_GRAPH, targetUriPatterns); 
+        return mappings.getTargetUri();
     }
 
     @Override
     public Set<String> mapUri(String sourceUri, String lensUri) throws BridgeDBException {
-        Collection<Mapping> beans = mapFull(sourceUri, lensUri);
-        return extractUris(beans);
+        List<String> sourceUris = new ArrayList<String>();
+        sourceUris.add(sourceUri);
+        List<String> targetUriPatterns = new ArrayList<String>();
+        UriMappings mappings = uriService.mapUri(sourceUris, lensUri, NULL_GRAPH, targetUriPatterns); 
+        return mappings.getTargetUri();
     }
 
     @Override

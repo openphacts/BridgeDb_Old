@@ -44,6 +44,7 @@ public class UriMappings {
      * Default constructor for webService
      */
     public UriMappings(){
+        targetUri = new HashSet<String>();
     }
     
     public static UriMappings asBean(Set<String> targets){
@@ -66,4 +67,7 @@ public class UriMappings {
         this.targetUri = targetUri;
     }
  
+    public String toString(){
+        return targetUri.toString();
+    }
  }
