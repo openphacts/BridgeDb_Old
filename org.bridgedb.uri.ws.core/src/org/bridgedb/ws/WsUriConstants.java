@@ -35,7 +35,6 @@ public class WsUriConstants extends WsConstants{
     /**
      * @deprecated 
      */
-    public static final String GET_MAPPING_INFO = "getMappingInfo";
     public static final String GET_SAMPLE_MAPPINGS = "getSampleMappings";
     public static final String GRAPH = "graph";
     public static final String GRAPHVIZ = "graphviz";

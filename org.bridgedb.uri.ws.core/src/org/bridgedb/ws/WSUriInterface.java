@@ -38,32 +38,101 @@ import org.bridgedb.ws.bean.XrefBean;
  */
 public interface WSUriInterface extends WSCoreInterface{
 
+    /**
+     *
+     * @param id
+     * @param scrCode
+     * @param uri
+     * @param lensUri
+     * @param targetCodes
+     * @param graph
+     * @param targetUriPattern
+     * @return A MappingsBean wrapped in a Response
+     * @throws BridgeDBException
+     */
     public Response map(String id, String scrCode, String uri, String lensUri, List<String> targetCodes, 
             String graph, List<String> targetUriPattern) throws BridgeDBException;
 
+    /**
+     *
+     * @param uri
+     * @param lensUri
+     * @param graph
+     * @param targetUriPattern
+     * @return A MappingsBySetBean wrapped in a Response
+     * @throws BridgeDBException
+     */
     public Response mapBySet(List<String> uri, String lensUri, String graph, List<String> targetUriPattern) 
             throws BridgeDBException;
 
-    public UriExistsBean UriExists(String Uri) throws BridgeDBException;
+    /**
+     *
+     * @param Uri
+     * @return An UriExistsBean wrapped in a Response
+     * @throws BridgeDBException
+     */
+    public Response UriExists(String Uri) throws BridgeDBException;
 
-    public UriSearchBean UriSearch(String text, String limitString) throws BridgeDBException;
+    /**
+     *
+     * @param text
+     * @param limitString
+     * @return An UriSearchBean wrapped in a Response
+     * @throws BridgeDBException
+     */
+    public Response UriSearch(String text, String limitString) throws BridgeDBException;
 
-    public XrefBean toXref(String Uri) throws BridgeDBException;
+    /**
+     *
+     * @param Uri
+     * @return A XrefBean wrapped in a Response
+     * @throws BridgeDBException
+     */
+    public Response toXref(String Uri) throws BridgeDBException;
 
-    //public List<Mapping> getSampleMappings() throws BridgeDBException;
+    /**
+     *
+     * @param lensUri
+     * @return An OverallStatisticsBean wrapped in a Response
+     * @throws BridgeDBException
+     */
+    public Response getOverallStatistics(String lensUri) throws BridgeDBException;
 
-    public OverallStatisticsBean getOverallStatistics(String lensUri) throws BridgeDBException;
-
-    public MappingSetInfosBean getMappingSetInfos(String sourceSysCode, String targetSysCode, String lensUri) 
+    /**
+     *
+     * @param sourceSysCode
+     * @param targetSysCode
+     * @param lensUri
+     * @return A MappingSetInfosBean wrapped in a Response
+     * @throws BridgeDBException
+     */
+    public Response getMappingSetInfos(String sourceSysCode, String targetSysCode, String lensUri) 
             throws BridgeDBException;
 
-    public MappingSetInfoBean getMappingSetInfo(String mappingSetId) throws BridgeDBException;
+    /**
+     *
+     * @param mappingSetId
+     * @return A MappingSetInfoBean wrapped in a Response
+     * @throws BridgeDBException
+     */
+    public Response getMappingSetInfo(String mappingSetId) throws BridgeDBException;
 
-    public DataSourceUriPatternBean getDataSource(String dataSource) throws BridgeDBException;
+    /**
+     *
+     * @param dataSource
+     * @return A DataSourceUriPatternBean wrapped in a Response
+     * @throws BridgeDBException
+     */
+    public Response getDataSource(String dataSource) throws BridgeDBException;
     
     //public ValidationBean validateString(String info, String mimeTypee, String storeType, String validationType, 
     //        String includeWarnings) throws BridgeDBException;
 
-    public String getSqlCompatVersion() throws BridgeDBException;
+    /**
+     * A simple method to test WebService and underlying SQl engine are running.
+     * @return A String wrapped in a Response
+     * @throws BridgeDBException
+     */
+    public Response getSqlCompatVersion() throws BridgeDBException;
      
  }

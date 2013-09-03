@@ -35,12 +35,12 @@ import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.bean.DataSourceUriPatternBean;
-import org.bridgedb.ws.bean.MappingBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
 import org.bridgedb.ws.bean.MappingSetInfosBean;
 import org.bridgedb.ws.bean.MappingsBean;
 import org.bridgedb.ws.bean.MappingsBySetBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
+import org.bridgedb.ws.bean.UriExistsBean;
 import org.bridgedb.ws.bean.UriSearchBean;
 import org.bridgedb.ws.bean.XrefBean;
 
@@ -336,18 +336,22 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     
     @Override
     public boolean uriExists(String Uri) throws BridgeDBException {
-        return uriService.UriExists(Uri).exists();
+        Response response = uriService.UriExists(Uri);
+        UriExistsBean bean = (UriExistsBean)response.getEntity();
+        return bean.exists();
     }
 
     @Override
     public Set<String> uriSearch(String text, int limit) throws BridgeDBException {
-        UriSearchBean  bean = uriService.UriSearch(text, "" + limit);
+        Response response = uriService.UriSearch(text, "" + limit);
+        UriSearchBean bean = (UriSearchBean)response.getEntity();
         return bean.getUriSet();
     }
 
     @Override
     public Xref toXref(String Uri) throws BridgeDBException {
-        XrefBean bean = uriService.toXref(Uri);
+        Response response = uriService.toXref(Uri);
+        XrefBean bean = (XrefBean)response.getEntity(); 
         if (bean == null){
             return null;
         }
@@ -361,25 +365,29 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     
     @Override
     public OverallStatistics getOverallStatistics(String lensUri) throws BridgeDBException {
-        OverallStatisticsBean bean = uriService.getOverallStatistics(lensUri);
+        Response response = uriService.getOverallStatistics(lensUri);
+        OverallStatisticsBean bean = (OverallStatisticsBean)response.getEntity(); 
         return OverallStatisticsBean.asOverallStatistics(bean);
     }
 
     @Override
     public MappingSetInfo getMappingSetInfo(int mappingSetId) throws BridgeDBException {
-        MappingSetInfoBean bean = uriService.getMappingSetInfo("" + mappingSetId);
+        Response response = uriService.getMappingSetInfo("" + mappingSetId);
+        MappingSetInfoBean bean = (MappingSetInfoBean)response.getEntity(); 
         return bean.asMappingSetInfo();
     }
 
     @Override
     public List<MappingSetInfo> getMappingSetInfos(String sourceSysCode, String targetSysCode, String lensUri) throws BridgeDBException {
-        MappingSetInfosBean bean = uriService.getMappingSetInfos(sourceSysCode, targetSysCode, lensUri);
+        Response response = uriService.getMappingSetInfos(sourceSysCode, targetSysCode, lensUri);
+        MappingSetInfosBean bean = (MappingSetInfosBean)response.getEntity(); 
         return bean.getMappingSetInfos();
     }
    
     @Override
     public Set<String> getUriPatterns(String dataSource) throws BridgeDBException {
-        DataSourceUriPatternBean bean = uriService.getDataSource(dataSource);
+        Response response = uriService.getDataSource(dataSource);
+        DataSourceUriPatternBean bean = (DataSourceUriPatternBean)response.getEntity(); 
         if (bean == null) {
             return new HashSet<String>();
         } else {
@@ -389,7 +397,9 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
   
     @Override
     public int getSqlCompatVersion() throws BridgeDBException {
-        return Integer.parseInt(uriService.getSqlCompatVersion());
+        Response response = uriService.getSqlCompatVersion();
+        String version = response.getEntity().toString();
+        return Integer.parseInt(version);
     }
 
     @Override

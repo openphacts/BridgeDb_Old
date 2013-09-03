@@ -1017,11 +1017,6 @@ public class WSAPI extends WSFrame {
                 sb.append(SetMappings.METHOD_NAME);
                 sb.append("</a></dt>");
         sb.append("<dd>Brings up a table of all the mappings in the system by URISpace</dd>");
-        sb.append("<dt>");
-                sb.append(WsUriConstants.GET_MAPPING_INFO);
-                sb.append("</a></dt>");
-        sb.append("<dd>DEPRICATED: Forwards call to ");
-        sb.append(SetMappings.METHOD_NAME);
         sb.append("<dt><a href=\"#");
                 sb.append(WsUriConstants.GRAPHVIZ);
                 sb.append("\">");

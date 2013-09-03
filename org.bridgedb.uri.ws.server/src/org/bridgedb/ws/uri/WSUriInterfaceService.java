@@ -24,17 +24,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
-import org.apache.velocity.VelocityContext;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
 import org.bridgedb.rdf.UriPattern;
@@ -54,7 +51,6 @@ import org.bridgedb.ws.WsConstants;
 import org.bridgedb.ws.WsUriConstants;
 import org.bridgedb.ws.bean.DataSourceUriPatternBean;
 import org.bridgedb.ws.bean.LensBean;
-import org.bridgedb.ws.bean.MappingBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
 import org.bridgedb.ws.bean.MappingSetInfosBean;
 import org.bridgedb.ws.bean.MappingsBean;
@@ -64,7 +60,6 @@ import org.bridgedb.ws.bean.UriExistsBean;
 import org.bridgedb.ws.bean.UriMappings;
 import org.bridgedb.ws.bean.UriSearchBean;
 import org.bridgedb.ws.bean.XrefBean;
-import uk.ac.manchester.cs.openphacts.bridgedb.webtemplates.WebTemplates;
 
 @Path("/")
 public class WSUriInterfaceService extends WSCoreService implements WSUriInterface {
@@ -139,7 +134,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
     }
  
-    public MappingsBean mapInternal(String id, String scrCode, String uri, String lensUri, List<String> targetCodes,
+    private MappingsBean mapInternal(String id, String scrCode, String uri, String lensUri, List<String> targetCodes,
             String graph, List<String> targetUriPatterns) throws BridgeDBException {
         if (logger.isDebugEnabled()){
             logger.debug("map called! ");
@@ -188,6 +183,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsUriConstants.MAP_URI)
+    @Override
     public UriMappings mapUri(
     		@QueryParam(WsUriConstants.URI) List<String> uris,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
@@ -239,7 +235,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
     }
 
-    public MappingsBySet mapBySetInner(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns) throws BridgeDBException {
+    protected final MappingsBySet mapBySetInner(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns) throws BridgeDBException {
         HashSet<String> uriSet = new HashSet<String>(uris);
         UriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
         return uriMapper.mapBySet(uriSet, lensUri, graph, targetPatterns);
@@ -308,6 +304,8 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             UriPattern pattern = UriPattern.alreadyExistingByPattern(targetUriPattern);
             if (pattern != null){
                 targets.add(pattern);
+            } else {
+                throw new BridgeDBException ("No pattern knwo for " +targetUriPattern);
             }
         }
         if (targets.isEmpty()){
@@ -349,73 +347,71 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + WsUriConstants.URI_EXISTS)
     @Override
-    public UriExistsBean UriExists(@QueryParam(WsUriConstants.URI) String URI) throws BridgeDBException {
+    public Response UriExists(@QueryParam(WsUriConstants.URI) String URI) throws BridgeDBException {
         if (URI == null) throw new BridgeDBException(WsUriConstants.URI + " parameter missing.");
         if (URI.isEmpty()) throw new BridgeDBException(WsUriConstants.URI + " parameter may not be null.");
         boolean exists = uriMapper.uriExists(URI);
-        return new UriExistsBean(URI, exists);
+        UriExistsBean bean = new UriExistsBean(URI, exists);
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + WsUriConstants.URI_SEARCH)
     @Override
-    public UriSearchBean UriSearch(@QueryParam(WsUriConstants.TEXT) String text,
+    public Response UriSearch(@QueryParam(WsUriConstants.TEXT) String text,
             @QueryParam(WsUriConstants.LIMIT) String limitString) throws BridgeDBException {
         if (text == null) throw new BridgeDBException(WsUriConstants.TEXT + " parameter missing.");
         if (text.isEmpty()) throw new BridgeDBException(WsUriConstants.TEXT + " parameter may not be null.");
+        UriSearchBean bean;
         if (limitString == null || limitString.isEmpty()){
             Set<String> uris = uriMapper.uriSearch(text, Integer.MAX_VALUE);
-            return new UriSearchBean(text, uris);
+            bean = new UriSearchBean(text, uris);
         } else {
             int limit = Integer.parseInt(limitString);
             Set<String> uris = uriMapper.uriSearch(text, limit);
-            return new UriSearchBean(text, uris);
+            bean = new UriSearchBean(text, uris);
         }
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + WsUriConstants.TO_XREF)
     @Override
-    public XrefBean toXref(@QueryParam(WsUriConstants.URI) String URI) throws BridgeDBException {
+    public Response toXref(@QueryParam(WsUriConstants.URI) String URI) throws BridgeDBException {
         if (URI == null) throw new BridgeDBException(WsUriConstants.URI + " parameter missing.");
         if (URI.isEmpty()) throw new BridgeDBException(WsUriConstants.URI + " parameter may not be null.");
         logger.info(URI);
         Xref xref = uriMapper.toXref(URI);
         logger.info(xref);
+        XrefBean bean;
         if (xref == null){
-            return new XrefBean();  //Returns an empty bean
+            bean = new XrefBean();  //Returns an empty bean
+        } else {
+            bean =  new XrefBean(xref);
         }
-        return new XrefBean(xref);
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
-    /*@Override
+     @Override
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/" + WsUriConstants.GET_SAMPLE_MAPPINGS) 
-    public List<Mapping> getSampleMappings() throws BridgeDBException {
-        return uriMapper.getSampleMapping();
-    }*/
-
-    @Override
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + WsUriConstants.GET_OVERALL_STATISTICS) 
-    public OverallStatisticsBean getOverallStatistics(@QueryParam(WsUriConstants.LENS_URI) String lensUri) 
+    public Response getOverallStatistics(@QueryParam(WsUriConstants.LENS_URI) String lensUri) 
             throws BridgeDBException {
         OverallStatistics overallStatistics = uriMapper.getOverallStatistics(lensUri);
         OverallStatisticsBean bean = OverallStatisticsBean.asBean(overallStatistics);
-        return bean;
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
     
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + SetMappings.METHOD_NAME + WsUriConstants.XML) 
-    public MappingSetInfosBean getMappingSetInfosXML(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
+    public Response getMappingSetInfosXML(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
             @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
         return getMappingSetInfos(scrCode, targetCode, lensUri);
@@ -423,9 +419,9 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     
     @Override
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + SetMappings.METHOD_NAME) 
-    public MappingSetInfosBean getMappingSetInfos(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
+    public Response getMappingSetInfos(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
             @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
         List<MappingSetInfo> infos = uriMapper.getMappingSetInfos(scrCode, targetCode, lensUri);
@@ -433,12 +429,13 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         for (MappingSetInfo info:infos){
             bean.addMappingSetInfo(info);
         }
-        return bean;
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
 	@GET
-	@Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
+	@Produces({MediaType.APPLICATION_XML})
 	@Path(Lens.URI_PREFIX + "{id}")
+    @Override
 	public LensBean getLens(@PathParam("id") String id) throws BridgeDBException {
  		Lens lens = Lens.byId(id);
 		LensBean result = LensBean.asBean(lens, null);
@@ -446,7 +443,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
 	}
     
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + Lens.METHOD_NAME + WsUriConstants.XML) 
     public List<LensBean> getLensesXML(@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
         return getLenses(lensUri);
@@ -464,8 +461,9 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + Lens.METHOD_NAME) 
+    @Override
 	public List<LensBean> getLenses(@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
  		List<LensBean> results = new ArrayList<LensBean>();
         List<Lens> lenses = getTheLens(lensUri);
@@ -477,9 +475,9 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     
     @Override
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/" + WsUriConstants.GET_MAPPING_INFO + "/{id}")
-    public MappingSetInfoBean getMappingSetInfo(@PathParam("id") String idString) throws BridgeDBException {
+    @Produces({MediaType.APPLICATION_XML})
+    @Path("/" + SetMappings.METHOD_NAME + "/{id}")
+    public Response getMappingSetInfo(@PathParam("id") String idString) throws BridgeDBException {
         if (idString == null) {
             throw new BridgeDBException("Path parameter missing.");
         }
@@ -488,44 +486,35 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         }
         int id = Integer.parseInt(idString);
         MappingSetInfo info = uriMapper.getMappingSetInfo(id);
-        return new MappingSetInfoBean(info);
-    }
-
-    /**
-     * @deprecated 
-     */
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/" + SetMappings.METHOD_NAME + "/{id}")
-    public MappingSetInfoBean getMappingSetInfoOld(@PathParam("id") String idString) throws BridgeDBException {
-        return getMappingSetInfo(idString);
+        MappingSetInfoBean bean = new MappingSetInfoBean(info);
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/" + WsUriConstants.DATA_SOURCE)
-    public DataSourceUriPatternBean getDataSource() throws BridgeDBException {
+    public Response getDataSource() throws BridgeDBException {
         throw new BridgeDBException("id path parameter missing.");
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Override
     @Path("/" + WsUriConstants.DATA_SOURCE + "/{id}")
-    public DataSourceUriPatternBean getDataSource(@PathParam("id") String id) throws BridgeDBException {
+    public Response getDataSource(@PathParam("id") String id) throws BridgeDBException {
         if (id == null) throw new BridgeDBException("Path parameter missing.");
         if (id.isEmpty()) throw new BridgeDBException("Path parameter may not be null.");
         DataSource ds = DataSource.getBySystemCode(id);
         DataSourceUriPatternBean bean = new DataSourceUriPatternBean(ds, uriMapper.getUriPatterns(id));
-        return bean;
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
     
     @GET
     @Produces({MediaType.TEXT_PLAIN})
     @Override
     @Path("/" + WsUriConstants.SQL_COMPAT_VERSION)
-    public String getSqlCompatVersion() throws BridgeDBException {
-        return "" + uriMapper.getSqlCompatVersion();
+    public Response getSqlCompatVersion() throws BridgeDBException {
+        return Response.ok(uriMapper.getSqlCompatVersion(), MediaType.TEXT_PLAIN).build();
     }
 
     //**** LinksetInterfaceMinimal methods

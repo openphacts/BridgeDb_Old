@@ -158,19 +158,6 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
     }
     
-     /**
-     * @deprecated 
-     */
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/" + WsUriConstants.GET_MAPPING_INFO)
-     public Response getMappingInfo(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
-            @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode, 
-            @Context HttpServletRequest httpServletRequest) 
-            throws BridgeDBException, UnsupportedEncodingException {
-        return getSetMapping(scrCode, targetCode, null, httpServletRequest);
-    }
-
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/" + Lens.METHOD_NAME) 
