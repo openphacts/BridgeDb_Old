@@ -81,7 +81,7 @@ public class WSCoreService implements WSCoreInterface {
     }
         
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + WsConstants.GET_SUPPORTED_SOURCE_DATA_SOURCES)
     @Override
     public Response getSupportedSrcDataSources() throws BridgeDBException {
@@ -98,7 +98,7 @@ public class WSCoreService implements WSCoreInterface {
 
     
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + WsConstants.FREE_SEARCH)
     @Override
     public Response freeSearch(
@@ -121,7 +121,7 @@ public class WSCoreService implements WSCoreInterface {
     } 
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + WsConstants.MAP_ID)
     @Override
     public Response mapID(
@@ -159,7 +159,7 @@ public class WSCoreService implements WSCoreInterface {
     } 
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + WsConstants.XREF_EXISTS)
     @Override
     public Response xrefExists( 
@@ -186,7 +186,7 @@ public class WSCoreService implements WSCoreInterface {
     }
     
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + WsConstants.GET_SUPPORTED_TARGET_DATA_SOURCES)
     @Override
     public Response getSupportedTgtDataSources() throws BridgeDBException {
@@ -200,7 +200,7 @@ public class WSCoreService implements WSCoreInterface {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path(WsConstants.IS_FREE_SEARCH_SUPPORTED)
     @Override
     public Response isFreeSearchSupported() {
@@ -209,7 +209,7 @@ public class WSCoreService implements WSCoreInterface {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + WsConstants.IS_MAPPING_SUPPORTED)
     @Override
     public Response isMappingSupported(
@@ -229,7 +229,7 @@ public class WSCoreService implements WSCoreInterface {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + WsConstants.PROPERTY + "/{key}")
     @Override
     public Response getProperty(@PathParam("key")String key) {
@@ -253,7 +253,7 @@ public class WSCoreService implements WSCoreInterface {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     @Path("/" + WsConstants.GET_CAPABILITIES)
     @Override
     public Response getCapabilities()  {
