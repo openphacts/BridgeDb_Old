@@ -21,6 +21,7 @@ package org.bridgedb.ws;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.GenericType;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
@@ -73,12 +74,16 @@ public class WSCoreClient implements WSCoreInterface{
             params.add(WsConstants.TARGET_DATASOURCE_SYSTEM_CODE, target);
         }
         //Make service call
-        XrefMapsBean bean = 
-                webResource.path(WsConstants.MAP_ID)
-                .queryParams(params)
-                .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<XrefMapsBean>() {});
-        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
+        try{
+            XrefMapsBean bean = 
+                    webResource.path(WsConstants.MAP_ID)
+                    .queryParams(params)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<XrefMapsBean>() {});
+            return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
 
     @Override
@@ -86,68 +91,82 @@ public class WSCoreClient implements WSCoreInterface{
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         params.add(WsConstants.TEXT, text);
         params.add(WsConstants.LIMIT, limit);
-        //Make service call
-        XrefsBean bean = 
-                webResource.path(WsConstants.FREE_SEARCH)
-                .queryParams(params)
-                .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<XrefsBean>() {});
-        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
+        try {
+            //Make service call
+            XrefsBean bean = 
+                    webResource.path(WsConstants.FREE_SEARCH)
+                    .queryParams(params)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<XrefsBean>() {});
+            return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
 
     @Override
     public Response getKeys() {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-        //Make service call
-        PropertiesBean bean = 
-                webResource.path(WsConstants.GET_KEYS)
-                .queryParams(params)
-                .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<PropertiesBean>() {});
-        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
+        try {
+            //Make service call
+            PropertiesBean bean = 
+                    webResource.path(WsConstants.GET_KEYS)
+                    .queryParams(params)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<PropertiesBean>() {});
+            return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
 
     @Override
     public Response getProperty(String key) {
-        //Make service call
-        PropertyBean bean = 
-                webResource.path(WsConstants.PROPERTY + "/" + key)
-                .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<PropertyBean>() {});
-        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
+        try {
+            //Make service call
+            PropertyBean bean = 
+                    webResource.path(WsConstants.PROPERTY + "/" + key)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<PropertyBean>() {});
+            return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
 
     @Override
     public Response getSupportedSrcDataSources() throws BridgeDBException {
-        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-        //Make service call
-        DataSourcesBean bean = 
-                webResource.path(WsConstants.GET_SUPPORTED_SOURCE_DATA_SOURCES)
-                .queryParams(params)
-                .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<DataSourcesBean>() {});
-        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
+        try{
+            //Make service call
+            DataSourcesBean bean = 
+                    webResource.path(WsConstants.GET_SUPPORTED_SOURCE_DATA_SOURCES)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<DataSourcesBean>() {});
+            return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
 
     @Override
     public Response getSupportedTgtDataSources() throws BridgeDBException {
-        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-        //Make service call
-        DataSourcesBean bean = 
-                webResource.path(WsConstants.GET_SUPPORTED_TARGET_DATA_SOURCES)
-                .queryParams(params)
-                .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<DataSourcesBean>() {});
-        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
+        try {
+            //Make service call
+            DataSourcesBean bean = 
+                    webResource.path(WsConstants.GET_SUPPORTED_TARGET_DATA_SOURCES)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<DataSourcesBean>() {});
+            return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
 
     @Override
     public Response isFreeSearchSupported() {
-        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         //Make service call
         FreeSearchSupportedBean bean = 
                 webResource.path(WsConstants.IS_FREE_SEARCH_SUPPORTED)
-                .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<FreeSearchSupportedBean>() {});
         return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();

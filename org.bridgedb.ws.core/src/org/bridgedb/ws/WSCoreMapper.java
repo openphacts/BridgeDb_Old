@@ -48,6 +48,7 @@ import org.bridgedb.ws.bean.XrefsBean;
 public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
 
     WSCoreInterface webService;
+    static final int NO_CONTEXT = Response.Status.NO_CONTENT.getStatusCode();
     
     public WSCoreMapper(WSCoreInterface webService){
         this.webService = webService;
@@ -70,6 +71,9 @@ public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
         }
         if (codes.isEmpty()) return new HashMap<Xref, Set<Xref>>(); //No valid srcrefs so return empty set
         Response response = webService.mapID(ids, codes, targetCodes);
+        if (response.getStatus() == NO_CONTEXT){
+            return new HashMap<Xref, Set<Xref>>();
+        }
         XrefMapsBean bean = (XrefMapsBean)response.getEntity();
         return bean.asMappings();
     }
@@ -86,6 +90,9 @@ public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
             targetCodes.add(tgtDataSources[i].getSystemCode());
         }
         Response response = webService.mapID(ids, codes, targetCodes);
+        if (response.getStatus() == NO_CONTEXT){
+            return new HashSet<Xref>();
+        }
         XrefMapsBean bean = (XrefMapsBean)response.getEntity();
         return bean.getTargetXrefs();
     }
@@ -105,6 +112,9 @@ public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
     public Set<Xref> freeSearch(String text, int limit) throws BridgeDBException {
         Response response = webService.freeSearch(text, "" + limit);
         XrefsBean bean =  (XrefsBean)response.getEntity();
+        if (response.getStatus() == NO_CONTEXT){
+            return new HashSet<Xref>();
+        }
         return bean.asXrefs();
     }
 
@@ -149,12 +159,18 @@ public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
     public Set<DataSource> getSupportedSrcDataSources() throws BridgeDBException {
         Response response = webService.getSupportedSrcDataSources();
         DataSourcesBean beans = (DataSourcesBean)response.getEntity();
+        if (response.getStatus() == NO_CONTEXT){
+            return new HashSet<DataSource>();
+        }
         return beans.getDataSources();
     }
 
     @Override
     public Set<DataSource> getSupportedTgtDataSources() throws BridgeDBException {
         Response response = webService.getSupportedTgtDataSources();
+        if (response.getStatus() == NO_CONTEXT){
+            return new HashSet<DataSource>();
+        }
         DataSourcesBean beans = (DataSourcesBean)response.getEntity();
         return beans.getDataSources();
     }
@@ -169,6 +185,9 @@ public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
     @Override
     public String getProperty(String key) {
         Response response = webService.getProperty(key);
+        if (response.getStatus() == NO_CONTEXT){
+            return null;
+        }
         PropertyBean bean = (PropertyBean)response.getEntity();
         if (bean == null) return null;
         return bean.getValue();
@@ -178,6 +197,9 @@ public class WSCoreMapper implements IDMapper, IDMapperCapabilities {
     public Set<String> getKeys() {
         Response response = webService.getKeys();
         PropertiesBean beans = (PropertiesBean)response.getEntity();
+        if (response.getStatus() == NO_CONTEXT){
+            return new HashSet<String>();
+        }
         return beans.getKeys();
     }
 

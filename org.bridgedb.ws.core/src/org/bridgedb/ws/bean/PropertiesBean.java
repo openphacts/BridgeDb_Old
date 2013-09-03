@@ -63,4 +63,8 @@ public class PropertiesBean {
         Property.add(bean);
     }
 
+    public boolean isEmpty() {
+        return Property.isEmpty();
+    }
+
 }

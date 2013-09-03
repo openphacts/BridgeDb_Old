@@ -68,5 +68,9 @@ public class XrefsBean {
     public void setXref(Set<XrefBean> Xref) {
         this.Xref = Xref;
     }
+
+    public boolean isEmpty() {
+        return Xref.isEmpty();
+    }
         
 }

@@ -105,4 +105,8 @@ public class MappingSupportedBean {
         toString+= target.toString();
         return toString;
     }
+
+    public boolean isEmpty() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 }

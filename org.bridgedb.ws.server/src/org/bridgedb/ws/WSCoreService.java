@@ -40,13 +40,11 @@ import org.bridgedb.sql.SQLIdMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.ws.bean.CapabilitiesBean;
-import org.bridgedb.ws.bean.DataSourceBean;
 import org.bridgedb.ws.bean.DataSourcesBean;
 import org.bridgedb.ws.bean.FreeSearchSupportedBean;
 import org.bridgedb.ws.bean.MappingSupportedBean;
 import org.bridgedb.ws.bean.PropertiesBean;
 import org.bridgedb.ws.bean.PropertyBean;
-import org.bridgedb.ws.bean.XrefBean;
 import org.bridgedb.ws.bean.XrefExistsBean;
 import org.bridgedb.ws.bean.XrefMapsBean;
 import org.bridgedb.ws.bean.XrefsBean;
@@ -60,23 +58,26 @@ import org.bridgedb.ws.bean.XrefsBean;
 @Path("/")
 public class WSCoreService implements WSCoreInterface {
 
+    static final String NO_CONTENT_ON_EMPTY = "no.content.on.empty";
+    private final boolean noConentOnEmpty;
+            
     static final Logger logger = Logger.getLogger(WSCoreService.class);
-
+    
     protected IDMapper idMapper;
 
     /**
-     * Defuault constuctor for super classes.
+     * Default constructor for super classes.
      * 
      * Super classes will have the responsibilities of setting up the idMapper.
      */
     protected WSCoreService() throws BridgeDBException{
-        ConfigReader.configureLogger();
-        idMapper = new SQLIdMapper(false);
+        this(new SQLIdMapper(false));
     }
     
     public WSCoreService(IDMapper idMapper) throws BridgeDBException {
         this.idMapper = idMapper;
-        ConfigReader.configureLogger();
+        String property = ConfigReader.getProperty(NO_CONTENT_ON_EMPTY);
+        noConentOnEmpty = Boolean.valueOf(property);
         logger.info("WS Service running using supplied idMapper");
     }
         
@@ -90,6 +91,9 @@ public class WSCoreService implements WSCoreInterface {
         try {
             Set<DataSource> dataSources = capabilities.getSupportedSrcDataSources();
             DataSourcesBean bean = new DataSourcesBean (dataSources);
+            if (noConentOnEmpty & bean.isEmpty()){
+                return Response.noContent().build();
+            }
             return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
         } catch (IDMapperException e){
             throw BridgeDBException.convertToBridgeDB(e);
@@ -117,6 +121,9 @@ public class WSCoreService implements WSCoreInterface {
             throw BridgeDBException.convertToBridgeDB(e);
         }
         XrefsBean bean = new XrefsBean(mappings);
+        if (noConentOnEmpty & bean.isEmpty()){
+            return Response.noContent().build();
+        }
         return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     } 
 
@@ -152,6 +159,9 @@ public class WSCoreService implements WSCoreInterface {
         try {
             Map<Xref, Set<Xref>>  mappings = idMapper.mapID(srcXrefs, targetDataSources);
             XrefMapsBean bean = new XrefMapsBean(mappings);
+            if (noConentOnEmpty & bean.isEmpty()){
+                return Response.noContent().build();
+            }
             return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
         } catch (IDMapperException e){
             throw BridgeDBException.convertToBridgeDB(e);
@@ -173,12 +183,14 @@ public class WSCoreService implements WSCoreInterface {
         } catch (IllegalArgumentException ex){
              logger.error(ex.getMessage());
              XrefExistsBean bean = XrefExistsBean.asBean(id, scrCode, false);
+             //XrefExists is never empty so never no context
              return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
             
         }
         Xref source = new Xref(id, dataSource);
         try {
             XrefExistsBean bean = XrefExistsBean.asBean(source, idMapper.xrefExists(source));
+             //XrefExists is never empty so never no context
             return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
         } catch (IDMapperException e){
             throw BridgeDBException.convertToBridgeDB(e);
@@ -193,6 +205,9 @@ public class WSCoreService implements WSCoreInterface {
         try {
             Set<DataSource> dataSources = idMapper.getCapabilities().getSupportedSrcDataSources();
             DataSourcesBean bean = new DataSourcesBean(dataSources);
+            if (noConentOnEmpty & bean.isEmpty()){
+                return Response.noContent().build();
+            }
             return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
         } catch (IDMapperException e){
             throw BridgeDBException.convertToBridgeDB(e);
@@ -205,6 +220,7 @@ public class WSCoreService implements WSCoreInterface {
     @Override
     public Response isFreeSearchSupported() {
         FreeSearchSupportedBean bean = new FreeSearchSupportedBean(idMapper.getCapabilities().isFreeSearchSupported());
+        //FreeSearchSupported is never empty so never no context
         return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
 
@@ -221,6 +237,7 @@ public class WSCoreService implements WSCoreInterface {
         DataSource tgt = DataSource.getBySystemCode(targetCode);
         try {
             MappingSupportedBean bean = MappingSupportedBean.asBean(src, tgt, idMapper.getCapabilities().isMappingSupported(src, tgt));
+            //MappingSupported is never empty so never no content
             return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
         } catch (IDMapperException e){
             throw BridgeDBException.convertToBridgeDB(e);
@@ -235,6 +252,9 @@ public class WSCoreService implements WSCoreInterface {
     public Response getProperty(@PathParam("key")String key) {
         String property = idMapper.getCapabilities().getProperty(key);
         PropertyBean bean = new PropertyBean(key, property);
+        if (noConentOnEmpty & bean.isEmpty()){
+            return Response.noContent().build();
+        }
         return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
     
@@ -248,6 +268,9 @@ public class WSCoreService implements WSCoreInterface {
         IDMapperCapabilities idMapperCapabilities = idMapper.getCapabilities();
         for (String key:keys){
             bean.addProperty(key, idMapperCapabilities.getProperty(key));
+        }
+        if (noConentOnEmpty & bean.isEmpty()){
+            return Response.noContent().build();
         }
         return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }

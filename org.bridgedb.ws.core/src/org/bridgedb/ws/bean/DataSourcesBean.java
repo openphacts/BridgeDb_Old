@@ -64,6 +64,10 @@ public class DataSourcesBean {
         this.DataSource = DataSource;
     }
 
+    public boolean isEmpty() {
+        return DataSource.isEmpty();
+    }
+
     
 
 }

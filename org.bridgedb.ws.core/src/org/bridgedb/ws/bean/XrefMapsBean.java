@@ -91,4 +91,8 @@ public class XrefMapsBean {
     public void setXrefMapping(Set<XrefMapBean> XrefMapping) {
         this.XrefMapping = XrefMapping;
     }
+
+    public boolean isEmpty() {
+        return XrefMapping.isEmpty();
+    }
 }
