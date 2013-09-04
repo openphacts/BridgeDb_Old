@@ -69,7 +69,7 @@ You **MUST** either supply local values matching your local setup or setup your 
 Database Dependency
 -------------------
 MySQL version 5 or above **MUST** be installed and running  
-MySQL databases and users **MUST** be created with CREATE, DROP, INDEX, INSERT, 
+MySQL databases and users **MUST** be created with CREATE, DROP, INDEX, INSERT, ALTER,
 UPDATE, DELETE, and SELECT permissions.
 
 Consult the BridgeDB.properties file for the defaults, or copy and amend the configuration file
