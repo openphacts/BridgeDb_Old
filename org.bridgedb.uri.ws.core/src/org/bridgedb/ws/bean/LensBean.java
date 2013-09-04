@@ -147,5 +147,9 @@ public class LensBean {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public boolean isEmpty() {
+        return name == null || name.isEmpty();
+    }
     
 }

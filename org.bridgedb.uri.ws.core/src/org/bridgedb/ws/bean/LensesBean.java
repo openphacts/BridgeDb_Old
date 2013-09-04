@@ -60,5 +60,9 @@ public class LensesBean {
         this.lenses = lenses;
     }
 
+    public boolean isEmpty() {
+        return lenses.isEmpty();
+    }
+
   
 }

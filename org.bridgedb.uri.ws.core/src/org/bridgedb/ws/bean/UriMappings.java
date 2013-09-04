@@ -70,4 +70,8 @@ public class UriMappings {
     public String toString(){
         return targetUri.toString();
     }
+
+    public boolean isEmpty() {
+        return targetUri.isEmpty();
+    }
  }

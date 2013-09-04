@@ -209,9 +209,9 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             @QueryParam(WsUriConstants.GRAPH) String graph,
             @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns) throws BridgeDBException {
         UriMappings result = mapUriInner(uris, lensUri, graph, targetUriPatterns);
-        //if (result.isEmpty()){
-        //    return Response.noContent().build();
-        //} 
+        if (result.isEmpty()){
+            return Response.noContent().build();
+        } 
         return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
     }
 
@@ -449,6 +449,9 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
 	public Response getLens(@PathParam("id") String id) throws BridgeDBException {
  		Lens lens = Lens.byId(id);
 		LensBean bean = new LensBean(lens, null);
+        if (bean.isEmpty()){
+            return Response.noContent().build();
+        } 
         return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
 	}
     
@@ -477,6 +480,9 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
 	public Response getLenses(@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
         List<Lens> lenses = getTheLens(lensUri);
 		LensesBean bean = new LensesBean(lenses, null);
+        if (bean.isEmpty()){
+            return Response.noContent().build();
+        } 
         return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
 	}
     
