@@ -30,7 +30,7 @@ import org.bridgedb.statistics.MappingSetInfo;
  */
 @XmlRootElement(name="MappingSetInfo")
 public class MappingSetInfoBean {
-    private Integer id;
+    private Integer id = null;
     private DataSetInfoBean source;
     private String predicate;
     private DataSetInfoBean target;
@@ -347,6 +347,10 @@ public class MappingSetInfoBean {
      */
     public void setFrequencyMax(Integer frequencyMax) {
         this.frequencyMax = frequencyMax;
+    }
+
+    public boolean isEmpty() {
+        return id == null;
     }
 
 

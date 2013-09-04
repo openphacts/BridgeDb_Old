@@ -67,4 +67,8 @@ public class XrefBean {
     public String toString(){
         return id + ":" + dataSource;
     }
+
+    public boolean isEmpty() {
+        return id == null || id.isEmpty();
+    }
 }

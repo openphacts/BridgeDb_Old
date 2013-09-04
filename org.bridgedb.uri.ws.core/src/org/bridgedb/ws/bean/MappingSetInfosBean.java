@@ -68,6 +68,10 @@ public class MappingSetInfosBean {
     public void addMappingSetInfo(MappingSetInfo info) {
         MappingSetInfo.add(new MappingSetInfoBean(info));
     }
+
+    public boolean isEmpty() {
+        return MappingSetInfo.isEmpty();
+    }
     
 
 }

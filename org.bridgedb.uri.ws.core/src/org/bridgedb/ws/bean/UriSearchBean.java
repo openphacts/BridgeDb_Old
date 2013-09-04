@@ -78,6 +78,10 @@ public class UriSearchBean {
             return new HashSet(Uri);
         }
     }
+
+    public boolean isEmpty() {
+        return Uri.isEmpty();
+    }
  
     
 }

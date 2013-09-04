@@ -78,4 +78,8 @@ public class DataSourceUriPatternBean {
     public void setUriPattern(Set<String> UriPattern) {
         this.UriPattern = UriPattern;
     }
+
+    public boolean isEmpty() {
+        return UriPattern.isEmpty();
+    }
 }
