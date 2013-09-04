@@ -139,11 +139,32 @@ public interface WSUriInterface extends WSCoreInterface{
      */
     public Response getSqlCompatVersion() throws BridgeDBException;
      
-    public UriMappings mapUri(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns) 
+    /**
+     *
+     * @param uris
+     * @param lensUri
+     * @param graph
+     * @param targetUriPatterns
+     * @return A UriMappings wrapped in a Response
+     * @throws BridgeDBException
+     */
+    public Response mapUri(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns) 
             throws BridgeDBException;
     
-    public LensBean getLens(@PathParam("id") String id) throws BridgeDBException;
+    /**
+     *
+     * @param id
+     * @return A LensBean wrapped in a Response
+     * @throws BridgeDBException
+     */
+    public Response getLens(@PathParam("id") String id) throws BridgeDBException;
 
- 	public LensesBean getLenses(String lensUri) throws BridgeDBException;
+ 	/**
+     *
+     * @param lensUri
+     * @return A LensesBean wrapped in a Response
+     * @throws BridgeDBException
+     */
+    public Response getLenses(String lensUri) throws BridgeDBException;
 
  }

@@ -134,7 +134,11 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
         } else {
             targetUriPatterns.add(targetUriPattern.getUriPattern());
         }
-        UriMappings mappings = uriService.mapUri(sourceUris, lensUri, NULL_GRAPH, targetUriPatterns); 
+        Response response = uriService.mapUri(sourceUris, lensUri, NULL_GRAPH, targetUriPatterns); 
+        if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()){
+            return new HashSet<String>();
+        }
+        UriMappings mappings = (UriMappings)response.getEntity();
         return mappings.getTargetUri();
     }
 
@@ -143,7 +147,11 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
         List<String> sourceUris = new ArrayList<String>();
         sourceUris.add(sourceUri);
         List<String> targetUriPatterns = new ArrayList<String>();
-        UriMappings mappings = uriService.mapUri(sourceUris, lensUri, NULL_GRAPH, targetUriPatterns); 
+        Response response = uriService.mapUri(sourceUris, lensUri, NULL_GRAPH, targetUriPatterns); 
+        if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()){
+            return new HashSet<String>();
+        }
+        UriMappings mappings = (UriMappings)response.getEntity();
         return mappings.getTargetUri();
     }
 
@@ -349,6 +357,10 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     @Override
     public boolean uriExists(String Uri) throws BridgeDBException {
         Response response = uriService.UriExists(Uri);
+        if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()){
+            //Should never happen but just in case
+            return false;
+        }
         UriExistsBean bean = (UriExistsBean)response.getEntity();
         return bean.exists();
     }
@@ -356,6 +368,9 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     @Override
     public Set<String> uriSearch(String text, int limit) throws BridgeDBException {
         Response response = uriService.UriSearch(text, "" + limit);
+        if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()){
+            return new HashSet<String>();
+        }
         UriSearchBean bean = (UriSearchBean)response.getEntity();
         return bean.getUriSet();
     }
@@ -363,6 +378,10 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     @Override
     public Xref toXref(String Uri) throws BridgeDBException {
         Response response = uriService.toXref(Uri);
+        if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()){
+            //Should never happen but just in case
+            throw new BridgeDBException("Unable to convert " + Uri + " to an xref. Server returned no context");
+        }
         XrefBean bean = (XrefBean)response.getEntity(); 
         if (bean == null){
             return null;
@@ -378,6 +397,10 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     @Override
     public OverallStatistics getOverallStatistics(String lensUri) throws BridgeDBException {
         Response response = uriService.getOverallStatistics(lensUri);
+        if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()){
+            //Should never happen but just in case
+            throw new BridgeDBException("Unable to get OverallStatistics. Server returned no context");
+        }
         OverallStatisticsBean bean = (OverallStatisticsBean)response.getEntity(); 
         return OverallStatisticsBean.asOverallStatistics(bean);
     }
@@ -385,6 +408,9 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     @Override
     public MappingSetInfo getMappingSetInfo(int mappingSetId) throws BridgeDBException {
         Response response = uriService.getMappingSetInfo("" + mappingSetId);
+        if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()){
+            throw new BridgeDBException("Unable to get MappingSetInfo for " + mappingSetId + " Server returned no context");
+        }
         MappingSetInfoBean bean = (MappingSetInfoBean)response.getEntity(); 
         return bean.asMappingSetInfo();
     }
@@ -392,6 +418,10 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     @Override
     public List<MappingSetInfo> getMappingSetInfos(String sourceSysCode, String targetSysCode, String lensUri) throws BridgeDBException {
         Response response = uriService.getMappingSetInfos(sourceSysCode, targetSysCode, lensUri);
+        if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()){
+            throw new BridgeDBException("Unable to get MappingSetInfo for " + sourceSysCode + " -> " + targetSysCode + 
+                    " lens: " + lensUri + " Server returned no context");
+        }
         MappingSetInfosBean bean = (MappingSetInfosBean)response.getEntity(); 
         return bean.getMappingSetInfos();
     }
@@ -399,6 +429,9 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     @Override
     public Set<String> getUriPatterns(String dataSource) throws BridgeDBException {
         Response response = uriService.getDataSource(dataSource);
+        if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()){
+            return new HashSet<String>();
+        }
         DataSourceUriPatternBean bean = (DataSourceUriPatternBean)response.getEntity(); 
         if (bean == null) {
             return new HashSet<String>();
@@ -410,6 +443,9 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     @Override
     public int getSqlCompatVersion() throws BridgeDBException {
         Response response = uriService.getSqlCompatVersion();
+       if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()){
+            throw new BridgeDBException("Unable to get SqlCompatVersion. Server returned no context");
+        }
         String version = response.getEntity().toString();
         return Integer.parseInt(version);
     }

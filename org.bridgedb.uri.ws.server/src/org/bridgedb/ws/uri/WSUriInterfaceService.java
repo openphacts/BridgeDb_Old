@@ -181,15 +181,8 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         return map(id, scrCode, lensUri, targetDataSources, graph, targetPatterns);
     }
 
-    @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/" + WsUriConstants.MAP_URI)
-    @Override
-    public UriMappings mapUri(
-    		@QueryParam(WsUriConstants.URI) List<String> uris,
-     		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
-            @QueryParam(WsUriConstants.GRAPH) String graph,
-            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns) throws BridgeDBException {
+    private UriMappings mapUriInner(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns) 
+            throws BridgeDBException {
        if (logger.isDebugEnabled()){
             logger.debug("map called! ");
             logger.debug("   uri = " + uris);             
@@ -204,6 +197,22 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
            results.addAll(uriMapper.mapUri(single, lensUri, graph, targetPatterns));
        }
        return UriMappings.asBean(results);
+    }
+
+    @GET
+    @Produces({MediaType.APPLICATION_XML})
+    @Path("/" + WsUriConstants.MAP_URI)
+    @Override
+    public Response mapUri(
+    		@QueryParam(WsUriConstants.URI) List<String> uris,
+     		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
+            @QueryParam(WsUriConstants.GRAPH) String graph,
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns) throws BridgeDBException {
+        UriMappings result = mapUriInner(uris, lensUri, graph, targetUriPatterns);
+        //if (result.isEmpty()){
+        //    return Response.noContent().build();
+        //} 
+        return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
     }
 
     @GET
@@ -437,16 +446,16 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
 	@Produces({MediaType.APPLICATION_XML})
 	@Path(Lens.URI_PREFIX + "{id}")
     @Override
-	public LensBean getLens(@PathParam("id") String id) throws BridgeDBException {
+	public Response getLens(@PathParam("id") String id) throws BridgeDBException {
  		Lens lens = Lens.byId(id);
-		LensBean result = new LensBean(lens, null);
-		return result;
+		LensBean bean = new LensBean(lens, null);
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
 	}
     
     @GET
     @Produces({MediaType.APPLICATION_XML})
     @Path("/" + Lens.METHOD_NAME + WsUriConstants.XML) 
-    public LensesBean getLensesXML(@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
+    public Response getLensesXML(@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
         return getLenses(lensUri);
     }
 
@@ -465,9 +474,10 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     @Produces({MediaType.APPLICATION_XML})
     @Path("/" + Lens.METHOD_NAME) 
     @Override
-	public LensesBean getLenses(@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
+	public Response getLenses(@QueryParam(WsUriConstants.LENS_URI) String lensUri) throws BridgeDBException {
         List<Lens> lenses = getTheLens(lensUri);
-		return new LensesBean(lenses, null);
+		LensesBean bean = new LensesBean(lenses, null);
+        return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
 	}
     
     @Override

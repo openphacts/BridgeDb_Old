@@ -280,19 +280,28 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
         return result;
     }*/
 
-	public List<LensBean> getLenses() {
-		List<LensBean> result = 
-				webResource.path(Lens.METHOD_NAME)
-				.accept(MediaType.APPLICATION_XML_TYPE)
-				.get(new GenericType<List<LensBean>>() {});
-        return result;
+	public Response getLenses() {
+        try {
+            List<LensBean> result = 
+                	webResource.path(Lens.METHOD_NAME)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<List<LensBean>>() {});
+                return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
 	}
 
-	public LensBean getLens(String id) throws BridgeDBException {
-  		LensBean result = webResource.path(Lens.METHOD_NAME + "/" + id)
-		.accept(MediaType.APPLICATION_XML_TYPE)
-		.get(new GenericType<LensBean>() {});
-		return result;
+    @Override
+	public Response getLens(String id) throws BridgeDBException {
+        try {
+            LensBean result = webResource.path(Lens.METHOD_NAME + "/" + id)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<LensBean>() {});
+            return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
 	}
         
     @Override
@@ -310,7 +319,7 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
     }
 
     @Override
-    public UriMappings mapUri(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns) throws BridgeDBException {
+    public Response mapUri(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         for (String uri:uris){
             if (uri != null){
@@ -335,16 +344,14 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
                     .queryParams(params)
                     .accept(MediaType.APPLICATION_XML_TYPE)
                     .get(new GenericType<UriMappings>() {});
-            return result;
-             //return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+             return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
         } catch (UniformInterfaceException ex){
-            return new UriMappings();
-            //return Response.noContent().build();
+            return Response.noContent().build();
         }
    }
 
     @Override
-    public LensesBean getLenses(String lensUri) throws BridgeDBException {
+    public Response getLenses(String lensUri) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         if (lensUri != null){
             params.add(WsUriConstants.LENS_URI, lensUri);        
@@ -356,11 +363,9 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
                     .queryParams(params)
                     .accept(MediaType.APPLICATION_XML_TYPE)
                     .get(new GenericType<LensesBean>() {});
-            return result;
-             //return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+             return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
         } catch (UniformInterfaceException ex){
-            return new LensesBean();
-            //return Response.noContent().build();
+            return Response.noContent().build();
         }
     }
 
