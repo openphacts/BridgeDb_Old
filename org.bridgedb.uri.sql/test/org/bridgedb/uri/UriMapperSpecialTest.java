@@ -129,12 +129,6 @@ public abstract class UriMapperSpecialTest extends UriListenerTest{
         assertEquals(map2xref2, result);
     }
 
-    @Test 
-    public void testGetXrefBad() throws BridgeDBException {
-        report("GetXrefBad");
-        Xref xref = uriMapper.toXref(mapBadUri1);
-    }
-    
     @Test
     public void testGetOverallStatistics() throws BridgeDBException {
         report("GetOverallStatistics()");
