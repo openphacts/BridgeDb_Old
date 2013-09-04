@@ -454,6 +454,7 @@ public class WSAPI extends WSFrame {
             sb.append("<li>List the Xrefs that map to these Xrefs</li>");
             sb.append("<li>Implements:  Map&ltXref, Set&ltXref&gt&gt mapID(Collection&ltXref&gt srcXrefs, DataSource... tgtDataSources)</li>");
             sb.append("<li>Implements:  Set&ltXref&gt mapID(Xref srcXrefs, DataSource... tgtDataSources)</li>");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Required arguements: (Only Source Xref considered)</li>");
                 sb.append("<ul>");
                 parameterID_CODE(sb);
@@ -475,6 +476,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>Implements:  boolean xrefExists(Xref xref)</li>");
             sb.append("<li>State if the Xref is know to the Mapping Service or not</li>");
+            appendXmlJson(sb);
             sb.append("<li>Required arguements: (Considers both Source and target Xrefs</li>");
                 sb.append("<ul>");
                 parameterID_CODE(sb);
@@ -510,6 +512,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>Searches for Xrefs that have this id.</li>");
             sb.append("<li>Implements:  Set&ltXref&gt freeSearch (String text, int limit)</li>");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Required arguements:</li>");
                 sb.append("<ul>");
                 parameterTextLimit(sb);
@@ -589,6 +592,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>Implements:  IDMapperCapabilities getCapabilities()</li>");
             sb.append("<li>Gives the Capabilitles as defined by BridgeDB.</li>");
+            appendXmlJson(sb); 
             sb.append("<li>Example: <a href=\"");
                     sb.append(contextPath);
                     sb.append(WsConstants.GET_CAPABILITIES);
@@ -621,6 +625,7 @@ public class WSAPI extends WSFrame {
             } else {
                 sb.append("<li>Returns False because underlying IDMappper does not support freeSearch or URISearch.</li>");                
             }
+            appendXmlJson(sb); 
             sb.append("<li>Example: <a href=\"");
                     sb.append(contextPath);
                     sb.append(WsConstants.IS_FREE_SEARCH_SUPPORTED);
@@ -639,6 +644,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>Implements:  Set&ltDataSource&gt  getSupportedSrcDataSources()</li>");
             sb.append("<li>Returns Supported Source (BridgeDB)DataSource(s).</li>");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Example: <a href=\"");
                     sb.append(contextPath);
                     sb.append(WsConstants.GET_SUPPORTED_SOURCE_DATA_SOURCES);
@@ -655,6 +661,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>Implements:  Set&ltDataSource&gt  getSupportedTgtDataSources()</li>");
             sb.append("<li>Returns Supported Target (BridgeDB)DataSource(s).</li>");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Example: <a href=\"");
                     sb.append(contextPath);
                     sb.append(WsConstants.GET_SUPPORTED_TARGET_DATA_SOURCES);
@@ -674,6 +681,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>States if two DataSources are mapped at least once.</li>");
             sb.append("<li>Implements:  boolean isMappingSupported(DataSource src, DataSource tgt)</li>");
+            appendXmlJson(sb); 
             sb.append("<li>Required arguements: (One of each)</li>");
                 sb.append("<ul>");
                 sb.append("<li><a href=\"#");
@@ -710,6 +718,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>Implements:  String getProperty(String key)</li>");
             sb.append("<li>Returns The property value for this key.</li>");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Required arguements:</li>");
                 sb.append("<ul>");
                 sb.append("<li>Place the actual key after the /</li> ");
@@ -740,6 +749,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>Implements:  Set<String> getKeys()</li>");
             sb.append("<li>Returns The keys and their property value.</li>");
+            appendXmlJsonHtml(sb); 
             if (keys.isEmpty()){
                 sb.append("<li>There are currently no properties supported</li>");
             } else {
@@ -780,12 +790,6 @@ public class WSAPI extends WSFrame {
         sb.append("<dd>Same data as ");
             refMapBySet(sb);
             sb.append(" but presented at RDF.</dd>");
-        sb.append("<dt>");
-                sb.append(WsUriConstants.MAP_URL);
-                sb.append("</a></dt>");
-        sb.append("<dd>DEPRICATED: Forwards call to ");
-        sb.append(WsUriConstants.MAP);
-        sb.append("</dd>");
         sb.append("<dt><a href=\"#");
                 sb.append(WsUriConstants.URI_EXISTS);
                 sb.append("\">");
@@ -858,6 +862,7 @@ public class WSAPI extends WSFrame {
                 sb.append("\">");
                 sb.append(WsUriConstants.TARGET_URI_PATTERN);
                 sb.append("</a>. If both are supplied an error is thrown.</li> ");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Required arguements:</li>");
                 sb.append("<ul>");
                 sb.append("<li>URI based</li>");
@@ -899,6 +904,7 @@ public class WSAPI extends WSFrame {
                 sb.append("\">");
                 sb.append(WsUriConstants.TARGET_URI_PATTERN);
                 sb.append("</a>. If both are supplied an error is thrown.</li> ");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Required arguements:</li>");
             sb.append("<ul>");
                 parameterUri(sb);
@@ -922,6 +928,7 @@ public class WSAPI extends WSFrame {
                 sb.append("</a></h3>");
         sb.append("<ul>");
             sb.append("<li>List the URIs that map to this/these URIs organised into Sets and Source Target pairs.</li>");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Arguements same as:");
                 refMapUri(sb);
             sb.append("</li>");
@@ -940,7 +947,9 @@ public class WSAPI extends WSFrame {
             sb.append("<li>Same data as ");
                 refMapBySet(sb);
                 sb.append(" but presented at RDF.</dd>");
-            sb.append("<li>Includes all arguements as:");
+            appendTextHtml(sb); 
+ 
+            sb.append("<li>Includes all the same arguements as :");
                 refMapUri(sb);
                 sb.append(" and ");
                 refMapBySet(sb);
@@ -963,6 +972,7 @@ public class WSAPI extends WSFrame {
                 sb.append("</h3>");
             sb.append("<ul>");
             sb.append("<li>State if the URI is know to the Mapping Service or not</li>");
+            appendXmlJson(sb); 
             sb.append("<li>Required arguements:</li>");
                 sb.append("<ul>");
                 parameterUri(sb);
@@ -991,6 +1001,7 @@ public class WSAPI extends WSFrame {
                 sb.append("</h3>");
             sb.append("<ul>");
             sb.append("<li>Searches for URIs that have this ending.</li>");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Required arguements:</li>");
                 sb.append("<ul>");
                 parameterTextLimit(sb);
@@ -1035,6 +1046,7 @@ public class WSAPI extends WSFrame {
                 sb.append("</h3>");
                 sb.append("<ul>");
             sb.append("<li>Brings up a table/List of mappings in the system by URISpaces</li>");
+            appendXmlJsonHtml(sb);
             sb.append("<li>Optional arguments</li>");
                 sb.append("<ul>");
                 sb.append("<li><a href=\"#");
@@ -1112,6 +1124,7 @@ public class WSAPI extends WSFrame {
                 sb.append("<li>Call graphviz (ex dot -Tgif imsMappings.dot -o imsMappings.gif)</li>");
                 sb.append("<li>Open output in your favourite viewer</li>");
                 sb.append("</ul>");
+            sb.append("<li>This method is only for media type HTML. But output is plain text.</li>");
             sb.append("<li>No arguements</li>");
             sb.append("<li>Example: <a href=\"");
                     sb.append(contextPath);
@@ -1130,7 +1143,8 @@ public class WSAPI extends WSFrame {
                 sb.append(WsUriConstants.DATA_SOURCE);
                 sb.append("/id</h3>");
             sb.append("<ul>");
-            sb.append("<li>Obtian a dataSource</li>");
+            sb.append("<li>Obtain a dataSource</li>");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Required arguements: </li>");
                 sb.append("<ul>");
                 sb.append("<li>Returns the DataSource and associated UriSpace(s) with a specific id.</li> ");
@@ -1439,6 +1453,45 @@ public class WSAPI extends WSFrame {
         sb.append("\">");
         sb.append("</a></li>");    
     }
+
+    private void appendTextHtml(StringBuilder sb) {
+        sb.append("<li>This method is available for media types TEXT.</li>");
+        if (noConentOnEmpty){
+            sb.append("<ul>");
+            sb.append("<li>Status 204 (no Content) is never returned.</li>");
+            sb.append("</ul>");
+        }
+        sb.append("<li>Request for media type HTML will return same text in a window.</li>");
+        if (noConentOnEmpty){
+            sb.append("<ul>");
+            sb.append("<li>Empty RDF is returned if no data available.</li>");
+            sb.append("</ul>");
+        }
+    }
  
+    private void appendXmlJson(StringBuilder sb) {
+        sb.append("<li>This method is available for media types XML and JSON.</li>");
+        if (noConentOnEmpty){
+            sb.append("<ul>");
+            sb.append("<li>Status 204 (no Content) is never returned.</li>");
+            sb.append("</ul>");
+        }
+        sb.append("<li>There is not media type HTML.</li>");
+    }
+
+    private void appendXmlJsonHtml(StringBuilder sb) {
+        sb.append("<li>This method is available for media types XML and JSON.</li>");
+        if (noConentOnEmpty){
+            sb.append("<ul>");
+            sb.append("<li>Status 204 (no Content) is return if no data available.</li>");
+            sb.append("</ul>");
+        }
+        sb.append("<li>Request for media type HTML will return XML Format.</li>");
+        if (noConentOnEmpty){
+            sb.append("<ul>");
+            sb.append("<li>An warning page is returned if no data available.</li>");
+            sb.append("</ul>");
+        }
+    }
 }
 

@@ -36,12 +36,10 @@ public class MappingSupportedBean {
     public MappingSupportedBean(){
     }
     
-    public static MappingSupportedBean asBean(DataSource sourceDataSource, DataSource targetDataSource, boolean supported){
-        MappingSupportedBean bean = new MappingSupportedBean();
-        bean.source = new DataSourceBean(sourceDataSource);
-        bean.target = new DataSourceBean(targetDataSource);
-        bean.isMappingSupported = supported;
-        return bean;
+    public MappingSupportedBean(DataSource sourceDataSource, DataSource targetDataSource, boolean supported){
+        source = new DataSourceBean(sourceDataSource);
+        target = new DataSourceBean(targetDataSource);
+        isMappingSupported = supported;
     }
     
     /**
