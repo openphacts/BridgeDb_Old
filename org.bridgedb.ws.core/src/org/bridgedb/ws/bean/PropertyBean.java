@@ -66,4 +66,11 @@ public class PropertyBean {
     public void setValue(String value) {
         this.value = value;
     }
+
+    public boolean isEmpty() {
+        if (value == null){
+            return true;
+        }
+        return value.isEmpty();
+    }
 }

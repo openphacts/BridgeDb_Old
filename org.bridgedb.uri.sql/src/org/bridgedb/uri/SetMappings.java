@@ -118,7 +118,7 @@ public class SetMappings {
         }
     }
 
-    private  static URI toURI(String text, String contextPath){
+    protected static URI toURI(String text, String contextPath){
         try {
             return new URIImpl(text);
         } catch (IllegalArgumentException ex){

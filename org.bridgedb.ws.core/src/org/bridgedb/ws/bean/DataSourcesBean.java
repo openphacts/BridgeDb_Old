@@ -22,64 +22,52 @@ package org.bridgedb.ws.bean;
 import java.util.HashSet;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import org.bridgedb.DataSource;
 
-/**
- *
- * @author Christian
- */
-@XmlRootElement(name="DataSourceUriPattern")
-public class DataSourceUriPatternBean {
-    private Set<String> UriPattern;
+@XmlRootElement(name="DataSources")
+public class DataSourcesBean {
 
-    private DataSourceBean DataSource;
+    private Set<DataSourceBean> DataSource;
     
-    /**
-     * Empty Constructor for WebServcices
-     */
-    public DataSourceUriPatternBean(){
-        UriPattern = new HashSet<String>();
+    //Webservice constructor
+    public DataSourcesBean(){
+        DataSource = new HashSet<DataSourceBean>();
     }
-    
-    public DataSourceUriPatternBean(DataSource dataSource, Set<String> patterns){
-        DataSource = new DataSourceBean(dataSource);
-        UriPattern = patterns;
+
+    public DataSourcesBean(Set<DataSource> dataSources) {
+        DataSource = new HashSet<DataSourceBean>();
+        for (DataSource ds:dataSources){
+            DataSource.add(new DataSourceBean(ds));
+        }
+    }
+
+    public Set<DataSource> getDataSources(){
+        HashSet<DataSource> results = new HashSet<DataSource>();
+        for (DataSourceBean bean:DataSource){
+            results.add(DataSourceBean.asDataSource(bean));
+        }
+        return results;
     }
     
     /**
      * @return the DataSource
      */
-    public DataSourceBean getDataSource() {
+    public Set<DataSourceBean> getDataSource() {
         return DataSource;
     }
 
     /**
      * @param DataSource the DataSource to set
      */
-    public void setDataSource(DataSourceBean DataSource) {
+    public void setDataSource(Set<DataSourceBean> DataSource) {
         this.DataSource = DataSource;
     }
 
-    @Override
-    public String toString(){
-        return UriPattern + "->" + DataSource;
-    }
-
-    /**
-     * @return the UriPattern
-     */
-    public Set<String> getUriPattern() {
-        return UriPattern;
-    }
-
-    /**
-     * @param UriPattern the UriPattern to set
-     */
-    public void setUriPattern(Set<String> UriPattern) {
-        this.UriPattern = UriPattern;
-    }
-
     public boolean isEmpty() {
-        return UriPattern.isEmpty();
+        return DataSource.isEmpty();
     }
+
+    
+
 }

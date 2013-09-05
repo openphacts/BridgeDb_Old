@@ -19,69 +19,50 @@
 //
 package org.bridgedb.ws.bean;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.bridgedb.uri.Lens;
 
-@XmlRootElement(name="UriSearch")
-public class UriSearchBean {
-    private List<String> Uri;
+/**
+ *
+ * @author Alasdair
+ */
+@XmlRootElement(name="Lenses")
+public class LensesBean {
 
-    private String term;
-
-    public UriSearchBean(){
-    }
+    private Set<LensBean> lenses;
     
-    public UriSearchBean(String term, Set<String> Uris){
-        if (Uris == null || Uris.isEmpty()){
-            Uri = new ArrayList<String>();
-        } else {
-            Uri = new ArrayList(Uris);
+    //Webservice constructor
+    public LensesBean(){
+        lenses = new HashSet<LensBean>();
+    }
+
+    public LensesBean(List<Lens> lenses, String contextPath) {
+        this();
+        for (Lens lens:lenses){
+            this.lenses.add(new LensBean(lens, contextPath));
         }
-        this.term = term;
     }
 
     /**
-     * @return the Uri
+     * @return the lenses
      */
-    public List<String> getUri() {
-        return Uri;
+    public Set<LensBean> getLenses() {
+        return lenses;
     }
 
     /**
-     * @param Uri the Uri to set
+     * @param lenses the lenses to set
      */
-    public void setUri(List<String> Uri) {
-        this.Uri = Uri;
-    }
-
-    /**
-     * @return the term
-     */
-    public String getTerm() {
-        return term;
-    }
-
-    /**
-     * @param term the term to set
-     */
-    public void setTerm(String term) {
-        this.term = term;
-    }
-
-    public Set<String> getUriSet() {
-        if (Uri == null || Uri.isEmpty()){
-            return new HashSet<String>();
-        } else {
-            return new HashSet(Uri);
-        }
+    public void setLenses(Set<LensBean> lenses) {
+        this.lenses = lenses;
     }
 
     public boolean isEmpty() {
-        return Uri.isEmpty();
+        return lenses.isEmpty();
     }
- 
-    
+
+  
 }

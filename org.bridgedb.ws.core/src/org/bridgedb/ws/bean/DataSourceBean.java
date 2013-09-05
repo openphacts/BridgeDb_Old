@@ -42,32 +42,27 @@ public class DataSourceBean {
     public DataSourceBean(){
     }
 
-    public static DataSourceBean asBean(DataSource dataSource){
-        if (dataSource == null){
-            return null;
-        }
-        DataSourceBean bean = new DataSourceBean();
-        bean.sysCode = dataSource.getSystemCode();
-        bean.fullName = dataSource.getFullName();
+    public DataSourceBean (DataSource dataSource){
+        sysCode = dataSource.getSystemCode();
+        fullName = dataSource.getFullName();
         String urlPattern = dataSource.getUrl("$id");
         if (urlPattern.length() > 3 ){
-            bean.urlPattern = urlPattern;
+            urlPattern = urlPattern;
         } else {
-            bean.urlPattern = null;
+            urlPattern = null;
         }
-        bean.idExample = dataSource.getExample().getId();
-        bean.isPrimary = dataSource.isPrimary();
-        bean.type = dataSource.getType();
+        idExample = dataSource.getExample().getId();
+        isPrimary = dataSource.isPrimary();
+        type = dataSource.getType();
         //Object organism = dataSource.getOrganism();
         //if (organism instanceof Organism)
         String emptyUrn = dataSource.getURN("");
         if (emptyUrn.length() > 1){
-            bean.urnBase = emptyUrn.substring(0, emptyUrn.length()-1);    
+            urnBase = emptyUrn.substring(0, emptyUrn.length()-1);    
         } else {
-            bean.urnBase = null;
+            urnBase = null;
         }
-        bean.mainUrl = dataSource.getMainUrl(); 
-        return bean;
+        mainUrl = dataSource.getMainUrl(); 
     }
     
     public static DataSourceBean asBean(String sysCode){

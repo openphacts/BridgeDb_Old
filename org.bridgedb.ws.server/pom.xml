@@ -79,6 +79,12 @@
 			<artifactId>org.bridgedb.ws.core</artifactId>
 			<version>${project.version}</version>
  		</dependency>
+		<dependency>
+			<groupId>org.bridgedb</groupId>
+			<artifactId>org.bridgedb.sql</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxrs</artifactId>
@@ -94,6 +100,12 @@
             <artifactId>jersey-client</artifactId>
             <version>${jersey.version}</version>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${servlet.version}</version>
+            <scope>provided</scope>
         </dependency>
 		<dependency>
 			<groupId>org.bridgedb</groupId>

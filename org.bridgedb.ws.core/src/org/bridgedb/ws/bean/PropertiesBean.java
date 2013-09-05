@@ -19,52 +19,52 @@
 //
 package org.bridgedb.ws.bean;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.bridgedb.Xref;
 
-@XmlRootElement(name="XrefMapping")
-public class XrefMapBean {
-    XrefBean source;
-    XrefBean target;
+/**
+ *
+ * @author Christian
+ */
+@XmlRootElement(name="Properties")
+public class PropertiesBean {
+
+    private Set<PropertyBean> Property;
     
-    public XrefMapBean(){}
-
-    public static XrefMapBean asBean(Xref source, Xref target) {
-        XrefMapBean bean = new XrefMapBean();
-        bean.source = new XrefBean(source);
-        bean.target = new XrefBean(target);
-        return bean;
-    }
- 
-    /**
-     * @return the source
-     */
-    public XrefBean getSource() {
-        return source;
+    public PropertiesBean(){
+         Property = new HashSet<PropertyBean>();
     }
 
     /**
-     * @param source the source to set
+     * @return the Property
      */
-    public void setSource(XrefBean source) {
-        this.source = source;
+    public Set<PropertyBean> getProperty() {
+        return Property;
     }
 
     /**
-     * @return the target
+     * @param Property the Property to set
      */
-    public XrefBean getTarget() {
-        return target;
+    public void setProperty(Set<PropertyBean> Property) {
+        this.Property = Property;
     }
 
-    /**
-     * @param target the target to set
-     */
-    public void setTarget(XrefBean target) {
-        this.target = target;
+    public Set<String> getKeys() {
+        HashSet<String> results = new HashSet<String>();
+        for (PropertyBean bean:Property){
+            results.add(bean.getKey());
+        }
+        return results;
     }
 
-    public String toString(){
-        return source + " -> " + target;
+    public void addProperty(String key, String property) {
+        PropertyBean bean = new PropertyBean(key, property);
+        Property.add(bean);
     }
+
+    public boolean isEmpty() {
+        return Property.isEmpty();
+    }
+
 }

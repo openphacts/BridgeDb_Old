@@ -37,10 +37,10 @@ public class DataSourceMapBean {
 
     public static DataSourceMapBean asBean(DataSource source, Set<DataSource> tgtDataSource){
         DataSourceMapBean bean = new DataSourceMapBean();
-        bean.source = DataSourceBean.asBean(source);
+        bean.source = new DataSourceBean(source);
         bean.target = new ArrayList<DataSourceBean>();
         for (DataSource tgt:tgtDataSource){
-           bean.target.add(DataSourceBean.asBean(tgt));
+           bean.target.add(new DataSourceBean(tgt));
         }
         return bean;
     }

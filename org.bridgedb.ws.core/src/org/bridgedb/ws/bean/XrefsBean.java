@@ -20,58 +20,57 @@
 package org.bridgedb.ws.bean;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.bridgedb.uri.Mapping;
+import org.apache.log4j.Logger;
+import org.bridgedb.DataSource;
+import org.bridgedb.Xref;
 
-/**
- * Contains the information held for a particular mapping.
- * <p>
- * @See getMethods for what is returned.
- * <p>
- * A few things that are not returned and why included:
- * <ul>
- * <li>UriSpace: 
- * @author Christian
- */
-@XmlRootElement(name="Mapping")
-public class UriMappings {
- 
-    private Set<String> targetUri;
+@XmlRootElement(name="Xrefs")
+public class XrefsBean {
+
+    static final Logger logger = Logger.getLogger(XrefsBean.class);
     
-    /**
-     * Default constructor for webService
-     */
-    public UriMappings(){
-        targetUri = new HashSet<String>();
-    }
+    private Set<XrefBean> Xref;
     
-    public static UriMappings asBean(Set<String> targets){
-        UriMappings bean = new UriMappings();
-        bean.setTargetUri(targets);
-        return bean;
+    public XrefsBean(){
+        Xref = new HashSet<XrefBean>();
+    }
+
+    public XrefsBean(Set<Xref> xrefs){
+        Xref = new HashSet<XrefBean>();
+        for (Xref xref:xrefs){
+            logger.info(xref);
+            if (xref != null){
+                Xref.add(new XrefBean(xref));
+            }
+        }
+    }
+
+    public Set<Xref> asXrefs() {
+        HashSet<Xref> results = new HashSet<Xref>();
+        for (XrefBean bean:getXref()){
+            results.add(bean.asXref());
+        }
+        return results;
     }
 
     /**
-     * @return the targetUri
+     * @return the Xref
      */
-    public Set<String> getTargetUri() {
-        return targetUri;
+    public Set<XrefBean> getXref() {
+        return Xref;
     }
 
     /**
-     * @param targetUri the targetUri to set
+     * @param Xref the Xref to set
      */
-    public void setTargetUri(Set<String> targetUri) {
-        this.targetUri = targetUri;
-    }
- 
-    public String toString(){
-        return targetUri.toString();
+    public void setXref(Set<XrefBean> Xref) {
+        this.Xref = Xref;
     }
 
     public boolean isEmpty() {
-        return targetUri.isEmpty();
+        return Xref.isEmpty();
     }
- }
+        
+}

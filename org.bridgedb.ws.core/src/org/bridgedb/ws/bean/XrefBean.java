@@ -33,36 +33,23 @@ public class XrefBean {
         dataSource = null;
     }
         
+    public XrefBean (Xref xref){
+        id = xref.getId();
+        dataSource = new DataSourceBean(xref.getDataSource());
+    }
+
+    public XrefBean (String id, String scrCode){
+        this.id = id;
+        this.dataSource = DataSourceBean.asBean(scrCode);
+    }
+
     public String getId() {
         return id;
     }
   
-    public static XrefBean asBean(Xref xref){
-        if (xref == null){
-            return null;
-        }
-        XrefBean bean = new XrefBean();
-        bean.id = xref.getId();
-        bean.dataSource = DataSourceBean.asBean(xref.getDataSource());
-        return bean;
-    }
-
-     public static XrefBean asBean(String id, String scrCode){
-        XrefBean bean = new XrefBean();
-        bean.id = id;
-        bean.dataSource = DataSourceBean.asBean(scrCode);
-        return bean;
-    }
-
-    public static Xref asXref(XrefBean bean){
-        if (bean == null){
-            return null;
-        }
-        DataSource ds = DataSourceBean.asDataSource(bean.dataSource);
-        if (ds == null && bean.id == null){
-            return null;
-        }
-        return new Xref(bean.id, ds);
+    public Xref asXref(){
+        DataSource ds = DataSourceBean.asDataSource(dataSource);
+        return new Xref(id, ds);
     }
     
     public void setId(String id) {
@@ -79,5 +66,9 @@ public class XrefBean {
 
     public String toString(){
         return id + ":" + dataSource;
+    }
+
+    public boolean isEmpty() {
+        return id == null || id.isEmpty();
     }
 }

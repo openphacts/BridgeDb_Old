@@ -33,7 +33,7 @@ import org.bridgedb.uri.Mapping;
  * <li>UriSpace: 
  * @author Christian
  */
-@XmlRootElement(name="Mapping")
+@XmlRootElement(name="mapping")
 public class MappingBean {
  
     private XrefBean source;
@@ -54,17 +54,17 @@ public class MappingBean {
     public static MappingBean asBean(Mapping mapping){
         MappingBean bean = new MappingBean();
         bean.setSourceUri(mapping.getSourceUri());
-        bean.setSource(XrefBean.asBean(mapping.getSource()));
+        bean.setSource(new XrefBean(mapping.getSource()));
         bean.setTargetUri(mapping.getTargetUri());
-        bean.setTarget(XrefBean.asBean(mapping.getTarget()));
+        bean.setTarget(new XrefBean(mapping.getTarget()));
         bean.setMappingSetId(mapping.getMappingSetId());
         bean.setPredicate(mapping.getPredicate());
         return bean;
     }
 
     public static Mapping asMapping (MappingBean bean){
-        Mapping result = new Mapping (XrefBean.asXref(bean.getSource()), bean.getPredicate(),
-                XrefBean.asXref(bean.getTarget()), bean.getMappingSetId());
+        Mapping result = new Mapping (bean.getSource().asXref(), bean.getPredicate(),
+                bean.getTarget().asXref(), bean.getMappingSetId());
         result.setSourceUri(bean.getSourceUri());
         result.setTargetUri(bean.getTargetUri());
         return result;

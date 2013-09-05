@@ -42,23 +42,20 @@ public class LensBean {
     public LensBean(){
     }
 
-    public static Lens asLens(LensBean bean){
-        String id = bean.getUri().substring(bean.getUri().indexOf("/"));
-        return new Lens(id, bean.getName(), bean.getCreatedOn(), bean.getCreatedBy(), 
-                bean.getDescription(), bean.getJustification());
-    }
-
-    public static LensBean asBean(Lens lens, String contextPath) {
-        LensBean bean = new LensBean();
-    	bean.uri = lens.toUri(contextPath);
-        bean.name = lens.getName();
-        bean.createdBy = lens.getCreatedBy();
-        bean.createdOn = lens.getCreatedOn();
-        bean.description = lens.getDescription();
-        bean.justification = new HashSet<String>(lens.getJustifications());
-        return bean;
+    public LensBean(Lens lens, String contextPath) {
+    	uri = lens.toUri(contextPath);
+        name = lens.getName();
+        createdBy = lens.getCreatedBy();
+        createdOn = lens.getCreatedOn();
+        description = lens.getDescription();
+        justification = new HashSet<String>(lens.getJustifications());
     }
     
+    public Lens asLens(){
+        String id = getUri().substring(getUri().indexOf("/"));
+        return new Lens(id, getName(), getCreatedOn(), getCreatedBy(), getDescription(), getJustification());
+    }
+
     public String toString(){
            return  "Lens URI: " + this.getUri() + 
         		   " Name: " + this.getName() +
@@ -149,6 +146,10 @@ public class LensBean {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isEmpty() {
+        return name == null || name.isEmpty();
     }
     
 }

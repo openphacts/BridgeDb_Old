@@ -27,10 +27,14 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.bridgedb.rdf.RdfBase;
 import org.bridgedb.rdf.constants.DulConstants;
+import org.bridgedb.rdf.constants.OWLConstants;
 import org.bridgedb.rdf.constants.VoidConstants;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.Reporter;
 import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+import org.openrdf.model.impl.ContextStatementImpl;
+import org.openrdf.model.impl.StatementImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
@@ -170,6 +174,15 @@ public class MappingsBySet {
             Set<Statement> more = setMapping.asRDF(lens, contextPath);
             statements.addAll(more);          
         }
+        for (UriMapping mapping:mappings){
+            if (!mapping.getSourceUri().equals(mapping.getTargetUri())){
+                URI sourceURI = SetMappings.toURI(mapping.getSourceUri(), contextPath);
+                URI targetURI = SetMappings.toURI(mapping.getTargetUri(), contextPath);
+                Statement statement =  new StatementImpl(sourceURI, OWLConstants.SAMEAS_URI, targetURI);
+                statements.add(statement);
+            }
+        }
+
        return statements;
     }
     
@@ -252,4 +265,7 @@ public class MappingsBySet {
         Reporter.println(getAvaiableWriters().toString());
     }
 
+    public boolean isEmpty(){
+        return mappings.isEmpty() && setMappings.isEmpty();
+    }
 }

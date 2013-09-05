@@ -24,6 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,6 +39,7 @@ import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
+import org.bridgedb.uri.GraphResolver;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.Mapping;
@@ -221,7 +223,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     private void checkDataSources(String columnName) throws BridgeDBException{
         Set<String> toCheckNames = getPatternDataSources(columnName);
         for (String toCheckName:toCheckNames){
-            UriPattern pattern = UriPattern.existingByPattern(toCheckName);
+            UriPattern pattern = UriPattern.possibleExistingByPattern(toCheckName);
             if (pattern != null){
                 DataSource ds = pattern.getDataSource();
                 String code;
@@ -351,13 +353,14 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     @Override
-    public synchronized Set<String> mapUri (Xref sourceXref, String lensUri, UriPattern... tgtUriPatterns) 
+    public synchronized Set<String> mapUri (Xref sourceXref, String lensUri, String graph, UriPattern... tgtUriPatterns) 
             throws BridgeDBException {
-        if (tgtUriPatterns == null || tgtUriPatterns.length == 0){
+        Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
+        if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
             return mapUri (sourceXref, lensUri);
         }
         Set<String> results = new HashSet<String>();
-        for (UriPattern tgtUriPattern:tgtUriPatterns){
+        for (UriPattern tgtUriPattern:targetUriPatterns){
             results.addAll(mapUri (sourceXref, lensUri, tgtUriPattern));
         }
         return results;
@@ -391,14 +394,15 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     @Override
-    public synchronized Set<String> mapUri (String sourceUri, String lensUri, UriPattern... tgtUriPatterns) 
+    public synchronized Set<String> mapUri (String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) 
             throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
-        if (tgtUriPatterns == null || tgtUriPatterns.length == 0){
+        Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
+        if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
             return mapUri (sourceUri, lensUri);
         }
         Set<String> results = new HashSet<String>();
-        for (UriPattern tgtUriPattern:tgtUriPatterns){
+        for (UriPattern tgtUriPattern:targetUriPatterns){
             results.addAll(mapUri (sourceUri, lensUri, tgtUriPattern));
         }
         return results;
@@ -435,17 +439,20 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return results;
     }
     
-    public synchronized MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern... tgtUriPatterns) throws BridgeDBException {
-        if (tgtUriPatterns == null || tgtUriPatterns.length == 0){
-            return mapBySet (sourceUri, lensUri);
+    @Override
+    public synchronized MappingsBySet mapBySet(String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException {
+        Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
+        if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
+           return mapBySet (sourceUri, lensUri);
         }
         MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
-        for (UriPattern tgtUriPattern:tgtUriPatterns){
+        for (UriPattern tgtUriPattern:targetUriPatterns){
             mapBySet(sourceUri, mappingsBySet, lensUri, tgtUriPattern);
         }
         return mappingsBySet;
         
     }
+
     @Override
     public synchronized MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
         MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
@@ -467,14 +474,15 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized MappingsBySet mapBySet(Set<String> sourceUris, String lensUri, UriPattern... tgtUriPatterns) 
+    public synchronized MappingsBySet mapBySet(Set<String> sourceUris, String lensUri, String graph, UriPattern... tgtUriPatterns) 
            throws BridgeDBException{
+        Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
         MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
         for (String sourceUri:sourceUris) {
-            if (tgtUriPatterns == null || tgtUriPatterns.length == 0){
+            if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
                 mapBySet(sourceUri, mappingsBySet, lensUri);
             } else {
-                for (UriPattern tgtUriPattern:tgtUriPatterns) {
+                for (UriPattern tgtUriPattern:targetUriPatterns) {
                     mapBySet(sourceUri, mappingsBySet, lensUri, tgtUriPattern);
                 }
             }
@@ -615,13 +623,14 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized Set<Mapping> mapFull (Xref sourceXref, String lensUri, UriPattern... tgtUriPatterns) 
+    public synchronized Set<Mapping> mapFull (Xref sourceXref, String lensUri, String graph, UriPattern... tgtUriPatterns) 
             throws BridgeDBException{
-        if (tgtUriPatterns == null || tgtUriPatterns.length == 0){
+        Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
+        if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
             return mapFull (sourceXref, lensUri);
         } else {
             Set<Mapping> results = new HashSet<Mapping>();
-            for (UriPattern tgtUriPattern: tgtUriPatterns){
+            for (UriPattern tgtUriPattern: targetUriPatterns){
                 results.addAll(mapFull(sourceXref, lensUri, tgtUriPattern));
             }
             return results;
@@ -629,10 +638,10 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized Set<Mapping> mapFull(String sourceUri, String lensUri, UriPattern... tgtUriPatterns) throws BridgeDBException {
+    public synchronized Set<Mapping> mapFull(String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         Xref sourceXref = toXref(sourceUri);
-        Set<Mapping> results = mapFull(sourceXref,  lensUri, tgtUriPatterns);
+        Set<Mapping> results = mapFull(sourceXref,  lensUri, graph, tgtUriPatterns);
         for (Mapping result:results){
             result.addSourceUri(sourceUri);
         }
@@ -1856,7 +1865,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             throw new BridgeDBException("Unable to run update. " + update, ex);
         }    
     }
-       /**
+    
+    /**
      * Updates the count variable for each Mapping Sets.
      * <p>
      * This allows the counts of the mappings in each Mapping Set to be quickly returned.
@@ -2072,5 +2082,14 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         }
     }
 
+    private Set<UriPattern> mergeGraphAndTargets(String graph, UriPattern[] tgtUriPatterns) throws BridgeDBException {
+        if (tgtUriPatterns == null || tgtUriPatterns.length == 0){
+            return GraphResolver.getUriPatternsForGraph(graph);
+        }
+        if (graph == null || graph.trim().isEmpty()){            
+            return new HashSet<UriPattern>(Arrays.asList(tgtUriPatterns));
+        }
+        throw new BridgeDBException ("Illegal call with both graph and tgtUriPatterns parameters");
+    }
 }
  

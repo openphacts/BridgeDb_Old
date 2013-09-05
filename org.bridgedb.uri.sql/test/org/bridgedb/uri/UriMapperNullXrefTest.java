@@ -17,6 +17,8 @@ import org.junit.Test;
  */
 public abstract class UriMapperNullXrefTest extends UriListenerTest{
 
+    private static  final String NULL_GRAPH = null;
+
     /**
      * Test of mapID method, of class UriMapper.
      */
@@ -63,7 +65,7 @@ public abstract class UriMapperNullXrefTest extends UriListenerTest{
         String sourceUri = null;
         String lensId = Lens.getDefaultLens();
         UriPattern[] tgtUriPatterns = null;
-        Set results = uriMapper.mapUri(sourceUri, lensId, uriPattern2, uriPattern3);
+        Set results = uriMapper.mapUri(sourceUri, lensId, NULL_GRAPH, uriPattern2, uriPattern3);
         assertTrue(results.isEmpty());
     }
 
@@ -101,7 +103,7 @@ public abstract class UriMapperNullXrefTest extends UriListenerTest{
         Xref sourceXref = null;
         String lensId = Lens.getDefaultLens();
         UriPattern[] tgtUriPatterns = null;
-        Set results = uriMapper.mapUri(sourceXref, lensId, uriPattern2, uriPattern3);
+        Set results = uriMapper.mapUri(sourceXref, lensId, NULL_GRAPH, uriPattern2, uriPattern3);
         assertTrue(results.isEmpty());
     }
 
@@ -177,7 +179,7 @@ public abstract class UriMapperNullXrefTest extends UriListenerTest{
         Xref sourceXref = null;
         String lensId = Lens.getDefaultLens();
         UriPattern[] tgtUriPatterns = null;
-        Set<Mapping> results = uriMapper.mapFull(sourceXref, lensId, uriPattern2, uriPattern3);
+        Set<Mapping> results = uriMapper.mapFull(sourceXref, lensId, NULL_GRAPH, uriPattern2, uriPattern3);
         assertTrue(results.isEmpty());
     }
 
@@ -260,7 +262,7 @@ public abstract class UriMapperNullXrefTest extends UriListenerTest{
         Xref sourceXref = null;
         String lensId = Lens.getDefaultLens();
         UriPattern[] tgtUriPatterns = null;
-        Set<Mapping> results = uriMapper.mapFull(sourceUri, lensId, uriPattern2, uriPattern3);
+        Set<Mapping> results = uriMapper.mapFull(sourceUri, lensId, NULL_GRAPH, uriPattern2, uriPattern3);
         assertTrue(results.isEmpty());
     }
 

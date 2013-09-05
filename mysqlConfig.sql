@@ -8,5 +8,4 @@ GRANT CREATE, DROP, DELETE, INDEX, SELECT, INSERT, UPDATE on imstest.* TO 'imste
 -- Default IMS database
 CREATE USER 'ims'@'localhost' identified by 'ims';
 CREATE DATABASE ims;
-GRANT CREATE, DROP, DELETE, INDEX, SELECT, INSERT, UPDATE on ims.* TO 'ims'@'localhost';
-
+GRANT CREATE, DROP, DELETE, INDEX, SELECT, INSERT, UPDATE, ALTER on ims.* TO 'ims'@'localhost';

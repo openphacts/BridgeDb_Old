@@ -20,15 +20,8 @@
 package org.bridgedb.ws;
 
 import java.util.List;
+import javax.ws.rs.core.Response;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.ws.bean.CapabilitiesBean;
-import org.bridgedb.ws.bean.DataSourceBean;
-import org.bridgedb.ws.bean.FreeSearchSupportedBean;
-import org.bridgedb.ws.bean.MappingSupportedBean;
-import org.bridgedb.ws.bean.PropertyBean;
-import org.bridgedb.ws.bean.XrefBean;
-import org.bridgedb.ws.bean.XrefExistsBean;
-import org.bridgedb.ws.bean.XrefMapBean;
 
 /**
  *
@@ -36,38 +29,71 @@ import org.bridgedb.ws.bean.XrefMapBean;
  */
 public interface WSCoreInterface {
 
-    List<XrefMapBean> mapID(List<String> id, List<String> scrCode, List<String> targetCodes) throws BridgeDBException;
+    /**
+     * @param id
+     * @param scrCode
+     * @param targetCodes Optional
+     * @return An XrefMapsBean wrapped in a Response
+     * @throws BridgeDBException
+     */
+    Response mapID(List<String> id, List<String> scrCode, List<String> targetCodes) throws BridgeDBException;
 
-    XrefExistsBean xrefExists(String id, String scrCode) throws BridgeDBException;
+    /**
+     * @param id
+     * @param scrCode
+     * @return A XrefExistsBean wrapped in a response
+     * @throws BridgeDBException
+     */
+    Response xrefExists(String id, String scrCode) throws BridgeDBException;
 
-    List<XrefBean> freeSearch(String text, String limit) throws BridgeDBException;
+    /**
+     * @param text
+     * @param limit Optional
+     * @return A XrefsBean wrapped in a Response
+     * @throws BridgeDBException
+     */
+    Response freeSearch(String text, String limit) throws BridgeDBException;
 
-    CapabilitiesBean getCapabilities();
+    /**
+     * @return A CapabilitiesBean wrapped in a Response
+     */
+    Response getCapabilities();
 
-    FreeSearchSupportedBean isFreeSearchSupported();
+    /**
+     * @return A FreeSearchSupportedBean wrapped in a Response
+     */
+    Response isFreeSearchSupported();
 
-    List<DataSourceBean> getSupportedSrcDataSources() throws BridgeDBException;
+    /**
+     * @return A DataSourcesBean wrapped in a Response
+     * @throws BridgeDBException
+     */
+    Response getSupportedSrcDataSources() throws BridgeDBException;
 
-    List<DataSourceBean> getSupportedTgtDataSources() throws BridgeDBException;
+    /**
+     * @return A DataSourcesBean wrapped in a Response
+     * @throws BridgeDBException
+     */
+    Response getSupportedTgtDataSources() throws BridgeDBException;
 
-    MappingSupportedBean isMappingSupported( String sourceCode, String targetCode) throws BridgeDBException;
+    /**
+     * @param sourceCode
+     * @param targetCode
+     * @return A MappingSupportedBean wrapped in a Response
+     * @throws BridgeDBException
+     */
+    Response isMappingSupported( String sourceCode, String targetCode) throws BridgeDBException;
 
-    PropertyBean getProperty(String key);
+    /**
+     * @param key
+     * @return A PropertyBean wrapped in a Response
+     */
+    Response getProperty(String key);
 
-    List<PropertyBean> getKeys();
+    /**
+     * A Response wrapper for a 
+     * @return A PropertiesBean wrapped in a Response
+     */
+    Response getKeys();
    
-    /*DataSourceBean getDataSoucre(String code) throws BridgeDBException;
-
-
-
-    CapabilitiesBean getCapabilities();
-
-    public List<URLMappingBean> mapByURLs(List<String> sourceURL, List<String> linkSetId, List<String> targetNameSpace) 
-            throws BridgeDBException;
-
-    public URLExistsBean urlExists(String URL) throws BridgeDBException;
-
-    public URLSearchBean URLSearch(String text, Integer limit) throws BridgeDBException;
-*/
-
 }

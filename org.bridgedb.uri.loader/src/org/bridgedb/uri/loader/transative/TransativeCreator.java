@@ -164,7 +164,7 @@ public class TransativeCreator {
             throw new BridgeDBException("No URI pattern known for " + info.getSysCode());
         }
         String pattern = patterns.iterator().next();
-        return UriPattern.byPattern(pattern);
+        return UriPattern.existingOrCreateByPattern(pattern);
     }
 
     private void checkTransativeLegal(MappingSetInfo left, MappingSetInfo right) throws BridgeDBException {

@@ -19,6 +19,7 @@
 //
 package org.bridgedb.ws.bean;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,43 +36,50 @@ import org.bridgedb.uri.Mapping;
  * <li>UriSpace: 
  * @author Christian
  */
-@XmlRootElement(name="Mapping")
-public class UriMappings {
- 
-    private Set<String> targetUri;
+@XmlRootElement(name="mappings")
+public class MappingsBean {
+    
+    private Set<MappingBean> Mapping;
     
     /**
      * Default constructor for webService
      */
-    public UriMappings(){
-        targetUri = new HashSet<String>();
+    public MappingsBean(){
+        Mapping = new HashSet<MappingBean>();
     }
     
-    public static UriMappings asBean(Set<String> targets){
-        UriMappings bean = new UriMappings();
-        bean.setTargetUri(targets);
-        return bean;
+    public MappingsBean (Set<Mapping> mappings){
+        Mapping = new HashSet<MappingBean>();
+        for (Mapping aMapping:mappings){
+            Mapping.add(MappingBean.asBean(aMapping));;
+        }
+     }
+
+    public Set<Mapping> asMappings (){
+        HashSet<Mapping> result = new HashSet<Mapping>();
+        for (MappingBean bean:Mapping){
+            result.add(MappingBean.asMapping(bean));
+        }
+        return result;
+    }
+
+    public List<MappingBean> asMappingBeanList (){
+        return new ArrayList<MappingBean> (Mapping);
+    }
+
+   /**
+     * @return the mapping
+     */
+    public Set<MappingBean> getMapping() {
+        return Mapping;
     }
 
     /**
-     * @return the targetUri
+     * @param mapping the mapping to set
      */
-    public Set<String> getTargetUri() {
-        return targetUri;
+    public void setMapping(Set<MappingBean> mapping) {
+        this.Mapping = mapping;
     }
-
-    /**
-     * @param targetUri the targetUri to set
-     */
-    public void setTargetUri(Set<String> targetUri) {
-        this.targetUri = targetUri;
-    }
- 
-    public String toString(){
-        return targetUri.toString();
-    }
-
-    public boolean isEmpty() {
-        return targetUri.isEmpty();
-    }
+    
+  
  }

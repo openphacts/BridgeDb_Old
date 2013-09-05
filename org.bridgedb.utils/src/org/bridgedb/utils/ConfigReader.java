@@ -352,7 +352,12 @@ public class ConfigReader {
         }
         return false;
     }
-        
+    
+    public static String getProperty(String propertyName) throws BridgeDBException {
+        Properties properties = getProperties();
+        return properties.getProperty(propertyName);
+    }
+
     public static void useTest() {
         useTest = true;
     } 
@@ -360,6 +365,5 @@ public class ConfigReader {
     public static boolean inTestMode() {
         return useTest;
     }
-
-
+    
 }

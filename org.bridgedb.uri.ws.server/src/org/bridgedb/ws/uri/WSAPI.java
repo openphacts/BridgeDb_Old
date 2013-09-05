@@ -33,6 +33,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.bridgedb.Xref;
+import org.bridgedb.rdf.UriPattern;
+import org.bridgedb.uri.GraphResolver;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.MappingsBySet;
@@ -57,7 +59,10 @@ public class WSAPI extends WSFrame {
     private final static String LIMIT5_PARAMETER = "&" + WsConstants.LIMIT + "=5";
     private final static String FIRST_URI_PARAMETER = "?" + WsUriConstants.URI + "=";
     private final static String TARGET_DATASOURCE_SYSTEM_CODE_PARAMETER = "&" + WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE + "=";
-    private final static String TARGET_URI_PATTERN_PARAMETER = "&" + WsUriConstants.TARGET_URI_PATTERN + "=";
+    private final static String GRAPH_PARAMETER = "&" + WsUriConstants.GRAPH + "=";
+    private final static String TARGET_URI_PATTERN_PARAMETERX = "&" + WsUriConstants.TARGET_URI_PATTERN + "=";
+    private final static String EXAMPLE_GRAPH = "ApiExampleGraph"; 
+
     
     private HashMap<String,String> apiStrings = new HashMap<String,String>();
     
@@ -151,9 +156,16 @@ public class WSAPI extends WSFrame {
         Mapping mapping2 = mappings.get(2);
         Xref sourceXref2 =  mapping2.getSource();
         String sourceUri2 = mapping2.getSourceUri().iterator().next();
-        String targetUri2 = mapping2.getTargetUri().iterator().next();    
+        String targetUri2 = mapping2.getTargetUri().iterator().next(); 
         Xref targetXref2 = mapping2.getTarget();
-        String targetUriSpace2 = targetUri2.substring(0, targetUri2.length()- targetXref2.getId().length());
+        String targetUriSpace2;
+        if (uriListener != null){
+            UriPattern pattern = uriListener.toUriPattern(targetUri2);
+            targetUriSpace2 = pattern.toString();
+        } else {
+            targetUriSpace2 = targetUri2.substring(0, targetUri2.length()- targetXref2.getId().length());
+        }
+        GraphResolver.addMapping(EXAMPLE_GRAPH, targetUriSpace2);
         boolean freeSearchSupported = idMapper.getCapabilities().isFreeSearchSupported(); 
         Set<String> keys = idMapper.getCapabilities().getKeys();
 
@@ -310,13 +322,29 @@ public class WSAPI extends WSFrame {
             sb.append("<li>It it not recommended to use this parameter except for testing until farther notice.</li>");
             sb.append("</ul>\n");        
         sb.append("<dt><a name=\"");
+                sb.append(WsUriConstants.GRAPH);
+                sb.append("\">");
+                sb.append(WsUriConstants.GRAPH);
+                sb.append("</a></dt>");
+            sb.append("<ul>");
+            sb.append("<li>Limits the results to ones required for this OpenRdf context/graph.</li>");
+            sb.append("<li>This works by looking up the required ");
+            sb.append(WsUriConstants.TARGET_URI_PATTERN);
+            sb.append("(s) in the graph.properties configuration file.<li>");
+            sb.append("<li>There can only one parameter ");
+            sb.append(WsUriConstants.GRAPH);
+            sb.append(" and ONLY if NO paramters ");
+            sb.append(WsUriConstants.TARGET_URI_PATTERN);
+            sb.append(" are supplied.</li>");
+            sb.append("</ul>\n");       
+        sb.append("<dt><a name=\"");
                 sb.append(WsUriConstants.TARGET_URI_PATTERN);
                 sb.append("\">");
                 sb.append(WsUriConstants.TARGET_URI_PATTERN);
                 sb.append("</a></dt>");
             sb.append("<ul>");
             sb.append("<li>Limits the results to ones with URIs with this pattern.</li>");
-            sb.append("<li>The URISpace of a URI is one defined when the mapping is loaded, not any with which the URI startWith.</li>");
+            sb.append("<li>The URI pattern must match on of the Patterns specified in the System. It will not with just any the URI startWith.</li>");
             sb.append("<li>String Format</li>");
             sb.append("<li>Do NOT include the @gt and @lt seen arround URIs in RDF</li>");
             sb.append("<li>Typically there can but need not be more than one.</li>");
@@ -426,6 +454,7 @@ public class WSAPI extends WSFrame {
             sb.append("<li>List the Xrefs that map to these Xrefs</li>");
             sb.append("<li>Implements:  Map&ltXref, Set&ltXref&gt&gt mapID(Collection&ltXref&gt srcXrefs, DataSource... tgtDataSources)</li>");
             sb.append("<li>Implements:  Set&ltXref&gt mapID(Xref srcXrefs, DataSource... tgtDataSources)</li>");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Required arguements: (Only Source Xref considered)</li>");
                 sb.append("<ul>");
                 parameterID_CODE(sb);
@@ -447,6 +476,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>Implements:  boolean xrefExists(Xref xref)</li>");
             sb.append("<li>State if the Xref is know to the Mapping Service or not</li>");
+            appendXmlJson(sb);
             sb.append("<li>Required arguements: (Considers both Source and target Xrefs</li>");
                 sb.append("<ul>");
                 parameterID_CODE(sb);
@@ -482,6 +512,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>Searches for Xrefs that have this id.</li>");
             sb.append("<li>Implements:  Set&ltXref&gt freeSearch (String text, int limit)</li>");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Required arguements:</li>");
                 sb.append("<ul>");
                 parameterTextLimit(sb);
@@ -561,6 +592,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>Implements:  IDMapperCapabilities getCapabilities()</li>");
             sb.append("<li>Gives the Capabilitles as defined by BridgeDB.</li>");
+            appendXmlJson(sb); 
             sb.append("<li>Example: <a href=\"");
                     sb.append(contextPath);
                     sb.append(WsConstants.GET_CAPABILITIES);
@@ -593,6 +625,7 @@ public class WSAPI extends WSFrame {
             } else {
                 sb.append("<li>Returns False because underlying IDMappper does not support freeSearch or URISearch.</li>");                
             }
+            appendXmlJson(sb); 
             sb.append("<li>Example: <a href=\"");
                     sb.append(contextPath);
                     sb.append(WsConstants.IS_FREE_SEARCH_SUPPORTED);
@@ -611,6 +644,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>Implements:  Set&ltDataSource&gt  getSupportedSrcDataSources()</li>");
             sb.append("<li>Returns Supported Source (BridgeDB)DataSource(s).</li>");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Example: <a href=\"");
                     sb.append(contextPath);
                     sb.append(WsConstants.GET_SUPPORTED_SOURCE_DATA_SOURCES);
@@ -627,6 +661,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>Implements:  Set&ltDataSource&gt  getSupportedTgtDataSources()</li>");
             sb.append("<li>Returns Supported Target (BridgeDB)DataSource(s).</li>");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Example: <a href=\"");
                     sb.append(contextPath);
                     sb.append(WsConstants.GET_SUPPORTED_TARGET_DATA_SOURCES);
@@ -646,6 +681,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>States if two DataSources are mapped at least once.</li>");
             sb.append("<li>Implements:  boolean isMappingSupported(DataSource src, DataSource tgt)</li>");
+            appendXmlJson(sb); 
             sb.append("<li>Required arguements: (One of each)</li>");
                 sb.append("<ul>");
                 sb.append("<li><a href=\"#");
@@ -682,6 +718,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>Implements:  String getProperty(String key)</li>");
             sb.append("<li>Returns The property value for this key.</li>");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Required arguements:</li>");
                 sb.append("<ul>");
                 sb.append("<li>Place the actual key after the /</li> ");
@@ -712,6 +749,7 @@ public class WSAPI extends WSFrame {
             sb.append("<ul>");
             sb.append("<li>Implements:  Set<String> getKeys()</li>");
             sb.append("<li>Returns The keys and their property value.</li>");
+            appendXmlJsonHtml(sb); 
             if (keys.isEmpty()){
                 sb.append("<li>There are currently no properties supported</li>");
             } else {
@@ -752,12 +790,6 @@ public class WSAPI extends WSFrame {
         sb.append("<dd>Same data as ");
             refMapBySet(sb);
             sb.append(" but presented at RDF.</dd>");
-        sb.append("<dt>");
-                sb.append(WsUriConstants.MAP_URL);
-                sb.append("</a></dt>");
-        sb.append("<dd>DEPRICATED: Forwards call to ");
-        sb.append(WsUriConstants.MAP);
-        sb.append("</dd>");
         sb.append("<dt><a href=\"#");
                 sb.append(WsUriConstants.URI_EXISTS);
                 sb.append("\">");
@@ -821,6 +853,16 @@ public class WSAPI extends WSFrame {
                 sb.append("\">");
                 sb.append(WsUriConstants.TARGET_URI_PATTERN);
                 sb.append("</a>. If both are supplied the result is the union of the calls with each individually.</li> ");
+            sb.append("<li>Note: it is not allowed to use both <a href=\"#");
+                sb.append(WsUriConstants.GRAPH);
+                sb.append("\">");
+                sb.append(WsUriConstants.GRAPH);
+                sb.append("</a> and <a href=\"#");
+                sb.append(WsUriConstants.TARGET_URI_PATTERN);
+                sb.append("\">");
+                sb.append(WsUriConstants.TARGET_URI_PATTERN);
+                sb.append("</a>. If both are supplied an error is thrown.</li> ");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Required arguements:</li>");
                 sb.append("<ul>");
                 sb.append("<li>URI based</li>");
@@ -835,7 +877,8 @@ public class WSAPI extends WSFrame {
             sb.append("<li>Optional arguments</li>");
                 sb.append("<ul>");
                 parameterLens(sb);
-                parameterTargetPattern(sb);
+                parameterGraph(sb);
+                parameterTargetPatternX(sb);
                 parameterTargetCode(sb);
                 sb.append("</ul>");
         mapExamplesXrefbased(sb, contextPath, WsUriConstants.MAP, sourceXref1, tragetSysCode1, sourceXref2);
@@ -852,6 +895,16 @@ public class WSAPI extends WSFrame {
                 sb.append("</a></h3>");
         sb.append("<ul>");
             sb.append("<li>List the URIs that map to this URI(s)</li>");
+            sb.append("<li>Note: it is not allowed to use both <a href=\"#");
+                sb.append(WsUriConstants.GRAPH);
+                sb.append("\">");
+                sb.append(WsUriConstants.GRAPH);
+                sb.append("</a> and <a href=\"#");
+                sb.append(WsUriConstants.TARGET_URI_PATTERN);
+                sb.append("\">");
+                sb.append(WsUriConstants.TARGET_URI_PATTERN);
+                sb.append("</a>. If both are supplied an error is thrown.</li> ");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Required arguements:</li>");
             sb.append("<ul>");
                 parameterUri(sb);
@@ -859,7 +912,8 @@ public class WSAPI extends WSFrame {
                 sb.append("</ul>");
             sb.append("<li>Optional arguments</li><ul>");
                 parameterLens(sb);
-                parameterTargetPattern(sb);
+                parameterGraph(sb);
+                parameterTargetPatternX(sb);
                 sb.append("</ul>");
             mapExamplesUriBased(sb, contextPath, WsUriConstants.MAP_URI, sourceUri1, sourceUri2, targetUriSpace2);
             sb.append("</ul>\n");
@@ -874,6 +928,7 @@ public class WSAPI extends WSFrame {
                 sb.append("</a></h3>");
         sb.append("<ul>");
             sb.append("<li>List the URIs that map to this/these URIs organised into Sets and Source Target pairs.</li>");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Arguements same as:");
                 refMapUri(sb);
             sb.append("</li>");
@@ -892,7 +947,9 @@ public class WSAPI extends WSFrame {
             sb.append("<li>Same data as ");
                 refMapBySet(sb);
                 sb.append(" but presented at RDF.</dd>");
-            sb.append("<li>Includes all arguements as:");
+            appendTextHtml(sb); 
+ 
+            sb.append("<li>Includes all the same arguements as :");
                 refMapUri(sb);
                 sb.append(" and ");
                 refMapBySet(sb);
@@ -915,6 +972,7 @@ public class WSAPI extends WSFrame {
                 sb.append("</h3>");
             sb.append("<ul>");
             sb.append("<li>State if the URI is know to the Mapping Service or not</li>");
+            appendXmlJson(sb); 
             sb.append("<li>Required arguements:</li>");
                 sb.append("<ul>");
                 parameterUri(sb);
@@ -943,6 +1001,7 @@ public class WSAPI extends WSFrame {
                 sb.append("</h3>");
             sb.append("<ul>");
             sb.append("<li>Searches for URIs that have this ending.</li>");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Required arguements:</li>");
                 sb.append("<ul>");
                 parameterTextLimit(sb);
@@ -969,11 +1028,6 @@ public class WSAPI extends WSFrame {
                 sb.append(SetMappings.METHOD_NAME);
                 sb.append("</a></dt>");
         sb.append("<dd>Brings up a table of all the mappings in the system by URISpace</dd>");
-        sb.append("<dt>");
-                sb.append(WsUriConstants.GET_MAPPING_INFO);
-                sb.append("</a></dt>");
-        sb.append("<dd>DEPRICATED: Forwards call to ");
-        sb.append(SetMappings.METHOD_NAME);
         sb.append("<dt><a href=\"#");
                 sb.append(WsUriConstants.GRAPHVIZ);
                 sb.append("\">");
@@ -992,6 +1046,7 @@ public class WSAPI extends WSFrame {
                 sb.append("</h3>");
                 sb.append("<ul>");
             sb.append("<li>Brings up a table/List of mappings in the system by URISpaces</li>");
+            appendXmlJsonHtml(sb);
             sb.append("<li>Optional arguments</li>");
                 sb.append("<ul>");
                 sb.append("<li><a href=\"#");
@@ -1069,6 +1124,7 @@ public class WSAPI extends WSFrame {
                 sb.append("<li>Call graphviz (ex dot -Tgif imsMappings.dot -o imsMappings.gif)</li>");
                 sb.append("<li>Open output in your favourite viewer</li>");
                 sb.append("</ul>");
+            sb.append("<li>This method is only for media type HTML. But output is plain text.</li>");
             sb.append("<li>No arguements</li>");
             sb.append("<li>Example: <a href=\"");
                     sb.append(contextPath);
@@ -1087,7 +1143,8 @@ public class WSAPI extends WSFrame {
                 sb.append(WsUriConstants.DATA_SOURCE);
                 sb.append("/id</h3>");
             sb.append("<ul>");
-            sb.append("<li>Obtian a dataSource</li>");
+            sb.append("<li>Obtain a dataSource</li>");
+            appendXmlJsonHtml(sb); 
             sb.append("<li>Required arguements: </li>");
                 sb.append("<ul>");
                 sb.append("<li>Returns the DataSource and associated UriSpace(s) with a specific id.</li> ");
@@ -1163,7 +1220,15 @@ public class WSAPI extends WSFrame {
         sb.append("</a></li> ");
     }
 
-    private void parameterTargetPattern(StringBuilder sb){
+    private void parameterGraph(StringBuilder sb){
+        sb.append("<li><a href=\"#");
+        sb.append(WsUriConstants.GRAPH);
+        sb.append("\">");
+        sb.append(WsUriConstants.GRAPH);
+        sb.append("</a></li> ");
+    }
+
+    private void parameterTargetPatternX(StringBuilder sb){
         sb.append("<li><a href=\"#");
         sb.append(WsUriConstants.TARGET_URI_PATTERN);
         sb.append("\">");
@@ -1252,7 +1317,19 @@ public class WSAPI extends WSFrame {
             throws UnsupportedEncodingException, BridgeDBException{
         mapExamplesUriBased1(sb, contextPath, methodName, sourceUri1);
         mapExamplesUriBased2(sb, contextPath, methodName, sourceUri1, sourceUri2);
-        mapExamplesUriBased3(sb, contextPath, methodName, sourceUri2, targetUriSpace2);
+        sb.append("<li>The by ");
+        sb.append(WsUriConstants.GRAPH);
+        sb.append(" and by ");
+        sb.append(WsUriConstants.TARGET_URI_PATTERN);
+        sb.append(" methods provide the same result as ");
+        sb.append(EXAMPLE_GRAPH);
+        sb.append(" has been set to the just the single ");
+        sb.append(WsUriConstants.TARGET_URI_PATTERN);
+        sb.append(" ");
+        sb.append(targetUriSpace2);
+        sb.append("</li>");
+        mapExamplesUriBasedWithGraph(sb, contextPath, methodName, sourceUri2);
+        mapExamplesUriBasedWithTarget(sb, contextPath, methodName, sourceUri2, targetUriSpace2);
         mapExamplesUriBased4(sb, contextPath, methodName, sourceUri1);
     }
     
@@ -1292,20 +1369,38 @@ public class WSAPI extends WSFrame {
         sb.append("</a></li>");    
     }
     
-    private void mapExamplesUriBased3(StringBuilder sb, String contextPath, String methodName, String sourceUri2, String targetUriSpace2) 
+    private void mapExamplesUriBasedWithGraph(StringBuilder sb, String contextPath, String methodName, 
+            String sourceUri2) throws UnsupportedEncodingException, BridgeDBException{
+        sb.append("<li>Example: <a href=\"");
+        sb.append(contextPath);
+        sb.append(methodName);
+        sb.append(FIRST_URI_PARAMETER);
+        sb.append(URLEncoder.encode(sourceUri2, "UTF-8"));
+        sb.append(GRAPH_PARAMETER);
+        sb.append(URLEncoder.encode(EXAMPLE_GRAPH, "UTF-8"));
+        sb.append("\">");
+        sb.append(methodName);
+        sb.append(FIRST_URI_PARAMETER);
+        sb.append(sourceUri2);
+        sb.append(GRAPH_PARAMETER);
+        sb.append(EXAMPLE_GRAPH);
+        sb.append("</a></li>");    
+    }
+
+   private void mapExamplesUriBasedWithTarget(StringBuilder sb, String contextPath, String methodName, String sourceUri2, String targetUriSpace2) 
             throws UnsupportedEncodingException, BridgeDBException{
         sb.append("<li>Example: <a href=\"");
         sb.append(contextPath);
         sb.append(methodName);
         sb.append(FIRST_URI_PARAMETER);
         sb.append(URLEncoder.encode(sourceUri2, "UTF-8"));
-        sb.append(TARGET_URI_PATTERN_PARAMETER);
+        sb.append(TARGET_URI_PATTERN_PARAMETERX);
         sb.append(URLEncoder.encode(targetUriSpace2, "UTF-8"));
         sb.append("\">");
         sb.append(methodName);
         sb.append(FIRST_URI_PARAMETER);
         sb.append(sourceUri2);
-        sb.append(TARGET_URI_PATTERN_PARAMETER);
+        sb.append(TARGET_URI_PATTERN_PARAMETERX);
         sb.append(targetUriSpace2);
         sb.append("</a></li>");    
     }
@@ -1330,7 +1425,7 @@ public class WSAPI extends WSFrame {
         sb.append(FIRST_URI_PARAMETER);
         sb.append(sourceUri1);
         addDefaultLens(sb);
-        sb.append("\">");
+        sb.append(">");
         sb.append("</a></li>");    
     }           
 
@@ -1358,6 +1453,45 @@ public class WSAPI extends WSFrame {
         sb.append("\">");
         sb.append("</a></li>");    
     }
+
+    private void appendTextHtml(StringBuilder sb) {
+        sb.append("<li>This method is available for media types TEXT.</li>");
+        if (noConentOnEmpty){
+            sb.append("<ul>");
+            sb.append("<li>Status 204 (no Content) is never returned.</li>");
+            sb.append("</ul>");
+        }
+        sb.append("<li>Request for media type HTML will return same text in a window.</li>");
+        if (noConentOnEmpty){
+            sb.append("<ul>");
+            sb.append("<li>Empty RDF is returned if no data available.</li>");
+            sb.append("</ul>");
+        }
+    }
  
+    private void appendXmlJson(StringBuilder sb) {
+        sb.append("<li>This method is available for media types XML and JSON.</li>");
+        if (noConentOnEmpty){
+            sb.append("<ul>");
+            sb.append("<li>Status 204 (no Content) is never returned.</li>");
+            sb.append("</ul>");
+        }
+        sb.append("<li>There is not media type HTML.</li>");
+    }
+
+    private void appendXmlJsonHtml(StringBuilder sb) {
+        sb.append("<li>This method is available for media types XML and JSON.</li>");
+        if (noConentOnEmpty){
+            sb.append("<ul>");
+            sb.append("<li>Status 204 (no Content) is return if no data available.</li>");
+            sb.append("</ul>");
+        }
+        sb.append("<li>Request for media type HTML will return XML Format.</li>");
+        if (noConentOnEmpty){
+            sb.append("<ul>");
+            sb.append("<li>An warning page is returned if no data available.</li>");
+            sb.append("</ul>");
+        }
+    }
 }
 

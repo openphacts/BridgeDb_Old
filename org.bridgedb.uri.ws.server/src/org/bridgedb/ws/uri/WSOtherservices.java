@@ -19,12 +19,8 @@
 //
 package org.bridgedb.ws.uri;
 
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Properties;
-import java.util.logging.Level;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -39,10 +35,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
-import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.uri.Lens;
@@ -171,19 +164,6 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         maker.tableMaker(sb);
     }
     
-     /**
-     * @deprecated 
-     */
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/" + WsUriConstants.GET_MAPPING_INFO)
-     public Response getMappingInfo(@QueryParam(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE) String scrCode,
-            @QueryParam(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE) String targetCode, 
-            @Context HttpServletRequest httpServletRequest) 
-            throws BridgeDBException, UnsupportedEncodingException {
-        return getSetMapping(scrCode, targetCode, null, httpServletRequest);
-    }
-
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/" + Lens.METHOD_NAME) 
@@ -249,15 +229,19 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
     @GET
     @Produces({MediaType.TEXT_PLAIN})
     @Path("/" + WsUriConstants.MAP_BY_SET + WsUriConstants.RDF)
-    public String mapBySetText(@QueryParam(WsUriConstants.URI) List<String> uris,
+    public Response mapBySetRdfText(@QueryParam(WsUriConstants.URI) List<String> uris,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
+            @QueryParam(WsUriConstants.GRAPH) String graph,
             @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
             @QueryParam(WsUriConstants.RDF_FORMAT) String formatName
             ) throws BridgeDBException {
-        HashSet<String> uriSet = new HashSet<String>(uris);
-        UriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
-        MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, targetPatterns);
-        return mappingsBySet.toRDF(null, formatName);
+        MappingsBySet mappingsBySet = mapBySetInner(uris, lensUri, graph, targetUriPatterns);
+        if (mappingsBySet.isEmpty()){
+            return Response.noContent().build();
+        } else {
+            String rdf = mappingsBySet.toRDF(null, formatName);     
+            return Response.ok(rdf, MediaType.TEXT_PLAIN_TYPE).build();
+        }
     }
     
     private void generateTextarea(StringBuilder sb, String fieldName, String text) {
@@ -273,19 +257,22 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
     @GET
     @Produces({MediaType.TEXT_HTML})
     @Path("/" + WsUriConstants.MAP_BY_SET + WsUriConstants.RDF)
-    public Response mapBySetTexthtml(@QueryParam(WsUriConstants.URI) List<String> uris,
+    public Response mapBySetRdfHtml(@QueryParam(WsUriConstants.URI) List<String> uris,
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
+            @QueryParam(WsUriConstants.GRAPH) String graph,
             @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
             @QueryParam(WsUriConstants.RDF_FORMAT) String formatName,
             @Context HttpServletRequest httpServletRequest
             ) throws BridgeDBException {
-        HashSet<String> uriSet = new HashSet<String>(uris);
-        UriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
-        MappingsBySet mappingsBySet = uriMapper.mapBySet(uriSet, lensUri, targetPatterns);
+        MappingsBySet mappingsBySet = mapBySetInner(uris, lensUri, graph, targetUriPatterns);
         StringBuilder sb = topAndSide("HTML friendly " + WsUriConstants.MAP_BY_SET + WsUriConstants.RDF + " Output",  httpServletRequest);
-        sb.append("<h1>Use MediaType.TEXT_PLAIN to remove HTML stuff</h1>");
+        sb.append("<h2>Warning unlike ");
+        sb.append(WsUriConstants.MAP_BY_SET);
+        sb.append(" this method does not include any protential mapping to self.</h2>");
+        sb.append("<h4>Use MediaType.TEXT_PLAIN to remove HTML stuff</h4>");
+        sb.append("<p>Warning MediaType.TEXT_PLAIN version returns status 204 if no mappings found.</p>");
         generateTextarea(sb, "RDF", mappingsBySet.toRDF(null, formatName));
-         footerAndEnd(sb);
+        footerAndEnd(sb);
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
     }
 
@@ -302,6 +289,31 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		this.context = servletContextEvent.getServletContext();
 	}
+
+    @GET
+    @Produces({MediaType.TEXT_HTML})
+    @Path("/" + WsUriConstants.MAP_BY_SET)
+    public Response mapBySetHtml(@QueryParam(WsUriConstants.URI) List<String> uris,
+     		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
+            @QueryParam(WsUriConstants.GRAPH) String graph,
+            @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
+            @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
+        Response result = mapBySet(uris, lensUri, graph, targetUriPatterns);
+        if (noConentOnEmpty & result.getStatus() == Response.Status.NO_CONTENT.getStatusCode()){
+            return noContentWrapper(httpServletRequest);
+        }
+        return result;
+    }
+
+    @Override
+    protected Response noContentWrapper(HttpServletRequest httpServletRequest) throws BridgeDBException {
+        StringBuilder sb = topAndSide ("Empty Reply", httpServletRequest);
+        sb.append("<h1>Reply is an Empty Set or Empty Object</h1>\n");
+        sb.append("<h2>Note: The XML and Json versions of this request simply return status 204 (No Context)</h2>");
+        footerAndEnd(sb);
+        return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
+   }
+
 
 }
 

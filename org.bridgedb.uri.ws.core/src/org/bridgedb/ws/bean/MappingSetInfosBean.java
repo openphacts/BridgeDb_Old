@@ -24,64 +24,54 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.bridgedb.statistics.DataSetInfo;
+import org.bridgedb.statistics.MappingSetInfo;
 
-@XmlRootElement(name="UriSearch")
-public class UriSearchBean {
-    private List<String> Uri;
+/**
+ *
+ * @author Christian
+ */
+@XmlRootElement(name="MappingSetInfos")
+public class MappingSetInfosBean {
 
-    private String term;
-
-    public UriSearchBean(){
-    }
+    private Set<MappingSetInfoBean> MappingSetInfo;
     
-    public UriSearchBean(String term, Set<String> Uris){
-        if (Uris == null || Uris.isEmpty()){
-            Uri = new ArrayList<String>();
-        } else {
-            Uri = new ArrayList(Uris);
+    /**
+     * WS Constructor
+     */
+    public MappingSetInfosBean(){
+        MappingSetInfo = new HashSet<MappingSetInfoBean>();
+    }
+
+    /**
+     * @return the MappingSetInfo
+     */
+    public Set<MappingSetInfoBean> getMappingSetInfo() {
+        return MappingSetInfo;
+    }
+
+    /**
+     * @param MappingSetInfo the MappingSetInfo to set
+     */
+    public void setMappingSetInfo(Set<MappingSetInfoBean> MappingSetInfo) {
+        this.MappingSetInfo = MappingSetInfo;
+    }
+
+    public List<MappingSetInfo> getMappingSetInfos() {
+        ArrayList<MappingSetInfo> results = new ArrayList<MappingSetInfo>();
+        for (MappingSetInfoBean bean:MappingSetInfo){
+            results.add(bean.asMappingSetInfo());
         }
-        this.term = term;
+        return results;
     }
 
-    /**
-     * @return the Uri
-     */
-    public List<String> getUri() {
-        return Uri;
-    }
-
-    /**
-     * @param Uri the Uri to set
-     */
-    public void setUri(List<String> Uri) {
-        this.Uri = Uri;
-    }
-
-    /**
-     * @return the term
-     */
-    public String getTerm() {
-        return term;
-    }
-
-    /**
-     * @param term the term to set
-     */
-    public void setTerm(String term) {
-        this.term = term;
-    }
-
-    public Set<String> getUriSet() {
-        if (Uri == null || Uri.isEmpty()){
-            return new HashSet<String>();
-        } else {
-            return new HashSet(Uri);
-        }
+    public void addMappingSetInfo(MappingSetInfo info) {
+        MappingSetInfo.add(new MappingSetInfoBean(info));
     }
 
     public boolean isEmpty() {
-        return Uri.isEmpty();
+        return MappingSetInfo.isEmpty();
     }
- 
     
+
 }

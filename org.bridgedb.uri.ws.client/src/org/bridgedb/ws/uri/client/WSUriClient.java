@@ -20,14 +20,15 @@
 package org.bridgedb.ws.uri.client;
 
 import com.sun.jersey.api.client.GenericType;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import org.bridgedb.DataSource;
 import org.bridgedb.DataSourceOverwriteLevel;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
-import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.SetMappings;
 import org.bridgedb.utils.BridgeDBException;
@@ -36,12 +37,15 @@ import org.bridgedb.ws.WSUriInterface;
 import org.bridgedb.ws.WsConstants;
 import org.bridgedb.ws.WsUriConstants;
 import org.bridgedb.ws.bean.DataSourceUriPatternBean;
-import org.bridgedb.ws.bean.MappingBean;
 import org.bridgedb.ws.bean.MappingSetInfoBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
 import org.bridgedb.ws.bean.LensBean;
+import org.bridgedb.ws.bean.LensesBean;
+import org.bridgedb.ws.bean.MappingSetInfosBean;
+import org.bridgedb.ws.bean.MappingsBean;
 import org.bridgedb.ws.bean.MappingsBySetBean;
 import org.bridgedb.ws.bean.UriExistsBean;
+import org.bridgedb.ws.bean.UriMappings;
 import org.bridgedb.ws.bean.UriSearchBean;
 import org.bridgedb.ws.bean.XrefBean;
 
@@ -61,7 +65,8 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
     }
     
     @Override
-    public List<MappingBean> map(String id, String scrCode, String uri, String lensUri, List<String> targetCodes, List<String> targetUriPattern) throws BridgeDBException {
+    public Response map(String id, String scrCode, String uri, String lensUri, List<String> targetCodes, 
+        String graph, List<String> targetUriPattern) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         if (id != null){
             params.add(WsConstants.ID, id);
@@ -80,22 +85,30 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
                 params.add(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE, target);
             }
         }
+        if (graph != null){
+            params.add(WsUriConstants.GRAPH, graph); 
+        }
         if (targetUriPattern != null){
             for (String target:targetUriPattern){
                 params.add(WsUriConstants.TARGET_URI_PATTERN, target);
             }
         }
-        //Make service call
-        List<MappingBean> result = 
-                webResource.path(WsUriConstants.MAP)
-                .queryParams(params)
-                .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<List<MappingBean>>() {});
-         return result;
+        try{
+            //Make service call
+            MappingsBean result = 
+                    webResource.path(WsUriConstants.MAP)
+                    .queryParams(params)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<MappingsBean>() {});
+            return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            //throw new BridgeDBException ("Error", ex); 
+            return Response.noContent().build();
+        }
     }
 
     @Override
-    public MappingsBySetBean mapBySet(List<String> uris, String lensUri, List<String> targetUriPattern) throws BridgeDBException {
+    public Response mapBySet(List<String> uris, String lensUri, String graph, List<String> targetUriPattern) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         for (String uri:uris){
             if (uri != null){
@@ -105,61 +118,81 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
         if (lensUri != null){
             params.add(WsUriConstants.LENS_URI, lensUri);        
         }
+        if (graph != null){
+            params.add(WsUriConstants.GRAPH, graph); 
+        }
         if (targetUriPattern != null){
             for (String target:targetUriPattern){
                 params.add(WsUriConstants.TARGET_URI_PATTERN, target);
             }
         }
-        MappingsBySetBean result = 
+        try {
+            MappingsBySetBean result = 
                 webResource.path(WsUriConstants.MAP_BY_SET)
                 .queryParams(params)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get(new GenericType<MappingsBySetBean>() {});
-        return result;        
+            return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
 
 
     @Override
-    public UriExistsBean UriExists(String uri) throws BridgeDBException {
+    public Response UriExists(String uri) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         params.add(WsUriConstants.URI, uri);
-        //Make service call
-        UriExistsBean result = 
-                webResource.path(WsUriConstants.URI_EXISTS)
-                .queryParams(params)
-                .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<UriExistsBean>() {});
-         return result;
+        try {
+            //Make service call
+            UriExistsBean result = 
+                    webResource.path(WsUriConstants.URI_EXISTS)
+                    .queryParams(params)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<UriExistsBean>() {});
+            return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
 
     @Override
-    public UriSearchBean UriSearch(String text, String limitString) throws BridgeDBException {
+    public Response UriSearch(String text, String limitString) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         params.add(WsUriConstants.TEXT, text);
         params.add(WsUriConstants.LIMIT, limitString);
-        //Make service call
-        UriSearchBean result = 
-                webResource.path(WsUriConstants.URI_SEARCH)
-                .queryParams(params)
-                .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<UriSearchBean>() {});
-         return result;
+        try {
+            //Make service call
+            UriSearchBean result = 
+                    webResource.path(WsUriConstants.URI_SEARCH)
+                    .queryParams(params)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<UriSearchBean>() {});
+            return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
 
     private String encode (String original){
         return original.replaceAll("%", "%20");
     }
+    
     @Override
-    public XrefBean toXref(String uri) throws BridgeDBException {
+    public Response toXref(String uri) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         params.add(WsUriConstants.URI, encode(uri));
-        //Make service call
-        XrefBean result = 
-                webResource.path(WsUriConstants.TO_XREF)
-                .queryParams(params)
-                .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<XrefBean>() {});
-        return result;
+        try {
+            //Make service call
+            XrefBean result = 
+                    webResource.path(WsUriConstants.TO_XREF)
+                    .queryParams(params)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<XrefBean>() {});
+            return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
 
     /*@Override
@@ -172,50 +205,66 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
     }*/
 
     @Override
-    public OverallStatisticsBean getOverallStatistics(String lensUri) throws BridgeDBException {
+    public Response getOverallStatistics(String lensUri) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         params.add(WsUriConstants.LENS_URI, encode(lensUri));
-         //Make service call
-        OverallStatisticsBean result = 
-                webResource.path(WsUriConstants.GET_OVERALL_STATISTICS)
-                .queryParams(params)
-                .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<OverallStatisticsBean>() {});
-         return result;
+        try {
+             //Make service call
+             OverallStatisticsBean result = 
+                    webResource.path(WsUriConstants.GET_OVERALL_STATISTICS)
+                   .queryParams(params)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<OverallStatisticsBean>() {});
+            return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
 
     @Override
-    public MappingSetInfoBean getMappingSetInfo(String mappingSetId) throws BridgeDBException {
-        MappingSetInfoBean result = 
-                webResource.path(SetMappings.METHOD_NAME + "/" + mappingSetId)
-                .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<MappingSetInfoBean>() {});
-         return result;
+    public Response getMappingSetInfo(String mappingSetId) throws BridgeDBException {
+        try {
+            MappingSetInfoBean result = 
+                    webResource.path(SetMappings.METHOD_NAME + "/" + mappingSetId)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<MappingSetInfoBean>() {});
+            return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
         
     @Override
-    public List<MappingSetInfoBean> getMappingSetInfos(String sourceSysCode, String targetSysCode, String lensUri) throws BridgeDBException {
+    public Response getMappingSetInfos(String sourceSysCode, String targetSysCode, String lensUri) throws BridgeDBException {
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
         params.add(WsUriConstants.SOURCE_DATASOURCE_SYSTEM_CODE, sourceSysCode);
         params.add(WsUriConstants.TARGET_DATASOURCE_SYSTEM_CODE, targetSysCode);
         params.add(WsUriConstants.LENS_URI, encode(lensUri));
-        //Make service call
-        List<MappingSetInfoBean> result = 
-                webResource.path(SetMappings.METHOD_NAME)
-                .queryParams(params)
-                .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<List<MappingSetInfoBean>>() {});
-         return result;
+        try {
+            //Make service call
+            MappingSetInfosBean result = 
+                    webResource.path(SetMappings.METHOD_NAME)
+                    .queryParams(params)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<MappingSetInfosBean>() {});
+                return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
 
     @Override
-    public DataSourceUriPatternBean getDataSource(String dataSource) throws BridgeDBException{
-        //Make service call
-        DataSourceUriPatternBean result = 
-                webResource.path(WsUriConstants.DATA_SOURCE + "/" + dataSource)
-                .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(new GenericType<DataSourceUriPatternBean>() {});
-        return result;
+    public Response getDataSource(String dataSource) throws BridgeDBException{
+        try {
+            //Make service call
+            DataSourceUriPatternBean result = 
+                    webResource.path(WsUriConstants.DATA_SOURCE + "/" + dataSource)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<DataSourceUriPatternBean>() {});
+            return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
 
    /*TODO FIX this
@@ -231,29 +280,93 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
         return result;
     }*/
 
-	public List<LensBean> getLenses() {
-		List<LensBean> result = 
-				webResource.path(Lens.METHOD_NAME)
-				.accept(MediaType.APPLICATION_XML_TYPE)
-				.get(new GenericType<List<LensBean>>() {});
-		return result;
+	public Response getLenses() {
+        try {
+            List<LensBean> result = 
+                	webResource.path(Lens.METHOD_NAME)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<List<LensBean>>() {});
+                return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
 	}
 
-	public LensBean getLens(String id) throws BridgeDBException {
-  		LensBean result = webResource.path(Lens.METHOD_NAME + "/" + id)
-		.accept(MediaType.APPLICATION_XML_TYPE)
-		.get(new GenericType<LensBean>() {});
-		return result;
+    @Override
+	public Response getLens(String id) throws BridgeDBException {
+        try {
+            LensBean result = webResource.path(Lens.METHOD_NAME + "/" + id)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<LensBean>() {});
+            return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
 	}
         
     @Override
-    public String getSqlCompatVersion() throws BridgeDBException {
-        //Make service call
-         String result = 
-                webResource.path(WsUriConstants.SQL_COMPAT_VERSION)
-                .accept(MediaType.TEXT_PLAIN)
-                .get(new GenericType<String>() {});
-         return result;
+    public Response getSqlCompatVersion() throws BridgeDBException {
+        try {
+            //Make service call
+            String result = 
+                    webResource.path(WsUriConstants.SQL_COMPAT_VERSION)
+                    .accept(MediaType.TEXT_PLAIN)
+                    .get(new GenericType<String>() {});
+                return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
+    }
+
+    @Override
+    public Response mapUri(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns) throws BridgeDBException {
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        for (String uri:uris){
+            if (uri != null){
+                params.add(WsUriConstants.URI, uri);            
+            }
+        }
+        if (lensUri != null){
+            params.add(WsUriConstants.LENS_URI, lensUri);        
+        }
+         if (graph != null){
+            params.add(WsUriConstants.GRAPH, graph); 
+        }
+        if (targetUriPatterns != null){
+            for (String target:targetUriPatterns){
+                params.add(WsUriConstants.TARGET_URI_PATTERN, target);
+            }
+        }
+        try{
+            //Make service call
+            UriMappings result = 
+                    webResource.path(WsUriConstants.MAP_URI)
+                    .queryParams(params)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<UriMappings>() {});
+             return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
+   }
+
+    @Override
+    public Response getLenses(String lensUri) throws BridgeDBException {
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        if (lensUri != null){
+            params.add(WsUriConstants.LENS_URI, lensUri);        
+        }
+        try{
+            //Make service call
+            LensesBean result = 
+                    webResource.path(WsUriConstants.MAP_URI)
+                    .queryParams(params)
+                    .accept(MediaType.APPLICATION_XML_TYPE)
+                    .get(new GenericType<LensesBean>() {});
+             return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        } catch (UniformInterfaceException ex){
+            return Response.noContent().build();
+        }
     }
 
 }

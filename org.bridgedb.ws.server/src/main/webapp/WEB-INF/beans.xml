@@ -17,6 +17,6 @@
         </jaxrs:serviceBeans>
     </jaxrs:server>
     
-    <bean id="BridgeBDImpl" class="org.bridgedb.ws.server.WsCoreServer" />
+    <bean id="BridgeBDImpl" class="org.bridgedb.ws.WSCoreService" />
 
 </beans>
