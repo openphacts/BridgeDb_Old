@@ -197,7 +197,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
         MappingsBean result = mapInner (id, scrCode, uri, lensUri, targetCodes, graph, targetUriPatterns);
         if (noConentOnEmpty & result.asMappings().isEmpty()){
-            return noContectWrapper(httpServletRequest);
+            return noContentWrapper(httpServletRequest);
         } 
         return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
     }
@@ -262,7 +262,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
         UriMappings result = mapUriInner(uris, lensUri, graph, targetUriPatterns);
         if (noConentOnEmpty & result.isEmpty()){
-            return noContectWrapper(httpServletRequest);
+            return noContentWrapper(httpServletRequest);
         } 
         return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
     }
@@ -313,7 +313,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
         MappingsBySet mappingsBySet = mapBySetInner(uris, lensUri, graph, targetUriPatterns);
         if (noConentOnEmpty & mappingsBySet.isEmpty()){
-            return noContectWrapper(httpServletRequest);
+            return noContentWrapper(httpServletRequest);
         } 
         MappingsBySetBean result = new MappingsBySetBean(mappingsBySet);
         return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
@@ -390,7 +390,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
         UriSearchBean bean = UriSearchInner(text, limitString);
         if (noConentOnEmpty & bean.isEmpty()){
-            return noContectWrapper(httpServletRequest);
+            return noContentWrapper(httpServletRequest);
         } 
         return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
@@ -436,7 +436,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             @Context HttpServletRequest httpServletRequest) throws BridgeDBException {     
         XrefBean bean = toXrefInner(URI);
         if (noConentOnEmpty & bean.isEmpty()){
-            return noContectWrapper(httpServletRequest);
+            return noContentWrapper(httpServletRequest);
         } 
         return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
@@ -516,7 +516,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
         MappingSetInfosBean bean = getMappingSetInfosInner(scrCode, targetCode, lensUri);
         if (noConentOnEmpty & bean.isEmpty()){
-            return noContectWrapper(httpServletRequest);
+            return noContentWrapper(httpServletRequest);
         } 
         return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
@@ -556,7 +556,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
 		LensBean bean = getLensInner(id);
         if (noConentOnEmpty & bean.isEmpty()){
-            return noContectWrapper(httpServletRequest);
+            return noContentWrapper(httpServletRequest);
         } 
         return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
 	}
@@ -612,7 +612,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         List<Lens> lenses = getTheLens(lensUri);
 		LensesBean bean = new LensesBean(lenses, null);
         if (noConentOnEmpty & bean.isEmpty()){
-            return noContectWrapper(httpServletRequest);
+            return noContentWrapper(httpServletRequest);
         } 
         return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
 	}
@@ -659,7 +659,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             @Context HttpServletRequest httpServletRequest) throws BridgeDBException {  
         MappingSetInfoBean bean = getMappingSetInfoInner(idString);
         if (noConentOnEmpty & bean.isEmpty()){
-            return noContectWrapper(httpServletRequest);
+            return noContentWrapper(httpServletRequest);
         } 
         return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
@@ -712,7 +712,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
         DataSourceUriPatternBean bean = getDataSourceInner(id);
         if (noConentOnEmpty & bean.isEmpty()){
-            return noContectWrapper(httpServletRequest);
+            return noContentWrapper(httpServletRequest);
         } 
         return Response.ok(bean, MediaType.APPLICATION_XML_TYPE).build();
     }
