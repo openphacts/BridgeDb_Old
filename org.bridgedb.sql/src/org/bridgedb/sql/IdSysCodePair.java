@@ -30,26 +30,78 @@ import org.bridgedb.Xref;
  * @author Christian
  */
 public class IdSysCodePair {
-    
+
     private final String id;
-    private final String dataSourceCode;
+    private final String sysCode;
+    private Xref original;
     
     public IdSysCodePair(String id, String dataSourceCode){
         this.id = id;
-        this.dataSourceCode = dataSourceCode;
+        this.sysCode = dataSourceCode;
+        original = null;
+    }
+    
+    public IdSysCodePair(Xref xref){
+        original = xref;
+        this.id = xref.getId();
+        this.sysCode = toCode(xref.getDataSource());
+    }
+    
+    public static IdSysCodePair toIdSysCodePair(Xref xref){
+        if (xref == null) {
+            return null;
+        }
+        if (xref.getId() == null || xref.getId().isEmpty()) {
+            return null;
+        }
+        if (xref.getDataSource() == null ) {
+            return null;
+        }
+        return new IdSysCodePair(xref);
     }
     
     public Xref toXref(){
-        DataSource dataSource = findDataSource(dataSourceCode);
-        return new Xref(id, dataSource);
+        if (original == null){
+            DataSource dataSource = findDataSource(getSysCode());
+            original = new Xref(getId(), dataSource);
+        }
+        return original;
     }
     
-    public static Set<Xref> toXrefs(Set<IdSysCodePair> pairs){
+    /*public static Xref toXref(IdSysCodePair pair) {
+        if (pair == null){
+            return null;
+        }
+        return pair.toXref();
+    }*/
+
+   public static Set<Xref> toXrefs(Set<IdSysCodePair> pairs){
         HashSet<Xref> refs = new HashSet<Xref>();
         for (IdSysCodePair pair:pairs){
             refs.add(pair.toXref());
         }
         return refs;
+    }
+    
+    public static String toCode (DataSource dataSource){
+        if (dataSource == null){
+            return null;
+        }
+        if (dataSource.getSystemCode() != null || !dataSource.getSystemCode().isEmpty()){
+            return dataSource.getSystemCode();
+        }
+        return "_" + dataSource.getFullName();
+    }
+
+    public static String[] toCodes(DataSource[] dataSources) {
+        if (dataSources == null){
+            return null;
+        }
+        String[] codes = new String[dataSources.length];
+        for (int i = 0; i < dataSources.length; i++){
+            codes[i] = toCode(dataSources[i]);
+        }
+        return codes;
     }
     
     public static DataSource findDataSource(String code){
@@ -67,6 +119,20 @@ public class IdSysCodePair {
                 return DataSource.register(code, code).asDataSource();
             }
         }
+    }
+
+    /**
+     * @return the id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * @return the sysCode
+     */
+    public String getSysCode() {
+        return sysCode;
     }
 
 }

@@ -72,11 +72,18 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
     }
 
     @Override
-    public synchronized Set<Xref> mapID(Xref ref, DataSource... tgtDataSources) throws BridgeDBException {
-        if (badXref(ref)) {
-            logger.warn("mapId called with a badXref " + ref);
+    public synchronized Set<Xref> mapID(Xref xref, DataSource... tgtDataSources) throws BridgeDBException {
+        IdSysCodePair ref = IdSysCodePair.toIdSysCodePair(xref);
+        if (ref == null) {
+            logger.warn("mapId called with a badXref " + xref);
             return new HashSet<Xref>();
         }
+        String[] tgtSysCodes = IdSysCodePair.toCodes(tgtDataSources);
+        Set<IdSysCodePair> pairs = mapID(ref, tgtSysCodes);
+        return IdSysCodePair.toXrefs(pairs);
+    }
+
+    private synchronized Set<IdSysCodePair> mapID(IdSysCodePair ref, String... tgtSysCodes) throws BridgeDBException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT ");
             query.append(TARGET_ID_COLUMN_NAME);
@@ -87,18 +94,18 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
                 query.append(", ");
             query.append(MAPPING_SET_TABLE_NAME);
         appendMappingJoinMapping(query);
-        appendSourceXref(query, ref);
-        if (tgtDataSources != null && tgtDataSources.length > 0){    
+        appendSourceIdSysCodePair(query, ref);
+        if (tgtSysCodes != null &&tgtSysCodes.length > 0){    
             query.append(" AND ( ");
             query.append(TARGET_DATASOURCE_COLUMN_NAME);
             query.append(" = '");
-            query.append(getDataSourceKey(tgtDataSources[0]));
+            query.append(tgtSysCodes[0]);
             query.append("' ");
-            for (int i = 1; i < tgtDataSources.length; i++){
+            for (int i = 1; i < tgtSysCodes.length; i++){
                 query.append(" OR ");
                 query.append(TARGET_DATASOURCE_COLUMN_NAME);
                 query.append(" = '");
-                query.append(getDataSourceKey(tgtDataSources[i]));
+                query.append(tgtSysCodes[i]);
                 query.append("'");
             }
             query.append(")");
@@ -110,21 +117,20 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         } catch (SQLException ex) {
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }    
-        Set<IdSysCodePair> pairs = resultSetToIdSysCodePairSet(rs);
-        Set<Xref> results = IdSysCodePair.toXrefs(pairs);
-        if (tgtDataSources.length == 0){
+        Set<IdSysCodePair> results = resultSetToIdSysCodePairSet(rs);
+        if (tgtSysCodes.length == 0){
            results.add(ref); 
         } else {
-            for (DataSource tgtDataSource: tgtDataSources){
-                if (ref.getDataSource().equals(tgtDataSource)){
+            for (String tgtSysCode: tgtSysCodes){
+                if (ref.getSysCode().equals(tgtSysCode)){
                     results.add(ref);
                 }
             }
         }
         if (results.size() <= 1){
             String targets = "";
-            for (DataSource tgtDataSource:tgtDataSources){
-                targets+= tgtDataSource + ", ";
+            for (String tgtSysCode: tgtSysCodes){
+                targets+= tgtSysCode + ", ";
             }
             if (targets.isEmpty()){
                 targets = "all DataSources";
@@ -140,7 +146,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         return results;
     }
 
-  	/**
+ 	/**
 	 * Get all cross-references for the given entity, restricting the
 	 * result to contain only references from the given set of data sources.
 	 * @param ref the entity to get cross-references for. 
@@ -149,19 +155,21 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
 	 * Set when no cross references could be found. This method does not return null.
 	 * @throws IDMapperException if the mapping service is (temporarily) unavailable 
 	 */
-    public synchronized Set<Xref> mapID(Xref ref, DataSource tgtDataSource) throws BridgeDBException {
-        if (badXref(ref)) {
-            logger.warn("mapId called with a badXref " + ref);
+    public synchronized Set<Xref> mapID(Xref xref, DataSource tgtDataSource) throws BridgeDBException {
+        IdSysCodePair ref = IdSysCodePair.toIdSysCodePair(xref);
+        if (ref == null) {
+            logger.warn("mapId called with a badXref " + xref);
             return new HashSet<Xref>();
         }
         if (tgtDataSource == null){
             throw new BridgeDBException("Target DataSource can not be null");
         }
-        if (ref.getDataSource().equals(tgtDataSource)){
-            HashSet<Xref> results = new HashSet<Xref>();
-            results.add(ref);
-            return results;
-        }
+        String tgtSysCode = IdSysCodePair.toCode(tgtDataSource);
+        Set<IdSysCodePair> pairs = mapID(ref, tgtSysCode);
+        return IdSysCodePair.toXrefs(pairs);
+    }
+
+    private synchronized Set<IdSysCodePair> mapID(IdSysCodePair ref, String tgtSysCode) throws BridgeDBException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT ");
             query.append(TARGET_ID_COLUMN_NAME);
@@ -172,11 +180,11 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
                 query.append(", ");
             query.append(MAPPING_SET_TABLE_NAME);
         appendMappingJoinMapping(query);
-        appendSourceXref(query, ref);
+        appendSourceIdSysCodePair(query, ref);
         query.append(" AND ");
             query.append(TARGET_DATASOURCE_COLUMN_NAME);
             query.append(" = '");
-            query.append(getDataSourceKey(tgtDataSource));
+            query.append(tgtSysCode);
             query.append("' ");
 
         Statement statement = this.createStatement();
@@ -187,12 +195,22 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }    
         Set<IdSysCodePair> pairs = resultSetToIdSysCodePairSet(rs);
-        return IdSysCodePair.toXrefs(pairs);
+        if (ref.getSysCode().equals(tgtSysCode)){
+            pairs.add(ref);
+        }
+        return pairs;
     }
 
     @Override
     public synchronized boolean xrefExists(Xref xref) throws BridgeDBException {
-        if (badXref(xref)) return false;
+        IdSysCodePair ref = IdSysCodePair.toIdSysCodePair(xref);
+        if (ref == null) {
+            return false;
+        }
+        return IdSysCodePairExists(ref);
+   }
+
+   protected synchronized boolean IdSysCodePairExists(IdSysCodePair ref) throws BridgeDBException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT ");
         appendTopConditions(query, 0, 1); 
@@ -205,7 +223,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         query.append(MAPPING_SET_ID_COLUMN_NAME);
         query.append(" = ");
         query.append(MAPPING_SET_DOT_ID_COLUMN_NAME);
-        appendSourceXref(query, xref);
+        appendSourceIdSysCodePair(query, ref);
         appendLimitConditions(query,0, 1);
         Statement statement = this.createStatement();
         ResultSet rs;
@@ -213,7 +231,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
             rs = statement.executeQuery(query.toString());
             boolean result = rs.next();
             if (logger.isDebugEnabled()){
-                logger.debug(xref + " exists = " + result);
+                logger.debug(ref + " exists = " + result);
             }
             return result;
         } catch (SQLException ex) {
@@ -445,11 +463,11 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
     }
 
     /**
-     * Add a condition to the query that only mappings with a specific source Xref should be used.
+     * Add a condition to the query that only mappings with a specific source IdSysCodePair should be used.
      * @param query Query to add to.
-     * @param ref Xref that forms the base of the condition.
+     * @param ref IdSysCodePair that forms the base of the condition.
      */
-    protected final void appendSourceXref(StringBuilder query, Xref ref){
+    protected final void appendSourceIdSysCodePair(StringBuilder query, IdSysCodePair ref){
         query.append(" AND ");
             query.append(SOURCE_ID_COLUMN_NAME);
             query.append(" = '");
@@ -458,7 +476,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         query.append(" AND ");
             query.append(SOURCE_DATASOURCE_COLUMN_NAME);
             query.append(" = '");
-            query.append(getDataSourceKey(ref.getDataSource()));
+            query.append(ref.getSysCode());
             query.append("' ");        
     }
     
