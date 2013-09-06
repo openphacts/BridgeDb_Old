@@ -240,21 +240,7 @@ public interface UriMapper extends IDMapper{
 	public Set<Mapping> mapFull(Xref sourceXref, String LensUri, DataSource... tgtDataSources) 
             throws BridgeDBException;
 
-    /**
-	 * Get the set of mappings based the parameters supplied.
-     * 
-	 * @param sourceXref @see Class java docs. 
-     * @param LensUri @see Class java docs. 
-     * @param tgtDataSource @see Class java docs. 
-     *    
-	 * @return A Set containing the mappings or an empty et when no cross references could be found. 
-     *    This method does not return null.
-	 * @throws IDMapperException if the mapping service is (temporarily) unavailable 
-	 */
-	public Set<Mapping> mapFull(Xref sourceXref, String LensUri, DataSource tgtDataSource) 
-            throws BridgeDBException;
-
-    /**
+     /**
 	 * Get the set of mappings based the parameters supplied.
      * 
 	 * @param sourceXref @see Class java docs. 
@@ -280,20 +266,6 @@ public interface UriMapper extends IDMapper{
 	 * @throws IDMapperException if the mapping service is (temporarily) unavailable 
 	 */
     public Set<Mapping> mapFull(Xref sourceXref, String LensUri, String graph, UriPattern... tgtUriPatterns) 
-            throws BridgeDBException;
-
-    /**
-	 * Get the set of mappings based the parameters supplied.
-     * 
-	 * @param sourceXref @see Class java docs. 
-     * @param LensUri @see Class java docs. 
-     * @param tgtUriPattern @see Class java docs. 
-     *    
-	 * @return A Set containing the mappings or an empty et when no cross references could be found. 
-     *    This method does not return null.
-	 * @throws IDMapperException if the mapping service is (temporarily) unavailable 
-	 */
-    public Set<Mapping> mapFull(Xref sourceXref, String LensUri, UriPattern tgtUriPattern) 
             throws BridgeDBException;
 
     /**

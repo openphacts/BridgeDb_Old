@@ -546,6 +546,9 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     private synchronized Set<Mapping> mapFull (IdSysCodePair sourceRef, String lensUri) throws BridgeDBException{
+        if (sourceRef == null){
+            return new HashSet<Mapping>();
+        }
         StringBuilder query = startMappingQuery();
         appendMappingInfo(query);
         appendMappingFromAndWhere(query, sourceRef, lensUri, null);
@@ -569,30 +572,10 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     @Override
     public synchronized Set<Mapping> mapFull(String sourceUri, String lensUri) throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
-        Xref sourceXref = toXref(sourceUri);
-        Set<Mapping> results = mapFull(sourceXref,  lensUri);
+        IdSysCodePair sourceRef = toIdSysCodePair(sourceUri);
+        Set<Mapping> results = mapFull(sourceRef,  lensUri);
         for (Mapping result:results){
             result.addSourceUri(sourceUri);
-        }
-        return results;
-    }
-
-    @Override
-	public synchronized Set<Mapping> mapFull (Xref sourceXref, String lensUri, DataSource tgtDataSource) throws BridgeDBException{
-        IdSysCodePair sourceRef = IdSysCodePair.toIdSysCodePair(sourceXref);
-        if (sourceRef == null) {
-            logger.warn("mapId called with a badXref " + sourceXref);
-            return new HashSet<Mapping>();
-        }
-        if (tgtDataSource == null){
-            logger.warn("map called with a null tgtDatasource and " + tgtDataSource);
-            return new HashSet<Mapping>();
-        }
-        String tgtSysCode = IdSysCodePair.toCode(tgtDataSource);
-        Set<Mapping> results = mapPart(sourceRef, lensUri, tgtSysCode);
-        //Add targetUris
-        for (Mapping mapping: results){
-            mapping.addTargetUris(toUris(mapping.getTarget()));
         }
         return results;
     }
@@ -617,7 +600,13 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized Set<Mapping> mapFull (Xref ref, String lensUri, DataSource... tgtDataSources) 
+    public Set<Mapping> mapFull (Xref sourceXref, String lensUri, DataSource... tgtDataSources) 
+            throws BridgeDBException{
+        IdSysCodePair sourceRef = IdSysCodePair.toIdSysCodePair(sourceXref);
+        return mapFull(sourceRef, lensUri, tgtDataSources);
+    }
+
+    private Set<Mapping> mapFull (IdSysCodePair ref, String lensUri, DataSource... tgtDataSources) 
             throws BridgeDBException{
         if (tgtDataSources == null || tgtDataSources.length == 0){
             return mapFull (ref, lensUri);
@@ -630,15 +619,31 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         }
     }
 
-    @Override
-	public synchronized Set<Mapping> mapFull (Xref sourceXref, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
-        if (tgtUriPattern == null){
-            logger.warn("mapFull called with a null tgtDatasource and " + sourceXref);
+	private synchronized Set<Mapping> mapFull (IdSysCodePair sourceRef, String lensUri, DataSource tgtDataSource) throws BridgeDBException{
+        if (sourceRef == null) {
+            logger.warn("mapId called with a badXref " + sourceRef);
             return new HashSet<Mapping>();
         }
-        IdSysCodePair sourceRef = IdSysCodePair.toIdSysCodePair(sourceXref);
+        if (tgtDataSource == null){
+            logger.warn("map called with a null tgtDatasource and " + tgtDataSource);
+            return new HashSet<Mapping>();
+        }
+        String tgtSysCode = IdSysCodePair.toCode(tgtDataSource);
+        Set<Mapping> results = mapPart(sourceRef, lensUri, tgtSysCode);
+        //Add targetUris
+        for (Mapping mapping: results){
+            mapping.addTargetUris(toUris(mapping.getTarget()));
+        }
+        return results;
+    }
+
+	private Set<Mapping> mapFull (IdSysCodePair sourceRef, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
+        if (tgtUriPattern == null){
+            logger.warn("mapFull called with a null tgtDatasource and " + sourceRef);
+            return new HashSet<Mapping>();
+        }
         if (sourceRef == null) {
-            logger.warn("mapId called with a badXref " + sourceXref);
+            logger.warn("mapId called with a badXref " + sourceRef);
             return new HashSet<Mapping>();
         }
         DataSource tgtDataSource = tgtUriPattern.getDataSource();
@@ -651,15 +656,21 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized Set<Mapping> mapFull (Xref sourceXref, String lensUri, String graph, UriPattern... tgtUriPatterns) 
+    public Set<Mapping> mapFull (Xref sourceXref, String lensUri, String graph, UriPattern... tgtUriPatterns) 
+            throws BridgeDBException{
+        IdSysCodePair sourceRef = IdSysCodePair.toIdSysCodePair(sourceXref);
+        return mapFull(sourceRef, lensUri, graph, tgtUriPatterns);
+    }
+
+    private Set<Mapping> mapFull (IdSysCodePair sourceRef, String lensUri, String graph, UriPattern... tgtUriPatterns) 
             throws BridgeDBException{
         Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
         if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
-            return mapFull (sourceXref, lensUri);
+            return mapFull (sourceRef, lensUri);
         } else {
             Set<Mapping> results = new HashSet<Mapping>();
             for (UriPattern tgtUriPattern: targetUriPatterns){
-                results.addAll(mapFull(sourceXref, lensUri, tgtUriPattern));
+                results.addAll(mapFull(sourceRef, lensUri, tgtUriPattern));
             }
             return results;
         }
@@ -668,8 +679,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     @Override
     public synchronized Set<Mapping> mapFull(String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
-        Xref sourceXref = toXref(sourceUri);
-        Set<Mapping> results = mapFull(sourceXref,  lensUri, graph, tgtUriPatterns);
+        IdSysCodePair sourceRef = toIdSysCodePair(sourceUri);
+        Set<Mapping> results = mapFull(sourceRef, lensUri, graph, tgtUriPatterns);
         for (Mapping result:results){
             result.addSourceUri(sourceUri);
         }
@@ -679,8 +690,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     @Override
     public Set<Mapping> mapFull(String sourceUri, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
-        Xref sourceXref = toXref(sourceUri);
-        Set<Mapping> results = mapFull(sourceXref,  lensUri, tgtUriPattern);
+        IdSysCodePair sourceRef = toIdSysCodePair(sourceUri);
+        Set<Mapping> results = mapFull(sourceRef,  lensUri, tgtUriPattern);
         for (Mapping result:results){
             result.addSourceUri(sourceUri);
         }
@@ -690,8 +701,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     @Override
     public synchronized Set<Mapping> mapFull(String sourceUri, String lensUri, DataSource... tgtDataSources) throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
-        Xref sourceXref = toXref(sourceUri);
-        Set<Mapping> results = mapFull(sourceXref,  lensUri, tgtDataSources);
+        IdSysCodePair sourceRef = toIdSysCodePair(sourceUri);
+        Set<Mapping> results = mapFull(sourceRef,  lensUri, tgtDataSources);
         for (Mapping result:results){
             result.addSourceUri(sourceUri);
         }
@@ -701,8 +712,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     @Override
     public synchronized Set<Mapping> mapFull(String sourceUri, String lensUri, DataSource tgtDataSource) throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
-        Xref sourceXref = toXref(sourceUri);
-        Set<Mapping> results = mapFull(sourceXref,  lensUri, tgtDataSource);
+        IdSysCodePair sourceRef = toIdSysCodePair(sourceUri);
+        Set<Mapping> results = mapFull(sourceRef,  lensUri, tgtDataSource);
         for (Mapping result:results){
             result.addSourceUri(sourceUri);
         }

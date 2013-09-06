@@ -20,7 +20,7 @@ import org.junit.Test;
 public abstract class UriMapperNullLensTest extends UriListenerTest{
 
     private static  final String EMPTY_GRAPH = "";
-
+ 
     /**
      * Test of mapID method, of class UriMapper.
      */
@@ -345,7 +345,7 @@ public abstract class UriMapperNullLensTest extends UriListenerTest{
         Xref sourceXref = map3xref2;
         String lensId = null;
         UriPattern tgtUriPattern = uriPattern3;
-        Set<Mapping> results = uriMapper.mapFull(sourceXref, lensId, tgtUriPattern);
+        Set<Mapping> results = uriMapper.mapFull(sourceXref, lensId, EMPTY_GRAPH, tgtUriPattern);
         Set<String> targetUris = new HashSet<String>();
         Set<Xref> targetXrefs = new HashSet<Xref>();
         for (Mapping mapping:results){

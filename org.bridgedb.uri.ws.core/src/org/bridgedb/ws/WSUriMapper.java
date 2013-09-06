@@ -114,7 +114,7 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
 
     @Override
     public Set<String> mapUri(Xref sourceXref, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
-        Collection<Mapping> beans = mapFull(sourceXref, lensUri, tgtUriPattern);
+        Collection<Mapping> beans = mapFull(sourceXref, lensUri, null, tgtUriPattern);
         return extractUris(beans);
     }
 
@@ -260,14 +260,6 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
         //}
     }
     
-    @Override
-    public Set<Mapping> mapFull(Xref sourceXref, String lensUri, DataSource tgtDataSource) throws BridgeDBException {
-        DataSource[] tgtDataSources = new DataSource[1];
-        tgtDataSources[0] = tgtDataSource;
-
-        return mapFull(sourceXref, lensUri, tgtDataSources);
-    }
-
     @Override 
     public Set<Mapping> mapFull(Xref sourceXref, String lensUri) throws BridgeDBException {
         return  mapFull(sourceXref, lensUri, NULL_GRAPH);
@@ -279,13 +271,6 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
         }
         return map(sourceXref.getId(), sourceXref.getDataSource().getSystemCode(), 
                 NO_URI, lensUri, NO_SYSCODES, graph, NO_URI_PATTERNS);
-    }
-
-    @Override
-    public Set<Mapping> mapFull(Xref sourceXref, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
-        UriPattern[] tgtUriPatterns = new UriPattern[1];
-        tgtUriPatterns[0] = tgtUriPattern;
-        return mapFull(sourceXref, lensUri, NULL_GRAPH, tgtUriPatterns);
     }
 
     @Override

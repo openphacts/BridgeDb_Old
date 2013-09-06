@@ -383,7 +383,7 @@ public abstract class UriMapperAllLensTest extends UriListenerTest{
         Xref sourceXref = map3xref2;
         String lensId = Lens.getAllLens();
         UriPattern tgtUriPattern = uriPattern3;
-        Set<Mapping> results = uriMapper.mapFull(sourceXref, lensId, tgtUriPattern);
+        Set<Mapping> results = uriMapper.mapFull(sourceXref, lensId, NULL_GRAPH, tgtUriPattern);
         Set<String> targetUris = new HashSet<String>();
         Set<Xref> targetXrefs = new HashSet<Xref>();
         for (Mapping mapping:results){
