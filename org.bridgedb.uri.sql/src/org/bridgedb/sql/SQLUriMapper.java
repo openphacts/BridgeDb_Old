@@ -405,24 +405,17 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
  
     @Override
-    public synchronized MappingsBySet mapBySet(String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException {
+    public MappingsBySet mapBySet(String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException {
         Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
-        if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
-           return mapBySet (sourceUri, lensUri);
-        }
         MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
+        if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
+           return mapBySet (sourceUri, mappingsBySet, lensUri);
+        }
         for (UriPattern tgtUriPattern:targetUriPatterns){
             mapBySet(sourceUri, mappingsBySet, lensUri, tgtUriPattern);
         }
         return mappingsBySet;
         
-    }
-
-    @Override
-    public synchronized MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
-        MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
-        mapBySet(sourceUri, mappingsBySet, lensUri, tgtUriPattern) ;    
-        return mappingsBySet;
     }
 
     private void mapBySet(String sourceUri, MappingsBySet mappingsBySet, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
@@ -454,14 +447,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return mappingsBySet;           
     }
        
-    @Override
-    public synchronized MappingsBySet mapBySet(String sourceUri, String lensUri) 
-            throws BridgeDBException {
-        MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
-        mapBySet(sourceUri, mappingsBySet, lensUri);
-        return mappingsBySet;
-    }
-    
     public synchronized MappingsBySet mapBySet(String sourceUri, MappingsBySet mappingsBySet, String lensUri) 
             throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);

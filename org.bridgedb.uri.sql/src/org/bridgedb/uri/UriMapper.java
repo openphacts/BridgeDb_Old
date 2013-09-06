@@ -135,12 +135,6 @@ public interface UriMapper extends IDMapper{
     public Set<String> mapUri(Xref sourceXref, String LensUri, String graph, UriPattern... tgtUriPatterns) 
             throws BridgeDBException;
 
-    public MappingsBySet mapBySet(String sourceUri, String lensUri) 
-            throws BridgeDBException;
-
-    public MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern tgtUriPattern) 
-            throws BridgeDBException;
-
     public MappingsBySet mapBySet(String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException;
    
     public MappingsBySet mapBySet(Set<String> sourceUris, String lensUri, String graph, UriPattern... tgtUriPatterns) 

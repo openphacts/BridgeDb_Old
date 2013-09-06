@@ -101,20 +101,6 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     }
 
     @Override
-    public MappingsBySet mapBySet(String sourceUri, String lensUri) throws BridgeDBException {
-        Set<String> sourceUris = new HashSet<String>();
-        sourceUris.add(sourceUri);
-        return mapBySet(sourceUris, lensUri, NULL_GRAPH);
-    }
-
-    @Override
-    public MappingsBySet mapBySet(String sourceUri, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
-        Set<String> sourceUris = new HashSet<String>();
-        sourceUris.add(sourceUri);
-        return mapBySet(sourceUris, lensUri, NULL_GRAPH, tgtUriPattern);
-    }
-
-    @Override
     public MappingsBySet mapBySet(String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException {
         Set<String> sourceUris = new HashSet<String>();
         sourceUris.add(sourceUri);
