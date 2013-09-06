@@ -344,7 +344,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return results;
     }
     
-     private synchronized Set<IdSysCodePair> mapID(IdSysCodePair sourceRef, String lensUri) throws BridgeDBException {
+    private synchronized Set<IdSysCodePair> mapID(IdSysCodePair sourceRef, String lensUri) throws BridgeDBException {
         if (sourceRef == null) {
             logger.warn("mapId called with a badXref " + sourceRef);
             return new HashSet<IdSysCodePair>();
@@ -373,7 +373,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         }
         Set<String> results = new HashSet<String>();
         for (UriPattern tgtUriPattern:targetUriPatterns){
-            results.addAll(mapUri (sourceXref, lensUri, tgtUriPattern));
+            results.addAll(mapUri(sourceXref, lensUri, tgtUriPattern));
         }
         return results;
     }
@@ -386,9 +386,11 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             return new HashSet<String>();
         }
         DataSource tgtDataSource = tgtUriPattern.getDataSource();
-        Set<Xref> targetXrefs = mapID(sourceXref, lensUri, tgtDataSource);
+        String tgtSysCode = IdSysCodePair.toCode(tgtDataSource);
+        IdSysCodePair sourceRef = IdSysCodePair.toIdSysCodePair(sourceXref);
+        Set<IdSysCodePair> targetRefs = mapID(sourceRef, lensUri, tgtSysCode);
         HashSet<String> results = new HashSet<String>();
-        for (Xref target:targetXrefs){
+        for (IdSysCodePair target:targetRefs){
             results.add (tgtUriPattern.getUri(target.getId()));
         }
         return results;
@@ -397,9 +399,10 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     @Override
     public synchronized Set<String> mapUri (Xref sourceXref, String lensUri) 
             throws BridgeDBException {
-        Set<Xref> targetXrefs = mapID(sourceXref, lensUri);
+        IdSysCodePair sourceRef = IdSysCodePair.toIdSysCodePair(sourceXref);
+        Set<IdSysCodePair> targetRefs = mapID(sourceRef, lensUri);
         HashSet<String> results = new HashSet<String>();
-        for (Xref target:targetXrefs){
+        for (IdSysCodePair target:targetRefs){
             results.addAll (toUris(target));
         }
         return results;
