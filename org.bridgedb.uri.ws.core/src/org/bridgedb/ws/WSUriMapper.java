@@ -81,18 +81,6 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     }
     
     @Override
-    public Set<Xref> mapID(Xref sourceXref, String lensUri, DataSource tgtDataSource) throws BridgeDBException {
-        Collection<Mapping> beans = mapFull(sourceXref, lensUri, tgtDataSource);
-        return extractXref(beans);
-    }
-
-    @Override
-    public Set<Xref> mapID(Xref sourceXref, String lensUri) throws BridgeDBException {
-        Collection<Mapping> beans = mapFull(sourceXref, lensUri);
-        return extractXref(beans);
-    }
-
-    @Override
     public Set<String> mapUri(String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException {
         Collection<Mapping> beans = mapFull(sourceUri, lensUri, graph, tgtUriPatterns);
         return extractUris(beans);

@@ -287,34 +287,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         }
     }
 
-    @Override
-    public Set<Xref> mapID(Xref sourceXref, String lensUri, DataSource... tgtDataSource) throws BridgeDBException {
-        if (tgtDataSource == null || tgtDataSource.length == 0){
-            return mapID(sourceXref, lensUri);
-        }
-        if (tgtDataSource.length == 1){
-            return mapID(sourceXref, lensUri, tgtDataSource[0]);
-        }
-        HashSet<Xref> results = new HashSet<Xref>();
-        for (DataSource dataSource: tgtDataSource){
-            results.addAll(mapID(sourceXref, lensUri, dataSource));
-        }
-        return results;
-    }
-    
-    @Override
-    public Set<Xref> mapID(Xref sourceXref, String lensUri, DataSource tgtDataSource) throws BridgeDBException {
-        IdSysCodePair ref = IdSysCodePair.toIdSysCodePair(sourceXref);
-        if (ref == null) {
-            logger.warn("mapId called with a badXref " + sourceXref);
-            return new HashSet<Xref>();
-        }
-        String tgtSysCode = IdSysCodePair.toCode(tgtDataSource);
-        Set<IdSysCodePair> pairs = mapID(ref, lensUri, tgtSysCode);
-        Set<Xref> results = IdSysCodePair.toXrefs(pairs);
-        return results;
-    }
-    
     private synchronized Set<IdSysCodePair> mapID(IdSysCodePair sourcePair, String lensUri, String tgtSysCode) throws BridgeDBException {
         if (sourcePair == null || tgtSysCode == null){
             return new HashSet<IdSysCodePair>();
@@ -336,14 +308,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return results;
     }
 
-    @Override
-    public Set<Xref> mapID(Xref sourceXref, String lensUri) throws BridgeDBException {
-        IdSysCodePair sourceRef = IdSysCodePair.toIdSysCodePair(sourceXref);
-        Set<IdSysCodePair> pairs =  mapID(sourceRef, lensUri);
-        Set<Xref> results = IdSysCodePair.toXrefs(pairs);
-        return results;
-    }
-    
     private synchronized Set<IdSysCodePair> mapID(IdSysCodePair sourceRef, String lensUri) throws BridgeDBException {
         if (sourceRef == null) {
             logger.warn("mapId called with a badXref " + sourceRef);
@@ -361,6 +325,28 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         Set<IdSysCodePair> results = resultSetToIdSysCodePairSet(rs);
          //Add mapping to self
         results.add(sourceRef);
+        return results;
+    }
+    
+    private Set<IdSysCodePair> mapID(IdSysCodePair sourceRef, String lensUri, DataSource... tgtDataSource) throws BridgeDBException {
+        if (tgtDataSource == null || tgtDataSource.length == 0){
+            return mapID(sourceRef, lensUri);
+        }
+        if (tgtDataSource.length == 1){
+            return mapID(sourceRef, lensUri, IdSysCodePair.toCode(tgtDataSource[0]));
+        }
+        HashSet<IdSysCodePair> results = new HashSet<IdSysCodePair>();
+        for (DataSource dataSource: tgtDataSource){
+            results.addAll(mapID(sourceRef, lensUri, IdSysCodePair.toCode(dataSource)));
+        }
+        return results;
+    }
+    
+    @Override
+    public Set<Xref> mapID(Xref sourceXref, String lensUri, DataSource... tgtDataSources) throws BridgeDBException {
+        IdSysCodePair ref = IdSysCodePair.toIdSysCodePair(sourceXref);
+          Set<IdSysCodePair> pairs = mapID(ref, lensUri, tgtDataSources);
+        Set<Xref> results = IdSysCodePair.toXrefs(pairs);
         return results;
     }
     

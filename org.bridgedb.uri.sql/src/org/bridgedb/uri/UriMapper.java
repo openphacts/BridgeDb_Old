@@ -105,33 +105,7 @@ public interface UriMapper extends IDMapper{
 	 */
 	public Set<Xref> mapID(Xref sourceXref, String LensUri, DataSource... tgtDataSources) throws BridgeDBException;
 
-    /**
-	 * Get all cross-references for the given entity, restricting the
-	 * result to contain only references from the given set of data source,
-     * and only results which match the given Lens.
-     * 
-	 * @param sourceXref @see Class java docs. 
-     * @param LensUri @see Class java docs. 
-     * @param tgtDataSources @see Class java docs. 
-	 * @return A Set containing the cross references, or an empty
-	 * Set when no cross references could be found. This method does not return null.
-	 * @throws IDMapperException if the mapping service is (temporarily) unavailable 
-     */
-  	public Set<Xref> mapID(Xref sourceXref, String LensUri, DataSource tgtDataSource) throws BridgeDBException;
-	
-    /**
-	 * Get all cross-references for the given entity, restricting the
-	 * result to contain only references which match the given Lens.
-     * 
-	 * @param sourceXref @see Class java docs. 
-     * @param LensUri @see Class java docs. 
-	 * @return A Set containing the cross references, or an empty
-	 * Set when no cross references could be found. This method does not return null.
-	 * @throws IDMapperException if the mapping service is (temporarily) unavailable 
-     */
-    public Set<Xref> mapID(Xref sourceXref, String LensUri) throws BridgeDBException;
-
-    /**
+     /**
 	 * Get all Uris mapped to the given Uri, restricting the
 	 * result to contain only references which match the given UriPatterns and Lens.
      * 
