@@ -113,7 +113,7 @@ public abstract class UriMapperTestLensTest extends UriListenerTest{
         Xref sourceXref = map3xref2;
         String lensUri = Lens.getTestLens();
         UriPattern tgtUriPattern = uriPattern3;
-        Set results = uriMapper.mapUri(sourceXref, lensUri, tgtUriPattern);
+        Set results = uriMapper.mapUri(sourceXref, lensUri, NULL_GRAPH, tgtUriPattern);
         assertFalse(results.contains(map3Uri1));
         assertFalse(results.contains(map3Uri2));
         assertFalse(results.contains(map3Uri2a));
@@ -133,7 +133,7 @@ public abstract class UriMapperTestLensTest extends UriListenerTest{
         report("MapUri_sourceXref_lensUri");
         Xref sourceXref = map3xref2;
         String lensUri = Lens.getTestLens();
-        Set results = uriMapper.mapUri(sourceXref, lensUri);
+        Set results = uriMapper.mapUri(sourceXref, lensUri, NULL_GRAPH);
         assertFalse(results.contains(map3Uri1));
         assertTrue(results.contains(map3Uri2));
         assertTrue(results.contains(map3Uri2a));
@@ -177,7 +177,7 @@ public abstract class UriMapperTestLensTest extends UriListenerTest{
         String sourceUri = map3Uri2;
         String lensUri = Lens.getTestLens();
         UriPattern tgtUriPattern = uriPattern3;
-        Set results = uriMapper.mapUri(sourceUri, lensUri, tgtUriPattern);
+        Set results = uriMapper.mapUri(sourceUri, lensUri, NULL_GRAPH, tgtUriPattern);
         assertFalse(results.contains(map3Uri1));
         assertFalse(results.contains(map3Uri2));
         assertFalse(results.contains(map3Uri2a));
@@ -198,7 +198,7 @@ public abstract class UriMapperTestLensTest extends UriListenerTest{
         report("MapUri_sourceUri_lensUri");
         String sourceUri = map3Uri2;
         String lensUri = Lens.getTestLens();
-        Set results = uriMapper.mapUri(sourceUri, lensUri);
+        Set results = uriMapper.mapUri(sourceUri, lensUri, NULL_GRAPH);
         assertFalse(results.contains(map3Uri1));
         assertTrue(results.contains(map3Uri2));
         assertTrue(results.contains(map3Uri2a));

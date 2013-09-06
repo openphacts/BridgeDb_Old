@@ -122,7 +122,7 @@ public abstract class UriMapperNullLensTest extends UriListenerTest{
         report("MapUri_sourceXref_lensId");
         Xref sourceXref = map3xref2;
         String lensId = null;
-        Set results = uriMapper.mapUri(sourceXref, lensId);
+        Set results = uriMapper.mapUri(sourceXref, lensId, EMPTY_GRAPH);
         assertTrue(results.contains(map3Uri1));
         assertTrue(results.contains(map3Uri2));
         assertTrue(results.contains(map3Uri2a));
@@ -160,7 +160,7 @@ public abstract class UriMapperNullLensTest extends UriListenerTest{
         String sourceUri = map3Uri2;
         String lensId = null;
         UriPattern tgtUriPattern = uriPattern3;
-        Set results = uriMapper.mapUri(sourceUri, lensId, tgtUriPattern);
+        Set results = uriMapper.mapUri(sourceUri, lensId, EMPTY_GRAPH, tgtUriPattern);
         assertFalse(results.contains(map3Uri1));
         assertFalse(results.contains(map3Uri2));
         assertFalse(results.contains(map3Uri2a));
@@ -178,7 +178,7 @@ public abstract class UriMapperNullLensTest extends UriListenerTest{
         report("MapUri_sourceUri_lensId");
         String sourceUri = map3Uri2;
         String lensId = null;
-        Set results = uriMapper.mapUri(sourceUri, lensId);
+        Set results = uriMapper.mapUri(sourceUri, lensId, EMPTY_GRAPH);
         assertTrue(results.contains(map3Uri1));
         assertTrue(results.contains(map3Uri2));
         assertTrue(results.contains(map3Uri2a));

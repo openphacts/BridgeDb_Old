@@ -161,7 +161,7 @@ public abstract class UriMapperSimpleTest extends UriListenerTest{
         Xref sourceXref = map3xref2;
         String lensId = Lens.getDefaultLens();
         UriPattern tgtUriPattern = uriPattern3;
-        Set results = uriMapper.mapUri(sourceXref, lensId, tgtUriPattern);
+        Set results = uriMapper.mapUri(sourceXref, lensId, NULL_GRAPH, tgtUriPattern);
         assertFalse(results.contains(map3Uri1));
         assertFalse(results.contains(map3Uri2));
         assertFalse(results.contains(map3Uri2a));
@@ -179,7 +179,7 @@ public abstract class UriMapperSimpleTest extends UriListenerTest{
         report("MapUri_sourceXref_lensId");
         Xref sourceXref = map3xref2;
         String lensId = Lens.getDefaultLens();
-        Set results = uriMapper.mapUri(sourceXref, lensId);
+        Set results = uriMapper.mapUri(sourceXref, lensId, NULL_GRAPH);
         assertTrue(results.contains(map3Uri1));
         assertTrue(results.contains(map3Uri2));
         assertTrue(results.contains(map3Uri2a));
@@ -216,7 +216,7 @@ public abstract class UriMapperSimpleTest extends UriListenerTest{
         String sourceUri = map3Uri2;
         String lensId = Lens.getDefaultLens();
         UriPattern tgtUriPattern = uriPattern3;
-        Set results = uriMapper.mapUri(sourceUri, lensId, tgtUriPattern);
+        Set results = uriMapper.mapUri(sourceUri, lensId, NULL_GRAPH, tgtUriPattern);
         assertFalse(results.contains(map3Uri1));
         assertFalse(results.contains(map3Uri2));
         assertFalse(results.contains(map3Uri2a));
@@ -251,7 +251,7 @@ public abstract class UriMapperSimpleTest extends UriListenerTest{
         report("MapUri_sourceUri_lensId");
         String sourceUri = map3Uri2;
         String lensId = Lens.getDefaultLens();
-        Set results = uriMapper.mapUri(sourceUri, lensId);
+        Set results = uriMapper.mapUri(sourceUri, lensId, NULL_GRAPH);
         assertTrue(results.contains(map3Uri1));
         assertTrue(results.contains(map3Uri2));
         assertTrue(results.contains(map3Uri2a));

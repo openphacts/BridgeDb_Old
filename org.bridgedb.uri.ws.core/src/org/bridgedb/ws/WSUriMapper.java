@@ -101,49 +101,6 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     }
 
     @Override
-    public Set<String> mapUri(Xref sourceXref, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
-        Collection<Mapping> beans = mapFull(sourceXref, lensUri, null, tgtUriPattern);
-        return extractUris(beans);
-    }
-
-    @Override
-    public Set<String> mapUri(Xref sourceXref, String lensUri) throws BridgeDBException {
-        Collection<Mapping> beans = mapFull(sourceXref, lensUri);
-        return extractUris(beans);
-    }
-
-    @Override
-    public Set<String> mapUri(String sourceUri, String lensUri, UriPattern targetUriPattern) throws BridgeDBException {
-        List<String> sourceUris = new ArrayList<String>();
-        sourceUris.add(sourceUri);
-        List<String> targetUriPatterns = new ArrayList<String>();
-        if (targetUriPattern == null){
-            return new HashSet<String>();
-        } else {
-            targetUriPatterns.add(targetUriPattern.getUriPattern());
-        }
-        Response response = uriService.mapUri(sourceUris, lensUri, NULL_GRAPH, targetUriPatterns); 
-        if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()){
-            return new HashSet<String>();
-        }
-        UriMappings mappings = (UriMappings)response.getEntity();
-        return mappings.getTargetUri();
-    }
-
-    @Override
-    public Set<String> mapUri(String sourceUri, String lensUri) throws BridgeDBException {
-        List<String> sourceUris = new ArrayList<String>();
-        sourceUris.add(sourceUri);
-        List<String> targetUriPatterns = new ArrayList<String>();
-        Response response = uriService.mapUri(sourceUris, lensUri, NULL_GRAPH, targetUriPatterns); 
-        if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()){
-            return new HashSet<String>();
-        }
-        UriMappings mappings = (UriMappings)response.getEntity();
-        return mappings.getTargetUri();
-    }
-
-    @Override
     public MappingsBySet mapBySet(String sourceUri, String lensUri) throws BridgeDBException {
         Set<String> sourceUris = new HashSet<String>();
         sourceUris.add(sourceUri);

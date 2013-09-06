@@ -345,47 +345,13 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     @Override
     public Set<Xref> mapID(Xref sourceXref, String lensUri, DataSource... tgtDataSources) throws BridgeDBException {
         IdSysCodePair ref = IdSysCodePair.toIdSysCodePair(sourceXref);
-          Set<IdSysCodePair> pairs = mapID(ref, lensUri, tgtDataSources);
+        Set<IdSysCodePair> pairs = mapID(ref, lensUri, tgtDataSources);
         Set<Xref> results = IdSysCodePair.toXrefs(pairs);
         return results;
     }
     
-    @Override
-    public synchronized Set<String> mapUri (Xref sourceXref, String lensUri, String graph, UriPattern... tgtUriPatterns) 
+    private synchronized Set<String> mapUri (IdSysCodePair sourceRef, String lensUri) 
             throws BridgeDBException {
-        Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
-        if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
-            return mapUri (sourceXref, lensUri);
-        }
-        Set<String> results = new HashSet<String>();
-        for (UriPattern tgtUriPattern:targetUriPatterns){
-            results.addAll(mapUri(sourceXref, lensUri, tgtUriPattern));
-        }
-        return results;
-    }
- 
-    @Override
-    public synchronized Set<String> mapUri (Xref sourceXref, String lensUri, UriPattern tgtUriPattern) 
-            throws BridgeDBException {
-        if (tgtUriPattern == null){
-            logger.warn("mapUri called with a null tgtDatasource and " + sourceXref);
-            return new HashSet<String>();
-        }
-        DataSource tgtDataSource = tgtUriPattern.getDataSource();
-        String tgtSysCode = IdSysCodePair.toCode(tgtDataSource);
-        IdSysCodePair sourceRef = IdSysCodePair.toIdSysCodePair(sourceXref);
-        Set<IdSysCodePair> targetRefs = mapID(sourceRef, lensUri, tgtSysCode);
-        HashSet<String> results = new HashSet<String>();
-        for (IdSysCodePair target:targetRefs){
-            results.add (tgtUriPattern.getUri(target.getId()));
-        }
-        return results;
-    }
-    
-    @Override
-    public synchronized Set<String> mapUri (Xref sourceXref, String lensUri) 
-            throws BridgeDBException {
-        IdSysCodePair sourceRef = IdSysCodePair.toIdSysCodePair(sourceXref);
         Set<IdSysCodePair> targetRefs = mapID(sourceRef, lensUri);
         HashSet<String> results = new HashSet<String>();
         for (IdSysCodePair target:targetRefs){
@@ -393,29 +359,11 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         }
         return results;
     }
-    
-    @Override
-    public synchronized Set<String> mapUri (String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) 
+
+    private synchronized Set<String> mapUri (IdSysCodePair sourceRef, String lensUri, UriPattern tgtUriPattern) 
             throws BridgeDBException {
-        sourceUri = scrubUri(sourceUri);
-        Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
-        if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
-            return mapUri (sourceUri, lensUri);
-        }
-        Set<String> results = new HashSet<String>();
-        for (UriPattern tgtUriPattern:targetUriPatterns){
-            results.addAll(mapUri (sourceUri, lensUri, tgtUriPattern));
-        }
-        return results;
-    }
- 
-    @Override
-    public synchronized Set<String> mapUri (String sourceUri, String lensUri, UriPattern tgtUriPattern) 
-            throws BridgeDBException {
-        sourceUri = scrubUri(sourceUri);
-        IdSysCodePair sourceRef = toIdSysCodePair(sourceUri);
         if (tgtUriPattern == null){
-            logger.warn("mapUri called with a null tgtDatasource and " + sourceUri);
+            logger.warn("mapUri called with a null tgtDatasource");
             return new HashSet<String>();
         }
         DataSource tgtDataSource = tgtUriPattern.getDataSource();
@@ -428,19 +376,34 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return results;
     }
     
-    @Override
-    public synchronized Set<String> mapUri (String sourceUri, String lensUri) 
+    private Set<String> mapUri (IdSysCodePair sourceRef, String lensUri, String graph, UriPattern[] tgtUriPatterns) 
             throws BridgeDBException {
-        sourceUri = scrubUri(sourceUri);
-        IdSysCodePair sourceRef = toIdSysCodePair(sourceUri);
-        Set<IdSysCodePair> targetPairs = mapID(sourceRef, lensUri);
-        HashSet<String> results = new HashSet<String>();
-        for (IdSysCodePair target:targetPairs){
-            results.addAll (toUris(target));
+        Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
+        if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
+            return mapUri (sourceRef, lensUri);
+        }
+        Set<String> results = new HashSet<String>();
+        for (UriPattern tgtUriPattern:targetUriPatterns){
+            results.addAll(mapUri(sourceRef, lensUri, tgtUriPattern));
         }
         return results;
     }
-    
+ 
+    @Override
+    public Set<String> mapUri (Xref sourceXref, String lensUri, String graph, UriPattern... tgtUriPatterns) 
+            throws BridgeDBException {
+        IdSysCodePair sourceRef = IdSysCodePair.toIdSysCodePair(sourceXref);
+        return mapUri(sourceRef, lensUri, graph, tgtUriPatterns);
+    }
+        
+    @Override
+    public synchronized Set<String> mapUri (String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) 
+            throws BridgeDBException {
+        sourceUri = scrubUri(sourceUri);
+        IdSysCodePair sourceRef = toIdSysCodePair(sourceUri);
+        return mapUri(sourceRef, lensUri, graph, tgtUriPatterns);
+    }
+ 
     @Override
     public synchronized MappingsBySet mapBySet(String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException {
         Set<UriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);

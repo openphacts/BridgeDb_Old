@@ -44,10 +44,12 @@ import org.junit.Test;
  */
 public abstract class UriMapperSpecialTest extends UriListenerTest{
            
+    private static  final String NULL_GRAPH = null;
+
     @Test 
     public void testMapIDOneBad() throws BridgeDBException{
         report("MapIDOneBad");
-        Set<String> results = uriMapper.mapUri(mapBadUri1, Lens.getDefaultLens());
+        Set<String> results = uriMapper.mapUri(mapBadUri1, Lens.getDefaultLens(), NULL_GRAPH);
         //According to Martijn and the OPS needs mappers should return the incoming URI where appropiate.
         //Still optional as I am not sure text does.
         //Not all mappers will have the pattern matching to notice this is an invalid URI
@@ -71,7 +73,7 @@ public abstract class UriMapperSpecialTest extends UriListenerTest{
     @Test
     public void testMapNoneExistingDataSource() throws BridgeDBException{
         report("MapNoneExistingDataSource");
-        Set<String> results = uriMapper.mapUri(map1Uri2, Lens.getDefaultLens(), uriPatternBad);
+        Set<String> results = uriMapper.mapUri(map1Uri2, Lens.getDefaultLens(), NULL_GRAPH, uriPatternBad);
         assertEquals(0,results.size());
     }
 
