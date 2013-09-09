@@ -66,7 +66,7 @@ public abstract class UriMapperSpecialTest extends UriListenerTest{
     @Test 
     public void testMapFullOneBadOneNameSpace() throws BridgeDBException{
         report("MapFullOneBadOneNameSpace");
-        Set<Mapping> results = uriMapper.mapFull(mapBadUri1, Lens.getDefaultLens(), uriPattern2);
+        Set<Mapping> results = uriMapper.mapFull(mapBadUri1, Lens.getDefaultLens(), NULL_GRAPH, uriPattern2);
         assertTrue(results.size() <= 1);
     }
 

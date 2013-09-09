@@ -505,7 +505,7 @@ public abstract class UriMapperNullLensTest extends UriListenerTest{
         Xref sourceXref = map3xref2;
         String lensId = null;
         UriPattern tgtUriPattern = uriPattern3;
-        Set<Mapping> results = uriMapper.mapFull(sourceUri, lensId, tgtUriPattern);
+        Set<Mapping> results = uriMapper.mapFull(sourceUri, lensId, EMPTY_GRAPH, tgtUriPattern);
         Set<String> targetUris = new HashSet<String>();
         Set<Xref> targetXrefs = new HashSet<Xref>();
         Set<Integer> ids = new HashSet<Integer>(); 

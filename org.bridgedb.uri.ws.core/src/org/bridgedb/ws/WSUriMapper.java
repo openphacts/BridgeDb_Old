@@ -130,18 +130,16 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
         if (sourceXref == null){
             return new HashSet<Mapping>();
         }
-        if (tgtDataSources == null || tgtDataSources.length == 0){
-            return mapFull(sourceXref, lensUri);
-        }
         ArrayList<String> tgtSysCodes = new ArrayList<String>();
-        for (int i = 0 ; i < tgtDataSources.length; i++){
-            if (tgtDataSources[i] != null){
-                tgtSysCodes.add(tgtDataSources[i].getSystemCode());
+        if (tgtDataSources != null){
+            for (int i = 0 ; i < tgtDataSources.length; i++){
+                if (tgtDataSources[i] != null){
+                    tgtSysCodes.add(tgtDataSources[i].getSystemCode());
+                } else {
+                    tgtSysCodes.add(null);
+                }
             }
         }
-        if (tgtSysCodes.isEmpty()){
-            return new HashSet<Mapping>();
-        }        
         return map(sourceXref.getId(), sourceXref.getDataSource().getSystemCode(), 
                 NO_URI, lensUri, tgtSysCodes, NULL_GRAPH, NO_URI_PATTERNS);
     }
@@ -191,11 +189,6 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
         //}
     }
     
-    @Override 
-    public Set<Mapping> mapFull(Xref sourceXref, String lensUri) throws BridgeDBException {
-        return  mapFull(sourceXref, lensUri, NULL_GRAPH);
-    }
-    
     private Set<Mapping> mapFull(Xref sourceXref, String lensUri, String graph) throws BridgeDBException {
         if (sourceXref == null){
             return new HashSet<Mapping>();
@@ -206,34 +199,20 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
 
     @Override
     public Set<Mapping> mapFull(String sourceUri, String lensUri, DataSource... tgtDataSources) throws BridgeDBException {
-        if (tgtDataSources == null || tgtDataSources.length == 0){
-            return mapFull(sourceUri, lensUri);
-        }
         if (sourceUri == null){
             return new HashSet<Mapping>();
         }
         ArrayList<String> tgtSysCodes = new ArrayList<String>();
-        for (int i = 0 ; i < tgtDataSources.length; i++){
-            if (tgtDataSources[i] != null){
-                tgtSysCodes.add(tgtDataSources[i].getSystemCode());
+        if (tgtDataSources != null){
+            for (int i = 0 ; i < tgtDataSources.length; i++){
+                if (tgtDataSources[i] != null){
+                    tgtSysCodes.add(tgtDataSources[i].getSystemCode());
+                } else {
+                    tgtSysCodes.add(null);
+                }
             }
         }
-        if (tgtSysCodes.isEmpty()){
-            return new HashSet<Mapping>();
-        }
         return map(NO_ID, NO_SYSCODE, sourceUri, lensUri, tgtSysCodes, NULL_GRAPH, NO_URI_PATTERNS);
-    }
-
-    @Override
-    public Set<Mapping> mapFull(String sourceUri, String lensUri, DataSource tgtDataSource) throws BridgeDBException {
-        DataSource[] tgtDataSources = new DataSource[1];
-        tgtDataSources[0] = tgtDataSource;
-        return mapFull(sourceUri, lensUri, tgtDataSources);
-    }
-
-    @Override
-    public Set<Mapping> mapFull(String sourceUri, String lensUri) throws BridgeDBException {
-        return mapFull(sourceUri, lensUri, NULL_GRAPH);
     }
 
     private Set<Mapping> mapFull(String sourceUri, String lensUri, String graph) throws BridgeDBException {
@@ -241,13 +220,6 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
             return new HashSet<Mapping>();
         }
         return map(NO_ID, NO_SYSCODE, sourceUri, lensUri, NO_SYSCODES, graph, NO_URI_PATTERNS);
-    }
-
-    @Override
-    public Set<Mapping> mapFull(String sourceUri, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
-        UriPattern[] tgtUriPatterns = new UriPattern[1];
-        tgtUriPatterns[0] = tgtUriPattern;
-        return mapFull(sourceUri, lensUri, NULL_GRAPH, tgtUriPatterns);
     }
 
     @Override

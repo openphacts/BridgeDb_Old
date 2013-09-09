@@ -899,7 +899,7 @@ public abstract class UriMapperNullTargetTest extends UriListenerTest{
         Xref sourceXref = map3xref2;
         String lensId = Lens.getDefaultLens();
         UriPattern tgtUriPattern = null;
-        Set<Mapping> results = uriMapper.mapFull(sourceUri, lensId, tgtUriPattern);
+        Set<Mapping> results = uriMapper.mapFull(sourceUri, lensId, NULL_GRAPH, tgtUriPattern);
         assertTrue(results.isEmpty());
     }
 

@@ -773,6 +773,8 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         for (String targetCode:targetCodes){
             if (targetCode != null && !targetCode.isEmpty()){
                 targets.add(DataSource.getBySystemCode(targetCode));
+            } else {
+                targets.add(null);
             }
         }
         if (targets.isEmpty()){
