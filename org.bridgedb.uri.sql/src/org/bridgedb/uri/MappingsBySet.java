@@ -33,20 +33,19 @@ import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.Reporter;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
-import org.openrdf.model.impl.ContextStatementImpl;
 import org.openrdf.model.impl.StatementImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.RDFWriterFactory;
 import org.openrdf.rio.RDFWriterRegistry;
-import org.openrdf.rio.trig.TriGWriter;
-import org.openrdf.rio.turtle.TurtleWriter;
 import org.openrdf.rio.n3.N3Writer;
 import org.openrdf.rio.ntriples.NTriplesWriter;
 import org.openrdf.rio.rdfxml.RDFXMLWriter;
 import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
+import org.openrdf.rio.trig.TriGWriter;
 import org.openrdf.rio.trix.TriXWriter;
+import org.openrdf.rio.turtle.TurtleWriter;
 
 /**
  * Holder class for the main Meta Data of MappingSet.
@@ -72,10 +71,10 @@ public class MappingsBySet {
     }
     
     public void addMapping (int mappingSetId, String predicate, String justification, String mappingSource, 
-            String sourceUri, Set<String> targetUris){
+            String mappingResource, String sourceUri, Set<String> targetUris){
         SetMappings setMapping = setMappingById(mappingSetId);
         if (setMapping == null){
-            setMapping = new SetMappings(mappingSetId, predicate, justification, mappingSource);
+            setMapping = new SetMappings(mappingSetId, predicate, justification, mappingSource, mappingResource);
             setMappings.add(setMapping);
         }
         for (String targetUri: targetUris){
@@ -88,10 +87,10 @@ public class MappingsBySet {
     }
     
     public void addMapping (int mappingSetId, String predicate, String justification, String mappingSource, 
-            String sourceUri, String targetUri){
+            String mappingResource, String sourceUri, String targetUri){
         SetMappings setMapping = setMappingById(mappingSetId);
         if (setMapping == null){
-            setMapping = new SetMappings(mappingSetId, predicate, justification, mappingSource);
+            setMapping = new SetMappings(mappingSetId, predicate, justification, mappingSource, mappingResource);
             getSetMappings().add(setMapping);
         }
         setMapping.addMapping(new UriMapping(sourceUri, targetUri));

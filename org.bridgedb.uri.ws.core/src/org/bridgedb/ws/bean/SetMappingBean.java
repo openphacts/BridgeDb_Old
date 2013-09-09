@@ -35,6 +35,7 @@ public class SetMappingBean {
     private String predicate;
     private String justification;
     private String mappingSource;
+    private String mappingResource;
     private Set<UriMappingBean> mapping;
 
     /**
@@ -46,7 +47,7 @@ public class SetMappingBean {
     
     public final SetMappings asSetMapping(){
        SetMappings setMappings = 
-               new SetMappings(getId(), getPredicate(), getJustification(), getMappingSource());
+               new SetMappings(getId(), getPredicate(), getJustification(), getMappingSource(), getMappingResource());
        for (UriMappingBean uriMappingBean:getMapping()){
            setMappings.addMapping(uriMappingBean.asUriMapping());
        }
@@ -58,6 +59,7 @@ public class SetMappingBean {
         setPredicate(setMapping.getPredicate());
         setJustification(setMapping.getJustification());
         setMappingSource(setMapping.getMappingSource());
+        setMappingResource(setMapping.getMappingResource());
         mapping = new HashSet<UriMappingBean>();
         for (UriMapping uriMapping:setMapping.getMappings()){
             mapping.add(new UriMappingBean(uriMapping));
@@ -132,6 +134,20 @@ public class SetMappingBean {
      */
     public final void setMapping(Set<UriMappingBean> mapping) {
         this.mapping = mapping;
+    }
+
+    /**
+     * @return the mappingResource
+     */
+    public String getMappingResource() {
+        return mappingResource;
+    }
+
+    /**
+     * @param mappingResource the mappingResource to set
+     */
+    public void setMappingResource(String mappingResource) {
+        this.mappingResource = mappingResource;
     }
     
   

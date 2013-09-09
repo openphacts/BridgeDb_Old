@@ -590,6 +590,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         query.append(JUSTIFICATION_COLUMN_NAME);
         query.append(", ");
         query.append(MAPPING_SOURCE_COLUMN_NAME);
+        query.append(", ");
+        query.append(MAPPING_RESOURCE_COLUMN_NAME);
         return query;
    }
 
@@ -1471,7 +1473,9 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 String predicate = rs.getString(PREDICATE_COLUMN_NAME);
                 String justification = rs.getString(JUSTIFICATION_COLUMN_NAME);
                 String mappingSource = rs.getString(MAPPING_SOURCE_COLUMN_NAME);
-                mappingsBySet.addMapping(mappingSetId, predicate, justification, mappingSource, sourceUri, targetUris);
+                String mappingResource = rs.getString(MAPPING_RESOURCE_COLUMN_NAME);
+                mappingsBySet.addMapping(mappingSetId, predicate, justification, mappingSource, mappingResource, 
+                        sourceUri, targetUris);
             }
        } catch (SQLException ex) {
             throw new BridgeDBException("Unable to parse results.", ex);
@@ -1488,7 +1492,9 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 String predicate = rs.getString(PREDICATE_COLUMN_NAME);
                 String justification = rs.getString(JUSTIFICATION_COLUMN_NAME);
                 String mappingSource = rs.getString(MAPPING_SOURCE_COLUMN_NAME);
-                mappingsBySet.addMapping(mappingSetId, predicate, justification, mappingSource, sourceUri, targetUri);
+                String mappingResource = rs.getString(MAPPING_RESOURCE_COLUMN_NAME);
+                mappingsBySet.addMapping(mappingSetId, predicate, justification, mappingSource, mappingResource, 
+                        sourceUri, targetUri);
             }
        } catch (SQLException ex) {
             throw new BridgeDBException("Unable to parse results.", ex);

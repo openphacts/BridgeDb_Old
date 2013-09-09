@@ -43,17 +43,19 @@ public class SetMappings {
     private final String predicate;
     private final String justification;
     private final String mappingSource;
+    private final String mappingResource;
     private final Set<UriMapping> mappings;
     
     public static final String METHOD_NAME = "mappingSet";
     public static final String URI_PREFIX = "/" + METHOD_NAME + "/";
     public static final String HAS_LENS = "http:www.bridgedb.org/rdf/fulfillsLens" ;
     
-    public SetMappings(int id, String predicate, String justification, String mappingSource){
+    public SetMappings(int id, String predicate, String justification, String mappingSource, String mappingResource){
         this.id = id;
         this.predicate = predicate;
         this.justification = justification;
         this.mappingSource = mappingSource;
+        this.mappingResource = mappingResource;
         this.mappings = new HashSet<UriMapping>();
     }
     
@@ -157,6 +159,13 @@ public class SetMappings {
     public static void main(String[] args) {
         String contextPath = RdfBase.DEFAULT_BASE_URI;
         Reporter.println(toURI("test", contextPath).toString());
+    }
+
+    /**
+     * @return the mappingResource
+     */
+    public String getMappingResource() {
+        return mappingResource;
     }
 
 
