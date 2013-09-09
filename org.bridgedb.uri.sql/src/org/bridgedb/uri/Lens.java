@@ -199,7 +199,11 @@ public class Lens {
         }
     }
     
-	/**
+    public String toUri(){
+        return RdfBase.DEFAULT_BASE_URI + URI_PREFIX + getId();
+    }
+
+    /**
 	 * @return the name
 	 */
 	public String getName() {

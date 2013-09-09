@@ -239,7 +239,7 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         if (mappingsBySet.isEmpty()){
             return Response.noContent().build();
         } else {
-            String rdf = mappingsBySet.toRDF(null, formatName);     
+            String rdf = mappingsBySet.toRDF(formatName);     
             return Response.ok(rdf, MediaType.TEXT_PLAIN_TYPE).build();
         }
     }
@@ -271,7 +271,7 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         sb.append(" this method does not include any protential mapping to self.</h2>");
         sb.append("<h4>Use MediaType.TEXT_PLAIN to remove HTML stuff</h4>");
         sb.append("<p>Warning MediaType.TEXT_PLAIN version returns status 204 if no mappings found.</p>");
-        generateTextarea(sb, "RDF", mappingsBySet.toRDF(null, formatName));
+        generateTextarea(sb, "RDF", mappingsBySet.toRDF(formatName));
         footerAndEnd(sb);
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
     }

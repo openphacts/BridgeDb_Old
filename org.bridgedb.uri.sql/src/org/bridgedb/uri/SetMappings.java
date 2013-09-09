@@ -120,36 +120,36 @@ public class SetMappings {
         }
     }
 
-    protected static URI toURI(String text, String contextPath){
+    protected static URI toURI(String text){
         try {
             return new URIImpl(text);
         } catch (IllegalArgumentException ex){
-            return new URIImpl("<" + contextPath + text + ">");
+            return new URIImpl("<" + text + ">");
         }
     }
     
-    Set<Statement> asRDF(String lens, String contextPath) throws BridgeDBException {
+    Set<Statement> asRDF(String lens) throws BridgeDBException {
         HashSet<Statement> statements = new HashSet<Statement>();
-        URI setUri = new URIImpl(contextPath + URI_PREFIX + id);
-        URI predicateURI = toURI(predicate, contextPath);
+        URI setUri = new URIImpl(getMappingResource());
+        URI predicateURI = toURI(predicate);
         Statement statement = new StatementImpl(setUri, VoidConstants.LINK_PREDICATE, predicateURI);
         statements.add(statement);
-        URI justifcationURI = toURI(this.justification, contextPath);
+        URI justifcationURI = toURI(this.justification);
         statement = new StatementImpl(setUri, DulConstants.EXPRESSES, justifcationURI);
         statements.add(statement);
-        URI mappingSourceURI = toURI(this.mappingSource, contextPath);
+        URI mappingSourceURI = toURI(this.mappingSource);
         statement = new StatementImpl(setUri, VoidConstants.DATA_DUMP, mappingSourceURI);
         statements.add(statement);
         if (lens != null){
             Lens theLens = Lens.byId(lens);
-            URI lensUri = new URIImpl(theLens.toUri(contextPath));
+            URI lensUri = new URIImpl(theLens.toUri());
             URI hasLensUri = new URIImpl(HAS_LENS);
             statement = new StatementImpl(setUri, hasLensUri, lensUri);
             statements.add(statement);
         }
         for (UriMapping mapping:mappings){
-            URI sourceURI = toURI(mapping.getSourceUri(), contextPath);
-            URI targetURI = toURI(mapping.getTargetUri(), contextPath);
+            URI sourceURI = toURI(mapping.getSourceUri());
+            URI targetURI = toURI(mapping.getTargetUri());
             statement =  new ContextStatementImpl(sourceURI, predicateURI, targetURI, setUri);
             statements.add(statement);
         }
@@ -158,7 +158,7 @@ public class SetMappings {
     
     public static void main(String[] args) {
         String contextPath = RdfBase.DEFAULT_BASE_URI;
-        Reporter.println(toURI("test", contextPath).toString());
+        Reporter.println(toURI("test").toString());
     }
 
     /**

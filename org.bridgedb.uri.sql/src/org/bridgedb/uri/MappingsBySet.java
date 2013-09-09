@@ -164,19 +164,16 @@ public class MappingsBySet {
         return mappings;
     }
     
-    public Set<Statement> asRDF(String contextPath) throws BridgeDBException{
-        if (contextPath == null){
-            contextPath = RdfBase.DEFAULT_BASE_URI;
-        }
+    public Set<Statement> asRDF() throws BridgeDBException{
         HashSet<Statement> statements = new HashSet<Statement>();
         for (SetMappings setMapping: getSetMappings()){
-            Set<Statement> more = setMapping.asRDF(lens, contextPath);
+            Set<Statement> more = setMapping.asRDF(lens);
             statements.addAll(more);          
         }
         for (UriMapping mapping:mappings){
             if (!mapping.getSourceUri().equals(mapping.getTargetUri())){
-                URI sourceURI = SetMappings.toURI(mapping.getSourceUri(), contextPath);
-                URI targetURI = SetMappings.toURI(mapping.getTargetUri(), contextPath);
+                URI sourceURI = SetMappings.toURI(mapping.getSourceUri());
+                URI targetURI = SetMappings.toURI(mapping.getTargetUri());
                 Statement statement =  new StatementImpl(sourceURI, OWLConstants.SAMEAS_URI, targetURI);
                 statements.add(statement);
             }
@@ -230,8 +227,8 @@ public class MappingsBySet {
         }
     }
     
-    public String toRDF(String contextPath, String formatName) throws BridgeDBException{
-            Set<Statement> statements = asRDF(contextPath);
+    public String toRDF(String formatName) throws BridgeDBException{
+            Set<Statement> statements = asRDF();
             StringWriter writer = new StringWriter();
             if (formatName == null){
                 formatName = "TriX";
