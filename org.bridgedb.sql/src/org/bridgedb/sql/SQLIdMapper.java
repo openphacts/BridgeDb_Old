@@ -373,7 +373,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
     public synchronized boolean isMappingSupported(DataSource src, DataSource tgt) throws BridgeDBException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT ");
-        query.append(PREDICATE_COLUMN_NAME);
+        query.append(ID_COLUMN_NAME);
         query.append(" FROM ");
         query.append(MAPPING_SET_TABLE_NAME);
         query.append(" WHERE ");

@@ -41,6 +41,7 @@ import org.bridgedb.utils.BridgeDBException;
 public class SQLListener extends SQLBase implements MappingListener{
 
     //Numbering should not clash with any GDB_COMPAT_VERSION;
+    //version number must be even as URI extension uses SQL_COMPAT_VERSION + 1
 	public static final int SQL_COMPAT_VERSION = 24;
   
     //Maximumn size in database
@@ -51,13 +52,11 @@ public class SQLListener extends SQLBase implements MappingListener{
     protected static final int ID_LENGTH = 100;
     private static final int TYPE_LENGTH = 100;
     private static final int URNBASE_LENGTH = 100;
-    protected static final int PREDICATE_LENGTH = 100;
-    protected static final int JUSTIFICATION_LENGTH = 150;
 
     private static final int KEY_LENGTH= 100; 
     private static final int PROPERTY_LENGTH = 100;
     private static final int MAX_BLOCK_SIZE = 1000;
-protected static final int MAPPING_URI_LENGTH = 200;
+    protected static final int MAPPING_URI_LENGTH = 200;
     
     //static final String DATASOURCE_TABLE_NAME = "DataSource";
     static final String INFO_TABLE_NAME = "info";  //Do not change as used by RDG packages as well
@@ -67,13 +66,10 @@ protected static final int MAPPING_URI_LENGTH = 200;
 
     public static final String ID_COLUMN_NAME = "id";
     static final String IS_PUBLIC_COLUMN_NAME = "isPublic";
-    public static final String JUSTIFICATION_COLUMN_NAME = "justification";
     static final String KEY_COLUMN_NAME = "theKey";
-    static final String MAPPING_NAME_COLUMN_NAME = "mappingName";
     public static final String MAPPING_SET_ID_COLUMN_NAME = "mappingSetId";
     static final String MAPPING_SET_DOT_ID_COLUMN_NAME = MAPPING_SET_TABLE_NAME + "." + ID_COLUMN_NAME;
 
-    static final String PREDICATE_COLUMN_NAME = "predicate";
     static final String PROPERTY_COLUMN_NAME = "property";
     static final String SCHEMA_VERSION_COLUMN_NAME = "schemaversion"; //Do not change as used by RDG packages as well
     static final String SOURCE_DATASOURCE_COLUMN_NAME = "sourceDataSource";
@@ -127,9 +123,9 @@ protected static final int MAPPING_URI_LENGTH = 200;
             DataSource target, String mappingName, boolean symetric) throws BridgeDBException {
         //checkDataSourceInDatabase(source);
         //checkDataSourceInDatabase(target);
-        int forwardId = registerMappingSet(source, target, predicate, justification, mappingName, 0);
+        int forwardId = registerMappingSet(source, target, 0);
         if (symetric){
-            int symetricId = registerMappingSet(target, source, predicate, justification, mappingName, forwardId);
+            int symetricId = registerMappingSet(target, source, forwardId);
         }
         return forwardId;
     }
@@ -156,41 +152,30 @@ protected static final int MAPPING_URI_LENGTH = 200;
      * @param justification 
      * 
      */
-    protected final int registerMappingSet(DataSource source, DataSource target, String predicate, String justification, 
-            String mappingName, int symmetric) throws BridgeDBException {
+    protected final int registerMappingSet(DataSource source, DataSource target, int symmetric) throws BridgeDBException {
         String mappingUri = null;
         StringBuilder query = new StringBuilder("INSERT INTO ");
         query.append(MAPPING_SET_TABLE_NAME);
         query.append(" ("); 
         query.append(SOURCE_DATASOURCE_COLUMN_NAME);
         query.append(", ");
-        query.append(PREDICATE_COLUMN_NAME);
-        query.append(", "); 
-        query.append(JUSTIFICATION_COLUMN_NAME);
-        query.append(", ");
         query.append(TARGET_DATASOURCE_COLUMN_NAME); 
-        if (mappingName != null && !mappingName.isEmpty()){
-            query.append(", ");
-            query.append(MAPPING_NAME_COLUMN_NAME); 
-        }
         query.append(") VALUES ('"); 
         query.append(getDataSourceKey(source));
         query.append("', '");
-        query.append(predicate);
-        query.append("', '");
-        query.append(justification);
-        query.append("', '");
         query.append(getDataSourceKey(target));
-        if (mappingName != null && !mappingName.isEmpty()){
-            query.append("', '");
-            query.append(mappingName);
-        }
         query.append("')");
+        int autoinc = registerMappingSet(query.toString());
+        logger.info("Registered new Mapping " + autoinc + " from " + getDataSourceKey(source) + " to " + getDataSourceKey(target));
+        return autoinc;
+    }
+    
+    protected final int registerMappingSet(String update) throws BridgeDBException {
         Statement statement = createStatement();
         try {
-            statement.executeUpdate(query.toString());
+            statement.executeUpdate(update);
         } catch (SQLException ex) {
-            throw new BridgeDBException ("Error inserting link with " + query.toString(), ex);
+            throw new BridgeDBException ("Error inserting link with " + update, ex);
         }
         statement = createStatement();
         int autoinc = 0;
@@ -206,10 +191,9 @@ protected static final int MAPPING_URI_LENGTH = 200;
         } catch (SQLException ex) {
             throw new BridgeDBException ("Error getting new indetity with " + getId, ex);
         }
-        logger.info("Registered new Mapping " + autoinc + " from " + getDataSourceKey(source) + " to " + getDataSourceKey(target));
         return autoinc;
     }
-    
+
     @Override
     public synchronized void closeInput() throws BridgeDBException {
         runInsert();
@@ -379,7 +363,7 @@ protected static final int MAPPING_URI_LENGTH = 200;
 					+ " (    " + SCHEMA_VERSION_COLUMN_NAME + " INTEGER PRIMARY KEY	"
                     + ")");
   			sh.execute( //Add compatibility version of GDB
-					"INSERT INTO " + INFO_TABLE_NAME + " VALUES ( " + SQL_COMPAT_VERSION + ")");
+					"INSERT INTO " + INFO_TABLE_NAME + " VALUES ( " + getSQL_COMPAT_VERSION() + ")");
             query = "CREATE TABLE " + MAPPING_TABLE_NAME 
                     + "( " + SOURCE_ID_COLUMN_NAME      + " VARCHAR(" + ID_LENGTH + ") NOT NULL, "
         			+ "  " + TARGET_ID_COLUMN_NAME      + " VARCHAR(" + ID_LENGTH + ") NOT NULL, " 
@@ -389,15 +373,6 @@ protected static final int MAPPING_URI_LENGTH = 200;
                     + "INDEX `sourceMappingSetFind` (" + MAPPING_SET_ID_COLUMN_NAME + ", " + SOURCE_ID_COLUMN_NAME + ") "
                     + " ) " ;
 			sh.execute(query);
-         	query =	"CREATE TABLE " + MAPPING_SET_TABLE_NAME 
-                    + " (" + ID_COLUMN_NAME                   + " INT " + autoIncrement + " PRIMARY KEY, " 
-                        + SOURCE_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ") NOT NULL, "
-                        + PREDICATE_COLUMN_NAME         + " VARCHAR(" + PREDICATE_LENGTH + ") NOT NULL, "
-                        + JUSTIFICATION_COLUMN_NAME     + " VARCHAR(" + JUSTIFICATION_LENGTH + ") NOT NULL, "
-                        + TARGET_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ")  NOT NULL, "
-                        + MAPPING_NAME_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + ") "
-					+ " ) "; 
-            sh.execute(query);
             sh.execute ("CREATE TABLE  "
                     + "    " + PROPERTIES_TABLE_NAME
                     + "(   " + KEY_COLUMN_NAME +   "      VARCHAR(" + KEY_LENGTH + ") NOT NULL, "
@@ -408,8 +383,34 @@ protected static final int MAPPING_URI_LENGTH = 200;
 		} catch (SQLException e){
  			throw new BridgeDBException ("Error creating the tables using " + query, e);
 		}
+        createMappingSetTable();
 	}
      
+	protected void createMappingSetTable() throws BridgeDBException
+	{
+        //"IF NOT EXISTS " is not supported
+        String query = "";
+		try 
+		{
+			Statement sh = createStatement();
+        	query =	"CREATE TABLE " + MAPPING_SET_TABLE_NAME 
+                    + " (" + ID_COLUMN_NAME                   + " INT " + autoIncrement + " PRIMARY KEY, " 
+                        + SOURCE_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ") NOT NULL, "
+                        + TARGET_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ")  NOT NULL "
+ 					+ " ) "; 
+            sh.execute(query);
+            sh.close();
+		} catch (SQLException e){
+ 			throw new BridgeDBException ("Error creating the MappingSet table using " + query, e);
+		}
+	}
+    
+    private int getSQL_COMPAT_VERSION() {
+        return SQL_COMPAT_VERSION;
+    }
+    
+
+    
     /**
      * Checks that the schema is for this version.
      * 
@@ -786,5 +787,5 @@ protected static final int MAPPING_URI_LENGTH = 200;
             throw new BridgeDBException("Unable to load DataSources");
         }
     }*/
-    
+
 }

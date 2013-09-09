@@ -59,25 +59,24 @@ import org.openrdf.rio.RDFHandlerException;
  */
 public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener {
 
-    private static final int PREFIX_LENGTH = 400;
-    private static final int POSTFIX_LENGTH = 100;
-//    private static final int LENS_URI_LENGTH = 100;
-    private static final int MIMETYPE_LENGTH = 50;
     private static final int CREATED_BY_LENGTH = 150;
-    
+    private static final int JUSTIFICATION_LENGTH = 150;
+    private static final int MIMETYPE_LENGTH = 50;
+    private static final int POSTFIX_LENGTH = 100;
+    private static final int PREDICATE_LENGTH = 100;
+    private static final int PREFIX_LENGTH = 400;
+
     public static final String CHAIN_TABLE_NAME = "chain";
     private static final String VIA_TABLE_NAME = "via";
-    public static final String MAPPING_STATS_TABLE_NAME = "mappingStats";
     private static final String MIMETYPE_TABLE_NAME = "mimeType";
     private static final String URI_TABLE_NAME = "uri";
 
-//    private static final String LENS_JUSTIFICATIONS_TABLE_NAME = "lensJustifications";
-//    private static final String LENS_TABLE_NAME = "lens";
-    
     public static final String CHAIN_ID_COLUMN_NAME = "chainId";
     private static final String CREATED_BY_COLUMN_NAME = "createdBy";
     private static final String CREATED_ON_COLUMN_NAME = "createdOn";
     private static final String DATASOURCE_COLUMN_NAME = "dataSource";
+    public static final String JUSTIFICATION_COLUMN_NAME = "justification";
+    private static final String PREDICATE_COLUMN_NAME = "predicate";
     private static final String PREFIX_COLUMN_NAME = "prefix";
  //   private static final String LENS_ID_COLUMN_NAME = "lensId";
 //    private static final String LENS_URI_COLUMN_NAME = "lensUri";
@@ -143,7 +142,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 	{
         super.dropSQLTables();
  		dropTable(URI_TABLE_NAME);
-        dropTable(MAPPING_STATS_TABLE_NAME);
+        dropTable(MAPPING_SET_TABLE_NAME);
  		dropTable(MIMETYPE_TABLE_NAME);
         dropTable(VIA_TABLE_NAME);
         dropTable(CHAIN_TABLE_NAME);
@@ -168,26 +167,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                     + "     " + POSTFIX_COLUMN_NAME + " VARCHAR(" + POSTFIX_LENGTH + ") NOT NULL, "
                     + "     mimeType VARCHAR(" + MIMETYPE_LENGTH + ") NOT NULL "
                     + "  ) ");
-         	sh.execute("CREATE TABLE " + MAPPING_STATS_TABLE_NAME 
-                    + " (" + MAPPING_SET_ID_COLUMN_NAME + " INT, " 
-                        + SOURCE_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ") NOT NULL, "
-                        + PREDICATE_COLUMN_NAME         + " VARCHAR(" + PREDICATE_LENGTH + "), "
-                        + JUSTIFICATION_COLUMN_NAME     + " VARCHAR(" + JUSTIFICATION_LENGTH + "), "
-                        + TARGET_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + "), "
-                        + MAPPING_RESOURCE_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + "), "
-                        + MAPPING_SOURCE_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + "), "
-                        + SYMMETRIC_COLUMN_NAME + " INT, "
-                        + MAPPING_LINK_COUNT_COLUMN_NAME     + " INT, "
-                        + MAPPING_SOURCE_COUNT_COLUMN_NAME     + " INT, "
-                        + MAPPING_TARGET_COUNT_COLUMN_NAME     + " INT, "
-                        + MAPPING_MEDIUM_FREQUENCY_COLUMN_NAME     + " INT, "
-                        + MAPPING_75_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
-                        + MAPPING_90_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
-                        + MAPPING_99_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
-                        + MAPPING_MAX_FREQUENCY_COLUMN_NAME     + " INT, "
-                        + "UNIQUE KEY  (`" + MAPPING_SET_ID_COLUMN_NAME  + "`, `" + SOURCE_DATASOURCE_COLUMN_NAME 
-                        + "`, `" + TARGET_DATASOURCE_COLUMN_NAME + "`)"
-					+ " ) "); 
          	sh.execute("CREATE TABLE " + VIA_TABLE_NAME 
                     + " (" + MAPPING_SET_ID_COLUMN_NAME + " INT NOT NULL, "
                     + "     " + VIA_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ")  NOT NULL "
@@ -215,6 +194,42 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 		}
 	}
     
+	protected void createMappingSetTable() throws BridgeDBException
+	{
+        //"IF NOT EXISTS " is not supported
+        String query = "";
+		try 
+		{
+			Statement sh = createStatement();
+        	query = "CREATE TABLE " + MAPPING_SET_TABLE_NAME 
+                    + " (" + ID_COLUMN_NAME                   + " INT " + autoIncrement + " PRIMARY KEY, " 
+                        + SOURCE_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ") NOT NULL, "
+                        + PREDICATE_COLUMN_NAME         + " VARCHAR(" + PREDICATE_LENGTH + "), "
+                        + JUSTIFICATION_COLUMN_NAME     + " VARCHAR(" + JUSTIFICATION_LENGTH + "), "
+                        + TARGET_DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + "), "
+                        + MAPPING_RESOURCE_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + "), "
+                        + MAPPING_SOURCE_COLUMN_NAME  + " VARCHAR(" + MAPPING_URI_LENGTH + "), "
+                        + SYMMETRIC_COLUMN_NAME + " INT, "
+                        + MAPPING_LINK_COUNT_COLUMN_NAME     + " INT, "
+                        + MAPPING_SOURCE_COUNT_COLUMN_NAME     + " INT, "
+                        + MAPPING_TARGET_COUNT_COLUMN_NAME     + " INT, "
+                        + MAPPING_MEDIUM_FREQUENCY_COLUMN_NAME     + " INT, "
+                        + MAPPING_75_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
+                        + MAPPING_90_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
+                        + MAPPING_99_PERCENT_FREQUENCY_COLUMN_NAME     + " INT, "
+                        + MAPPING_MAX_FREQUENCY_COLUMN_NAME     + " INT"
+					+ " ) "; 
+            sh.execute(query);
+            sh.close();
+		} catch (SQLException e){
+ 			throw new BridgeDBException ("Error creating the MappingSet table using " + query, e);
+		}
+	}
+    
+    private int getSQL_COMPAT_VERSION() {
+        return SQL_COMPAT_VERSION + 1;
+    }
+    
     private void checkDataSources() throws BridgeDBException{
         checkDataSources(SOURCE_DATASOURCE_COLUMN_NAME);
         checkDataSources(TARGET_DATASOURCE_COLUMN_NAME);
@@ -234,56 +249,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 }
                 replaceSysCode (toCheckName, code);
             }
-        }
-    }
-
-    /**
-     * One way registration of Mapping Set.
-     * @param justification 
-     * 
-     */
-    private void registerMappingStats(int mappingsetId, DataSource source, DataSource target, String predicate, 
-            String justification, Resource mappingResource, Resource mappingSource, int symmetric) throws BridgeDBException {
-        StringBuilder query = new StringBuilder("INSERT INTO ");
-        query.append(MAPPING_STATS_TABLE_NAME);
-        query.append(" ("); 
-        query.append(MAPPING_SET_ID_COLUMN_NAME);
-        query.append(", "); 
-        query.append(SOURCE_DATASOURCE_COLUMN_NAME);
-        query.append(", ");
-        query.append(PREDICATE_COLUMN_NAME);
-        query.append(", "); 
-        query.append(JUSTIFICATION_COLUMN_NAME);
-        query.append(", ");
-        query.append(TARGET_DATASOURCE_COLUMN_NAME); 
-        query.append(", ");
-        query.append(MAPPING_RESOURCE_COLUMN_NAME); 
-        query.append(", ");
-        query.append(MAPPING_SOURCE_COLUMN_NAME); 
-        query.append(", ");
-        query.append(SYMMETRIC_COLUMN_NAME);
-        query.append(") VALUES (");
-        query.append(mappingsetId);
-        query.append(", '");
-        query.append(getDataSourceKey(source));
-        query.append("', '");
-        query.append(predicate);
-        query.append("', '");
-        query.append(justification);
-        query.append("', '");
-        query.append(getDataSourceKey(target));
-        query.append("', '");
-        query.append(mappingResource);
-        query.append("', '");
-        query.append(mappingSource);
-        query.append("', ");
-        query.append(symmetric);
-        query.append(")");
-        Statement statement = createStatement();
-        try {
-            statement.executeUpdate(query.toString());
-        } catch (SQLException ex) {
-            throw new BridgeDBException ("Error inserting mapping stats with " + query.toString(), ex);
         }
     }
 
@@ -624,7 +589,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         query.append(", ");
         query.append(JUSTIFICATION_COLUMN_NAME);
         query.append(", ");
-        query.append(MAPPING_NAME_COLUMN_NAME);
+        query.append(MAPPING_SOURCE_COLUMN_NAME);
         return query;
    }
 
@@ -911,7 +876,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         query.append(MAPPING_LINK_COUNT_COLUMN_NAME);
         query.append(") as numberOfMappings ");
         query.append(" FROM ");
-        query.append(MAPPING_STATS_TABLE_NAME);
+        query.append(MAPPING_SET_TABLE_NAME);
         this.appendLensClause(query, lensId, false);
         Statement statement = this.createStatement();
         try {
@@ -957,9 +922,9 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     public synchronized MappingSetInfo getMappingSetInfo(int mappingSetId) throws BridgeDBException {
         StringBuilder query = new StringBuilder("SELECT *");
         query.append(" FROM ");
-        query.append(MAPPING_STATS_TABLE_NAME);
+        query.append(MAPPING_SET_TABLE_NAME);
         query.append(" WHERE ");
-        query.append(MAPPING_SET_ID_COLUMN_NAME);
+        query.append(ID_COLUMN_NAME);
         query.append(" = ");
         query.append(mappingSetId);
         Statement statement = this.createStatement();
@@ -983,7 +948,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     public synchronized List<MappingSetInfo> getMappingSetInfos(String sourceSysCode, String targetSysCode,String lensUri) throws BridgeDBException {
         StringBuilder query = new StringBuilder("select *");
         query.append(" FROM ");
-        query.append(MAPPING_STATS_TABLE_NAME);
+        query.append(MAPPING_SET_TABLE_NAME);
         boolean whereSet = appendSystemCodes(query, sourceSysCode, targetSysCode);
         appendLensClause(query, lensUri, whereSet);         
         Statement statement = this.createStatement();
@@ -1092,19 +1057,60 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         checkUriPattern(targetUriPattern);
         DataSource source = sourceUriPattern.getDataSource();
         DataSource target = targetUriPattern.getDataSource();      
-        int mappingSetId = registerMappingSet(source, target, predicate, justification, mappingResource.stringValue(), 0);
-        registerMappingStats(mappingSetId, source, target, predicate, justification, mappingResource, mappingSource, 0);
+        int mappingSetId = registerMappingSet(source, target, predicate, justification, mappingResource, mappingSource, 0);
         registerVia(mappingSetId, viaLabels);
         registerChain(mappingSetId, chainedLinkSets);
         if (symetric){
-            int symetricId = registerMappingSet(target, source, predicate, justification, mappingResource.stringValue(), mappingSetId);
-            registerMappingStats(symetricId, target, source, predicate, justification, mappingResource, mappingSource, mappingSetId);
+            int symetricId = registerMappingSet(target, source, predicate, justification, mappingResource, mappingSource, mappingSetId);
             registerVia(symetricId, viaLabels);
             registerChain(symetricId, chainedLinkSets);
         }
         subjectUriPatterns.put(mappingSetId, sourceUriPattern);
         targetUriPatterns.put(mappingSetId, targetUriPattern);
         return mappingSetId;
+    }
+
+    /**
+     * One way registration of Mapping Set.
+     * @param justification 
+     * 
+     */
+    private int registerMappingSet(DataSource source, DataSource target, String predicate, 
+            String justification, Resource mappingResource, Resource mappingSource, int symmetric) throws BridgeDBException {
+        StringBuilder query = new StringBuilder("INSERT INTO ");
+        query.append(MAPPING_SET_TABLE_NAME);
+        query.append(" ("); 
+         query.append(SOURCE_DATASOURCE_COLUMN_NAME);
+        query.append(", ");
+        query.append(PREDICATE_COLUMN_NAME);
+        query.append(", "); 
+        query.append(JUSTIFICATION_COLUMN_NAME);
+        query.append(", ");
+        query.append(TARGET_DATASOURCE_COLUMN_NAME); 
+        query.append(", ");
+        query.append(MAPPING_RESOURCE_COLUMN_NAME); 
+        query.append(", ");
+        query.append(MAPPING_SOURCE_COLUMN_NAME); 
+        query.append(", ");
+        query.append(SYMMETRIC_COLUMN_NAME);
+        query.append(") VALUES ('");
+        query.append(getDataSourceKey(source));
+        query.append("', '");
+        query.append(predicate);
+        query.append("', '");
+        query.append(justification);
+        query.append("', '");
+        query.append(getDataSourceKey(target));
+        query.append("', '");
+        query.append(mappingResource);
+        query.append("', '");
+        query.append(mappingSource);
+        query.append("', ");
+        query.append(symmetric);
+        query.append(")");
+        int autoinc = registerMappingSet(query.toString());
+        logger.info("Registered new Mapping " + autoinc + " from " + getDataSourceKey(source) + " to " + getDataSourceKey(target));
+        return autoinc;
     }
 
     private void checkUriPattern(UriPattern pattern) throws BridgeDBException{
@@ -1421,13 +1427,12 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         ArrayList<MappingSetInfo> results = new ArrayList<MappingSetInfo>();
         try {
             while (rs.next()){
-                int id = rs.getInt(MAPPING_SET_ID_COLUMN_NAME);
+                int id = rs.getInt(ID_COLUMN_NAME);
                 Set<DataSetInfo> viaSysCodes = getViaCodes(id);
                 Set<Integer> chainIds = getChainIds(id);
                 DataSetInfo sourceInfo = findDataSetInfo(rs.getString(SOURCE_DATASOURCE_COLUMN_NAME));
                 DataSetInfo targetInfo = findDataSetInfo(rs.getString(TARGET_DATASOURCE_COLUMN_NAME));
-                
-
+              
                 results.add(new MappingSetInfo(id, 
                         sourceInfo, 
                         rs.getString(PREDICATE_COLUMN_NAME), 
@@ -1465,7 +1470,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 Integer mappingSetId = rs.getInt(MAPPING_SET_ID_COLUMN_NAME);
                 String predicate = rs.getString(PREDICATE_COLUMN_NAME);
                 String justification = rs.getString(JUSTIFICATION_COLUMN_NAME);
-                String mappingSource = rs.getString(MAPPING_NAME_COLUMN_NAME);
+                String mappingSource = rs.getString(MAPPING_SOURCE_COLUMN_NAME);
                 mappingsBySet.addMapping(mappingSetId, predicate, justification, mappingSource, sourceUri, targetUris);
             }
        } catch (SQLException ex) {
@@ -1482,7 +1487,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 Integer mappingSetId = rs.getInt(MAPPING_SET_ID_COLUMN_NAME);
                 String predicate = rs.getString(PREDICATE_COLUMN_NAME);
                 String justification = rs.getString(JUSTIFICATION_COLUMN_NAME);
-                String mappingSource = rs.getString(MAPPING_NAME_COLUMN_NAME);
+                String mappingSource = rs.getString(MAPPING_SOURCE_COLUMN_NAME);
                 mappingsBySet.addMapping(mappingSetId, predicate, justification, mappingSource, sourceUri, targetUri);
             }
        } catch (SQLException ex) {
@@ -1737,9 +1742,9 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     private int getMaxCounted() throws BridgeDBException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT MAX(");
-        query.append(MAPPING_SET_ID_COLUMN_NAME);
+        query.append(ID_COLUMN_NAME);
         query.append(") as maxCount FROM ");
-        query.append(MAPPING_STATS_TABLE_NAME);
+        query.append(MAPPING_SET_TABLE_NAME);
         query.append(" WHERE NOT(");
         query.append(MAPPING_LINK_COUNT_COLUMN_NAME);
         query.append(" is NULL)");
@@ -1759,7 +1764,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     @Override
     public void recover() throws BridgeDBException {
         int max = getMaxCounted();
-        deleteUncounted(MAPPING_STATS_TABLE_NAME, MAPPING_SET_ID_COLUMN_NAME, max);
         deleteUncounted(MAPPING_TABLE_NAME, MAPPING_SET_ID_COLUMN_NAME, max);
         deleteUncounted(MAPPING_SET_TABLE_NAME, ID_COLUMN_NAME, max);
         deleteUncounted(CHAIN_TABLE_NAME, MAPPING_SET_ID_COLUMN_NAME, max);
@@ -1808,15 +1812,15 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     private void countLinks () throws BridgeDBException{
         logger.info ("Updating link counts. Please Wait!");
         Statement countStatement = this.createStatement();
-        String query = ("select " + MAPPING_SET_ID_COLUMN_NAME
-                + " from " + MAPPING_STATS_TABLE_NAME 
+        String query = ("select " + ID_COLUMN_NAME
+                + " from " + MAPPING_SET_TABLE_NAME 
                 + " where " + MAPPING_LINK_COUNT_COLUMN_NAME + " is NULL");  
         ResultSet rs;
         //ystem.out.println(query);
         try {
             rs = countStatement.executeQuery(query);    
             while (rs.next()){
-                int mappingSetId = rs.getInt(MAPPING_SET_ID_COLUMN_NAME);
+                int mappingSetId = rs.getInt(ID_COLUMN_NAME);
                 int mappings = countLinks(mappingSetId);
                 countFrequency(mappingSetId);
             }
@@ -1846,7 +1850,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         query.append(" COUNT(*) as mappings "); 
         query.append(" FROM "); 
         query.append(MAPPING_TABLE_NAME); 
-        addStatsConditions(query, mappingSetId);
+        addStatsMappingSetIdConditions(query, mappingSetId);
         ResultSet rs;
         try {
             rs = countStatement.executeQuery(query.toString());    
@@ -1856,7 +1860,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 int targets = rs.getInt("targets");
                 int mappings = rs.getInt("mappings");
                 StringBuilder update = new StringBuilder("UPDATE ");
-                update.append(MAPPING_STATS_TABLE_NAME); 
+                update.append(MAPPING_SET_TABLE_NAME); 
                 update.append(" SET "); 
                 update.append(MAPPING_SOURCE_COUNT_COLUMN_NAME); 
                 update.append(" = "); 
@@ -1869,7 +1873,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 update.append(MAPPING_LINK_COUNT_COLUMN_NAME);
                 update.append(" = ");
                 update.append(mappings);
-                addStatsConditions(update, mappingSetId);
+                addStatsIdConditions(update, mappingSetId);
                 //ystem.out.println(update);
                 try {
                     int updateCount = updateStatement.executeUpdate(update.toString());
@@ -1889,12 +1893,20 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         }
     }
         
-    private void addStatsConditions(StringBuilder query, int mappingSetId){
+    private void addStatsIdConditions(StringBuilder query, int mappingSetId){
+        query.append(" WHERE "); 
+        query.append(ID_COLUMN_NAME); 
+        query.append(" = "); 
+        query.append(mappingSetId);          
+    }
+    
+    private void addStatsMappingSetIdConditions(StringBuilder query, int mappingSetId){
         query.append(" WHERE "); 
         query.append(MAPPING_SET_ID_COLUMN_NAME); 
         query.append(" = "); 
         query.append(mappingSetId);          
     }
+
     /**
      * Updates the count variable for each Mapping Sets.
      * <p>
@@ -1915,7 +1927,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         query.append(TARGET_ID_COLUMN_NAME);  
         query.append(")) as targetFrequency"); 
         query.append(" from mapping"); 
-        addStatsConditions(query, mappingSetId); 
+        addStatsMappingSetIdConditions(query, mappingSetId); 
         query.append(" GROUP BY "); 
         query.append(SOURCE_ID_COLUMN_NAME); 
         query.append(") AS innerQuery"); 
@@ -1977,7 +1989,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 freqMedium = freq75;
             }                                
             StringBuilder update = new StringBuilder("update ");
-            update.append(MAPPING_STATS_TABLE_NAME); 
+            update.append(MAPPING_SET_TABLE_NAME); 
             update.append(" set "); 
             update.append(MAPPING_MEDIUM_FREQUENCY_COLUMN_NAME); 
             update.append(" = "); 
@@ -1998,7 +2010,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             update.append(MAPPING_MAX_FREQUENCY_COLUMN_NAME); 
             update.append(" = "); 
             update.append(targetFrequency);
-            addStatsConditions(update, mappingSetId);
+            addStatsIdConditions(update, mappingSetId);
             //ystem.out.println(update);
             try {
                 int updateCount = updateStatement.executeUpdate(update.toString());

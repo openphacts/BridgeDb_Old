@@ -111,9 +111,9 @@ public class TransativeFinder extends SQLBase{
         Statement statement = mapper.createStatement();
         StringBuilder query = new StringBuilder("SELECT *");
         query.append(" FROM ");
-        query.append(SQLUriMapper.MAPPING_STATS_TABLE_NAME);
+        query.append(SQLUriMapper.MAPPING_SET_TABLE_NAME);
         query.append(" WHERE ");
-        query.append(SQLUriMapper.MAPPING_SET_ID_COLUMN_NAME);
+        query.append(SQLUriMapper.ID_COLUMN_NAME);
         query.append(" < ");
         query.append(info.getIntId());
         ResultSet rs;
