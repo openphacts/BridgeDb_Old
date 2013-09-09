@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.IDMapper;
 import org.bridgedb.IDMapperCapabilities;
@@ -58,6 +59,8 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
      */
     private final boolean useTop;
     
+    private static final Logger logger = Logger.getLogger(SQLIdMapper.class);
+
     public SQLIdMapper(boolean dropTables) throws BridgeDBException{
         super(dropTables);
         useLimit = SqlFactory.supportsLimit();

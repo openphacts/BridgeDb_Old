@@ -40,7 +40,7 @@ public class SQLBase {
     protected Connection possibleOpenConnection;
     private final boolean supportsIsValid;
     
-    static final Logger logger = Logger.getLogger(SQLBase.class);
+    private static final Logger logger = Logger.getLogger(SQLBase.class);
 
     public SQLBase() throws BridgeDBException{
        this.sqlAccess = SqlFactory.createTheSQLAccess();

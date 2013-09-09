@@ -23,8 +23,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.Set;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.DataSourceOverwriteLevel;
@@ -98,7 +96,7 @@ protected static final int MAPPING_URI_LENGTH = 200;
     private StringBuilder insertQuery;
     protected final String autoIncrement;
     
-    static final Logger logger = Logger.getLogger(SQLListener.class);
+    private static final Logger logger = Logger.getLogger(SQLListener.class);
 
     public SQLListener(boolean dropTables) throws BridgeDBException{
         super();
