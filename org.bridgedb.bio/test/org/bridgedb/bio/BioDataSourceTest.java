@@ -16,16 +16,24 @@
 //
 package org.bridgedb.bio;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
+import java.util.HashSet;
 import java.util.Set;
-import static org.junit.Assert.*;
 
 import org.bridgedb.DataSource;
-import org.bridgedb.DataSourceOverwriteLevel;
 import org.bridgedb.DataSourcePatterns;
 import org.bridgedb.Xref;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 
-public class Test
+public class BioDataSourceTest
 {
 	boolean eventReceived = false;
 
@@ -36,18 +44,24 @@ public class Test
 		BioDataSource.init();
 	}
 
-	@org.junit.Test
+	@Test
 	public void testInit()
 	{
 		for (DataSource ds : DataSource.getDataSources())
 		{
 			assertNotNull(ds);
 			assertNotNull(ds.getFullName());
-//			assertNotNull(ds.getSystemCode());
+			// test for all but a test case in testFromUrn()
+			if (!"blahblahblah".equals(ds.getFullName())) {
+				assertNotNull(
+					"Unexpected null system code for " + ds.getFullName(),
+					ds.getSystemCode()
+				);
+			}
 		}
 	}
 	
-	@org.junit.Test
+	@Test
 	public void testURN()
 	{
 		Xref ref = new Xref ("3643", BioDataSource.ENTREZ_GENE);
@@ -57,22 +71,22 @@ public class Test
 		
 	}
 
-	@org.junit.Test
+	@Test
 	public void testSpeciesSpecificEnsembl()
 	{
 		assertEquals (BioDataSource.ENSEMBL_COW, BioDataSource.getSpeciesSpecificEnsembl(Organism.BosTaurus));
 		assertEquals (BioDataSource.ENSEMBL_MOSQUITO, BioDataSource.getSpeciesSpecificEnsembl(Organism.AnophelesGambiae));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testBioDataSources()
 	{
-		assertEquals (BioDataSource.WORMBASE.getOrganism(), Organism.CaenorhabditisElegans);
-		assertEquals (BioDataSource.ENSEMBL_CHICKEN.getOrganism(), Organism.GallusGallus);
-		assertEquals (BioDataSource.CAS.getType(), "metabolite");
+		assertEquals (Organism.CaenorhabditisElegans, BioDataSource.WORMBASE.getOrganism());
+		assertEquals (Organism.GallusGallus, BioDataSource.ENSEMBL_CHICKEN.getOrganism());
+		assertEquals ("metabolite", BioDataSource.CAS.getType());
 	}
 	
-	@org.junit.Test
+	@Test
 	public void testPatterns()
 	{
 		assertTrue (DataSourcePatterns.getDataSourceMatches("1.1.1.1").contains(BioDataSource.ENZYME_CODE));
@@ -82,7 +96,7 @@ public class Test
 		assertTrue (DataSourcePatterns.getDataSourceMatches("CHEBI:17925").contains(BioDataSource.CHEBI));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testBasCASNumbers()
 	{
 		assertFalse(DataSourcePatterns.getDataSourceMatches("50-99-77").contains(BioDataSource.CAS));
@@ -91,21 +105,21 @@ public class Test
 		assertFalse(DataSourcePatterns.getDataSourceMatches("50-333-7").contains(BioDataSource.CAS));
 	}
 
-	@org.junit.Test
+	@Test
 	public void testDataSource()
 	{
 		DataSource ds = BioDataSource.ENSEMBL;
-		assertEquals (ds.getFullName(), "Ensembl");
-		assertEquals (ds.getSystemCode(), "En");
+		assertEquals ("Ensembl", ds.getFullName());
+		assertEquals ("En", ds.getSystemCode());
 				
 		DataSource ds4 = DataSource.getBySystemCode ("En");
 		assertEquals (ds, ds4);
 		
 		DataSource ds5 = DataSource.getByFullName ("Entrez Gene");
-		assertEquals (ds5, BioDataSource.ENTREZ_GENE);
+		assertEquals (BioDataSource.ENTREZ_GENE, ds5);
 	}
 
-	@org.junit.Test
+	@Test
 	public void testDataSourceFilter ()
 	{
 		// ensembl is primary, affy isn't
@@ -133,14 +147,14 @@ public class Test
 		assertFalse (f4.contains(BioDataSource.HMDB));
 	}
 	
-	@org.junit.Test
+	@Test
 	public void testAlias()
 	{
 		DataSource ds = DataSource.getByAlias("ensembl_gene_id");
-		assertSame(ds, BioDataSource.ENSEMBL);
+		assertSame(BioDataSource.ENSEMBL, ds);
 	}
 
-	@org.junit.Test
+	@Test
 	public void testFromUrn()
 	{
 		Xref ref = Xref.fromUrn("urn:miriam:ncbigene:3643");
@@ -148,7 +162,6 @@ public class Test
 		assertEquals ("3643", ref.getId());
 
 		ref = Xref.fromUrn("urn:miriam:blahblahblah:abc");
-        
 		assertEquals (DataSource.getByFullName("blahblahblah"), ref.getDataSource());
 
 		ref = Xref.fromUrn("blahblahblha");
@@ -158,5 +171,30 @@ public class Test
 		assertEquals (BioDataSource.GENE_ONTOLOGY, ref.getDataSource());
 		assertEquals ("GO:00001234", ref.getId());
 	}
-	
+
+	@Test
+	public void testUniqueSystemCodes() {
+		BioDataSource.init();
+		Set<String> codes = new HashSet<String>();
+		Set<DataSource> sources = DataSource.getDataSources();
+		Assert.assertNotSame(0, sources.size());
+		for (DataSource source : sources) {
+			codes.add(source.getSystemCode());
+		}
+		Assert.assertEquals(sources.size(), codes.size());
+	}
+
+	@Test
+	public void systemCodesDoNotHaveWhitespace() {
+		BioDataSource.init();
+		Set<DataSource> sources = DataSource.getDataSources();
+		Assert.assertNotSame(0, sources.size());
+		for (DataSource source : sources) {
+			String sysCode = source.getSystemCode();
+			if (sysCode != null) {
+				Assert.assertEquals(sysCode.length(), sysCode.trim().length());
+				Assert.assertFalse(sysCode.contains(" "));
+			}
+		}
+	}
 }
