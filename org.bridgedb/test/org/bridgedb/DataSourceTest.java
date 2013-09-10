@@ -43,18 +43,34 @@ public class DataSourceTest {
 		Assert.assertEquals("Affymetrix", source.getFullName());
 	}
 
-//    @Test (expected =  IllegalArgumentException.class)
+    @Test
 	public void testBuildingMainUrl() {
 		DataSource source = DataSource.register("X", "Affymetrix")
-		    .mainUrl("http://www.affymetrix.com/A")
+		    .mainUrl("http://www.affymetrix.com")
+		    .asDataSource();
+		Assert.assertEquals("http://www.affymetrix.com", source.getMainUrl());
+	}
+
+//    @Test (expected =  IllegalArgumentException.class)
+	public void testChangeMainUrl() {
+		DataSource source = DataSource.register("X", "Affymetrix")
+		    .mainUrl("http://www.affymetrix.com")
 		    .asDataSource();
 		source = DataSource.register("X", "Affymetrix")
-		    .mainUrl("http://www.affymetrix.com")
+		    .mainUrl("http://www.affymetrix.com/A")
 		    .asDataSource();
 	}
     
-//    @Test (expected =  IllegalArgumentException.class)
 	public void testBuildingType() {
+		DataSource source = DataSource.register("X", "Affymetrix")
+		    .type("metabolite")
+		    .asDataSource();
+		Assert.assertEquals("metabolite", source.getType());
+		Assert.assertTrue(source.isMetabolite());
+	}
+
+    //    @Test (expected =  IllegalArgumentException.class)
+	public void testChangeType() {
 		DataSource source = DataSource.register("X", "Affymetrix")
 		    .type("metabolite")
 		    .asDataSource();
@@ -68,6 +84,7 @@ public class DataSourceTest {
 	}
 
  //   @Test (expected =  IllegalArgumentException.class)
+ //TODO check if changing primary is a needed functionality   
 	public void testBuildingPrimary() {
 		DataSource source = DataSource.register("X", "Affymetrix")
 		    .primary(false)
@@ -76,6 +93,7 @@ public class DataSourceTest {
 		source = DataSource.register("X", "Affymetrix")
 			.primary(true)
 			.asDataSource();
+        Assert.assertTrue(source.isPrimary());
 	}
 
 	@Test
@@ -87,5 +105,39 @@ public class DataSourceTest {
 		Assert.assertTrue(source.isMetabolite());
 	}
     
+    @Test
+	public void testDeprecated() {
+		DataSource source = DataSource.register("EnAg", "Ensembl Mosquito")
+		    .deprecated(true).asDataSource();
+		Assert.assertTrue(source.isDeprecated());
+	}
+
+    /**
+	 * By default, all new data sources are not deprecated.
+	 */
+	@Test
+	public void testDefaultNotDeprecated() {
+		DataSource source = DataSource.register("F", "MetaboLoci")
+		    .asDataSource();
+		Assert.assertFalse(source.isDeprecated());
+	}
+
+    @Test
+	public void testDeprecatedBy() {
+		DataSource source = DataSource.register("EnAg", "Ensembl Mosquito")
+		    .deprecatedBy(
+		    	DataSource.register("En", "Ensembl").asDataSource()
+		    ).asDataSource();
+		Assert.assertTrue(source.isDeprecated());
+		Assert.assertNotNull(source.isDeprecatedBy());
+		Assert.assertEquals("En", source.isDeprecatedBy().getSystemCode());
+	}
+
+	@Test
+	public void testDefaultNoDeprecatedBy() {
+		DataSource source = DataSource.register("Cps", "PubChem-substance")
+			.asDataSource();
+		Assert.assertNull(source.isDeprecatedBy());
+	}
 
 }

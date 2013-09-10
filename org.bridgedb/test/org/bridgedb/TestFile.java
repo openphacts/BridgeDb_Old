@@ -96,7 +96,6 @@ public class TestFile {
 
 	}
 
-	// Test disabled, takes several minutes and produces too much output. 
 	public void _testTransitive() throws MalformedURLException, IDMapperException
 	{
 		IDMapperFile idMapper = new IDMapperText (YEAST_IDS.toURL(),
