@@ -49,16 +49,13 @@ public class CreateRdf {
         ConfigReader.logToConsole();
 
         //Load DataSources from BioDataSource and save that
-        DataSource.setOverwriteLevel(DataSourceOverwriteLevel.CONTROLLED);
         BioDataSource.init();
         File biofile = new File("../org.bridgedb.utils/resources/BioDataSource.ttl");
         BridgeDBRdfHandler.writeRdfToFile(biofile);
-        DataSource.setOverwriteLevel(DataSourceOverwriteLevel.STRICT);
         BridgeDBRdfHandler.parseRdfFile(biofile);        
         
         //Load the existing DataSource file 
         File dsfile = new File("../org.bridgedb.utils/resources/DataSource.ttl");
-        DataSource.setOverwriteLevel(DataSourceOverwriteLevel.STRICT);
         BridgeDBRdfHandler.parseRdfFile(dsfile);             
         System.out.println("Parsing finished");
                 

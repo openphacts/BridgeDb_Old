@@ -32,7 +32,6 @@ public class Test
 	@Before
 	public void setUp()
 	{
-        DataSource.setOverwriteLevel(DataSourceOverwriteLevel.VERSION1);
 		// cause static initializer to run.
 		BioDataSource.init();
 	}

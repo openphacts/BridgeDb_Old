@@ -137,9 +137,9 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
             repositoryConnection.add(id, BridgeDBConstants.SYSTEM_CODE_URI, new LiteralImpl(inner.getSystemCode()));
         }
 
-        for (String alternativeFullName:inner.getAlternativeFullNames()){
-            repositoryConnection.add(id, BridgeDBConstants.ALTERNATIVE_FULL_NAME_URI, new LiteralImpl(alternativeFullName));            
-        }
+//        for (String alternativeFullName:inner.getAlternativeFullNames()){
+//            repositoryConnection.add(id, BridgeDBConstants.ALTERNATIVE_FULL_NAME_URI, new LiteralImpl(alternativeFullName));            
+//        }
         
         if (inner.getMainUrl() != null){
             repositoryConnection.add(id, BridgeDBConstants.MAIN_URL_URI, new LiteralImpl(inner.getMainUrl()));
@@ -161,7 +161,7 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
 
         writeUriPattern(repositoryConnection, BridgeDBConstants.HAS_URL_PATTERN_URI, getDataSourceUrl());
 
-        String identifersOrgPattern = inner.getIdentifiersOrgUri("$id");
+/*        String identifersOrgPattern = inner.getIdentifiersOrgUri("$id");
         if (identifersOrgPattern == null){
             String urnPattern = inner.getURN("");
             if (urnPattern.length() > 1){
@@ -172,7 +172,7 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
             UriPattern identifersOrgUriPattern = UriPattern.existingOrCreateByPattern(identifersOrgPattern);
             writeUriPattern(repositoryConnection, BridgeDBConstants.HAS_IDENTIFERS_ORG_PATTERN_URI, identifersOrgUriPattern);
         }
-
+*/
         if (inner.getOrganism() != null){
             Organism organism = (Organism)inner.getOrganism();
             repositoryConnection.add(id, BridgeDBConstants.ORGANISM_URI, OrganismRdf.getResourceId(organism));
@@ -231,11 +231,11 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
         String systemCode = getPossibleSingletonString(repositoryConnection, dataSourceId, BridgeDBConstants.SYSTEM_CODE_URI);
         DataSource.Builder builder = DataSource.register(systemCode, fullName);
 
-        Set<String> alternativeNames = getAllStrings(repositoryConnection, dataSourceId, BridgeDBConstants.ALTERNATIVE_FULL_NAME_URI);
+/*        Set<String> alternativeNames = getAllStrings(repositoryConnection, dataSourceId, BridgeDBConstants.ALTERNATIVE_FULL_NAME_URI);
         for (String alternativeName:alternativeNames){
             builder.alternativeFullName(alternativeName);            
         }
- 
+ */
         String idExample = getPossibleSingletonString(repositoryConnection, dataSourceId, BridgeDBConstants.ID_EXAMPLE_URI);
         if (idExample != null){
             builder.idExample(idExample);
@@ -285,24 +285,24 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
     private void readUriPatternsStatements(RepositoryConnection repositoryConnection, Resource dataSourceId) 
             throws BridgeDBException, RepositoryException{
         String identifiersOrgBase = getPossibleSingletonString(repositoryConnection, dataSourceId, BridgeDBConstants.IDENTIFERS_ORG_BASE);
-        if (identifiersOrgBase != null){
-            try {
-                inner.setIdentifiersOrgUriBase(identifiersOrgBase);
-            } catch (IDMapperException ex) {
-                throw new BridgeDBException(ex);
-            }
-        }
+//        if (identifiersOrgBase != null){
+//            try {
+//                inner.setIdentifiersOrgUriBase(identifiersOrgBase);
+//            } catch (IDMapperException ex) {
+//                throw new BridgeDBException(ex);
+//            }
+//        }
         
         UriPattern identifiersOrgPattern = UriPattern.readUriPattern(repositoryConnection, dataSourceId, this, 
                 BridgeDBConstants.HAS_IDENTIFERS_ORG_PATTERN_URI);
-        if (identifiersOrgPattern != null){
+/*        if (identifiersOrgPattern != null){
             try {
                 inner.setIdentifiersOrgUriBase(identifiersOrgPattern.getPrefix());
             } catch (IDMapperException ex) {
                 throw new BridgeDBException(ex);
             }
         }
-         
+*/         
         bio2RdfPattern = UriPattern.readUriPattern(repositoryConnection, dataSourceId, this,
                 BridgeDBConstants.HAS_BIO2RDF_PATTERN_URI);
         sourceRdfPattern = UriPattern.readUriPattern(repositoryConnection, dataSourceId, this, 
@@ -317,12 +317,12 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
         otherUriPatterns.remove(bio2RdfPattern);
         otherUriPatterns.remove(sourceRdfPattern);
         otherUriPatterns.remove(wikiPathwaysPattern);
-        String identifersOrgPattern = inner.getIdentifiersOrgUri("$id");
+ /*       String identifersOrgPattern = inner.getIdentifiersOrgUri("$id");
         if (identifersOrgPattern != null){
             UriPattern identifersOrgUriPattern = UriPattern.existingOrCreateByPattern(identifersOrgPattern);
             otherUriPatterns.remove(identifersOrgUriPattern);    
         }
-    }
+*/    }
     
     private void readDataType(RepositoryConnection repositoryConnection, Resource  dataSourceId) 
             throws BridgeDBException, RepositoryException{
@@ -367,7 +367,7 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
     private void loadDataSourceUriPatterns() throws BridgeDBException {
         String pattern = inner.getUrl("$id");
         addPattern(pattern);
-        pattern = inner.getIdentifiersOrgUri("$id");
+//        pattern = inner.getIdentifiersOrgUri("$id");
         addPattern(pattern);        
    }
 
@@ -399,11 +399,11 @@ public class DataSourceUris extends RdfBase implements Comparable<DataSourceUris
         results.add(wikiPathwaysPattern);
         results.add(sourceRdfPattern);
         results.add(bio2RdfPattern);
-        String identifersOrgPattern = inner.getIdentifiersOrgUri("$id");
-        if (identifersOrgPattern != null){
-            UriPattern identifersOrgUriPattern = UriPattern.existingOrCreateByPattern(identifersOrgPattern);
-            results.add(identifersOrgUriPattern);
-        }
+//        String identifersOrgPattern = inner.getIdentifiersOrgUri("$id");
+//        if (identifersOrgPattern != null){
+//            UriPattern identifersOrgUriPattern = UriPattern.existingOrCreateByPattern(identifersOrgPattern);
+//            results.add(identifersOrgUriPattern);
+//        }
         results.addAll(otherUriPatterns);
         //Avoids having to check all of the above for null;
         results.remove(null);

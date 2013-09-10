@@ -26,22 +26,22 @@ import java.util.Map;
 import java.util.Set;
 
 /**
-contains information about a certain DataSource, such as
+Contains information about a certain DataSource. This includes:
 <ul>
 <li>It's full name ("Ensembl")
 <li>It's system code ("En")
 <li>It's main url ("http://www.ensembl.org")
 <li>Id-specific url's ("http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=" + id)
 </ul>
-The DataSource class uses the extensible enum pattern.
-You can't instantiate DataSources directly, instead you have to use one of
+The DataSource class uses the extensible <code>enum</code> pattern.
+You cannot instantiate DataSources directly, instead you have to use one of
 the constants from the org.bridgedb.bio module such as BioDataSource.ENSEMBL, 
-or the "getBySystemcode" or "getByFullname" methods.
+or the <code>getBySystemcode</code> or "getByFullname" methods.
 These methods return a predefined DataSource object if it exists.
 If a predefined DataSource for a requested SystemCode doesn't exists,
 a new one springs to life automatically. This can be used 
 when the user requests new, unknown data sources. If you call
-getBySystemCode twice with the same argument, it is guaranteed
+<code>getBySystemCode</code> twice with the same argument, it is guaranteed
 that you get the same return object. However, there is no way
 to combine a new DataSource with a new FullName unless you use 
 the "register" method.
@@ -52,32 +52,15 @@ handle unknown data sources in the same
 way as predefined ones.
 <p>
 Definitions for common DataSources can be found in {@link org.bridgedb.bio.BioDataSource}.
-<p>
-* This contains modifications not yet finalized nor approved by the Whole BridgeDB community.
-Until this message is removed use of new features is at the users own risk.
-
 */
 public final class DataSource
 {
-    /**
-     * String required to be in front of any URN(base) that will be valid in Miriam
-     * @since Version 2  (Version 1 had "urn:miriam:" hard coded in)
-     */
-    public static final String MIRIAM_URN_ROOT = "urn:miriam:";
-    /**
-     * String that is at the front of any identifiers.org uri.
-     * 
-     * @since Version 2
-     */
-    public static final String IDENTIFIERS_URI_ROOT = "http://identifiers.org/";
-
-    private static Map<String, DataSource> bySysCode = new HashMap<String, DataSource>();
+	private static Map<String, DataSource> bySysCode = new HashMap<String, DataSource>();
 	private static Map<String, DataSource> byFullName = new HashMap<String, DataSource>();
 	private static Set<DataSource> registry = new HashSet<DataSource>();
 	private static Map<String, DataSource> byAlias = new HashMap<String, DataSource>();
 	private static Map<String, DataSource> byMiriamBase = new HashMap<String, DataSource>();
-    private static DataSourceOverwriteLevel overwriteLevel = DataSourceOverwriteLevel.VERSION1;
-    
+	
 	private String sysCode = null;
 	private String fullName = null;
 	private String mainUrl = null;
@@ -85,27 +68,11 @@ public final class DataSource
 	private String postfix = "";
 	private Object organism = null;
 	private String idExample = null;
-    /**
-     * @since Version 1 However in Version 2 changed to the Object Boolean to capture a third state. Not yet Set!
-     */
-	private Boolean isPrimary = null;
-    /**
-     * @since Version 2. Only change is creation of a CONSTANT as in Version 1 type was defaulted to "unknown". 
-     */
-    public static String DEFAULT_TYPE = "unknown";
-	private String type = DEFAULT_TYPE;
-    /**
-     * Used for both the getUrn and getIdentifiersOrgUri (where applicable)
-     */
+	private boolean isPrimary = true;
+	private boolean isDeprecated = false;
+	private DataSource isDeprecatedBy = null;
+	private String type = "unknown";
 	private String urnBase = "";
-    /**
-     * Records any alternative FullName that this DataSource is mapped against.
-     * The getByFullName method will return this DataSource for any of these Strings
-     * However the getFullName method will not return any of these Strings
-     * @since version2
-     */
-    private Set<String> alternativeFullNames = new HashSet<String>();    
-
 	
 	/**
 	 * Constructor is private, so that we don't
@@ -115,16 +82,6 @@ public final class DataSource
 	 * DataSources can be added with {@link register}
 	 */
 	private DataSource () {}
-    
-    /**
-     * Sets the DataSourceOverwriteLevel
-     * @see DataSourceOverwriteLevel for the full explanation.
-     * @param level the DataSourceOverwriteLevel
-     * @since Version 2
-     */
-    public static void setOverwriteLevel(DataSourceOverwriteLevel level){
-       overwriteLevel = level;
-    }
 	
 	/** 
 	 * Turn id into url pointing to info page on the web, e.g. "http://www.ensembl.org/get?id=ENSG..."
@@ -181,7 +138,7 @@ public final class DataSource
 
 	/**
 	 * @return type of entity that this DataSource describes, for example
-	 *   "metabolite", "gene", "protein" or "probe" 
+	 *   "metabolite", "gene", "protein", "interaction" or "probe" 
 	 */
 	public String getType()
 	{
@@ -206,176 +163,7 @@ public final class DataSource
 		} catch (UnsupportedEncodingException ex) { idPart = id; }
 		return urnBase + ":" + idPart;
 	}
-
-    /**
-     * 
-     * @return Set of fullNames where getByFullName will return this Datasource but getFullName will 
-     *     NOT return these fullNames.
-     * @since version2
-     */
-    public Set<String> getAlternativeFullNames() {
-        return this.alternativeFullNames;
-    }
-
-    /**
-     * Return the identifiers.org uri if avaiable.
-     * 
-     * This is generated by checing if the urnBase is a miriam urn base and if so 
-     * by replacing the miriam:urn prefix with the identofiers.org prefix 
-     * and using a slash divider instead of a colon.
-     * @param id id part as a string or $id to get the pattern.
-     * @return identifiers.org uri or null.
-     */
-    public String getIdentifiersOrgUri(String id) {
-        if (urnBase != null && urnBase.startsWith(MIRIAM_URN_ROOT)){
-            return IDENTIFIERS_URI_ROOT + urnBase.substring(MIRIAM_URN_ROOT.length()) + "/" + id;
-        }
-        return null;
-    }
-
-     /**
-     * Registers an identifiers.org uri 
-     * 
-     * Since Version 2.0.0 If the urn base starts with "urn:miriam:" the part that comes after "urn:miriam:"
-     * will also be used for identifiers.org uris.
-     * 
-     * Convert the base to a miriam urn Base and calls the same method builder.setUrnBase does 
-     *          in DataSourceOverwriteLevel.STRICT mode (disregard the current level set)
-     * @param identifiersOrgBase an idetifiers.org uri which must start with "http://identifiers.org/".
-     *    Input supports both uris that ends with "/" and ones that do not,
-     *    But output will always be the "offical" one with the slash.
-     * @throws IDMapperException If a previous (different) urn base was registered by either this method or 
-     *     indirectly by the urnBase method. 
-     * @since Version 2.0.0
-	 */
-   public void setIdentifiersOrgUriBase(String identifiersOrgBase) throws IDMapperException {
-        if (identifiersOrgBase == null || identifiersOrgBase.isEmpty()){
-            throw new IDMapperException("IdentifiersOrgUriBase may not set to null or empty");
-        }
-        if (identifiersOrgBase.startsWith(IDENTIFIERS_URI_ROOT)){
-            try {
-                if (identifiersOrgBase.endsWith("/")) {
-                    setUrnBase(MIRIAM_URN_ROOT + identifiersOrgBase.substring(IDENTIFIERS_URI_ROOT.length(),
-                            identifiersOrgBase.length()-1));
-                } else {
-                    setUrnBase(MIRIAM_URN_ROOT + identifiersOrgBase.substring(IDENTIFIERS_URI_ROOT.length()));                    
-                }
-           } catch (Exception e){
-               throw new IDMapperException("Unable to set dentifiersOrgUriBase to " + identifiersOrgBase, e);
-           }
-       } else {
-           throw new IDMapperException("illegal IdentifiersOrgUriBase " + identifiersOrgBase 
-                   + " it must start with " + IDENTIFIERS_URI_ROOT);
-       }
-    }
 	
-   /**
-    * Sets the urnBase, using the overWrite level
-    * 
-    * In contrast to Builder.setUrnBase in Version 1 this method does register the DataSource with this urn Base.
-    * 
-    * @param base for urn generation, for example "urn:miriam:uniprot"
-    * @throw IllegalArgumentException Depends on OverwriteLevel
-    * @see DataSourceOverwriteLevel
-    */
-    private void setUrnBase(String base) {
-        switch (overwriteLevel){
-            case VERSION1 : {
-                setUrnBaseVersion1(base);
-                break;
-            }
-            case CONTROLLED: {
-                setUrnBaseControlled(base);
-                break;
-            }   
-            case STRICT: {
-                setUrnBaseStrict(base);
-                break;
-            }
-            default: throw new IllegalStateException ("Unexpected overwriteLevel " + overwriteLevel);
-        }       
-    }
-    
-   /**
-    * Sets the urnBase keeping the same data as in version 1
-    * 
-    * In contrast to Builder.setUrnBase in Version 1 this method does register the DataSource with this urn Base.
-    * 
-    * Called by Builder.setUrn if the DataSourceOverwriteLevel is VERSION1
-    * @param base for urn generation, for example "urn:miriam:uniprot"
-    * @throw IllegalArgumentException NEVER
-    * @see DataSourceOverwriteLevel
-    */
-    private void setUrnBaseVersion1(String base) {
-        this.urnBase = base;
-        if (base.startsWith(MIRIAM_URN_ROOT)){
-            byMiriamBase.put(base, this);
-        }
-    }
-
-   /**
-    * Sets the urnBase keeping a base which starts with urn:miriam over one that does not.
-    * 
-    * In contrast to Builder.setUrnBase in Version 1 this method does register the DataSource with this urn Base.
-
-    * Called by Builder.setUrn if the DataSourceOverwriteLevel is CONTROLLED
-    
-    * @param base for urn generation, for example "urn:miriam:uniprot"
-    * @throw IllegalArgumentException if the base is empty or null.
-    *     Also thrown if a second different base starting with urn:miriam is set.
-    * @since Version 2
-    * @see DataSourceOverwriteLevel
-    */
-    private void setUrnBaseControlled(String base) {
-        if (base == null || base.isEmpty()){
-            throw new IllegalArgumentException("urnBase may not be null or empty. Received " + base);
-        }
-        if (urnBase == null || urnBase.isEmpty()){
-            setUrnBaseVersion1(base);
-        }
-        if (base.equals(urnBase)){
-            return; //already the same
-        }
-        if (urnBase.startsWith(MIRIAM_URN_ROOT)){
-            if (base.startsWith(MIRIAM_URN_ROOT)){
-                throw new IllegalArgumentException("Illegal attemt to overwrite a Miriam urnBase for " + this + 
-                        " was " + urnBase + " so can not set " + base);
-            } else {
-                System.err.println("Ignoring attempt to overwrite urnBase for " + this + " from " + urnBase + " to " + base);
-            }
-        } else {
-            System.err.println("Overwrite urnBase for " + this + " from " + urnBase + " to " + base);
-            setUrnBaseVersion1(base);
-        }
-    }
-
-   /**
-    * Sets the urnBase if and only if no previous base has been set.
-    * 
-    * In contrast to Builder.setUrnBase in Version 1 this method does register the DataSource with this urn Base.
-
-    * Called by Builder.setUrn if the DataSourceOverwriteLevel is STRICT
-    
-    * @param base for urn generation, for example "urn:miriam:uniprot"
-    * @throw IllegalArgumentException if the base is empty or null.
-    *     Also thrown if a second different base (regardless of what they start with) is set.
-    * @since Version 2
-    * @see DataSourceOverwriteLevel
-    */
-    private void setUrnBaseStrict(String base) {
-       if (base == null || base.isEmpty()){
-            throw new IllegalArgumentException("urnBase may not be null or empty. Received " + base);
-        }
-        if (urnBase == null || urnBase.isEmpty()){
-            setUrnBaseVersion1(base);
-        }
-        if (base.equals(urnBase)){
-            return; //already the same
-        }
-        throw new IllegalArgumentException("Illegal attemt to overwrite a Miriam urnBase for " + this + 
-                " was " + urnBase + " so can not set " + base);
-    }
-    
 	/**
 	 * Uses builder pattern to set optional attributes for a DataSource. For example, this allows you to use the 
 	 * following code:
@@ -389,7 +177,7 @@ public final class DataSource
 	public static final class Builder
 	{
 		private final DataSource current;
-  		
+		
 		/**
 		 * Create a Builder for a DataSource. Note that an existing DataSource is
 		 * modified rather than creating a new one.
@@ -412,7 +200,7 @@ public final class DataSource
 		/**
 		 * 
 		 * @param urlPattern is a template for generating valid URL's for identifiers. 
-		 * 	The pattern should contain the substring "$id", which will be replaced by the actual identifier.
+		 * 	The pattern should contain the substring "$ID", which will be replaced by the actual identifier.
 		 * @return the same Builder object so you can chain setters
 		 */
 		public Builder urlPattern (String urlPattern)
@@ -435,18 +223,9 @@ public final class DataSource
 		/**
 		 * @param mainUrl url of homepage
 		 * @return the same Builder object so you can chain setters
-         * @since Version 1 but since Version2 could throw an Exception
-         * @throws IllegalArgumentException If and only if overwriteLevel == STRICT 
-         *    AND a previous different non null mainUrl had been set.
 		 */
 		public Builder mainUrl (String mainUrl)
 		{
-            if (current.mainUrl != null) {
-                if (DataSource.overwriteLevel == DataSourceOverwriteLevel.STRICT && !current.mainUrl.equals(mainUrl)){
-                    throw new IllegalArgumentException("Illegal attemt to overwrite a mainUrl for " + current + 
-                " was " + current.mainUrl + " so can not set " + mainUrl);
-                }
-            }
 			current.mainUrl = mainUrl;
 			return this;
 		}
@@ -455,18 +234,9 @@ public final class DataSource
 		/**
 		 * @param idExample an example id from this system
 		 * @return the same Builder object so you can chain setters
-         * @since Version 1 but since Version2 could throw an Exception
-         * @throws IllegalArgumentException If and only if overwriteLevel == STRICT 
-         *    AND a previous different non null idExample had been set.
 		 */
 		public Builder idExample (String idExample)
 		{
-            if (current.idExample != null && !current.idExample.isEmpty()){
-                if (DataSource.overwriteLevel == DataSourceOverwriteLevel.STRICT && !current.idExample.equals(idExample)){
-                    throw new IllegalArgumentException("Illegal attemt to overwrite a idExample for " + current + 
-                " was " + current.idExample + " so can not set " + idExample);
-                }
-            }
 			current.idExample = idExample;
 			return this;
 		}
@@ -475,53 +245,54 @@ public final class DataSource
 		 * @param isPrimary secondary id's such as EC numbers, Gene Ontology or vendor-specific systems occur in data or linkouts,
 		 * 	but their use in pathways is discouraged
 		 * @return the same Builder object so you can chain setters
-         * @since Version 1 but since Version2 could throw an Exception
-         * @throws IllegalArgumentException If and only if overwriteLevel == STRICT 
-         *    AND a previous different isPrimary was set.
 		 */
 		public Builder primary (boolean isPrimary)
 		{
-            if (current.isPrimary != null && DataSource.overwriteLevel == DataSourceOverwriteLevel.STRICT && 
-                    current.isPrimary != isPrimary){
-                throw new IllegalArgumentException("Illegal attemt to change primary for " + current + 
-                        " was " + current.isPrimary + " so can not set " + isPrimary);
-            }
 			current.isPrimary = isPrimary;
+			return this;
+		}
+		
+		/**
+		 * @param isDeprecated a boolean indicating this DataSource should no longer be used
+		 * @return the same Builder object so you can chain setters
+		 */
+		public Builder deprecated(boolean isDeprecated)
+		{
+			current.isDeprecated = isDeprecated;
+			return this;
+		}
+		
+		/**
+		 * Sets the DataSource which should be used instead of this deprecated one. It 
+		 * automatically sets <code>isDeprecated</code> to true.
+		 * 
+		 * @param sourceToUseInstead the {@link DataSource} that should be used instead of this
+		 *                           deprecated one
+		 * @return the same Builder object so you can chain setters
+		 */
+		public Builder deprecatedBy(DataSource sourceToUseInstead)
+		{
+			current.isDeprecated = true;
+			current.isDeprecatedBy = sourceToUseInstead;
 			return this;
 		}
 		
 		/**
 		 * @param type the type of datasource, for example "protein", "gene", "metabolite" 
 		 * @return the same Builder object so you can chain setters
-         * @since Version 1 but since Version2 could throw an Exception
-         * @throws IllegalArgumentException If and only if overwriteLevel == STRICT 
-         *    AND a previous different type was set to something other than "unknown".
 		 */
 		public Builder type (String type)
 		{
-            if (!current.type.equals(DEFAULT_TYPE) && DataSource.overwriteLevel == DataSourceOverwriteLevel.STRICT && 
-                    !current.type.equals(type)){
-                throw new IllegalArgumentException("Illegal attemt to change type for " + current + 
-                        " was " + current.type + " so can not set " + type);
-            }
- 			current.type = type;
+			current.type = type;
 			return this;
 		}
 		
 		/**
 		 * @param organism organism for which this system code is suitable, or null for any / not applicable
 		 * @return the same Builder object so you can chain setters
-         * @since Version 1 but since Version2 could throw an Exception
-         * @throws IllegalArgumentException If and only if overwriteLevel == STRICT 
-         *    AND a previous different organism was set.
 		 */
 		public Builder organism (Object organism)
 		{
-            if (current.organism != null && DataSource.overwriteLevel == DataSourceOverwriteLevel.STRICT && 
-                    !current.organism.equals(organism)){
-                throw new IllegalArgumentException("Illegal attemt to change Orgamism for " + current + 
-                        " was " + current.organism + " so can not set " + organism);
-            }
 			current.organism = organism;
 			return this;
 		}
@@ -532,48 +303,9 @@ public final class DataSource
 		 */
 		public Builder urnBase (String base)
 		{
-            current.setUrnBase(base);
-            return this;
-        }
-
-        /**
-         * Adds an alternative name to this DataSource, and registers it by fullName
-         * 
-         * The result is that the getFullName method will NOT return this alternativeName.
-         * 
-         * However getByFullName(alternativeName) will return the same DataSource as 
-         * returned by this Builder's getDataSource method.
-         * 
-         * As this method did not exist in Version 1 
-         *    the error checking will always be at DataSourceOverwriteLevel.STRICT.
-         * 
-         * Note: The behaviour of throwing an Exception if the alternativeName is equal to the fullName is open to change.
-         *    If required the behaviour could be changed to just ignoring the request.
-         * 
-         * @param alternativeName
-         * throw new IllegalArgumentException If the name is null or empty.
-         *     Also thrown if the alternativeName is already the full name. 
-         *     Also thrown if alternativeName is already mapped to a different DataSource
-		 * @return the same Builder object so you can chain setters
-         * @since Version 2
-         * @see DataSourceOverwriteLevel.
-         */
-        public Builder alternativeFullName(String alternativeName) {
-            if (alternativeName == null || alternativeName.isEmpty()){
-                throw new IllegalArgumentException("alternativeName may not be null or empty. Received "+ alternativeName);
-            }
-            DataSource other = byFullName.get(alternativeName);
-            if (other!= null && !other.equals(current)){
-                throw new IllegalArgumentException("alternativeName " + alternativeName + " already assigned to " 
-                        + other + " so can not be asisgned to " + current);                
-            }
-            if (current.fullName.equals(alternativeName)){
-                throw new IllegalArgumentException("Illegal attempt to set alternativeName same as fullName for " + current);
-            }
-            current.alternativeFullNames.add(alternativeName);
-            DataSource.byFullName.put(alternativeName, current);
-            return this;
-        }
+			current.urnBase = base;
+			return this;
+		}
 	}
 	
 	/** 
@@ -582,70 +314,16 @@ public final class DataSource
 	 * @param sysCode short unique code between 1-4 letters, originally used by GenMAPP
 	 * @param fullName full name used in GPML. Must be 20 or less characters
 	 * @return Builder that can be used for adding detailed information.
-     * @since Version 1 However With Version 2 the behaviour can be different depending on the DataSourceOverwriteLevel
-     * @see DataSourceOverwriteLevel
-     * @see lookupDataSourceVersion1(String sysCode, String fullName)
-    * @see lookupDataSourceControlled(String sysCode, String fullName)
-    * @see lookupDataSourceStrict(String sysCode, String fullName)
 	 */
 	public static Builder register(String sysCode, String fullName)
 	{
+		DataSource current = null;
 		if (fullName == null && sysCode == null) throw new NullPointerException();
+//		if (fullName != null && fullName.length() > 20) 
+//		{ 
+//			throw new IllegalArgumentException("full Name '" + fullName + "' must be 20 or less characters"); 
+//		}
 		
-		DataSource current = lookupDataSources(sysCode, fullName);
-		
-		if (current.urnBase != null)
-		{
-			byMiriamBase.put (current.urnBase, current);
-		}
-		
-		if (isSuitableKey(sysCode))
-			bySysCode.put(sysCode, current);
-		if (isSuitableKey(fullName))
-			byFullName.put(fullName, current);
-		
-		return new Builder(current);
-	}
-	
-    /**
-     * Helper method to call the appropriate lookup method depending on the DataSourceOverwriteLevel
-	 * @param sysCode short unique code between 1-4 letters, originally used by GenMAPP
-	 * @param fullName full name used in GPML. Must be 20 or less characters
-     * @return And existing or new DataSource
-     * @since Version 2
-     * @see DataSourceOverwriteLevel.
-     * @throws IllegalArgumentException (see individual methods)
-     */
-    private static DataSource lookupDataSources(String sysCode, String fullName) {
-        switch (overwriteLevel){
-            case VERSION1 : {
-                return lookupDataSourceVersion1(sysCode, fullName);
-            }
-            case CONTROLLED: {
-                DataSource result = lookupDataSourceControlled(sysCode, fullName);
-                return result;
-            }
-            case STRICT: {
-                return lookupDataSourceStrict(sysCode, fullName);
-            }
-            default: throw new IllegalStateException ("Unexpected overwriteLevel " + overwriteLevel);
-        }
-    }
-    
-    /**
-     * Finds or creates a DataSource as done in Version 1
-     * 
-     * Alternative name is not saved.
-     * 
-	 * @param sysCode short unique code between 1-4 letters, originally used by GenMAPP
-	 * @param fullName full name used in GPML. Must be 20 or less characters
-     * @return An existing or new DataSource
-     * @since Version 2 (although code here is from Version 1)
-     * @see DataSourceOverwriteLevel.
-     * @throws IllegalArgumentException NEVER
-     */
-    private static DataSource lookupDataSourceVersion1(String sysCode, String fullName) {
-        DataSource current;
 		if (byFullName.containsKey(fullName))
 		{
 			current = byFullName.get(fullName);
@@ -659,173 +337,24 @@ public final class DataSource
 			current = new DataSource ();
 			registry.add (current);
 		}
+		
+		if (current.urnBase != null)
+		{
+			byMiriamBase.put (current.urnBase, current);
+		}
+		
 		current.sysCode = sysCode;
 		current.fullName = fullName;
-        return current;
-    }
-    
-   /**
-     * Finds or creates a DataSource similar to Version 1 
-     *    but capturing when different fullNames are used for the same SysCode.
-     * 
-     * Similar to Version 1 the last fullName registered will be the one returned by getFullName.
-     * However now earlier fullNames will be saved as alternatives.
-     * 
-     * Also now an Exception is thrown if sysCode and fullname where each already mapped to a different DataSources.
-     *    Version 1 code would simply have used the DataSource mapped to FullName.
-     * 
-     * As there is no known case of the same FullName being assigned to two different sysCodes, 
-     *    an Exception is thrown if this occurs. 
-     *    This can and should be changed to saving alternative sysCodes if required.
-     * 
- 	 * @param sysCode short unique code between 1-4 letters, originally used by GenMAPP
-	 * @param fullName full name used in GPML. Must be 20 or less characters
-     * @return An existing or new DataSource
-     * @since Version 2 
-     * @see DataSourceOverwriteLevel.
-     * @throws IllegalArgumentException If this could result in tow Possible DataSources or a DataSource with two sysCodes.
-     */
-    private static DataSource lookupDataSourceControlled(String sysCode, String fullName) {
-        DataSource byName = byFullName.get(fullName);
-        DataSource byCode = bySysCode.get(sysCode);
-        if (byName == byCode){
-            if (byName == null){
-                return createNew(sysCode, fullName);
-            } 
-            //A DataSource can be registered against several fullNames. Make sure getFullName returns the last
-            if (byCode.fullName != null && !byCode.fullName.equals(fullName) && !byCode.fullName.isEmpty()){
-                byCode.alternativeFullNames.add(byCode.fullName);
-                byCode.alternativeFullNames.remove(fullName);
-                System.err.println("sysCode \"" + sysCode + " already used wtih fullName \"" + 
-                    byCode.fullName + "\" which does not match new fullName \"" + fullName + "\"");
-            }
-            byCode.fullName = fullName;    
-            return byCode;
-        }
-        if (sysCode == null || sysCode.isEmpty()){
-            //No byCode possible and no interest in overwritting possible existing sysCode in byName
-            return returnOrCreateNew(byName, sysCode, fullName);
-        }
-        if (fullName == null || fullName.isEmpty()){
-            //No byName possible and no interest in overwritting possible existing fullName in byCode
-            DataSource result = returnOrCreateNew(byCode, sysCode, fullName);
-            return result;
-        }
-        if (byName == null){
-            //byCode != null otherwise byName == byCode
-            //keep track of the old fullName in byCode before overWriting it.
-            if (byCode.fullName != null && !byCode.fullName.isEmpty()){
-                byCode.alternativeFullNames.add(byCode.fullName);
-                byCode.alternativeFullNames.remove(fullName);
-                System.err.println("sysCode \"" + sysCode + " already used wtih fullName \"" + 
-                    byCode.fullName + "\" which does not match new fullName \"" + fullName + "\"");
-            }
-            byCode.fullName = fullName;
-            byFullName.put(fullName, byCode);
-            return byCode;
-        } else if (byCode == null) {
-            if (byName.sysCode == null || byName.sysCode.isEmpty()){
-                byName.sysCode = sysCode;
-                return byName;
-            }
-            //No known case of fullName mapped to two sysCode
-            throw new IllegalArgumentException("FullName " + fullName + " already mapped to " + byName 
-                    + " which has a sysCode " + byName.sysCode + " so can not register with sysCode " + sysCode);
-        } else {
-            throw new IllegalArgumentException("Multiple possible DataSources found. " 
-                + "SysCode " + sysCode + " already maps to " + byCode 
-                + "while fullName " + fullName + " maps to " + byName);        
-        }
-    }
 
-    /**
-     * Helper method which check if the DataSources is null and either returns it or creates a new one.
-     * 
-     * Note: As this is a private method it is the callers responsibility to make sure that if not null 
-     *    other.sysCode == susCode and other.fullName == fullName.
-     *    Also to make sure no other DataSource exists with this sysCode or fullName
-     * @param other A DataSource or null
-	 * @param sysCode short unique code between 1-4 letters, originally used by GenMAPP
-	 * @param fullName full name used in GPML. Must be 20 or less characters
-     * @return An existing or new DataSource
-     */
-    private static DataSource returnOrCreateNew (DataSource other, String sysCode, String fullName){
-        if (other != null) {
-            return other;
-        }
-        return createNew(sysCode, fullName);
-    }
-    
-    /**
-     * Helper method that creates a new DataSource, sets the sysCode and fullName and registers it.
-     * 
-     * Currently this method does not add the DataSource to byFullName and bySysCode as it is only called indirectly by 
-     *    Builder.register and that is already done there.
-     * Note: As this is a private method it is the callers responsibility to make sure 
-     *     no other DataSource exists with this sysCode or fullName
-	 * @param sysCode short unique code between 1-4 letters, originally used by GenMAPP
-	 * @param fullName full name used in GPML. Must be 20 or less characters
-     * @return 
-     */
-    private static DataSource createNew(String sysCode, String fullName){
-        DataSource current = new DataSource ();
-		registry.add (current);
-		current.sysCode = sysCode;
-		current.fullName = fullName;
-        return current;
-    }
-
-   /**
-     * Finds or creates a DataSource making sure that no other DataSource exists with the same (non null) fullName or 
-     *    (non null) sysCode.
-     *    but capturing when different fullNames are used for the same SysCode.
-     * 
-     * throws a IllegalArgumentException rather than registering alternative names.
-
-     * Also now an Exception is thrown if sysCode and fullname where each already mapped to a different DataSources.
-     *    Version 1 code would simply have used the DataSource mapped to FullName.
-     * 
-  	 * @param sysCode short unique code between 1-4 letters, originally used by GenMAPP
-	 * @param fullName full name used in GPML. Must be 20 or less characters
-     * @return An existing or new DataSource
-     * @since Version 2 
-     * @see DataSourceOverwriteLevel.
-     * @throws IllegalArgumentException If this could result in two Possible DataSources or a DataSource with two sysCodes.
-     */
-    private static DataSource lookupDataSourceStrict(String sysCode, String fullName) {
-        DataSource byName = byFullName.get(fullName);
-        DataSource byCode = bySysCode.get(sysCode);
-        if (byName == byCode){
-            return returnOrCreateNew(byName, sysCode, fullName);
-        }
-        if (sysCode == null || sysCode.isEmpty()) {
-            if (byName.sysCode == null || byName.sysCode.isEmpty()){
-                return returnOrCreateNew(byName, sysCode, fullName);
-            } else {
-                throw new IllegalArgumentException("SysCode is null/Empty but byName " + byName 
-                        + " already has a sysCode set");
-            }
-        }
-        if (fullName == null || fullName.isEmpty()) {
-            if  (byCode.fullName == null || byCode.fullName.isEmpty()){
-                return returnOrCreateNew(byCode, sysCode, fullName);
-            } else {
-                throw new IllegalArgumentException("FullName is null/Empty but byCode " + byCode 
-                        + " already has a fullName set");                
-            }    
-        }
-        String fn;
-        if (fullName == null){
-            fn = "(null)";
-        } else {
-            fn = fullName;
-        }
-        throw new IllegalArgumentException("Multiple possible DataSources found. " 
-                + "SysCode " + sysCode + " already maps to " + byCode 
-                + " while fullName " + fn + " maps to " + byName);
-    }
-
-    public void registerAlias(String alias)
+		if (isSuitableKey(sysCode))
+			bySysCode.put(sysCode, current);
+		if (isSuitableKey(fullName))
+			byFullName.put(fullName, current);
+		
+		return new Builder(current);
+	}
+	
+	public void registerAlias(String alias)
 	{
 		byAlias.put (alias, this);
 	}
@@ -846,43 +375,26 @@ public final class DataSource
 	 * @param systemCode short unique code to query for
 	 * @return pre-existing DataSource object by system code, 
 	 * 	if it exists, or creates a new one. 
-     * <p>
-     * Since Version 2 if Overwrite Level is Strict this method no longer creates a new DataSource. 
-     * Rather it throws an IllegalArgumentException.
 	 */
 	public static DataSource getBySystemCode(String systemCode)
 	{
-        if (bySysCode.containsKey(systemCode)){
-            return bySysCode.get(systemCode);
-        }
-        if (overwriteLevel == DataSourceOverwriteLevel.STRICT){
-            throw new IllegalArgumentException("No know DataSource known for " + systemCode);
-        }
-        if (isSuitableKey(systemCode)){
+		if (!bySysCode.containsKey(systemCode) && isSuitableKey(systemCode))
+		{
 			register (systemCode, null);
-        }
-        return bySysCode.get(systemCode);
+		}
+		return bySysCode.get(systemCode);
 	}
 	
 	/** 
 	 * returns pre-existing DataSource object by 
 	 * full name, if it exists, 
 	 * or creates a new one. 
-     * <p>
-     * Since Version 2 if Overwrite Level is Strict this method no longer creates a new DataSource. 
-     * Rather it throws an IllegalArgumentException.
 	 * @param fullName full name to query for
 	 * @return DataSource
 	 */
 	public static DataSource getByFullName(String fullName)
 	{
-		if (byFullName.containsKey(fullName)){
-    		return byFullName.get(fullName);
-        }
-        if (overwriteLevel == DataSourceOverwriteLevel.STRICT){
-            throw new IllegalArgumentException("No know DataSource known for " + fullName);
-        }
-		if (isSuitableKey(fullName))
+		if (!byFullName.containsKey(fullName) && isSuitableKey(fullName))
 		{
 			register (null, fullName);
 		}
@@ -946,7 +458,7 @@ public final class DataSource
 	 */
 	public String toString()
 	{
-		return sysCode + ":" + fullName;
+		return fullName;
 	}
 	
 	/**
@@ -964,17 +476,37 @@ public final class DataSource
 	 * A DataSource is primary if it is not of type probe, 
 	 * so that means e.g. Affymetrix or Agilent probes are not primary. All
 	 * gene, protein and metabolite identifiers are primary.
-     * @since Version 1 However since Version 2 if no primary was set during building a default value of true is still returned.
-     *     (in version 1 primary is automatically set to true.)
 	 */
 	public boolean isPrimary()
 	{
-        if (isPrimary == null){
-            return true;
-        }
-		return isPrimary.booleanValue();
+		return isPrimary;
 	}
 	
+	/**
+	 * A DataSource is deprecated if it is replaced by another data source
+	 * which should be used instead. Even if this DataSource is deprecated,
+	 * it does not imply it says what it is deprecated by.
+	 * 
+	 * @return true if this DataSource is deprecated
+	 * @see         
+	 */
+	public boolean isDeprecated()
+	{
+		return isDeprecated;
+	}
+	
+	/**
+	 * Returns the DataSource that should be used instead if this DataSource
+	 * is deprecated. This method may return null even if this DataSource is
+	 * deprecated.
+	 * 
+	 * @return if defined, the DataSource that should be used instead of this one
+	 */
+	public DataSource isDeprecatedBy()
+	{
+		return isDeprecatedBy;
+	}
+
 	/**
 	 * @return if this DataSource describes metabolites or not.
 	 */
@@ -998,7 +530,7 @@ public final class DataSource
 	 */
 	public static DataSource getByUrnBase(String base)
 	{
-		if (!base.startsWith (MIRIAM_URN_ROOT))
+		if (!base.startsWith ("urn:miriam:"))
 		{
 			return null;
 		}
@@ -1010,7 +542,7 @@ public final class DataSource
 		}
 		else
 		{
-			current = getByFullName(base.substring(MIRIAM_URN_ROOT.length()));
+			current = getByFullName(base.substring("urn:miriam:".length()));
 			current.urnBase = base;
 			byMiriamBase.put (base, current);
 		}

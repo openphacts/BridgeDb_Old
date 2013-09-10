@@ -281,12 +281,10 @@ public class LinksetExporter {
     }
 
     public static void writeBioDataSource() throws BridgeDBException{
-        DataSource.setOverwriteLevel(DataSourceOverwriteLevel.CONTROLLED);
-        BioDataSource.init();
+         BioDataSource.init();
         File dsfile = new File("../org.bridgedb.utils/resources/BioDataSource.ttl");
         BridgeDBRdfHandler.writeRdfToFile(dsfile);
         
-        DataSource.setOverwriteLevel(DataSourceOverwriteLevel.STRICT);
         BridgeDBRdfHandler.parseRdfFile(dsfile);        
     }
     
@@ -295,7 +293,6 @@ public class LinksetExporter {
         writeBioDataSource();
         
         File dsfile = new File("../org.bridgedb.utils/resources/DataSource.ttl");
-        DataSource.setOverwriteLevel(DataSourceOverwriteLevel.CONTROLLED);
         BridgeDBRdfHandler.parseRdfFile(dsfile);             
         Reporter.println("Parsing finished");
         
@@ -311,7 +308,6 @@ public class LinksetExporter {
 
         BridgeDBRdfHandler.writeRdfToFile(dsfile);
         
-        DataSource.setOverwriteLevel(DataSourceOverwriteLevel.STRICT);
         BridgeDBRdfHandler.parseRdfFile(dsfile);
         
         //LinksetExporter exporter = new LinksetExporter(file);

@@ -59,7 +59,6 @@ public class MergedSourceCreateRdf {
         System.out.println(DataSource.getDataSources());
         File mergedFile = new File("../org.bridgedb.rdf/resources/MergedDataSource.ttl");
         BridgeDBRdfHandler.writeRdfToFile(mergedFile);
-        DataSource.setOverwriteLevel(DataSourceOverwriteLevel.STRICT);
         BridgeDBRdfHandler.parseRdfFile(mergedFile);        
                 
      }

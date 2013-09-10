@@ -50,7 +50,6 @@ public class BioAndTttlCreateRdf {
         ConfigReader.logToConsole();
 
         //Load DataSources from BioDataSource and save that
-        DataSource.setOverwriteLevel(DataSourceOverwriteLevel.CONTROLLED);
         BioDataSource.init();
         
         File utilsFile = new File("../org.bridgedb.utils/resources/DataSource.ttl");
@@ -58,7 +57,6 @@ public class BioAndTttlCreateRdf {
         
         File mergedFile = new File("../org.bridgedb.rdf/resources/DataSource.ttl");
         BridgeDBRdfHandler.writeRdfToFile(mergedFile);
-        DataSource.setOverwriteLevel(DataSourceOverwriteLevel.STRICT);
         BridgeDBRdfHandler.parseRdfFile(mergedFile);        
                         
      }

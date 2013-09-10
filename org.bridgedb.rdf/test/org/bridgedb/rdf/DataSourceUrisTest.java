@@ -216,7 +216,7 @@ public class DataSourceUrisTest extends TestUtils{
         Set<UriPattern> result = dataSourceUris.getUriPatterns();
         UriPattern pattern = UriPattern.existingOrCreateByPattern("http://www.chemspider.com/Chemical-Structure.$id.html");
         assertThat (result, hasItem(pattern));
-        pattern = UriPattern.existingOrCreateByPattern("http://identifiers.org/chemspider/$id");
-        assertThat (result, hasItem(pattern));
+//        pattern = UriPattern.existingOrCreateByPattern("http://identifiers.org/chemspider/$id");
+//        assertThat (result, hasItem(pattern));
     }
 }

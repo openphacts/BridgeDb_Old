@@ -96,7 +96,6 @@ public class SQLListener extends SQLBase implements MappingListener{
 
     public SQLListener(boolean dropTables) throws BridgeDBException{
         super();
-        DataSource.setOverwriteLevel(DataSourceOverwriteLevel.STRICT);
         BridgeDBRdfHandler.init();
         this.autoIncrement = SqlFactory.getAutoIncrementCommand();
         if (dropTables){

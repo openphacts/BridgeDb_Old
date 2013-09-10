@@ -60,7 +60,6 @@ public class WSUriClient extends WSCoreClient implements WSUriInterface{
     
     public WSUriClient(String serviceAddress) throws BridgeDBException {
         super(serviceAddress);
-        DataSource.setOverwriteLevel(DataSourceOverwriteLevel.STRICT);
         BridgeDBRdfHandler.init();
     }
     

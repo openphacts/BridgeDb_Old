@@ -19,7 +19,6 @@ public class IDMapperStackTest extends TestCase
 	
 	protected void setUp() throws ClassNotFoundException, IDMapperException, MalformedURLException
 	{
-        DataSource.setOverwriteLevel(DataSourceOverwriteLevel.VERSION1);
 		Class.forName("org.bridgedb.file.IDMapperText");
 			
 		mappers = new HashMap<String,IDMapper>();
