@@ -1,5 +1,5 @@
 // BridgeDb,
-// An abstraction layer for identifer mapping services, both local and online.
+// An abstraction layer for identifier mapping services, both local and online.
 // Copyright 2006-2009 BridgeDb developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -228,7 +228,7 @@ public final class InternalUtils
     /**
      * Generic method for multimaps, a map that can contain multiple values per key.
      * Unlike a regular map, if you insert a value for a key that already exists, the previous value 
-     * will not be discared.
+     * will not be discarded.
      * <p>
      * This is like multiMapPut, but uses a list instead of a set for each value of the map. 
      * @param <T> key type of multimap
@@ -255,7 +255,7 @@ public final class InternalUtils
     /**
      * Generic method for multimaps, a map that can contain multiple values per key.
      * Unlike a regular map, if you insert a value for a key that already exists, the previous value 
-     * will not be discared.
+     * will not be discarded.
      * <p>
      * multiMapPutAll let's you insert a collection of items at once. 
      * @param <T> key type of multimap
@@ -280,7 +280,7 @@ public final class InternalUtils
     }
 
     /**
-     * Split a heterogeneous Xref set into multiple homogeneous Xref sets.
+     * Split a heterogeneous {@link Xref} set into multiple homogeneous Xref sets.
      * <p>
      * If the input contains {L:3643, L:1234, X:1004_at, X:1234_at},
      * then the output will contain
@@ -296,6 +296,25 @@ public final class InternalUtils
 			multiMapPut(result, ref.getDataSource(), ref);
 		}
 		return result;
+	}
+	
+	/**
+	 * Join the ID part of a collection of Xrefs with a custom separator.
+	 * @param refs Xrefs from which the ids will be concatenated
+	 * @param sep separator string.
+	 * @return concatenation of the ids.
+	 */
+	public static String joinIds (Collection<Xref> refs, String sep)
+	{
+		boolean first = true;
+		StringBuilder builder = new StringBuilder();
+		for (Xref ref : refs)
+		{
+			if (!first) builder.append (sep);
+			builder.append (ref.getId());
+			first = false;
+		}
+		return builder.toString();
 	}
 
 	/** read a configuration file in the bridgedb xml format */
