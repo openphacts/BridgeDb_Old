@@ -46,7 +46,7 @@ public class MappingSetTableMaker implements Comparator<MappingSetInfo>{
     
     protected final NumberFormat formatter;
     
-    static final Logger logger = Logger.getLogger(MappingSetTableMaker.class);
+    private static final Logger logger = Logger.getLogger(MappingSetTableMaker.class);
 
     public MappingSetTableMaker(List<MappingSetInfo> mappingSetInfos, HttpServletRequest httpServletRequest){
         this.httpServletRequest = httpServletRequest;
