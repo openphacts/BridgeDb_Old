@@ -246,13 +246,25 @@ public final class DataSource
 		}
 		
 		/**
+         * Note: Since version 2 this method no longer allows changing a mainUrl once set.
 		 * @param mainUrl url of homepage
 		 * @return the same Builder object so you can chain setters
+         * @throws IllegalArgumentException is a none null mainUrl is changed to a different value. 
 		 */
 		public Builder mainUrl (String mainUrl)
 		{
-			current.mainUrl = mainUrl;
-			return this;
+            if (mainUrl == null || mainUrl.isEmpty()){
+                return this;
+            }
+            if (current.mainUrl == null){
+                current.mainUrl = mainUrl;
+                return this;
+            }
+            if (current.mainUrl.equals(mainUrl)){
+                return this;
+            }
+            throw new IllegalArgumentException("Illegal attempt to change mainUrl for " + current + " from " 
+                    + current.mainUrl + " to " + mainUrl);
 		}
 
 

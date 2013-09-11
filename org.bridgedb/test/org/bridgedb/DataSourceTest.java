@@ -51,7 +51,7 @@ public class DataSourceTest {
 		Assert.assertEquals("http://www.affymetrix.com", source.getMainUrl());
 	}
 
-//    @Test (expected =  IllegalArgumentException.class)
+    @Test (expected =  IllegalArgumentException.class)
 	public void testChangeMainUrl() {
 		DataSource source = DataSource.register("X", "Affymetrix")
 		    .mainUrl("http://www.affymetrix.com")
