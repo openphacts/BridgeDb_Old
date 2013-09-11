@@ -170,6 +170,18 @@
     
 
 
+    <!-- http://vocabularies.bridgedb.org/ops#subjectsSpecies -->
+
+    <owl:ObjectProperty rdf:about="http://vocabularies.bridgedb.org/ops#subjectsSpecies">
+        <rdfs:label>Subjects Species</rdfs:label>
+        <skos:usageNote xml:lang="en">Resources from the NCBI Taxonomy should provide sufficient classes for capturing species.</skos:usageNote>
+        <rdfs:comment xml:lang="en">The species of the concept the subjects of the triples in the Linkset represent.</rdfs:comment>
+        <rdfs:domain rdf:resource="&void;Linkset"/>
+        <rdfs:range rdf:resource="&rdfs;Resource"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
