@@ -45,12 +45,7 @@ public class DataSourceBean {
     public DataSourceBean (DataSource dataSource){
         sysCode = dataSource.getSystemCode();
         fullName = dataSource.getFullName();
-        String urlPattern = dataSource.getUrl("$id");
-        if (urlPattern.length() > 3 ){
-            urlPattern = urlPattern;
-        } else {
-            urlPattern = null;
-        }
+        urlPattern = dataSource.getUrl("$id");
         idExample = dataSource.getExample().getId();
         isPrimary = dataSource.isPrimary();
         type = dataSource.getType();

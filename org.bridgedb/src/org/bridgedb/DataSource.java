@@ -64,8 +64,8 @@ public final class DataSource
 	private final String sysCode;
 	private final String fullName;
 	private String mainUrl = null;
-	private String prefix = "";
-	private String postfix = "";
+	private String prefix = null;
+	private String postfix = null;
 	private Object organism = null;
 	private String idExample = null;
 	private boolean isPrimary = true;
@@ -91,11 +91,16 @@ public final class DataSource
 	
 	/** 
 	 * Turn id into url pointing to info page on the web, e.g. "http://www.ensembl.org/get?id=ENSG..."
+     * 
+     * Since version 2 this will return null if not pattern has been set.
 	 * @param id identifier to use in url
 	 * @return Url
 	 */
 	public String getUrl(String id)
 	{
+        if (prefix == null){
+            return null;
+        }
 		return prefix + id + postfix;
 	}
 				
@@ -230,18 +235,23 @@ public final class DataSource
 		 */
 		public Builder urlPattern (String urlPattern)
 		{
-			if (urlPattern == null || "".equals (urlPattern))
-			{
-				current.prefix = "";
-				current.postfix = "";
+			if (urlPattern == null || "".equals (urlPattern)) {
+				return this;
 			}
-			else
-			{
-				int pos = urlPattern.indexOf("$id");
-				if (pos == -1) throw new IllegalArgumentException("Url maker pattern for " + current + "' should have $id in it");
-				current.prefix = urlPattern.substring(0, pos);
-				current.postfix = urlPattern.substring(pos + 3);
-			}
+            String oldUrlPattern = current.getUrl("$id");
+            if (oldUrlPattern != null){
+                if (oldUrlPattern.equals(urlPattern)){
+                    return this;
+                }
+                throw new IllegalArgumentException("DataSource " + current + " already has a URl Pattern of " 
+                        + oldUrlPattern + " so unable to set to " + urlPattern);
+            }
+            int pos = urlPattern.indexOf("$id");
+            if (pos == -1) {
+                throw new IllegalArgumentException("Url maker pattern for " + current + "' should have $id in it");
+            }
+            current.prefix = urlPattern.substring(0, pos);
+			current.postfix = urlPattern.substring(pos + 3);
 			return this;
 		}
 		
