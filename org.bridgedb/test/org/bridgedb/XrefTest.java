@@ -19,7 +19,7 @@ import org.junit.Test;
 
 public class XrefTest {
 
-	private final DataSource EN = DataSource.register("En", "Ensemble").asDataSource();
+	private final DataSource EN = DataSource.register("En", "Ensembl").asDataSource();
 	private final DataSource UNIPROT = DataSource.register("S", "Uniprot-TrEMBL").
 		urnBase("urn:miriam:uniprot:").asDataSource();
 
