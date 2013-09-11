@@ -2,10 +2,12 @@
 
 
 <!DOCTYPE rdf:RDF [
+    <!ENTITY void "http://rdfs.org/ns/void#" >
     <!ENTITY dcterms "http://purl.org/dc/terms/" >
     <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
     <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
     <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY 1.0 "http://vocabularies.bridgedb.org/ops/1.0#" >
     <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
 ]>
 
@@ -14,13 +16,69 @@
      xml:base="http://vocabularies.bridgedb.org/ops"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:1.0="http://vocabularies.bridgedb.org/ops/1.0#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:void="http://rdfs.org/ns/void#"
      xmlns:dcterms="http://purl.org/dc/terms/">
     <owl:Ontology rdf:about="http://vocabularies.bridgedb.org/ops#">
         <rdfs:label xml:lang="en">BridgeDB Dataset Descriptions Vocabulary</rdfs:label>
+        <dcterms:created rdf:datatype="&xsd;dateTime">2013-09-11T14:00:00+01:00</dcterms:created>
+        <dcterms:publisher rdf:datatype="&xsd;anyURI">http://bridgedb.org/</dcterms:publisher>
+        <dcterms:license rdf:datatype="&xsd;anyURI">http://creativecommons.org/licenses/by/3.0/</dcterms:license>
+        <dcterms:creator rdf:datatype="&xsd;anyURI">http://orcid.org/0000-0002-5711-4872</dcterms:creator>
+        <dcterms:creator xml:lang="en">Alasdair J G Gray</dcterms:creator>
+        <dcterms:title xml:lang="en">BridgeDB Dataset Description Vocabulary</dcterms:title>
+        <dcterms:contributor xml:lang="en">Christian Brenninkmeijer</dcterms:contributor>
         <owl:versionIRI rdf:resource="http://vocabularies.bridgedb.org/ops/1.0"/>
     </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://purl.org/dc/terms/contributor -->
+
+    <owl:AnnotationProperty rdf:about="&dcterms;contributor"/>
+    
+
+
+    <!-- http://purl.org/dc/terms/created -->
+
+    <owl:AnnotationProperty rdf:about="&dcterms;created"/>
+    
+
+
+    <!-- http://purl.org/dc/terms/creator -->
+
+    <owl:AnnotationProperty rdf:about="&dcterms;creator"/>
+    
+
+
+    <!-- http://purl.org/dc/terms/license -->
+
+    <owl:AnnotationProperty rdf:about="&dcterms;license"/>
+    
+
+
+    <!-- http://purl.org/dc/terms/publisher -->
+
+    <owl:AnnotationProperty rdf:about="&dcterms;publisher"/>
+    
+
+
+    <!-- http://purl.org/dc/terms/title -->
+
+    <owl:AnnotationProperty rdf:about="&dcterms;title"/>
 </rdf:RDF>
 
 
