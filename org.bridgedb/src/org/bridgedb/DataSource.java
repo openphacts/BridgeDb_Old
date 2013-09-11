@@ -72,7 +72,9 @@ public final class DataSource
 	private boolean isDeprecated = false;
 	private DataSource isDeprecatedBy = null;
 	private String type = "unknown";
-	private String urnBase = "";
+	private String miriamBase = "";
+    
+    private static final String URN_PREFIX = "urn:miriam:";
 	
 	/**
 	 * Constructor is private, so that we don't
@@ -161,7 +163,7 @@ public final class DataSource
 		{
 			idPart = URLEncoder.encode(id, "UTF-8");
 		} catch (UnsupportedEncodingException ex) { idPart = id; }
-		return urnBase + ":" + idPart;
+		return URN_PREFIX + miriamBase + ":" + idPart;
 	}
 	
 	/**
@@ -303,7 +305,19 @@ public final class DataSource
 		 */
 		public Builder urnBase (String base)
 		{
-			current.urnBase = base;
+            if (base == null){
+                return this;
+            }
+            base = base.trim();
+            if (base.isEmpty()){
+                return this;
+            }            
+            if (base.startsWith(URN_PREFIX)){
+                base = base.substring(URN_PREFIX.length());
+            } else {
+                throw new IllegalArgumentException("UrnBase must start with " + URN_PREFIX + " so can not accept " + base);
+            }
+			current.miriamBase = base;
 			return this;
 		}
 	}
@@ -362,9 +376,9 @@ public final class DataSource
 			registry.add (current);
 		}
 		
-		if (current.urnBase != null)
+		if (current.miriamBase != null)
 		{
-			byMiriamBase.put (current.urnBase, current);
+			byMiriamBase.put (current.miriamBase, current);
 		}
 		
 		current.sysCode = sysCode;
@@ -554,21 +568,22 @@ public final class DataSource
 	 */
 	public static DataSource getByUrnBase(String base)
 	{
-		if (!base.startsWith ("urn:miriam:"))
+		if (!base.startsWith (URN_PREFIX))
 		{
 			return null;
 		}
 		DataSource current = null;
 		
-		if (byMiriamBase.containsKey(base))
+        String key = base.substring(URN_PREFIX.length());
+		if (byMiriamBase.containsKey(key))
 		{
-			current = byMiriamBase.get(base);
+			current = byMiriamBase.get(key);
 		}
 		else
 		{
 			current = getByFullName(base.substring("urn:miriam:".length()));
-			current.urnBase = base;
-			byMiriamBase.put (base, current);
+			current.miriamBase = key;
+			byMiriamBase.put (key, current);
 		}
 		return current;
 	}
