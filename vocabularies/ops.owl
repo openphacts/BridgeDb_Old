@@ -158,6 +158,18 @@
     
 
 
+    <!-- http://vocabularies.bridgedb.org/ops#subjectsDatatype -->
+
+    <owl:ObjectProperty rdf:about="http://vocabularies.bridgedb.org/ops#subjectsDatatype">
+        <rdfs:label xml:lang="en">Subjects Datatype</rdfs:label>
+        <skos:usageNote xml:lang="en">Appendix B.1 of the Open PHACTS dataset description guidelines gives the set of values that are expected to be used within the Open PHACTS Discovery Platform.</skos:usageNote>
+        <rdfs:comment xml:lang="en">The type of concept the subjects of the triples in the Linkset represent.</rdfs:comment>
+        <rdfs:domain rdf:resource="&void;Linkset"/>
+        <rdfs:range rdf:resource="&rdfs;Resource"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
