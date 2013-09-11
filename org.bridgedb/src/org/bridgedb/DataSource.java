@@ -60,9 +60,9 @@ public final class DataSource
 	private static Set<DataSource> registry = new HashSet<DataSource>();
 	private static Map<String, DataSource> byAlias = new HashMap<String, DataSource>();
 	private static Map<String, DataSource> byMiriamBase = new HashMap<String, DataSource>();
-	
-	private String sysCode = null;
-	private String fullName = null;
+
+	private final String sysCode;
+	private final String fullName;
 	private String mainUrl = null;
 	private String prefix = "";
 	private String postfix = "";
@@ -84,7 +84,10 @@ public final class DataSource
 	 * {@link getByFullName} or {@link getBySystemCode}. Information about
 	 * DataSources can be added with {@link register}
 	 */
-	private DataSource () {}
+    private DataSource (String sysCode, String fullName) {
+        this.sysCode = sysCode;
+        this.fullName = fullName;
+    }
 	
 	/** 
 	 * Turn id into url pointing to info page on the web, e.g. "http://www.ensembl.org/get?id=ENSG..."
@@ -320,6 +323,13 @@ public final class DataSource
 		}
 		
 		/**
+         * This adds a miriam base to the DataSource.
+         * 
+         * Note: Since version 2 
+         *    The base must start with urn:miriam:.
+         *    The urnBase and identifiersOrgBase methods share the same miriam base.
+         *    It is no longer allowed to change a none null miriam Base
+         * 
 		 * @param base for urn generation, for example "urn:miriam:uniprot"
 		 * @return the same Builder object so you can chain setters
 		 */
@@ -340,7 +350,11 @@ public final class DataSource
 		}
 	
 		/**
-		 * @param base for urn generation, for example "urn:miriam:uniprot"
+        * Note: Since version 2 
+         *    The base must start with urn:miriam:.
+         *    The urnBase and identifiersOrgBase methods share the same miriam basee.
+         *    It is no longer allowed to change a none null miriam Base
+		 * @param base for identifiersOrg generation, for example "http://www.identifiers.org/uniprot"
 		 * @return the same Builder object so you can chain setters
 		 */
 		public Builder identifiersOrgBase (String base)
@@ -363,6 +377,7 @@ public final class DataSource
         private Builder miriamBase(String base){
             if (current.miriamBase == null){
                 current.miriamBase = base;
+                byMiriamBase.put(base, current);
             } else {
                 if (!current.miriamBase.equals(base)){
                     throw new IllegalArgumentException("illegal attemp to change miriam base from " 
@@ -376,6 +391,10 @@ public final class DataSource
 	/** 
 	 * Register a new DataSource with (optional) detailed information.
 	 * This can be used by other modules to define new DataSources.
+     * 
+     * Note: Since version 2 this method is stricter. 
+     * It will no longer allow an existing dataSource to have either its full name of sysCode changed.
+     * 
 	 * @param sysCode short unique code between 1-4 letters, originally used by GenMAPP
 	 * @param fullName full name used in GPML. Must be 20 or less characters
 	 * @return Builder that can be used for adding detailed information.
@@ -423,18 +442,10 @@ public final class DataSource
 		}
 		else
 		{
-			current = new DataSource ();
+			current = new DataSource (sysCode, fullName);
 			registry.add (current);
 		}
 		
-		if (current.miriamBase != null)
-		{
-			byMiriamBase.put (current.miriamBase, current);
-		}
-		
-		current.sysCode = sysCode;
-		current.fullName = fullName;
-
 		if (isSuitableKey(sysCode))
 			bySysCode.put(sysCode, current);
 		if (isSuitableKey(fullName))
@@ -613,30 +624,37 @@ public final class DataSource
 	}
 
 	/**
+     * Since version 2.0 this method will return null if no DataSource is known
 	 * @param base the base urn, which must start with "urn:miriam:". It it isn't, null is returned.
-	 * @returns the DataSource for a given urn base, or null if the base is invalid.
-	 * If the given urn base is unknown, a new DataSource will be created with the full name equal to the urn base without "urn.miriam."  
+	 * @returns the DataSource for a given urn base, or null if the base is invalid or unknown.
 	 */
 	public static DataSource getByUrnBase(String base)
 	{
-		if (!base.startsWith (URN_PREFIX))
+		if (base == null || !base.startsWith (URN_PREFIX))
 		{
 			return null;
 		}
 		DataSource current = null;
 		
         String key = base.substring(URN_PREFIX.length());
-		if (byMiriamBase.containsKey(key))
-		{
-			current = byMiriamBase.get(key);
-		}
-		else
-		{
-			current = getByFullName(base.substring("urn:miriam:".length()));
-			current.miriamBase = key;
-			byMiriamBase.put (key, current);
-		}
-		return current;
+        return byMiriamBase.get(key);
 	}
+
+	/**
+     * Since version 2.0 this method will return null if no DataSource is known
+	 * @param base the base urn, which must start with "http://identifiers.org/". It it isn't, null is returned.
+	 * @returns the DataSource for a given base, or null if the base is invalid or unknown.
+	 */
+    public static DataSource getByIdentiferOrgBase(String base) {
+		if (base == null || !base.startsWith (IDENTIFIERS_ORG_PREFIX))
+		{
+			return null;
+		}
+		DataSource current = null;
+		
+        String key = base.substring(IDENTIFIERS_ORG_PREFIX.length());
+        return byMiriamBase.get(key);
+    }
+	
 
 }

@@ -90,8 +90,7 @@ public class DataSourceUrnBaseTest{
         Assert.assertEquals(expected, result);
     }
 
-    //No equivellent method via the builder ever exisited.
-    @Test
+     @Test
     public void testSetIdentifiersOrgUri() throws IDMapperException{
         String fullName = "DataSourceUrnBase_TestIdentifiersOrgUri";
         String rootURL = "http://identifiers.org/" + fullName;
@@ -113,7 +112,6 @@ public class DataSourceUrnBaseTest{
         String urnBase = "urn:miriam:" + fullName;
 		DataSource source1 = DataSource.register(null, fullName).identifiersOrgBase(rootURL)
                 .asDataSource();
-        //no builder method exists
 		DataSource source2 = DataSource.register(null, fullName)
                 .urnBase(urnBase)
                 .asDataSource();
@@ -169,4 +167,19 @@ public class DataSourceUrnBaseTest{
                 .asDataSource();
     }
 
+    @Test
+    public void testGetBy() throws IDMapperException{
+        String fullName = "DataSourceUrnBase_testRegisterBoth()";
+        String rootURL = "http://identifiers.org/" + fullName;
+        String urnBase = "urn:miriam:" + fullName;
+		DataSource source1 = DataSource.register(null, fullName).identifiersOrgBase(rootURL)
+                .asDataSource();
+		DataSource source2 = DataSource.getByUrnBase(urnBase);
+        Assert.assertEquals(source1, source2);        
+		DataSource source3 = DataSource.getByIdentiferOrgBase(urnBase);
+        Assert.assertEquals(source1, source2);        
+        
+    }
+
+    
 }

@@ -57,7 +57,7 @@ public class DataSourceBean {
         //Object organism = dataSource.getOrganism();
         //if (organism instanceof Organism)
         String emptyUrn = dataSource.getURN("");
-        if (emptyUrn.length() > 1){
+        if (emptyUrn != null && emptyUrn.length() > 1){
             urnBase = emptyUrn.substring(0, emptyUrn.length()-1);    
         } else {
             urnBase = null;
