@@ -30,8 +30,8 @@ import static org.junit.Assert.*;
 public class DataSourceUrnBaseTest{
 
     @Test
-    public void testRegisterUrnBaseStrict() throws IDMapperException{
-        String fullName = "DataSourceUrnBase_TestRegisterUrnBaseStrict";
+    public void testRegisterUrnBase() throws IDMapperException{
+        String fullName = "DataSourceUrnBase_TestRegisterUrnBase";
         String rootURL = "http://identifiers.org/" + fullName;
         String urnBase = "urn:miriam:" + fullName;
 		DataSource source = DataSource.register(null,  fullName)
@@ -40,44 +40,24 @@ public class DataSourceUrnBaseTest{
         String id = "1234";
         String result = source.getURN(id);
         String expected = urnBase + ":" + id;
-        Assert.assertEquals(result, expected);
-//        result = source.getIdentifiersOrgUri(id);
-//        expected = rootURL + "/" + id;
-//        Assert.assertEquals(result, expected);        
+        Assert.assertEquals(expected, result);
+        result = source.getIdentifiersOrgUri(id);
+        expected = rootURL + "/" + id;
+        Assert.assertEquals(expected, result);
     }
 
- //   @Test (expected = IllegalArgumentException.class)
-    public void testRegisterUrnShortFirstStrict() throws IDMapperException{
+    @Test (expected = IllegalArgumentException.class)
+    public void testRegisterUrnShortFirst() throws IDMapperException{
         String shortBase = "shortBase";
-        String fullName = "DataSourceUrnBase_testRegisterUrnShortFirstStrict";
-        String rootURL = "http://identifiers.org/" + fullName;
-        String urnBase = "urn:miriam:" + fullName;
+        String fullName = "DataSourceUrnBase_testRegisterUrnShortFirst";
 		DataSource source1 = DataSource.register(null,  fullName)
                 .urnBase(shortBase)
                 .asDataSource();
-		DataSource source2 = DataSource.register(null,  fullName)
-                .urnBase(urnBase)
-                .asDataSource();
-    }
-    
-//    @Test (expected = IllegalArgumentException.class)
-    public void testRegisterUrnLongFirstStrict() throws IDMapperException{
-        System.out.println("RegisterUrnLongFirstStrict");
-        String shortBase = "shortBase";
-        String fullName = "DataSourceUrnBase_testRegisterUrnShortFirst";
-        String rootURL = "http://identifiers.org/" + fullName;
-        String urnBase = "urn:miriam:" + fullName;
-        DataSource source1 = DataSource.register(null,  fullName)
-                .urnBase(urnBase)
-                .asDataSource();
-		DataSource source2 = DataSource.register(null,  fullName)
-                .urnBase(shortBase)
-                .asDataSource();
     }
 
-//    @Test (expected = IllegalArgumentException.class)
-    public void testRegisterDifferentUrnsStrict(){
-        String fullName = "DataSourceUrnBase_testRegisterDifferentUrnsStrict";
+    @Test (expected = IllegalArgumentException.class)
+    public void testRegisterDifferentUrns(){
+        String fullName = "DataSourceUrnBase_testRegisterDifferentUrns";
         String urnBase1 = "urn:miriam:testUrnBase3a";
         String urnBase2 = "urn:miriam:testUrnBase3b";
 		DataSource source1 = DataSource.register(null,  fullName)
@@ -89,8 +69,8 @@ public class DataSourceUrnBaseTest{
     }
 
     @Test  
-    public void testRegisterSameUrnStrict(){
-        String fullName = "DataSourceUrnBase_testRegisterSameUrnStrict";
+    public void testRegisterSameUrn(){
+        String fullName = "DataSourceUrnBase_testRegisterSameUrn";
         String urnBase = "urn:miriam:testRegisterSameUrn";
 		DataSource source1 = DataSource.register(null,  fullName)
                 .urnBase(urnBase)
@@ -110,15 +90,13 @@ public class DataSourceUrnBaseTest{
         Assert.assertEquals(expected, result);
     }
 
-/*    //New meathod so only version always acts strict!
     //No equivellent method via the builder ever exisited.
     @Test
     public void testSetIdentifiersOrgUri() throws IDMapperException{
         String fullName = "DataSourceUrnBase_TestIdentifiersOrgUri";
         String rootURL = "http://identifiers.org/" + fullName;
         String urnBase = "urn:miriam:" + fullName;
-		DataSource source = DataSource.register(null,  fullName).asDataSource();
-        source.setIdentifiersOrgUriBase(rootURL);
+		DataSource source = DataSource.register(null,  fullName).identifiersOrgBase(rootURL).asDataSource();
         String id = "1234";
         String result = source.getURN(id);
         String expected = urnBase + ":" + id;
@@ -128,33 +106,14 @@ public class DataSourceUrnBaseTest{
         Assert.assertEquals(expected, result);        
     }
     
-    //Test the extra slash at the end
     @Test
-    public void testSetIdentifiersOrgUri2() throws IDMapperException{
-        String fullName = "DataSourceUrnBase_TestIdentifiersOrgUri2";
-        String rootURL = "http://identifiers.org/" + fullName;
-        String urnBase = "urn:miriam:" + fullName;
-		DataSource source = DataSource.register(null,  fullName).asDataSource();
-        source.setIdentifiersOrgUriBase(rootURL + "/");
-        String id = "1234";
-        String result = source.getURN(id);
-        String expected = urnBase + ":" + id;
-        Assert.assertEquals(expected, result);        
-        result = source.getIdentifiersOrgUri(id);
-        expected = rootURL + "/" + id;
-        Assert.assertEquals(expected, result);        
-    }
-
-    @Test
-    public void testRegisterBothStrict() throws IDMapperException{
+    public void testRegisterBoth() throws IDMapperException{
         String fullName = "DataSourceUrnBase_testRegisterBoth()";
         String rootURL = "http://identifiers.org/" + fullName;
         String urnBase = "urn:miriam:" + fullName;
-        DataSource.setOverwriteLevel(DataSourceOverwriteLevel.STRICT);
-		DataSource source1 = DataSource.register(null, fullName)
+		DataSource source1 = DataSource.register(null, fullName).identifiersOrgBase(rootURL)
                 .asDataSource();
         //no builder method exists
-        source1.setIdentifiersOrgUriBase(rootURL);
 		DataSource source2 = DataSource.register(null, fullName)
                 .urnBase(urnBase)
                 .asDataSource();
@@ -169,68 +128,45 @@ public class DataSourceUrnBaseTest{
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void testRegisterDifferentUrnBaseToUrnStrict() throws IDMapperException{
-        String fullName = "DataSourceUrnBase_testRegisterDifferentUrnBaseToUrnStrict";
+    public void testRegisterDifferentUrnBaseToUrn() throws IDMapperException{
+        String fullName = "DataSourceUrnBase_testRegisterDifferentUrnBaseToUrn";
         String rootURL = "http://identifiers.org/" + fullName + "A";
         String urnBase = "urn:miriam:" + fullName + "B";
-		DataSource source1 = DataSource.register(null, fullName)
+		DataSource source1 = DataSource.register(null, fullName).identifiersOrgBase(rootURL)
                 .asDataSource();
-        source1.setIdentifiersOrgUriBase(rootURL);
 		DataSource source2 = DataSource.register(null, fullName)
                 .urnBase(urnBase)
                 .asDataSource();
     }
 
-    @Test (expected = IDMapperException.class)   
-    public void testSetDifferentUrnBaseToUrn2Strict() throws IDMapperException{
-        String fullName = "DataSourceUrnBase_TestDifferentUrnBaseToUrn2Strict";
+    @Test (expected = IllegalArgumentException.class)   
+    public void testSetDifferentUrnBaseToUrn2() throws IDMapperException{
+        String fullName = "DataSourceUrnBase_TestDifferentUrnBaseToUrn2";
         String rootURL = "http://identifiers.org/" + fullName + "A";
         String urnBase = "urn:miriam:" + fullName + "B";
 		DataSource source = DataSource.register(null, fullName)
                 .urnBase(urnBase)
+                .identifiersOrgBase(rootURL)
                 .asDataSource();
-        source.setIdentifiersOrgUriBase(rootURL);
     }
 
-    @Test
+    @Test (expected = IllegalArgumentException.class)   
     public void testSetUrnBaseNonMiram() throws IDMapperException{
         String fullName = "DataSourceUrnBase_TestSetUrnBaseNonMiram";
 		DataSource source = DataSource.register(null, fullName)
                 .urnBase(fullName)
                 .asDataSource();
-        String id = "1234";
-        String result = source.getURN(id);
-        String expected = fullName + ":" + id;
-        Assert.assertEquals(result, expected);
-        result = source.getIdentifiersOrgUri(id);
-        expected = null;
-        Assert.assertEquals(expected, result);        
     }
 
-    @Test
-    public void testRegisterUrnBaseNonMiramStrict() throws IDMapperException{
-        String fullName = "DataSourceUrnBase_TestRegisterUrnBaseNonMiramStrict";
-		DataSource source = DataSource.register(fullName,  fullName)
-                .urnBase(fullName)
-                .asDataSource();
-        String id = "1234";
-        String result = source.getURN(id);
-        String expected = fullName + ":" + id;
-        Assert.assertEquals(result, expected);
-        result = source.getIdentifiersOrgUri(id);
-        expected = null;
-        Assert.assertEquals(expected, result);        
-    }
-
-    @Test (expected = IDMapperException.class)   
-    public void testIdentifiersOverWriteNonMiriamStrict() throws IDMapperException{
-        String fullName = "DataSourceUrnBase_testIdentifiersOverWriteNonMiriamStrict";
+    @Test (expected = IllegalArgumentException.class)   
+    public void testIdentifiersOverWriteNonMiriam() throws IDMapperException{
+        String fullName = "DataSourceUrnBase_testIdentifiersOverWriteNonMiriam";
         String rootURL = "http://identifiers.org/" + fullName + "A";
         String urnBase = fullName + "B";
 		DataSource source = DataSource.register(null, fullName)
                 .urnBase(urnBase)
+                .identifiersOrgBase(rootURL)
                 .asDataSource();
-        source.setIdentifiersOrgUriBase(rootURL);
     }
-*/
+
 }

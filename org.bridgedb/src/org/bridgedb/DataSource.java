@@ -72,9 +72,10 @@ public final class DataSource
 	private boolean isDeprecated = false;
 	private DataSource isDeprecatedBy = null;
 	private String type = "unknown";
-	private String miriamBase = "";
+	private String miriamBase = null;
     
     private static final String URN_PREFIX = "urn:miriam:";
+    private static final String IDENTIFIERS_ORG_PREFIX = "http://identifiers.org/";
 	
 	/**
 	 * Constructor is private, so that we don't
@@ -158,14 +159,33 @@ public final class DataSource
 	 */
 	public String getURN(String id)
 	{
-		String idPart = "";
+        if (miriamBase == null){
+            return null;
+        }
+		String idPart;
 		try
 		{
 			idPart = URLEncoder.encode(id, "UTF-8");
-		} catch (UnsupportedEncodingException ex) { idPart = id; }
+		} catch (UnsupportedEncodingException ex) { 
+            idPart = id; 
+        }
 		return URN_PREFIX + miriamBase + ":" + idPart;
 	}
-	
+
+    public String getIdentifiersOrgUri(String id) {
+        if (miriamBase == null){
+            return null;
+        }
+		String idPart;
+		try
+		{
+			idPart = URLEncoder.encode(id, "UTF-8");
+		} catch (UnsupportedEncodingException ex) { 
+            idPart = id; 
+        }
+		return this.IDENTIFIERS_ORG_PREFIX + miriamBase + "/" + idPart;
+    }
+
 	/**
 	 * Uses builder pattern to set optional attributes for a DataSource. For example, this allows you to use the 
 	 * following code:
@@ -313,15 +333,46 @@ public final class DataSource
                 return this;
             }            
             if (base.startsWith(URN_PREFIX)){
-                base = base.substring(URN_PREFIX.length());
+                return miriamBase(base.substring(URN_PREFIX.length()));
             } else {
                 throw new IllegalArgumentException("UrnBase must start with " + URN_PREFIX + " so can not accept " + base);
             }
-			current.miriamBase = base;
-			return this;
 		}
-	}
 	
+		/**
+		 * @param base for urn generation, for example "urn:miriam:uniprot"
+		 * @return the same Builder object so you can chain setters
+		 */
+		public Builder identifiersOrgBase (String base)
+		{
+            if (base == null){
+                return this;
+            }
+            base = base.trim();
+            if (base.isEmpty()){
+                return this;
+            }            
+            if (base.startsWith(IDENTIFIERS_ORG_PREFIX)){
+                return miriamBase(base.substring(IDENTIFIERS_ORG_PREFIX.length()));
+            } else {
+                throw new IllegalArgumentException("identifiers.org base must start with " + IDENTIFIERS_ORG_PREFIX + " so can not accept " + base);
+            }
+			
+		}
+        
+        private Builder miriamBase(String base){
+            if (current.miriamBase == null){
+                current.miriamBase = base;
+            } else {
+                if (!current.miriamBase.equals(base)){
+                    throw new IllegalArgumentException("illegal attemp to change miriam base from " 
+                            + current.miriamBase + " to " + base);
+                }
+            }           
+			return this;            
+        }
+	}
+
 	/** 
 	 * Register a new DataSource with (optional) detailed information.
 	 * This can be used by other modules to define new DataSources.
