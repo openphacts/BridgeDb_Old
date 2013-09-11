@@ -7,7 +7,7 @@
     <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
     <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
     <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
-    <!ENTITY 1.0 "http://vocabularies.bridgedb.org/ops/1.0#" >
+    <!ENTITY versioning "http://vocabularies.bridgedb.org/ops/1.0#" >
     <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
 ]>
 
@@ -16,10 +16,10 @@
      xml:base="http://vocabularies.bridgedb.org/ops"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
-     xmlns:1.0="http://vocabularies.bridgedb.org/ops/1.0#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:void="http://rdfs.org/ns/void#"
+     xmlns:versioning="http://vocabularies.bridgedb.org/ops/1.0#"
      xmlns:dcterms="http://purl.org/dc/terms/">
     <owl:Ontology rdf:about="http://vocabularies.bridgedb.org/ops#">
         <rdfs:label xml:lang="en">BridgeDB Dataset Descriptions Vocabulary</rdfs:label>
@@ -79,6 +79,61 @@
     <!-- http://purl.org/dc/terms/title -->
 
     <owl:AnnotationProperty rdf:about="&dcterms;title"/>
+    
+
+
+    <!-- http://vocabularies.bridgedb.org/ops#curationLevel -->
+
+    <owl:AnnotationProperty rdf:about="http://vocabularies.bridgedb.org/ops#curationLevel">
+        <rdfs:label xml:lang="en">Curation Level</rdfs:label>
+        <rdfs:comment>The level of curation of the links in the Linkset.</rdfs:comment>
+        <rdfs:domain rdf:resource="&void;Linkset"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://vocabularies.bridgedb.org/ops#curationLevel -->
+
+    <owl:ObjectProperty rdf:about="http://vocabularies.bridgedb.org/ops#curationLevel">
+        <rdfs:label xml:lang="en">Curation Level</rdfs:label>
+        <rdfs:comment>The level of curation of the links in the Linkset.</rdfs:comment>
+        <rdfs:domain rdf:resource="&void;Linkset"/>
+        <rdfs:range rdf:resource="&rdfs;Resource"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://rdfs.org/ns/void#Linkset -->
+
+    <owl:Class rdf:about="&void;Linkset"/>
+    
+
+
+    <!-- http://www.w3.org/2000/01/rdf-schema#Resource -->
+
+    <owl:Class rdf:about="&rdfs;Resource"/>
 </rdf:RDF>
 
 
