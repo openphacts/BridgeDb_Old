@@ -68,10 +68,14 @@ public class BioDataSource
 		"Cs", "Chemspider").asDataSource();
 	public static final DataSource SGD = DataSource.register (
 		"D", "SGD").asDataSource();
+    /** @deprecated as full name changed */
+    //Changed by Christian Sept 2013 to match datasources,txt
 	public static final DataSource ENZYME_CODE = DataSource.register (
-		"E", "EC Number").asDataSource();
+		"E", "Enzyme Nomenclature").asDataSource();
+    /** @deprecated as full name changed */
+    //Changed by Christian Sept 2013 to match datasources,txt
 	public static final DataSource ECOLI = DataSource.register (
-		"Ec", "Ecoli").asDataSource();
+		"Ec", "EcoGene").asDataSource();
 	public static final DataSource EMBL = DataSource.register (
 		"Em", "EMBL").asDataSource();
 	public static final DataSource ENSEMBL = DataSource.register (
@@ -165,8 +169,10 @@ public class BioDataSource
 		"L", "Entrez Gene").asDataSource();
 	public static final DataSource MGI = DataSource.register (
 		"M", "MGI").asDataSource();
+    /** @deprecated as full name changed */
+    //Changed by Christian Sept 2013 to match datasources,txt
 	public static final DataSource MIRBASE = DataSource.register (
-		"Mb", "miRBase").asDataSource();
+		"Mb", "miRBase Sequence").asDataSource();
 	public static final DataSource MIRBASE_MATURE = DataSource.register (
 		"Mbm", "miRBase mature sequence").asDataSource();
 	public static final DataSource MAIZE_GDB = DataSource.register (
@@ -195,8 +201,10 @@ public class BioDataSource
 		"R", "RGD").asDataSource(); 
 	public static final DataSource REACTOME = DataSource.register (
 		"Re", "Reactome").asDataSource();
+    /** @deprecated as full name changed */
+    //Changed by Christian Sept 2013 to match datasources,txt
 	public static final DataSource KEGG_REACTION = DataSource.register (
-		"Kr", "Kegg Reaction").asDataSource();
+		"Kr", "KEGG Reaction").asDataSource();
 	public static final DataSource RFAM = DataSource.register (
 		"Rf", "Rfam").asDataSource();
 	/** NB the UNIPROT datasource is for Uniprot accession numbers like P12345 */
@@ -222,9 +230,11 @@ public class BioDataSource
 	public static final DataSource WIKIGENE = DataSource.register (
 		"Wg", "WikiGenes").asDataSource();
 	public static final DataSource WIKIPEDIA = DataSource.register (
-		"Wi", "Wikipedia").asDataSource();
+		"Wi", "Wikipedia").asDataSource();    
+    /** @deprecated as full name changed */
+    //Changed by Christian Sept 2013 to match datasources,txt
 	public static final DataSource WIKIPATHWAYS = DataSource.register (
-		"Wp", "Wikipathways").asDataSource();
+		"Wp", "WikiPathways").asDataSource();
 	public static final DataSource WHEAT_GENE_NAMES = DataSource.register (
 		"Wn", "Wheat gene names").asDataSource();
 	public static final DataSource WHEAT_GENE_REFERENCES= DataSource.register (
