@@ -327,10 +327,34 @@ public final class DataSource
 		if (byFullName.containsKey(fullName))
 		{
 			current = byFullName.get(fullName);
+            if (sysCode ==null){
+                if (current.getSystemCode() != null){
+                    throw new IllegalArgumentException ("System code does not match for DataSource " + fullName 
+                            + " was " + current.getSystemCode() + " so it can not be changed to null.");
+                }
+            } else {
+                if (!sysCode.equals(current.getSystemCode())){
+                    throw new IllegalArgumentException ("System code does not match for DataSource " + fullName 
+                            + " was " + current.getSystemCode() + " so it can not be changed to " + sysCode);
+                }
+                
+            }
 		}
 		else if (bySysCode.containsKey(sysCode))
 		{
-			current = bySysCode.get(sysCode);
+            current = bySysCode.get(sysCode);
+            if (fullName ==null){
+                if (current.getFullName() != null){
+                    throw new IllegalArgumentException ("Full name does not match for DataSource " + sysCode 
+                            + " was " + current.getFullName() + " so it can not be changed to " + null);
+                }
+            } else {
+                if (!fullName.equals(current.getFullName())){
+                    throw new IllegalArgumentException ("Full name does not match for DataSource " + sysCode 
+                            + " was " + current.getFullName() + " so it can not be changed to " + fullName);
+                }
+                
+            }
 		}
 		else
 		{

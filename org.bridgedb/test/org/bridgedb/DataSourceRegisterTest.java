@@ -58,7 +58,7 @@ public class DataSourceRegisterTest {
         Assert.assertEquals(sysCode, ds.getSystemCode());
     }
     
-//    @Test (expected =  IllegalArgumentException.class)
+    @Test (expected =  IllegalArgumentException.class)
     public void testSecondFullName() throws IDMapperException{
         System.out.println("SecondFullName");
         String sysCode = "DataSourceRegistryTest_SecondFullName";
@@ -68,7 +68,7 @@ public class DataSourceRegisterTest {
         DataSource ds2 = DataSource.register(sysCode, fullName2).asDataSource();
     }
 
-//    @Test (expected =  IllegalArgumentException.class)
+    @Test (expected =  IllegalArgumentException.class)
     public void testSecondNullFullName() throws IDMapperException{
         System.out.println("SecondNullFullName");
         String sysCode = "DataSourceRegistryTest_SecondNullFullName";
@@ -77,7 +77,7 @@ public class DataSourceRegisterTest {
         DataSource ds2 = DataSource.register(sysCode, null).asDataSource();
     }
     
-//    @Test (expected =  IllegalArgumentException.class)
+    @Test (expected =  IllegalArgumentException.class)
     public void testNullThenFullName() throws IDMapperException{
         String sysCode = "DataSourceRegistryTest_NullThenFullName";
         String fullName2 = "DataSourceRegistryTest_testNullThenFullName";
@@ -85,7 +85,7 @@ public class DataSourceRegisterTest {
         DataSource ds2 = DataSource.register(sysCode, fullName2).asDataSource();
     }
     
-//    @Test (expected =  IllegalArgumentException.class)
+    @Test (expected =  IllegalArgumentException.class)
     public void testSecondSysCode() throws IDMapperException{
         String sysCode1 = "DataSourceRegistryTest_SecondSysCode1";
         String sysCode2 = "DataSourceRegistryTest_SecondSysCode2";
@@ -94,7 +94,7 @@ public class DataSourceRegisterTest {
         DataSource ds2 = DataSource.register(sysCode2, fullName).asDataSource();
     }
 
-//    @Test (expected =  IllegalArgumentException.class)
+    @Test (expected =  IllegalArgumentException.class)
     public void testSecondNullSysCode() throws IDMapperException{
         String sysCode1 = "DataSourceRegistryTest_RegisterSecondNullSysCode1";
         String fullName = "DataSourceRegistryTest_testSecondNullSysCode";
@@ -102,7 +102,7 @@ public class DataSourceRegisterTest {
         DataSource ds2 = DataSource.register(null, fullName).asDataSource();
     }
 
-//    @Test (expected =  IllegalArgumentException.class)
+    @Test (expected =  IllegalArgumentException.class)
     public void testNullThenSysCode() throws IDMapperException{
         String sysCode2 = "DataSourceRegistryTest_NullThenSysCode";
         String fullName = "DataSourceRegistryTest_NullThenSysCode";
@@ -110,7 +110,7 @@ public class DataSourceRegisterTest {
         DataSource ds2 = DataSource.register(sysCode2, fullName).asDataSource();
     }
 
-//    @Test 
+    @Test 
     public void testFullNameNull() throws IDMapperException{
         System.out.println("FullNameNull");
         String sysCode = "DataSourceRegistryTest_FullNameNull";
