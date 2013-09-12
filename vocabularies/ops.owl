@@ -111,11 +111,11 @@
     
 
 
-    <!-- http://vocabularies.bridgedb.org/ops#curationLevel -->
+    <!-- http://vocabularies.bridgedb.org/ops#assertionMethod -->
 
-    <owl:ObjectProperty rdf:about="http://vocabularies.bridgedb.org/ops#curationLevel">
-        <rdfs:label xml:lang="en">Curation Level</rdfs:label>
-        <rdfs:comment>The level of curation of the links in the Linkset.</rdfs:comment>
+    <owl:ObjectProperty rdf:about="http://vocabularies.bridgedb.org/ops#assertionMethod">
+        <rdfs:label xml:lang="en">Assertion Method</rdfs:label>
+        <rdfs:comment>The method by which the links in the Linkset have been asserted.</rdfs:comment>
         <rdfs:domain rdf:resource="&void;Linkset"/>
         <rdfs:range rdf:resource="&rdfs;Resource"/>
     </owl:ObjectProperty>
