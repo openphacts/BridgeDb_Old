@@ -3594,6 +3594,7 @@ bridgeDB:DataSource_PubChem_compound a bridgeDB:DataSource ;
 	bridgeDB:type "metabolite" ;
 	bridgeDB:hasUrlPattern <http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?cid=$id> ;
 	bridgeDB:hasUriPattern <http://pubchem.ncbi.nlm.nih.gov/rest/rdf/compound/CID$id> ;
+    bridgeDB:hasUriPattern <http://rdf.ncbi.nlm.nih.gov/pubchem/compound/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/pubchem.compound/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?cid=$id> .
 
