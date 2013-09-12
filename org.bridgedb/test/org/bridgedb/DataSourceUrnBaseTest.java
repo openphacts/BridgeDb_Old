@@ -34,7 +34,7 @@ public class DataSourceUrnBaseTest{
         String fullName = "DataSourceUrnBase_TestRegisterUrnBase";
         String rootURL = "http://identifiers.org/" + fullName;
         String urnBase = "urn:miriam:" + fullName;
-		DataSource source = DataSource.register(null,  fullName)
+		DataSource source = DataSource.register(fullName,  fullName)
                 .urnBase(urnBase)
                 .asDataSource();
         String id = "1234";
@@ -72,14 +72,14 @@ public class DataSourceUrnBaseTest{
     public void testRegisterSameUrn(){
         String fullName = "DataSourceUrnBase_testRegisterSameUrn";
         String urnBase = "urn:miriam:testRegisterSameUrn";
-		DataSource source1 = DataSource.register(null,  fullName)
+		DataSource source1 = DataSource.register(fullName,  fullName)
                 .urnBase(urnBase)
                 .asDataSource();
         String id = "1234";
         String result = source1.getURN(id);
         String expected = urnBase + ":" + id;
         Assert.assertEquals(expected, result);
-		DataSource source2 = DataSource.register(null,  fullName)
+		DataSource source2 = DataSource.register(fullName,  fullName)
                 .urnBase(urnBase)
                 .asDataSource();
         Assert.assertEquals(source1, source2);
@@ -95,7 +95,7 @@ public class DataSourceUrnBaseTest{
         String fullName = "DataSourceUrnBase_TestIdentifiersOrgUri";
         String rootURL = "http://identifiers.org/" + fullName;
         String urnBase = "urn:miriam:" + fullName;
-		DataSource source = DataSource.register(null,  fullName).identifiersOrgBase(rootURL).asDataSource();
+		DataSource source = DataSource.register(fullName,  fullName).identifiersOrgBase(rootURL).asDataSource();
         String id = "1234";
         String result = source.getURN(id);
         String expected = urnBase + ":" + id;
@@ -110,9 +110,10 @@ public class DataSourceUrnBaseTest{
         String fullName = "DataSourceUrnBase_testRegisterBoth()";
         String rootURL = "http://identifiers.org/" + fullName;
         String urnBase = "urn:miriam:" + fullName;
-		DataSource source1 = DataSource.register(null, fullName).identifiersOrgBase(rootURL)
+		DataSource source1 = DataSource.register(fullName, fullName)
+                .identifiersOrgBase(rootURL)
                 .asDataSource();
-		DataSource source2 = DataSource.register(null, fullName)
+		DataSource source2 = DataSource.register(fullName, fullName)
                 .urnBase(urnBase)
                 .asDataSource();
         Assert.assertEquals(source1, source2);        
@@ -130,9 +131,10 @@ public class DataSourceUrnBaseTest{
         String fullName = "DataSourceUrnBase_testRegisterDifferentUrnBaseToUrn";
         String rootURL = "http://identifiers.org/" + fullName + "A";
         String urnBase = "urn:miriam:" + fullName + "B";
-		DataSource source1 = DataSource.register(null, fullName).identifiersOrgBase(rootURL)
+		DataSource source1 = DataSource.register(fullName, fullName)
+                .identifiersOrgBase(rootURL)
                 .asDataSource();
-		DataSource source2 = DataSource.register(null, fullName)
+		DataSource source2 = DataSource.register(fullName, fullName)
                 .urnBase(urnBase)
                 .asDataSource();
     }
@@ -142,7 +144,7 @@ public class DataSourceUrnBaseTest{
         String fullName = "DataSourceUrnBase_TestDifferentUrnBaseToUrn2";
         String rootURL = "http://identifiers.org/" + fullName + "A";
         String urnBase = "urn:miriam:" + fullName + "B";
-		DataSource source = DataSource.register(null, fullName)
+		DataSource source = DataSource.register(fullName, fullName)
                 .urnBase(urnBase)
                 .identifiersOrgBase(rootURL)
                 .asDataSource();
@@ -151,7 +153,7 @@ public class DataSourceUrnBaseTest{
     @Test (expected = IllegalArgumentException.class)   
     public void testSetUrnBaseNonMiram() throws IDMapperException{
         String fullName = "DataSourceUrnBase_TestSetUrnBaseNonMiram";
-		DataSource source = DataSource.register(null, fullName)
+		DataSource source = DataSource.register(fullName, fullName)
                 .urnBase(fullName)
                 .asDataSource();
     }
@@ -161,7 +163,7 @@ public class DataSourceUrnBaseTest{
         String fullName = "DataSourceUrnBase_testIdentifiersOverWriteNonMiriam";
         String rootURL = "http://identifiers.org/" + fullName + "A";
         String urnBase = fullName + "B";
-		DataSource source = DataSource.register(null, fullName)
+		DataSource source = DataSource.register(fullName, fullName)
                 .urnBase(urnBase)
                 .identifiersOrgBase(rootURL)
                 .asDataSource();
@@ -172,7 +174,7 @@ public class DataSourceUrnBaseTest{
         String fullName = "DataSourceUrnBase_testRegisterBoth()";
         String rootURL = "http://identifiers.org/" + fullName;
         String urnBase = "urn:miriam:" + fullName;
-		DataSource source1 = DataSource.register(null, fullName).identifiersOrgBase(rootURL)
+		DataSource source1 = DataSource.register(fullName, fullName).identifiersOrgBase(rootURL)
                 .asDataSource();
 		DataSource source2 = DataSource.getByUrnBase(urnBase);
         Assert.assertEquals(source1, source2);        

@@ -85,7 +85,7 @@ public abstract class IDMapperTestBase {
         DataSource3 = DataSource.register("ChemblMolecule", "Chembl Molecule").urlPattern("http://data.kasabi.com/dataset/chembl-rdf/molecule/m$id")
                 .idExample("1").asDataSource();
         //This DataSource MUST not be supported
-        DataSourceBad = DataSource.register("TestDSBad", null)
+        DataSourceBad = DataSource.register("TestDSBad", "TestDSBad")
                 .urlPattern("www.NotInTheURlMapper.com#$id").asDataSource();
 
         //Set of Xrefs that are expected to map together.

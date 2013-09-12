@@ -533,13 +533,13 @@ public class TransativeFinder extends SQLBase{
     private static Set<String> getLimited() {
         if (limitedSysCodes == null){
             limitedSysCodes = new HashSet<String>();
-            limitedSysCodes.add(DataSource.getByFullName("Chemspider").getSystemCode());
-            limitedSysCodes.add(DataSource.getByFullName("OPS Chemical Registry Service").getSystemCode());
-            limitedSysCodes.add(DataSource.getByFullName("ChEMBL target component").getSystemCode());
-            limitedSysCodes.add(DataSource.getByFullName("Uniprot").getSystemCode());
-            limitedSysCodes.add(DataSource.getByFullName("Ensembl").getSystemCode());
-            limitedSysCodes.add(DataSource.getByFullName("Drugbank Drugs").getSystemCode());
-            limitedSysCodes.add(DataSource.getByFullName("HMDB").getSystemCode());
+            limitedSysCodes.add(DataSource.getExistingByFullName("Chemspider").getSystemCode());
+            limitedSysCodes.add(DataSource.getExistingByFullName("OPS Chemical Registry Service").getSystemCode());
+            limitedSysCodes.add(DataSource.getExistingByFullName("ChEMBL target component").getSystemCode());
+            limitedSysCodes.add(DataSource.getExistingByFullName("Uniprot").getSystemCode());
+            limitedSysCodes.add(DataSource.getExistingByFullName("Ensembl").getSystemCode());
+            limitedSysCodes.add(DataSource.getExistingByFullName("Drugbank Drugs").getSystemCode());
+            limitedSysCodes.add(DataSource.getExistingByFullName("HMDB").getSystemCode());
         }
         return limitedSysCodes;
     }

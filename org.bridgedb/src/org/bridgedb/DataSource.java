@@ -88,6 +88,12 @@ public final class DataSource
     private DataSource (String sysCode, String fullName) {
         this.sysCode = sysCode;
         this.fullName = fullName;
+		if (isSuitableKey(sysCode)) {
+            bySysCode.put(sysCode, this);
+        }
+		if (isSuitableKey(fullName)) {
+            byFullName.put(fullName, this);
+        }
     }
 	
 	/** 
@@ -458,17 +464,23 @@ public final class DataSource
      * It will no longer allow an existing dataSource to have either its full name of sysCode changed.
      * 
 	 * @param sysCode short unique code between 1-4 letters, originally used by GenMAPP
-	 * @param fullName full name used in GPML. Must be 20 or less characters
+	 * @param fullName full name used in GPML.
 	 * @return Builder that can be used for adding detailed information.
 	 */
-	public static Builder register(String sysCode, String fullName)
+	public static Builder register(String sysCode, String fullName){
+/*        if (!isSuitableKey(sysCode)) {
+            throw new IllegalArgumentException ("Unsuitable sysCode " + sysCode);
+        }
+		if (!isSuitableKey(fullName)) {
+            throw new IllegalArgumentException ("Unsuitable fullName " + fullName);
+        }
+*/        return findOrRegister(sysCode, fullName);
+    }
+            
+    private static Builder findOrRegister(String sysCode, String fullName)
 	{
-		DataSource current = null;
+ 		DataSource current = null;
 		if (fullName == null && sysCode == null) throw new NullPointerException();
-//		if (fullName != null && fullName.length() > 20) 
-//		{ 
-//			throw new IllegalArgumentException("full Name '" + fullName + "' must be 20 or less characters"); 
-//		}
 		
 		if (byFullName.containsKey(fullName))
 		{
@@ -508,11 +520,6 @@ public final class DataSource
 			registry.add (current);
 		}
 		
-		if (isSuitableKey(sysCode))
-			bySysCode.put(sysCode, current);
-		if (isSuitableKey(fullName))
-			byFullName.put(fullName, current);
-		
 		return new Builder(current);
 	}
 	
@@ -537,33 +544,62 @@ public final class DataSource
 	 * @param systemCode short unique code to query for
 	 * @return pre-existing DataSource object by system code, 
 	 * 	if it exists, or creates a new one. 
+     * @deprecated 
 	 */
 	public static DataSource getBySystemCode(String systemCode)
 	{
 		if (!bySysCode.containsKey(systemCode) && isSuitableKey(systemCode))
 		{
-			register (systemCode, null);
+			findOrRegister (systemCode, null);
 		}
 		return bySysCode.get(systemCode);
 	}
 	
 	/** 
+	 * @param systemCode short unique code to query for
+	 * @return pre-existing DataSource object by system code if it exists
+     * @throws IllegalArgumentException if no DataSource is known with this systemCode
+	 */
+	public static DataSource getExistingBySystemCode(String systemCode)
+	{
+		if (bySysCode.containsKey(systemCode)){
+    		return bySysCode.get(systemCode);
+		}
+        throw new IllegalArgumentException("No DataSource known for " + systemCode);
+	}
+
+    /** 
 	 * returns pre-existing DataSource object by 
 	 * full name, if it exists, 
 	 * or creates a new one. 
 	 * @param fullName full name to query for
 	 * @return DataSource
+     * @deprecated 
 	 */
 	public static DataSource getByFullName(String fullName)
 	{
 		if (!byFullName.containsKey(fullName) && isSuitableKey(fullName))
 		{
-			register (null, fullName);
+			findOrRegister (null, fullName);
 		}
 		return byFullName.get(fullName);
 	}
 	
-	public static DataSource getByAlias(String alias)
+	/** 
+	 * returns pre-existing DataSource object 
+	 * @param fullName full name to query for
+	 * @return DataSource
+     * @throws IllegalArgumentException if no DataSource is known with this systemCode
+	 */
+	public static DataSource getExistingByFullName(String fullName)
+	{
+		if (byFullName.containsKey(fullName)){
+    		return byFullName.get(fullName);
+        }
+        throw new IllegalArgumentException ("No DataSource known for " + fullName);
+	}
+
+    public static DataSource getByAlias(String alias)
 	{
 		return byAlias.get(alias);
 	}

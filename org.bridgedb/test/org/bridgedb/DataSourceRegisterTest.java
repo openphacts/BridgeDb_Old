@@ -21,6 +21,7 @@ package org.bridgedb;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -41,7 +42,8 @@ public class DataSourceRegisterTest {
         Assert.assertEquals(sysCode, ds.getSystemCode());
     }
 
-    @Test
+    @Ignore
+    @Test (expected =  IllegalArgumentException.class)
     public void testFullNameOnly() throws IDMapperException{
         String fullName = "DataSourceRegistryTest_testFullNameOnly";
         DataSource ds = DataSource.register(null, fullName).asDataSource();
@@ -49,7 +51,8 @@ public class DataSourceRegisterTest {
         Assert.assertEquals(null, ds.getSystemCode());
     }
             
-    @Test
+    @Ignore
+    @Test (expected =  IllegalArgumentException.class)
     public void testSysCodeOnly() throws IDMapperException{
         String sysCode = "DataSourceRegistryTest_SysCodeOnly";
         DataSource ds = DataSource.register(sysCode, null).asDataSource();
@@ -76,6 +79,7 @@ public class DataSourceRegisterTest {
         DataSource ds2 = DataSource.register(sysCode, null).asDataSource();
     }
     
+    @Ignore
     @Test (expected =  IllegalArgumentException.class)
     public void testNullThenFullName() throws IDMapperException{
         String sysCode = "DataSourceRegistryTest_NullThenFullName";
@@ -109,18 +113,4 @@ public class DataSourceRegisterTest {
         DataSource ds2 = DataSource.register(sysCode2, fullName).asDataSource();
     }
 
-    @Test 
-    public void testFullNameNull() throws IDMapperException{
-        System.out.println("FullNameNull");
-        String sysCode = "DataSourceRegistryTest_FullNameNull";
-        DataSource ds1 = DataSource.register(sysCode, null).asDataSource();
-        DataSource ds2 = DataSource.register(sysCode, null).asDataSource();
-        //Is this behaviour desirable????
-        Assert.assertEquals(ds1, ds2);
-        //Is this behaviour desirable????
-        Assert.assertEquals(null, ds1.getFullName());
-        Assert.assertEquals(sysCode, ds1.getSystemCode());
-        Assert.assertEquals(null, ds2.getFullName());
-        Assert.assertEquals(sysCode, ds2.getSystemCode());
-    }
 }
