@@ -142,8 +142,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 	{
         super.dropSQLTables();
  		dropTable(URI_TABLE_NAME);
-        dropTable(MAPPING_SET_TABLE_NAME);
- 		dropTable(MIMETYPE_TABLE_NAME);
+  		dropTable(MIMETYPE_TABLE_NAME);
         dropTable(VIA_TABLE_NAME);
         dropTable(CHAIN_TABLE_NAME);
 // 		dropTable(LENS_TABLE_NAME);
