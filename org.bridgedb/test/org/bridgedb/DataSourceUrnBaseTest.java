@@ -150,10 +150,20 @@ public class DataSourceUrnBaseTest{
                 .asDataSource();
     }
 
+    @Test  
+    public void testSetUrnBaseSysCode() throws IDMapperException{
+        String sysCode = "DataSourceUrnBase-TestSetUrnBaseNonMiram";
+        String fullName = "DataSourceUrnBase_TestSetUrnBaseNonMiram";
+		DataSource source = DataSource.register(sysCode, fullName)
+                .urnBase(sysCode)
+                .asDataSource();
+    }
+
     @Test (expected = IllegalArgumentException.class)   
     public void testSetUrnBaseNonMiram() throws IDMapperException{
+        String sysCode = "DataSourceUrnBase-TestSetUrnBaseNonMiram";
         String fullName = "DataSourceUrnBase_TestSetUrnBaseNonMiram";
-		DataSource source = DataSource.register(fullName, fullName)
+		DataSource source = DataSource.register(sysCode, fullName)
                 .urnBase(fullName)
                 .asDataSource();
     }

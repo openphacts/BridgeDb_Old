@@ -99,19 +99,36 @@ public final class DataSource
 	/** 
 	 * Turn id into url pointing to info page on the web, e.g. "http://www.ensembl.org/get?id=ENSG..."
      * 
+     * This method will return just the id if no pattern is known so its use is discouraged.
+     * 
+	 * @param id identifier to use in url
+	 * @return Url
+     * @deprecated
+	 */
+	public String getUrl(String id)
+	{
+        if (prefix == null){
+            return id;
+        }
+		return prefix + id + postfix;
+	}
+				
+	/** 
+	 * Turn id into url pointing to info page on the web, e.g. "http://www.ensembl.org/get?id=ENSG..."
+     * 
      * Since version 2 this will return null if not pattern has been set.
 	 * @param id identifier to use in url
 	 * @return Url
 	 */
-	public String getUrl(String id)
+	public String getKnownUrl(String id)
 	{
         if (prefix == null){
             return null;
         }
 		return prefix + id + postfix;
 	}
-				
-	/** 
+
+    /** 
 	 * returns full name of DataSource e.g. "Ensembl". 
 	 * May return null if only the system code is known. 
 	 * Also used as identifier in GPML
@@ -169,10 +186,37 @@ public final class DataSource
 	 * to create a MIRIAM URI like "urn:miriam:uniprot:P12345", 
 	 * or if this DataSource is not included
 	 * in the MIRIAM data types list, a bridgedb URI.
+     * Since version 2 if no Miriam base is known this method will use the system code.
+     * Use of this method is discouraged as a non standard urn was returned if no Miriam Base was known
 	 * @param id Id to generate URN from.
+     * @deprecated 
 	 * @return the URN. 
 	 */
 	public String getURN(String id)
+	{
+		String idPart;
+		try
+		{
+			idPart = URLEncoder.encode(id, "UTF-8");
+		} catch (UnsupportedEncodingException ex) { 
+            idPart = id; 
+        }
+        if (miriamBase == null){
+            return sysCode + ":" + id;
+        }
+		return URN_PREFIX + miriamBase + ":" + idPart;
+	}
+
+	/**
+	 * Creates a global identifier. 
+	 * It uses the MIRIAM data type list
+	 * to create a MIRIAM URI like "urn:miriam:uniprot:P12345", 
+	 * or if this DataSource is not included
+	 * in the MIRIAM data types list, a bridgedb URI.
+	 * @param id Id to generate URN from.
+	 * @return the URN. 
+	 */
+	public String getMiriamURN(String id)
 	{
         if (miriamBase == null){
             return null;
@@ -245,7 +289,7 @@ public final class DataSource
 			if (urlPattern == null || "".equals (urlPattern)) {
 				return this;
 			}
-            String oldUrlPattern = current.getUrl("$id");
+            String oldUrlPattern = current.getKnownUrl("$id");
             if (oldUrlPattern != null){
                 if (oldUrlPattern.equals(urlPattern)){
                     return this;
@@ -404,6 +448,9 @@ public final class DataSource
 		public Builder urnBase (String base)
 		{
             if (base == null){
+                return this;
+            }
+            if (base.equals(current.sysCode)){
                 return this;
             }
             base = base.trim();
@@ -725,6 +772,7 @@ public final class DataSource
      * Since version 2.0 this method will return null if no DataSource is known
 	 * @param base the base urn, which must start with "urn:miriam:". It it isn't, null is returned.
 	 * @returns the DataSource for a given urn base, or null if the base is invalid or unknown.
+     * @deprecated 
 	 */
 	public static DataSource getByUrnBase(String base)
 	{
@@ -732,13 +780,32 @@ public final class DataSource
 		{
 			return null;
 		}
-		DataSource current = null;
-		
-        String key = base.substring(URN_PREFIX.length());
-        return byMiriamBase.get(key);
+        String key = base.substring(URN_PREFIX.length());      
+        if (byMiriamBase.containsKey(key)){
+            return byMiriamBase.get(key);
+        }
+        DataSource current = getByFullName(key);
+        current.miriamBase = key;
+        byMiriamBase.put (key, current);
+        return current;
 	}
 
 	/**
+     * Since version 2.0 this method will return null if no DataSource is known
+	 * @param base the base urn, which must start with "urn:miriam:". It it isn't, null is returned.
+	 * @returns the DataSource for a given urn base, or null if the base is invalid or unknown.
+	 */
+	public static DataSource getByMiriamBase(String base)
+	{
+		if (base == null || !base.startsWith (URN_PREFIX))
+		{
+			return null;
+		}
+        String key = base.substring(URN_PREFIX.length());      
+        return byMiriamBase.get(key);
+	}
+
+    /**
      * Since version 2.0 this method will return null if no DataSource is known
 	 * @param base the base urn, which must start with "http://identifiers.org/". It it isn't, null is returned.
 	 * @returns the DataSource for a given base, or null if the base is invalid or unknown.
