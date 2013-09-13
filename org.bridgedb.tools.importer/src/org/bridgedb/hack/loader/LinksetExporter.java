@@ -29,7 +29,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.bridgedb.BridgeDb;
 import org.bridgedb.DataSource;
-import org.bridgedb.DataSourceOverwriteLevel;
 import org.bridgedb.IDMapper;
 import org.bridgedb.IDMapperException;
 import org.bridgedb.Xref;

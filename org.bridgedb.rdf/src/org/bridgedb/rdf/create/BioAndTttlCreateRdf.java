@@ -23,8 +23,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import org.apache.log4j.Logger;
-import org.bridgedb.DataSource;
-import org.bridgedb.DataSourceOverwriteLevel;
 import org.bridgedb.IDMapper;
 import org.bridgedb.bio.BioDataSource;
 import org.bridgedb.rdf.BridgeDBRdfHandler;

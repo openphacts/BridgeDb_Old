@@ -25,7 +25,6 @@ import java.sql.Statement;
 import java.util.Date;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
-import org.bridgedb.DataSourceOverwriteLevel;
 import org.bridgedb.mapping.MappingListener;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.utils.BridgeDBException;
