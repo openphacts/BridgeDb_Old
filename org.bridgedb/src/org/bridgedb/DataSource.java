@@ -235,14 +235,7 @@ public final class DataSource
         if (miriamBase == null){
             return null;
         }
-		String idPart;
-		try
-		{
-			idPart = URLEncoder.encode(id, "UTF-8");
-		} catch (UnsupportedEncodingException ex) { 
-            idPart = id; 
-        }
-		return this.IDENTIFIERS_ORG_PREFIX + miriamBase + "/" + idPart;
+		return this.IDENTIFIERS_ORG_PREFIX + miriamBase + "/" + id;
     }
 
 	/**
@@ -470,6 +463,7 @@ public final class DataSource
          *    The urnBase and identifiersOrgBase methods share the same miriam basee.
          *    It is no longer allowed to change a none null miriam Base
 		 * @param base for identifiersOrg generation, for example "http://www.identifiers.org/uniprot"
+         *    It will also accept an identifiersOrg Pattern such as "http://www.identifiers.org/uniprot/$id"
 		 * @return the same Builder object so you can chain setters
 		 */
 		public Builder identifiersOrgBase (String base)
@@ -482,6 +476,12 @@ public final class DataSource
                 return this;
             }            
             if (base.startsWith(IDENTIFIERS_ORG_PREFIX)){
+                if (base.endsWith("/$id")){
+                    base = base.substring(0, base.length()-4);
+                } else if (base.endsWith("/")){
+                    base = base.substring(0, base.length()-1);
+                }
+                System.out.println("identifiersOrgBase " + base);
                 return miriamBase(base.substring(IDENTIFIERS_ORG_PREFIX.length()));
             } else {
                 throw new IllegalArgumentException("identifiers.org base must start with " + IDENTIFIERS_ORG_PREFIX + " so can not accept " + base);
