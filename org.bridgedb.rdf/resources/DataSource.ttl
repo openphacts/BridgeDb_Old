@@ -3129,7 +3129,8 @@ bridgeDB:DataSource_OPS_Chemical_Registry_Service a bridgeDB:DataSource ;
 	bridgeDB:idExample "OPS21009" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "unknown" ;
-	bridgeDB:hasUrlPattern <http://ops.rsc-us.org/$id> .
+    bridgeDB:hasUrlPattern <http://ops.rsc.org/$id> ;
+	bridgeDB:hasUriPattern <http://ops.rsc-us.org/$id> .
 
 bridgeDB:DataSource_Orphanet a bridgeDB:DataSource ;
 	bridgeDB:fullName "Orphanet" ;
