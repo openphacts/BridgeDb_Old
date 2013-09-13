@@ -198,7 +198,7 @@ public class BioDataSource
 	public static final DataSource REACTOME = DataSource.register (
 		"Re", "Reactome").asDataSource();
 	public static final DataSource KEGG_REACTION = DataSource.register (
-		"Rk", "Kegg Reaction").asDataSource();
+		"Rk", "KEGG Reaction").asDataSource();
 	public static final DataSource RFAM = DataSource.register (
 		"Rf", "Rfam").asDataSource();
 	/** NB the UNIPROT datasource is for Uniprot accession numbers like P12345 */
