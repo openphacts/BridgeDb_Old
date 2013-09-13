@@ -35,6 +35,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
+ * @deprecated use resources.org.bridgedb.bio.datasources.txt instead 
+ *
  * Definition of many common biological DataSources.
  * Meta data about these Data Sources, such as URL templates,
  * are read from a bundled text file. Call the init() method
@@ -68,12 +70,8 @@ public class BioDataSource
 		"Cs", "Chemspider").asDataSource();
 	public static final DataSource SGD = DataSource.register (
 		"D", "SGD").asDataSource();
-    /** @deprecated as full name changed */
-    //Changed by Christian Sept 2013 to match datasources,txt
 	public static final DataSource ENZYME_CODE = DataSource.register (
 		"E", "Enzyme Nomenclature").asDataSource();
-    /** @deprecated as full name changed */
-    //Changed by Christian Sept 2013 to match datasources,txt
 	public static final DataSource ECOLI = DataSource.register (
 		"Ec", "EcoGene").asDataSource();
 	public static final DataSource EMBL = DataSource.register (
@@ -169,8 +167,6 @@ public class BioDataSource
 		"L", "Entrez Gene").asDataSource();
 	public static final DataSource MGI = DataSource.register (
 		"M", "MGI").asDataSource();
-    /** @deprecated as full name changed */
-    //Changed by Christian Sept 2013 to match datasources,txt
 	public static final DataSource MIRBASE = DataSource.register (
 		"Mb", "miRBase Sequence").asDataSource();
 	public static final DataSource MIRBASE_MATURE = DataSource.register (
@@ -201,10 +197,8 @@ public class BioDataSource
 		"R", "RGD").asDataSource(); 
 	public static final DataSource REACTOME = DataSource.register (
 		"Re", "Reactome").asDataSource();
-    /** @deprecated as full name changed */
-    //Changed by Christian Sept 2013 to match datasources,txt
 	public static final DataSource KEGG_REACTION = DataSource.register (
-		"Kr", "KEGG Reaction").asDataSource();
+		"Rk", "Kegg Reaction").asDataSource();
 	public static final DataSource RFAM = DataSource.register (
 		"Rf", "Rfam").asDataSource();
 	/** NB the UNIPROT datasource is for Uniprot accession numbers like P12345 */
@@ -230,9 +224,7 @@ public class BioDataSource
 	public static final DataSource WIKIGENE = DataSource.register (
 		"Wg", "WikiGenes").asDataSource();
 	public static final DataSource WIKIPEDIA = DataSource.register (
-		"Wi", "Wikipedia").asDataSource();    
-    /** @deprecated as full name changed */
-    //Changed by Christian Sept 2013 to match datasources,txt
+		"Wi", "Wikipedia").asDataSource();
 	public static final DataSource WIKIPATHWAYS = DataSource.register (
 		"Wp", "WikiPathways").asDataSource();
 	public static final DataSource WHEAT_GENE_NAMES = DataSource.register (

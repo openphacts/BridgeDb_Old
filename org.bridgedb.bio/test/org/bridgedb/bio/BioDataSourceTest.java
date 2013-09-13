@@ -161,9 +161,8 @@ public class BioDataSourceTest
 		assertEquals (BioDataSource.ENTREZ_GENE, ref.getDataSource());
 		assertEquals ("3643", ref.getId());
 
-        ref = Xref.fromUrn("urn:miriam:blahblahblah:abc");
-        //This behaviour has changed since Version 2
-		assertNull (ref);
+		ref = Xref.fromUrn("urn:miriam:blahblahblah:abc");
+		assertEquals (DataSource.getByFullName("blahblahblah"), ref.getDataSource());
 
 		ref = Xref.fromUrn("blahblahblha");
 		assertNull (ref);
