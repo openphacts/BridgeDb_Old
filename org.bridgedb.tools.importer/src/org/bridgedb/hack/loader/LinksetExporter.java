@@ -94,7 +94,7 @@ public class LinksetExporter {
             return false;
         }
         DataSourceUris dsu = DataSourceUris.byDataSource(dataSource);
-        UriPattern wp = dsu.getWikiPathwaysPattern();
+ /*       UriPattern wp = dsu.getWikiPathwaysPattern();
         if (wp == null){
             System.err.println("Skipping DataSource " + dataSource + " as it has no WikiPathways pattern");
             return false;
@@ -103,7 +103,7 @@ public class LinksetExporter {
             System.err.println("Skipping DataSource " + dataSource + " as WikiPathways pattern " + wp.getUriPattern() + " has a postfix");
             return false;
         }
-        return true;
+ */       return true;
     }
     
     public synchronized void exportLinkset(File directory, DataSource srcDataSource, DataSource tgtDataSource) throws BridgeDBException, IOException {
@@ -144,7 +144,7 @@ public class LinksetExporter {
     }
 
     private boolean writeLinkset(DataSource srcDataSource, DataSource tgtDataSource) throws IOException, BridgeDBException {
-        writeVoidHeader(srcDataSource, tgtDataSource);
+      //  writeVoidHeader(srcDataSource, tgtDataSource);
         return writeLinks(srcDataSource, tgtDataSource);
     }
  
@@ -153,7 +153,7 @@ public class LinksetExporter {
         buffer.newLine();
     }
     
-    private String getWikiPathwaysPattern(DataSource dataSource) throws BridgeDBException{
+ /*   private String getWikiPathwaysPattern(DataSource dataSource) throws BridgeDBException{
         DataSourceUris dsu = DataSourceUris.byDataSource(dataSource);
         UriPattern pattern = dsu.getWikiPathwaysPattern();
         if (pattern == null){
@@ -183,7 +183,7 @@ public class LinksetExporter {
         writeln("    void:linkPredicate " + LINK_PREDICATE + " .");
         writeln("");                
     }
-
+    */
     private boolean writeLinks(DataSource srcDataSource, DataSource tgtDataSource) throws BridgeDBException, IOException {
         if (srcDataSource == tgtDataSource){
             return writeSelfLinks(srcDataSource, tgtDataSource);
