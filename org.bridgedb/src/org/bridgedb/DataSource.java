@@ -515,13 +515,13 @@ public final class DataSource
 	 * @return Builder that can be used for adding detailed information.
 	 */
 	public static Builder register(String sysCode, String fullName){
-/*        if (!isSuitableKey(sysCode)) {
-            throw new IllegalArgumentException ("Unsuitable sysCode " + sysCode);
+        if (!isSuitableKey(sysCode)) {
+            throw new IllegalArgumentException ("Unsuitable sysCode " + sysCode + " with " + fullName);
         }
 		if (!isSuitableKey(fullName)) {
-            throw new IllegalArgumentException ("Unsuitable fullName " + fullName);
+            throw new IllegalArgumentException ("Unsuitable fullName " + fullName + " with " + sysCode);
         }
-*/        return findOrRegister(sysCode, fullName);
+        return findOrRegister(sysCode, fullName);
     }
             
     private static Builder findOrRegister(String sysCode, String fullName)
