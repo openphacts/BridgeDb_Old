@@ -35,8 +35,6 @@ import org.bridgedb.Xref;
 import org.bridgedb.XrefIterator;
 import org.bridgedb.bio.BioDataSource;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
-import org.bridgedb.rdf.DataSourceUris;
-import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.utils.Reporter;
@@ -93,7 +91,6 @@ public class LinksetExporter {
             System.err.println("Ignoring null DataSource");
             return false;
         }
-        DataSourceUris dsu = DataSourceUris.byDataSource(dataSource);
  /*       UriPattern wp = dsu.getWikiPathwaysPattern();
         if (wp == null){
             System.err.println("Skipping DataSource " + dataSource + " as it has no WikiPathways pattern");

@@ -290,24 +290,6 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
     }
     
     /**
-     * @deprecated 
-     * @param dsu
-     * @throws BridgeDBException 
-     */
-    public void setPrimaryDataSource(DataSourceUris dsu) throws BridgeDBException{
-        throw new UnsupportedOperationException("No Longer supported");
-    }
-       
-    /**
-     * @deprecated 
-     * @param dsu
-     * @throws BridgeDBException 
-     */
-    public void setDataSource(DataSourceUris dsu) throws BridgeDBException{
-        throw new UnsupportedOperationException("No Longer supported");
-    }
-    
-    /**
      * @deprecated
      * @return 
      */
@@ -322,15 +304,6 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         return dataSource;
     }
     
-    /**
-     * @deprecated 
-     * @return 
-     */
-    public DataSourceUris getMainDataSourceUris() {
-        return null;
-    }
-  
-
     public final URI getResourceId(){
         return new URIImpl(getUriPattern());
     }
@@ -371,37 +344,6 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         }
     }
 
-    /**
-     * @deprecated 
-     * @param repositoryConnection
-     * @param dataSourceId
-     * @param parent
-     * @param predicate
-     * @return
-     * @throws RepositoryException
-     * @throws BridgeDBException 
-     */
-    public static UriPattern readUriPattern(RepositoryConnection repositoryConnection, Resource dataSourceId, DataSourceUris parent, 
-            URI predicate) throws RepositoryException, BridgeDBException{
-        throw new UnsupportedOperationException("No Longer supported");
-
-    }
-    
-    /**
-     * @deprecated 
-     * @param repositoryConnection
-     * @param dataSourceId
-     * @param parent
-     * @param predicate
-     * @return
-     * @throws RepositoryException
-     * @throws BridgeDBException 
-     */
-    public static Set<UriPattern> readUriPatterns(RepositoryConnection repositoryConnection, Resource dataSourceId, 
-            DataSourceUris parent, URI predicate) throws RepositoryException, BridgeDBException{
-       throw new UnsupportedOperationException("No Longer supported");
-    }
-    
     public static UriPattern readUriPattern(RepositoryConnection repositoryConnection, Resource uriPatternId) 
             throws BridgeDBException, RepositoryException{
         //TODO handle the extra statements

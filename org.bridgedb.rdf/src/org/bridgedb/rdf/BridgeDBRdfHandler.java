@@ -178,16 +178,6 @@ public class BridgeDBRdfHandler extends RdfBase{
         return builder.asDataSource();
     }
     
-    private static void readUrlPattern(RepositoryConnection repositoryConnection, Resource dataSourceId, 
-            DataSource.Builder builder) throws BridgeDBException, RepositoryException{
-//TODO not use DataSourceURI
-        UriPattern uriPattern = UriPattern.readUriPattern(repositoryConnection, dataSourceId, null, 
-                BridgeDBConstants.HAS_URL_PATTERN_URI);
-        if (uriPattern != null){
-            builder.urlPattern(uriPattern.getUriPattern());
-        }       
-    }
- 
     private void readRegexPattern(RepositoryConnection repositoryConnection, Resource subject, DataSource dataSource) {
         //ystem.out.println("skipping read regex");
     }
