@@ -8,7 +8,7 @@
     <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
     <!ENTITY skos "http://www.w3.org/2004/02/skos/core#" >
     <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
-    <!ENTITY versioning "http://vocabularies.bridgedb.org/ops/1.0#" >
+    <!ENTITY versioning "http://vocabularies.bridgedb.org/ops/0.1#" >
     <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
 ]>
 
