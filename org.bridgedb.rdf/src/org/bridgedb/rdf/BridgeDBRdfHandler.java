@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
+import org.bridgedb.bio.Organism;
 import org.bridgedb.rdf.constants.BridgeDBConstants;
 import org.bridgedb.rdf.constants.RdfConstants;
 import org.bridgedb.utils.BridgeDBException;
@@ -40,6 +41,9 @@ import org.bridgedb.utils.Reporter;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.Value;
+import org.openrdf.model.impl.BooleanLiteralImpl;
+import org.openrdf.model.impl.LiteralImpl;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -253,22 +257,7 @@ public class BridgeDBRdfHandler extends RdfBase{
     }
     
     public static void writeRdfToFile(File file) throws BridgeDBException{
-        Reporter.println("Writing DataSource RDF to " + file.getAbsolutePath());
-        Repository repository = null;
-        RepositoryConnection repositoryConnection = null;
-        try {
-            repository = new SailRepository(new MemoryStore());
-            repository.initialize();
-            repositoryConnection = repository.getConnection();
-            DataSourceUris.writeAll(repositoryConnection);
-            OrganismRdf.addAll(repositoryConnection);
-            UriPattern.addAll(repositoryConnection);
-            writeRDF(repositoryConnection, file);        
-        } catch (Exception ex) {
-            throw new BridgeDBException ("Error writing Rdf to file ", ex);
-        } finally {
-            shutDown(repository, repositoryConnection);
-        }
+        writeRdfToFile(file, DataSource.getDataSources());
     }
     
     public static void writeRdfToFile(File file, Collection<DataSource> dataSources) throws BridgeDBException{
@@ -279,7 +268,9 @@ public class BridgeDBRdfHandler extends RdfBase{
             repository = new SailRepository(new MemoryStore());
             repository.initialize();
             repositoryConnection = repository.getConnection();
-            DataSourceUris.writeAll(repositoryConnection, dataSources);
+            for (DataSource dataSource: dataSources){
+                writeDataSource(repositoryConnection, dataSource);
+            }
             OrganismRdf.addAll(repositoryConnection);
             UriPattern.addAll(repositoryConnection);
             writeRDF(repositoryConnection, file);        
@@ -290,6 +281,64 @@ public class BridgeDBRdfHandler extends RdfBase{
         }
     }
     
+    private static void writeDataSource(RepositoryConnection repositoryConnection, DataSource dataSource) throws RepositoryException {
+        Resource id = asResource(dataSource);
+        repositoryConnection.add(id, RdfConstants.TYPE_URI, BridgeDBConstants.DATA_SOURCE_URI);         
+        
+        if (dataSource.getFullName() != null){
+            repositoryConnection.add(id, BridgeDBConstants.FULL_NAME_URI, new LiteralImpl(dataSource.getFullName()));
+        }
+
+        if (dataSource.getSystemCode() != null && (!dataSource.getSystemCode().trim().isEmpty())){
+            repositoryConnection.add(id, BridgeDBConstants.SYSTEM_CODE_URI, new LiteralImpl(dataSource.getSystemCode()));
+        }
+
+//        for (String alternativeFullName:inner.getAlternativeFullNames()){
+//            repositoryConnection.add(id, BridgeDBConstants.ALTERNATIVE_FULL_NAME_URI, new LiteralImpl(alternativeFullName));            
+//        }
+        
+        if (dataSource.getMainUrl() != null){
+            repositoryConnection.add(id, BridgeDBConstants.MAIN_URL_URI, new LiteralImpl(dataSource.getMainUrl()));
+        }
+
+        if (dataSource.getExample() != null && dataSource.getExample().getId() != null){
+            repositoryConnection.add(id, BridgeDBConstants.ID_EXAMPLE_URI, new LiteralImpl(dataSource.getExample().getId()));
+        }
+ 
+        if (dataSource.isPrimary()){
+            repositoryConnection.add(id, BridgeDBConstants.PRIMAY_URI, BooleanLiteralImpl.TRUE);
+        } else {
+            repositoryConnection.add(id, BridgeDBConstants.PRIMAY_URI, BooleanLiteralImpl.FALSE);
+        }
+ 
+        if (dataSource.getType() != null){
+            repositoryConnection.add(id, BridgeDBConstants.TYPE_URI, new LiteralImpl(dataSource.getType()));
+        } 
+
+        String url = dataSource.getKnownUrl("$id");
+        if (url != null){
+            URIImpl URL = new URIImpl(url);
+            repositoryConnection.add(id, BridgeDBConstants.HAS_URL_PATTERN_URI, URL);
+        }
+
+/*        String identifersOrgPattern = inner.getIdentifiersOrgUri("$id");
+        if (identifersOrgPattern == null){
+            String urnPattern = inner.getURN("");
+            if (urnPattern.length() > 1){
+                Value urnBase = new LiteralImpl(urnPattern.substring(0, urnPattern.length()-1));
+                repositoryConnection.add(id, BridgeDBConstants.URN_BASE_URI, urnBase);
+            }
+        } else {            
+            UriPattern identifersOrgUriPattern = UriPattern.existingOrCreateByPattern(identifersOrgPattern);
+            writeUriPattern(repositoryConnection, BridgeDBConstants.HAS_IDENTIFERS_ORG_PATTERN_URI, identifersOrgUriPattern);
+        }
+*/
+        if (dataSource.getOrganism() != null){
+            Organism organism = (Organism)dataSource.getOrganism();
+            repositoryConnection.add(id, BridgeDBConstants.ORGANISM_URI, OrganismRdf.getResourceId(organism));
+        }
+    }
+
     private static void writeRDF(RepositoryConnection repositoryConnection, File file) 
             throws IOException, RDFHandlerException, RepositoryException{
         Writer writer = new FileWriter (file);
@@ -329,8 +378,12 @@ public class BridgeDBRdfHandler extends RdfBase{
         }
     }
 
-    protected static Resource getUriId(DataSource dataSource) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    protected static Resource asResource(DataSource dataSource) {
+        if (dataSource.getFullName() == null){
+            return new URIImpl(BridgeDBConstants.DATA_SOURCE1 + "_bysysCode_" + scrub(dataSource.getSystemCode()));
+        } else {
+            return new URIImpl(BridgeDBConstants.DATA_SOURCE1 + "_" + scrub(dataSource.getFullName()));
+        }
     }
 
  
