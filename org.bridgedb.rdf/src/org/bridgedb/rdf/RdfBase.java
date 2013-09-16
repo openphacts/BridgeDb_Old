@@ -21,12 +21,14 @@ package org.bridgedb.rdf;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.log4j.Logger;
 import org.bridgedb.utils.BridgeDBException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
@@ -38,6 +40,8 @@ import org.openrdf.repository.RepositoryResult;
 public abstract class RdfBase {
     public static String DEFAULT_BASE_URI = "http://no/BaseURI/Set/";
 
+    private static final Logger logger = Logger.getLogger(RdfBase.class);
+    
     static String scrub(String original){
         String result = original.replaceAll("\\W", "_");
         while(result.contains("__")){
@@ -131,4 +135,23 @@ public abstract class RdfBase {
         }
         return results;
     }
+    
+    static void shutDown(Repository repository, RepositoryConnection repositoryConnection){
+        if (repositoryConnection != null){
+            try {            
+                repositoryConnection.close();
+            } catch (RepositoryException ex) {
+                logger.error("Error closing connection", ex);
+            }
+        }
+        if (repository != null){
+            try {            
+                repository.shutDown();
+            } catch (RepositoryException ex) {
+                logger.error("Error shutting down repository", ex);
+            }
+        }
+    }
+    
+
 }

@@ -32,7 +32,6 @@ import org.bridgedb.utils.BridgeDBException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 import org.openrdf.model.impl.LiteralImpl;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.RepositoryConnection;
@@ -43,16 +42,17 @@ import org.openrdf.repository.RepositoryResult;
  *
  * @author Christian
  */
-public class UriPattern extends RdfBase implements Comparable<UriPattern>{
+public class UriPattern1 extends RdfBase implements Comparable<UriPattern1>{
 
     private final String prefix;
     private final String postfix;
-    private DataSource dataSource;
+    private DataSourceUris dataSourceUris;
+    private TreeSet<DataSourceUris> isUriPatternOf = new TreeSet<DataSourceUris>();
     
-    private static HashMap<String,UriPattern> byPrefixOrNameSpaceOnly = new HashMap<String,UriPattern>();
-    private static HashMap<String,HashMap<String,UriPattern>> byPrefixAndPostFix = 
-            new HashMap<String,HashMap<String,UriPattern>> ();  
-    private static HashMap<DataSource,Set<UriPattern>> byDataSource = new HashMap<DataSource,Set<UriPattern>>();
+    private static HashMap<Resource, UriPattern1> register = new HashMap<Resource, UriPattern1>();
+    private static HashMap<String,UriPattern1> byPrefixOrNameSpaceOnly = new HashMap<String,UriPattern1>();
+    private static HashMap<String,HashMap<String,UriPattern1>> byPrefixAndPostFix = 
+            new HashMap<String,HashMap<String,UriPattern1>> ();  
     
     private static HashSet<URI> expectedPredicates = new HashSet<URI>(Arrays.asList(new URI[] {
         BridgeDBConstants.HAS_POSTFIX_URI,
@@ -62,26 +62,28 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         BridgeDBConstants.IS_URI_PATTERN_OF
     }));
             
-    private UriPattern(String start){
+    private UriPattern1(String start){
         prefix = start;
         this.postfix = "";
         registerByPrefixAndNameSpace();
+        register.put(getResourceId(), this);
     } 
     
-    private UriPattern(String prefix, String postfix){
+    private UriPattern1(String prefix, String postfix){
         this.prefix= prefix;
         if (postfix == null || postfix.isEmpty()){
             this.postfix = "";
             registerByPrefixAndNameSpace();
         } else {
             this.postfix = postfix;
-            HashMap<String,UriPattern> postFixMap = byPrefixAndPostFix.get(prefix);
+            HashMap<String,UriPattern1> postFixMap = byPrefixAndPostFix.get(prefix);
             if (postFixMap == null){
-                postFixMap = new HashMap<String,UriPattern>();
+                postFixMap = new HashMap<String,UriPattern1>();
             }
             postFixMap.put(postfix, this);
             byPrefixAndPostFix.put(prefix, postFixMap);
         }
+        register.put(getResourceId(), this);
     }
   
     public String getPrefix(){
@@ -97,15 +99,12 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
     }
     
     public static void refreshUriPatterns() throws BridgeDBException{
+        register.clear();
         BridgeDBRdfHandler.init();
     }
-
-    /**
-     * @deprecated 
-     * @return 
-     */
-    public static Set<UriPattern> getUriPatterns() {
-        throw new UnsupportedOperationException("No Longer supported");
+    
+    public static Set<UriPattern1> getUriPatterns() {
+        return new HashSet(register.values());
     }
 
     /**
@@ -113,31 +112,31 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
      * @param start
      * @return UriPattern or null if more than one UriPattern starts this way,
      */
-    public static UriPattern byPrefixOrNameSpace(String start){
+    public static UriPattern1 byPrefixOrNameSpace(String start){
         if (byPrefixOrNameSpaceOnly.containsKey(start)) {
             return byPrefixOrNameSpaceOnly.get(start);
         } else {
-            return new UriPattern(start);            
+            return new UriPattern1(start);            
         }
     }
     
-    public static UriPattern byPrefixAndPostfix(String nameSpace, String postfix) {
+    public static UriPattern1 byPrefixAndPostfix(String nameSpace, String postfix) {
         if (postfix == null || postfix.isEmpty()){
             return byPrefixOrNameSpace(nameSpace);
         }
-        HashMap<String,UriPattern> postFixMap = byPrefixAndPostFix.get(nameSpace);
+        HashMap<String,UriPattern1> postFixMap = byPrefixAndPostFix.get(nameSpace);
         if (postFixMap == null){
-            return new UriPattern(nameSpace, postfix);
+            return new UriPattern1(nameSpace, postfix);
         }
-        UriPattern result = postFixMap.get(postfix);
+        UriPattern1 result = postFixMap.get(postfix);
         if (result == null){
-            return new UriPattern(nameSpace, postfix);
+            return new UriPattern1(nameSpace, postfix);
         }
         return result;
     }
                 
-    public static UriPattern existingOrCreateByPattern(String urlPattern) throws BridgeDBException{
-        UriPattern result = possibleExistingByPattern(urlPattern);
+    public static UriPattern1 existingOrCreateByPattern(String urlPattern) throws BridgeDBException{
+        UriPattern1 result = possibleExistingByPattern(urlPattern);
         if (result != null){
             return result;
         }
@@ -150,7 +149,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         return byPrefixAndPostFix(nameSpace, postfix);
     }
 
-    public static UriPattern alreadyExistingByPattern(String uriPattern) throws BridgeDBException {
+    public static UriPattern1 alreadyExistingByPattern(String uriPattern) throws BridgeDBException {
         if (uriPattern == null || uriPattern.isEmpty()){
             throw new BridgeDBException ("Illegal empty or null uriPattern: " + uriPattern);
         }
@@ -171,7 +170,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         if (postfix.isEmpty()){
             return byPrefixOrNameSpaceOnly.get(prefixOrNameSpace);
         } else {
-            HashMap<String,UriPattern> postFixMap = byPrefixAndPostFix.get(prefixOrNameSpace);
+            HashMap<String,UriPattern1> postFixMap = byPrefixAndPostFix.get(prefixOrNameSpace);
             if (postFixMap == null){
                 throw new BridgeDBException("UriPattern " + uriPattern + " is not known");
             }
@@ -179,7 +178,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         }        
     }
     
-    public static UriPattern possibleExistingByPattern(String uriPattern) {
+    public static UriPattern1 possibleExistingByPattern(String uriPattern) {
         if (uriPattern == null || uriPattern.isEmpty()){
             return null;
         }
@@ -200,7 +199,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         if (postfix.isEmpty()){
             return byPrefixOrNameSpaceOnly.get(prefixOrNameSpace);
         } else {
-            HashMap<String,UriPattern> postFixMap = byPrefixAndPostFix.get(prefixOrNameSpace);
+            HashMap<String,UriPattern1> postFixMap = byPrefixAndPostFix.get(prefixOrNameSpace);
             if (postFixMap == null){
                 return null;
             }
@@ -269,7 +268,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
     //}
 
 
-    private static UriPattern byPrefixAndPostFix(String nameSpace, String postfix) throws BridgeDBException{
+    private static UriPattern1 byPrefixAndPostFix(String nameSpace, String postfix) throws BridgeDBException{
         if (postfix.isEmpty() || postfix.equals("NULL")){
             return byPrefixOrNameSpace(nameSpace);
         } else {
@@ -277,44 +276,55 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         }
     }
     
-    /**
-     * @deprecated 
-     * @param dsu
-     * @throws BridgeDBException 
-     */
     public void setPrimaryDataSource(DataSourceUris dsu) throws BridgeDBException{
-        throw new UnsupportedOperationException("No Longer supported");
+        if (dsu == null){
+            return;
+        }
+        if (dataSourceUris ==  null) {       
+            dataSourceUris = dsu;
+            isUriPatternOf.remove(dsu);
+        } else if (dataSourceUris.equals(dsu)){
+            //Do nothing;
+        } else {
+            throw new BridgeDBException("Illegal attempt to set Primary DataSource of " + this + " to " + dsu 
+                    + " has it was already set to " + dataSourceUris);
+        }  
     }
        
-    /**
-     * @deprecated 
-     * @param dsu
-     * @throws BridgeDBException 
-     */
     public void setDataSource(DataSourceUris dsu) throws BridgeDBException{
-        throw new UnsupportedOperationException("No Longer supported");
-    }
+        if (dsu == null){
+            //ignore request
+        } else if (dsu.equals(dataSourceUris)){
+            //Do nothing;
+        } else {
+            isUriPatternOf.add(dsu);
+        } 
+     }
     
-    /**
-     * @deprecated
-     * @return 
-     */
     public DataSource getPrimaryDataSource(){
-        throw new UnsupportedOperationException("No Longer supported");
-    }
-    
-    public DataSource getDataSource() throws BridgeDBException{
-        if (dataSource == null){
-            throw new BridgeDBException ("No DataSource known for " + this);
+        if (dataSourceUris == null){
+            return null;
         }
-        return dataSource;
+        return dataSourceUris.getDataSource();
     }
     
-    /**
-     * @deprecated 
-     * @return 
-     */
+    public DataSource getDataSource(){
+        DataSourceUris main = getMainDataSourceUris();
+        if (main == null){
+            return DataSource.register(getUriPattern(), "Grouping for " + getUriPattern())
+                    .urlPattern(getUriPattern())
+                    .asDataSource();
+        }
+        return main.getDataSource();
+    }
+    
     public DataSourceUris getMainDataSourceUris() {
+        if (dataSourceUris != null){
+            return dataSourceUris;
+        }
+        if (isUriPatternOf.size() == 1){
+            return isUriPatternOf.iterator().next();
+        }
         return null;
     }
   
@@ -331,17 +341,13 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         }
     }
 
-    /**
-     * @deprecated 
-     * @param repositoryConnection
-     * @throws IOException
-     * @throws RepositoryException
-     * @throws BridgeDBException 
-     */
     public static void addAll(RepositoryConnection repositoryConnection) 
             throws IOException, RepositoryException, BridgeDBException {
-        throw new UnsupportedOperationException("No Longer supported");
-   }
+        TreeSet<UriPattern1> all = new TreeSet(register.values());
+        for (UriPattern1 uriPattern:all){
+            uriPattern.add(repositoryConnection);
+        }        
+    }
     
     public void add(RepositoryConnection repositoryConnection) throws RepositoryException{
         URI id = getResourceId();
@@ -350,8 +356,11 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         if (!postfix.isEmpty()){
             repositoryConnection.add(id, BridgeDBConstants.HAS_POSTFIX_URI,  new LiteralImpl(postfix));
         }
-        if (dataSource != null){
-            repositoryConnection.add(id, BridgeDBConstants.HAS_DATA_SOURCE,  BridgeDBRdfHandler.getUriId(dataSource));            
+        if (dataSourceUris != null){
+            repositoryConnection.add(id, BridgeDBConstants.HAS_DATA_SOURCE,  dataSourceUris.getResourceId());            
+        }
+        for (DataSourceUris dsu:isUriPatternOf){
+                repositoryConnection.add(id, BridgeDBConstants.IS_URI_PATTERN_OF,  dsu.getResourceId()); 
         }
     }        
     
@@ -360,61 +369,54 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
                 repositoryConnection.getStatements(null, RdfConstants.TYPE_URI, BridgeDBConstants.URI_PATTERN_URI, true);
         while (statements.hasNext()) {
             Statement statement = statements.next();
-            UriPattern pattern = readUriPattern(repositoryConnection, statement.getSubject());
+            UriPattern1 pattern = readUriPattern(repositoryConnection, statement.getSubject());
         }
     }
-
-    /**
-     * @deprecated 
-     * @param repositoryConnection
-     * @param dataSourceId
-     * @param parent
-     * @param predicate
-     * @return
-     * @throws RepositoryException
-     * @throws BridgeDBException 
-     */
-    public static UriPattern readUriPattern(RepositoryConnection repositoryConnection, Resource dataSourceId, DataSourceUris parent, 
+   
+    public static UriPattern1 readUriPattern(RepositoryConnection repositoryConnection, Resource dataSourceId, DataSourceUris parent, 
             URI predicate) throws RepositoryException, BridgeDBException{
-        throw new UnsupportedOperationException("No Longer supported");
-
+        Resource id = getPossibleSingletonResource(repositoryConnection, dataSourceId, predicate);
+        if (id != null){
+            UriPattern1 result = readUriPattern(repositoryConnection, id);
+            result.setPrimaryDataSource(parent);
+            return result;
+        }
+        return null;
     }
     
-    /**
-     * @deprecated 
-     * @param repositoryConnection
-     * @param dataSourceId
-     * @param parent
-     * @param predicate
-     * @return
-     * @throws RepositoryException
-     * @throws BridgeDBException 
-     */
-    public static Set<UriPattern> readUriPatterns(RepositoryConnection repositoryConnection, Resource dataSourceId, 
+    public static Set<UriPattern1> readUriPatterns(RepositoryConnection repositoryConnection, Resource dataSourceId, 
             DataSourceUris parent, URI predicate) throws RepositoryException, BridgeDBException{
-       throw new UnsupportedOperationException("No Longer supported");
+        Set<Resource> resources = getAllResources(repositoryConnection,  dataSourceId, predicate);
+        HashSet<UriPattern1> results = new HashSet<UriPattern1>();
+        for (Resource resource:resources){
+            UriPattern1 uriPattern = readUriPattern(repositoryConnection, resource);
+            uriPattern.setDataSource(parent);
+            results.add(uriPattern);
+        }
+        return results;
     }
     
-    public static UriPattern readUriPattern(RepositoryConnection repositoryConnection, Resource uriPatternId) 
+    public static UriPattern1 readUriPattern(RepositoryConnection repositoryConnection, Resource uriPatternId) 
             throws BridgeDBException, RepositoryException{
         //TODO handle the extra statements
         //checkStatements(repositoryConnection, uriPatternId);
-        UriPattern pattern;      
+        UriPattern1 pattern;      
         String prefix = getPossibleSingletonString(repositoryConnection, uriPatternId, BridgeDBConstants.HAS_PREFIX_URI);
         if (prefix == null){
             pattern = existingOrCreateByPattern(uriPatternId.stringValue());
         } else {
             String postfix = getPossibleSingletonString(repositoryConnection, uriPatternId, BridgeDBConstants.HAS_POSTFIX_URI);
             if (postfix == null){
-                pattern = UriPattern.byPrefixOrNameSpace(prefix);
+                pattern = UriPattern1.byPrefixOrNameSpace(prefix);
             } else {
-                pattern = UriPattern.byPrefixAndPostFix(prefix, postfix);
+                pattern = UriPattern1.byPrefixAndPostFix(prefix, postfix);
             }
         }
         //Constructor registers with standard recource this register with used resource
         if (pattern == null){
             throw new BridgeDBException("Attempt to register null from " + uriPatternId);
         }
+        register.put((URI)uriPatternId, pattern);
         return pattern;
     }
 
@@ -440,8 +442,44 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         return getUriPattern();      
     }
 
+    public static void checkAllDataSourceUris() throws BridgeDBException{
+        for (UriPattern1 uriPattern:register.values()){
+            uriPattern.checkDataSourceUris();
+        }        
+    }
+    
+    private void checkDataSourceUris() throws BridgeDBException{
+        if (dataSourceUris != null){
+            return;  //DataSource has been Set
+        }
+        if (isUriPatternOf.size() <= 1){
+            return;  //Singleton can be used and empty is fine too
+        }
+        DataSourceUris parent = null;
+        for (DataSourceUris dsu:isUriPatternOf){
+            if (dsu.getUriParent() != null){
+                if (parent == null){
+                    parent = dsu.getUriParent();
+                } else {
+                    System.err.println(this + " has two primary DataSources " + parent + " and " + dsu 
+                            + " please delcare one formally");
+                }
+            }
+        }
+        if (parent != null){
+            dataSourceUris = parent;
+        } else {
+            String uriPattern = getUriPattern();        
+            DataSource dataSource = DataSource.register(uriPattern, uriPattern).urlPattern(uriPattern).asDataSource();
+            dataSourceUris = DataSourceUris.byDataSource(dataSource);
+        }
+        for (DataSourceUris dsu:isUriPatternOf){
+            dsu.setUriParent(dataSourceUris); 
+        }
+    }
+
     @Override
-    public int compareTo(UriPattern other) {
+    public int compareTo(UriPattern1 other) {
         String thisString = this.getResourceId().stringValue().toLowerCase();
         thisString = thisString.replaceFirst("https://","http://");
         String otherString = other.getResourceId().stringValue().toLowerCase();
@@ -480,29 +518,6 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
            byPrefixOrNameSpaceOnly.put(start, this);
         }
     }
-
-    void setDataSource(DataSource dataSource) throws BridgeDBException {
-        System.out.println("set " + dataSource + " for " + this);
-        if (dataSource.equals(this.dataSource)){
-            return;
-        }
-        if (this.dataSource != null){
-            throw new BridgeDBException ("UriPattern " + this + " already associated with DataSource " + this.dataSource 
-                    + " to unable to set to " + dataSource);
-        }
-        this.dataSource = dataSource;
-        Set<UriPattern> patterns = byDataSource.get(dataSource);
-        if (patterns == null){
-            patterns = new HashSet<UriPattern>();
-        }
-        patterns.add(this);
-        byDataSource.put(dataSource, patterns);
-    }
   
-    static Set<UriPattern> getUriPatterns(DataSource dataSource) {
-        return byDataSource.get(dataSource);
-    }
-
-
 
  }

@@ -21,19 +21,25 @@ package org.bridgedb.rdf;
 
 import info.aduna.lang.FileFormat;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.rdf.constants.BridgeDBConstants;
+import org.bridgedb.rdf.constants.RdfConstants;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.utils.Reporter;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
+import org.openrdf.model.Value;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -51,39 +57,23 @@ import org.openrdf.sail.memory.MemoryStore;
  *
  * @author Christian
  */
-public class BridgeDBRdfHandler {
+public class BridgeDBRdfHandler extends RdfBase{
    
     static boolean initialized = false;
-    static final Logger logger = Logger.getLogger(BridgeDBRdfHandler.class);
     public static String DEFAULT_BASE_URI = "http://no/BaseURI/Set/";
     public static RDFFormat DEFAULT_FILE_FORMAT = RDFFormat.TURTLE;
     public static final String CONFIG_FILE_NAME = "DataSource.ttl";
 
-    public static void main(String[] args) throws RepositoryException, BridgeDBException, IOException, RDFParseException, RDFHandlerException {
-        ConfigReader.logToConsole();
-        File file1 = new File ("C:/OpenPhacts/BioDataSource.ttl");
-        parseRdfFile(file1);
-    }
+    static final Logger logger = Logger.getLogger(BridgeDBRdfHandler.class);
 
-    public static void parseRdfFile(File file) throws BridgeDBException{
-        Reporter.println("Parsing " + file.getAbsolutePath());
-        Repository repository = null;
-        RepositoryConnection repositoryConnection = null;
-        try {
-            repository = new SailRepository(new MemoryStore());
-            repository.initialize();
-            repositoryConnection = repository.getConnection();
-            repositoryConnection.add(file, DEFAULT_BASE_URI, getFormat(file));
-            DataSourceUris.readAllDataSourceUris(repositoryConnection);
-            UriPattern.readAllUriPatterns(repositoryConnection);      
-        } catch (Exception ex) {
-            throw new BridgeDBException ("Error parsing RDf file ", ex);
-        } finally {
-            shutDown(repository, repositoryConnection);
-        }
+    private HashMap<Resource, DataSource> dataSourceRegister = new HashMap<Resource, DataSource>();
+    private HashMap<Resource, UriPattern> uriPatternRegister = new HashMap<Resource, UriPattern>();
+
+    private BridgeDBRdfHandler(){
+        
     }
     
-    static void parseRdfInputStream(InputStream stream) throws BridgeDBException {
+    private void doParseRdfInputStream(InputStream stream) throws BridgeDBException {
         Repository repository = null;
         RepositoryConnection repositoryConnection = null;
         try {
@@ -91,8 +81,8 @@ public class BridgeDBRdfHandler {
             repository.initialize();
             repositoryConnection = repository.getConnection();
             repositoryConnection.add(stream, DEFAULT_BASE_URI, DEFAULT_FILE_FORMAT);
-            DataSourceUris.readAllDataSourceUris(repositoryConnection);
-            UriPattern.readAllUriPatterns(repositoryConnection);      
+            readAllDataSources(repositoryConnection);
+            readAllUriPatterns(repositoryConnection);      
         } catch (Exception ex) {
             throw new BridgeDBException ("Error parsing Rdf inputStream ", ex);
         } finally {
@@ -104,7 +94,146 @@ public class BridgeDBRdfHandler {
             shutDown(repository, repositoryConnection);
         }
     }
+
+    private void readAllDataSources(RepositoryConnection repositoryConnection) throws RepositoryException, BridgeDBException {
+        RepositoryResult<Statement> statements = 
+                repositoryConnection.getStatements(null, RdfConstants.TYPE_URI, BridgeDBConstants.DATA_SOURCE_URI, true);
+                //repositoryConnection.getStatements(null, null, null, true);
+        while (statements.hasNext()) {
+            Statement statement = statements.next();
+            Resource dataSourceResource = statement.getSubject();
+            DataSource dataSource = getDataSource(repositoryConnection, dataSourceResource);
+            readRegexPattern(repositoryConnection, dataSourceResource, dataSource);
+            readUriPatterns(repositoryConnection, dataSourceResource, dataSource);
+        }
+    }
     
+    private DataSource getDataSource(RepositoryConnection repositoryConnection, Resource dataSourceResource) 
+            throws BridgeDBException, RepositoryException {
+        DataSource result = dataSourceRegister.get(dataSourceResource);
+        if (result == null){
+            result = readDataSource(repositoryConnection, dataSourceResource);
+            dataSourceRegister.put(dataSourceResource, result);
+        }
+        return result;
+    }
+
+    public DataSource readDataSource(RepositoryConnection repositoryConnection, Resource dataSourceId) 
+            throws BridgeDBException, RepositoryException{
+        String fullName = getPossibleSingletonString(repositoryConnection, dataSourceId, BridgeDBConstants.FULL_NAME_URI);
+        String systemCode = getPossibleSingletonString(repositoryConnection, dataSourceId, BridgeDBConstants.SYSTEM_CODE_URI);
+        DataSource.Builder builder = DataSource.register(systemCode, fullName);
+
+        String idExample = getPossibleSingletonString(repositoryConnection, dataSourceId, BridgeDBConstants.ID_EXAMPLE_URI);
+        if (idExample != null){
+            builder.idExample(idExample);
+        }
+        
+        String mainUrl = getPossibleSingletonString(repositoryConnection, dataSourceId, BridgeDBConstants.MAIN_URL_URI);
+        if (mainUrl != null){
+            builder.mainUrl(mainUrl);
+        }
+  
+        Value organismId = getPossibleSingleton(repositoryConnection, dataSourceId, BridgeDBConstants.ORGANISM_URI);
+        if (organismId != null){
+            Object organism = OrganismRdf.byRdfResource(organismId);
+            builder.organism(organism);
+        }
+            
+        String primary = getPossibleSingletonString(repositoryConnection, dataSourceId, BridgeDBConstants.PRIMAY_URI);
+        if (primary != null){
+            builder.primary(Boolean.parseBoolean(primary));
+        }
+
+        String type = getPossibleSingletonString(repositoryConnection, dataSourceId, BridgeDBConstants.TYPE_URI);
+        if (type != null){
+            builder.type(type);
+        }
+
+        Value uriValue = getPossibleSingleton(repositoryConnection, dataSourceId, BridgeDBConstants.HAS_URL_PATTERN_URI);
+        if (uriValue != null){
+            UriPattern uriPattern = getUriPattern(repositoryConnection, (Resource)uriValue);
+            uriPattern.setDataSource(builder.asDataSource());
+        }
+        
+        String urnBase = getPossibleSingletonString(repositoryConnection, dataSourceId, BridgeDBConstants.URN_BASE_URI);
+        if (urnBase != null){
+            builder.urnBase(urnBase);
+        }
+        
+        return builder.asDataSource();
+    }
+    
+    private static void readUrlPattern(RepositoryConnection repositoryConnection, Resource dataSourceId, 
+            DataSource.Builder builder) throws BridgeDBException, RepositoryException{
+//TODO not use DataSourceURI
+        UriPattern uriPattern = UriPattern.readUriPattern(repositoryConnection, dataSourceId, null, 
+                BridgeDBConstants.HAS_URL_PATTERN_URI);
+        if (uriPattern != null){
+            builder.urlPattern(uriPattern.getUriPattern());
+        }       
+    }
+ 
+    private void readRegexPattern(RepositoryConnection repositoryConnection, Resource subject, DataSource dataSource) {
+        //ystem.out.println("skipping read regex");
+    }
+
+    private void readUriPatterns(RepositoryConnection repositoryConnection, Resource subject, DataSource dataSource) throws BridgeDBException, RepositoryException {
+       RepositoryResult<Statement> statements = 
+                repositoryConnection.getStatements(subject, BridgeDBConstants.HAS_URI_PATTERN_URI, null, true);
+                //repositoryConnection.getStatements(null, null, null, true);
+        while (statements.hasNext()) {
+            Statement statement = statements.next();
+            Value uriValue = statement.getObject();
+            UriPattern uriPattern = getUriPattern(repositoryConnection, (Resource)uriValue);
+            uriPattern.setDataSource(dataSource);
+         }
+    }
+
+    private void readAllUriPatterns(RepositoryConnection repositoryConnection) throws RepositoryException, BridgeDBException {
+        RepositoryResult<Statement> statements = 
+                repositoryConnection.getStatements(null, RdfConstants.TYPE_URI, BridgeDBConstants.URI_PATTERN_URI, true);
+                //repositoryConnection.getStatements(null, null, null, true);
+        while (statements.hasNext()) {
+            Statement statement = statements.next();
+            Resource uriPatternResource = statement.getSubject();
+            UriPattern uriPattern = getUriPattern(repositoryConnection, uriPatternResource);
+        }
+   }
+
+    private UriPattern getUriPattern(RepositoryConnection repositoryConnection, Resource uriPatternResource) 
+            throws BridgeDBException, RepositoryException {
+        UriPattern result = uriPatternRegister.get(uriPatternResource);
+        if (result == null){
+            result = UriPattern.readUriPattern(repositoryConnection, uriPatternResource);
+            uriPatternRegister.put(uriPatternResource, result);
+        }
+        return result;
+    }
+
+
+    //Static methods
+    
+    public static void parseRdfFile(File file) throws BridgeDBException{
+        try {
+            InputStream inputStream = new FileInputStream(file);
+            parseRdfInputStream(inputStream);
+        } catch (IOException ex) {
+            throw new BridgeDBException ("Error accessing file " + file.getAbsolutePath(), ex);
+        }
+    }
+    
+    static void parseRdfInputStream(InputStream stream) throws BridgeDBException {
+        BridgeDBRdfHandler handler = new BridgeDBRdfHandler();
+        handler.doParseRdfInputStream(stream);
+    }
+    
+    public static void main(String[] args) throws RepositoryException, BridgeDBException, IOException, RDFParseException, RDFHandlerException {
+        ConfigReader.logToConsole();
+        File file1 = new File ("C:\\OpenPhacts\\BridgeDb\\org.bridgedb.rdf\\resources\\DataSource.ttl");
+        parseRdfFile(file1);
+    }
+
     public static void init() throws BridgeDBException{
         if (initialized){
             return;
@@ -175,23 +304,6 @@ public class BridgeDBRdfHandler {
         rdfWriter.endRDF();
     }
     
-    private static void shutDown(Repository repository, RepositoryConnection repositoryConnection){
-        if (repositoryConnection != null){
-            try {            
-                repositoryConnection.close();
-            } catch (RepositoryException ex) {
-                logger.error("Error closing connection", ex);
-            }
-        }
-        if (repository != null){
-            try {            
-                repository.shutDown();
-            } catch (RepositoryException ex) {
-                logger.error("Error shutting down repository", ex);
-            }
-        }
-    }
-    
     private static RDFFormat getFormat(File file){
         String fileName = file.getName();
         if (fileName.endsWith(".n3")){
@@ -209,4 +321,9 @@ public class BridgeDBRdfHandler {
         }
     }
 
+    protected static Resource getUriId(DataSource dataSource) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+ 
 }

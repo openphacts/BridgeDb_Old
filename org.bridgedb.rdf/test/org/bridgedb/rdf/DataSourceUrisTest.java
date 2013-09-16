@@ -30,6 +30,7 @@ import org.junit.AfterClass;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
@@ -210,10 +211,11 @@ public class DataSourceUrisTest extends TestUtils{
     
     @Test
     public void testGetUriPatterns() throws BridgeDBException{
+        System.out.println("start parse");
         BridgeDBRdfHandler.parseRdfFile(file1);
-        DataSource dataSource =  DataSource.getBySystemCode("Cs");
-        DataSourceUris dataSourceUris = DataSourceUris.byDataSource(dataSource);
-        Set<UriPattern> result = dataSourceUris.getUriPatterns();
+        System.out.println("end parse");
+        DataSource dataSource =  DataSource.getExistingBySystemCode("Cs");
+        Set<UriPattern> result = UriPattern.getUriPatterns(dataSource);
         UriPattern pattern = UriPattern.existingOrCreateByPattern("http://www.chemspider.com/Chemical-Structure.$id.html");
         assertThat (result, hasItem(pattern));
 //        pattern = UriPattern.existingOrCreateByPattern("http://identifiers.org/chemspider/$id");
