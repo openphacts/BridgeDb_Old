@@ -33,7 +33,6 @@ import org.bridgedb.utils.BridgeDBException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 import org.openrdf.model.impl.LiteralImpl;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.RepositoryConnection;
@@ -287,14 +286,6 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         } else {
             return byPrefixAndPostfix(nameSpace, postfix);
         }
-    }
-    
-    /**
-     * @deprecated
-     * @return 
-     */
-    public DataSource getPrimaryDataSource(){
-        throw new UnsupportedOperationException("No Longer supported");
     }
     
     public DataSource getDataSource() throws BridgeDBException{
