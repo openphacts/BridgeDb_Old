@@ -72,7 +72,7 @@ public class TransativeFinderTest {
         DataSource dataSource = DataSource.register(name, name).asDataSource();
         TransativeFinder.addAcceptableVai(dataSource);
         UriPattern uriPattern = UriPattern.existingOrCreateByPattern(pattern);
-        uriPattern.setPrimaryDataSource(DataSourceUris.byDataSource(dataSource));
+        uriPattern.setDataSource(dataSource);
         mapper.registerUriPattern(dataSource, pattern);     
     }
     

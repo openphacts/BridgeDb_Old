@@ -100,12 +100,21 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         BridgeDBRdfHandler.init();
     }
 
-    /**
-     * @deprecated 
-     * @return 
-     */
+    public static Set<UriPattern> getUriPatternsWithDataSource() {
+        HashSet<UriPattern> results = new HashSet<UriPattern>();
+        for (Set<UriPattern> patterns:byDataSource.values()){
+            results.addAll(patterns);
+        }
+        return results;
+    }
+    
     public static Set<UriPattern> getUriPatterns() {
-        throw new UnsupportedOperationException("No Longer supported");
+        HashSet<UriPattern> patterns = new HashSet<UriPattern>(byPrefixOrNameSpaceOnly.values());
+        for (HashMap<String,UriPattern> map:byPrefixAndPostFix.values()){
+            patterns.addAll(map.values());
+        }
+        patterns.remove(null);
+        return patterns;
     }
 
     /**
@@ -168,7 +177,9 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
             prefixOrNameSpace = cleanPattern.substring(0, idPos);
             postfix = cleanPattern.substring(idPos + 3);
         } 
+        System.out.println(prefixOrNameSpace + " " + postfix);
         if (postfix.isEmpty()){
+            System.out.println(byPrefixOrNameSpaceOnly);
             return byPrefixOrNameSpaceOnly.get(prefixOrNameSpace);
         } else {
             HashMap<String,UriPattern> postFixMap = byPrefixAndPostFix.get(prefixOrNameSpace);
@@ -481,7 +492,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         }
     }
 
-    void setDataSource(DataSource dataSource) throws BridgeDBException {
+    public void setDataSource(DataSource dataSource) throws BridgeDBException {
         System.out.println("set " + dataSource + " for " + this);
         if (dataSource.equals(this.dataSource)){
             return;

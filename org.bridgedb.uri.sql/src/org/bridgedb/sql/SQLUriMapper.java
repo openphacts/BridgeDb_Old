@@ -127,7 +127,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
      private SQLUriMapper(boolean dropTables) throws BridgeDBException{
         super(dropTables);
         clearUriPatterns();
-        Collection<UriPattern> patterns = UriPattern.getUriPatterns();
+        Collection<UriPattern> patterns = UriPattern.getUriPatternsWithDataSource();
         for (UriPattern pattern:patterns){
             this.registerUriPattern(pattern);
         }

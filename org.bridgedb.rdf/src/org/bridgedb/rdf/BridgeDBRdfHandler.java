@@ -154,11 +154,19 @@ public class BridgeDBRdfHandler extends RdfBase{
         if (uriValue != null){
             UriPattern uriPattern = getUriPattern(repositoryConnection, (Resource)uriValue);
             uriPattern.setDataSource(builder.asDataSource());
+            builder.urlPattern(uriPattern.getUriPattern());
         }
         
         String urnBase = getPossibleSingletonString(repositoryConnection, dataSourceId, BridgeDBConstants.URN_BASE_URI);
         if (urnBase != null){
             builder.urnBase(urnBase);
+        }
+        
+        Value identifiersOrgValue = getPossibleSingleton(repositoryConnection, dataSourceId, BridgeDBConstants.HAS_IDENTIFERS_ORG_PATTERN_URI);
+        if (identifiersOrgValue != null){
+            UriPattern uriPattern = getUriPattern(repositoryConnection, (Resource)identifiersOrgValue);
+            uriPattern.setDataSource(builder.asDataSource());
+            builder.identifiersOrgBase(uriPattern.getUriPattern());
         }
         
         return builder.asDataSource();
