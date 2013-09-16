@@ -87,10 +87,10 @@ public class IdSysCodePair {
         if (dataSource == null){
             return null;
         }
-        if (dataSource.getSystemCode() != null || !dataSource.getSystemCode().isEmpty()){
-            return dataSource.getSystemCode();
+        if (dataSource.getSystemCode() == null || dataSource.getSystemCode().isEmpty()){
+            return "_" + dataSource.getFullName();
         }
-        return "_" + dataSource.getFullName();
+        return dataSource.getSystemCode();
     }
 
     public static String[] toCodes(DataSource[] dataSources) {
