@@ -29,6 +29,8 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
@@ -223,7 +225,6 @@ public class BridgeDBRdfHandler extends RdfBase{
         return result;
     }
 
-
     //Static methods
     
     public static void parseRdfFile(File file) throws BridgeDBException{
@@ -257,10 +258,12 @@ public class BridgeDBRdfHandler extends RdfBase{
     }
     
     public static void writeRdfToFile(File file) throws BridgeDBException{
-        writeRdfToFile(file, DataSource.getDataSources());
+        TreeSet<DataSource> sortedDataSources = new TreeSet<DataSource>(new  DataSourceComparator());
+        sortedDataSources.addAll(DataSource.getDataSources());
+        writeRdfToFile(file, sortedDataSources);
     }
     
-    public static void writeRdfToFile(File file, Collection<DataSource> dataSources) throws BridgeDBException{
+    public static void writeRdfToFile(File file, SortedSet<DataSource> dataSources) throws BridgeDBException{
         Reporter.println("Writing DataSource RDF to " + file.getAbsolutePath());
         Repository repository = null;
         RepositoryConnection repositoryConnection = null;
@@ -292,10 +295,6 @@ public class BridgeDBRdfHandler extends RdfBase{
         if (dataSource.getSystemCode() != null && (!dataSource.getSystemCode().trim().isEmpty())){
             repositoryConnection.add(id, BridgeDBConstants.SYSTEM_CODE_URI, new LiteralImpl(dataSource.getSystemCode()));
         }
-
-//        for (String alternativeFullName:inner.getAlternativeFullNames()){
-//            repositoryConnection.add(id, BridgeDBConstants.ALTERNATIVE_FULL_NAME_URI, new LiteralImpl(alternativeFullName));            
-//        }
         
         if (dataSource.getMainUrl() != null){
             repositoryConnection.add(id, BridgeDBConstants.MAIN_URL_URI, new LiteralImpl(dataSource.getMainUrl()));
@@ -321,18 +320,12 @@ public class BridgeDBRdfHandler extends RdfBase{
             repositoryConnection.add(id, BridgeDBConstants.HAS_URL_PATTERN_URI, URL);
         }
 
-/*        String identifersOrgPattern = inner.getIdentifiersOrgUri("$id");
+        String identifersOrgPattern = dataSource.getIdentifiersOrgUri("$id");
         if (identifersOrgPattern == null){
-            String urnPattern = inner.getURN("");
-            if (urnPattern.length() > 1){
-                Value urnBase = new LiteralImpl(urnPattern.substring(0, urnPattern.length()-1));
-                repositoryConnection.add(id, BridgeDBConstants.URN_BASE_URI, urnBase);
-            }
-        } else {            
-            UriPattern identifersOrgUriPattern = UriPattern.existingOrCreateByPattern(identifersOrgPattern);
-            writeUriPattern(repositoryConnection, BridgeDBConstants.HAS_IDENTIFERS_ORG_PATTERN_URI, identifersOrgUriPattern);
+            URIImpl URL = new URIImpl(url);
+            repositoryConnection.add(id, BridgeDBConstants.HAS_IDENTIFERS_ORG_PATTERN_URI, URL);
         }
-*/
+
         if (dataSource.getOrganism() != null){
             Organism organism = (Organism)dataSource.getOrganism();
             repositoryConnection.add(id, BridgeDBConstants.ORGANISM_URI, OrganismRdf.getResourceId(organism));

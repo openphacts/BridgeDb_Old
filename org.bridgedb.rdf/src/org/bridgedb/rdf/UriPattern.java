@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import org.bridgedb.DataSource;
 import org.bridgedb.rdf.constants.BridgeDBConstants;
@@ -108,8 +109,8 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         return results;
     }
     
-    public static Set<UriPattern> getUriPatterns() {
-        HashSet<UriPattern> patterns = new HashSet<UriPattern>(byPrefixOrNameSpaceOnly.values());
+    public static SortedSet<UriPattern> getUriPatterns() {
+        TreeSet<UriPattern> patterns = new TreeSet<UriPattern>(byPrefixOrNameSpaceOnly.values());
         for (HashMap<String,UriPattern> map:byPrefixAndPostFix.values()){
             patterns.addAll(map.values());
         }
@@ -342,16 +343,11 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         }
     }
 
-    /**
-     * @deprecated 
-     * @param repositoryConnection
-     * @throws IOException
-     * @throws RepositoryException
-     * @throws BridgeDBException 
-     */
     public static void addAll(RepositoryConnection repositoryConnection) 
             throws IOException, RepositoryException, BridgeDBException {
-        throw new UnsupportedOperationException("No Longer supported");
+        for (UriPattern pattern:getUriPatterns()){
+            pattern.add(repositoryConnection);
+        }
    }
     
     public void add(RepositoryConnection repositoryConnection) throws RepositoryException{
@@ -362,7 +358,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
             repositoryConnection.add(id, BridgeDBConstants.HAS_POSTFIX_URI,  new LiteralImpl(postfix));
         }
         if (dataSource != null){
-            repositoryConnection.add(id, BridgeDBConstants.HAS_DATA_SOURCE,  BridgeDBRdfHandler.getUriId(dataSource));            
+            repositoryConnection.add(id, BridgeDBConstants.HAS_DATA_SOURCE,  BridgeDBRdfHandler.asResource(dataSource));            
         }
     }        
     
