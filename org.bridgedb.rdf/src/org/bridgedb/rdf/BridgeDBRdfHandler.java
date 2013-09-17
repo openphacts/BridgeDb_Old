@@ -32,8 +32,10 @@ import java.util.HashMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
+import org.bridgedb.DataSourcePatterns;
 import org.bridgedb.bio.Organism;
 import org.bridgedb.rdf.constants.BridgeDBConstants;
 import org.bridgedb.rdf.constants.RdfConstants;
@@ -173,6 +175,12 @@ public class BridgeDBRdfHandler extends RdfBase{
             UriPattern uriPattern = getUriPattern(repositoryConnection, (Resource)identifiersOrgValue);
             uriPattern.setDataSource(builder.asDataSource());
             builder.identifiersOrgBase(uriPattern.getUriPattern());
+        }
+        
+        Value regexValue = getPossibleSingleton(repositoryConnection, dataSourceId, BridgeDBConstants.HAS_REGEX_PATTERN_URI);
+        if (regexValue != null){
+            Pattern pattern = Pattern.compile(regexValue.stringValue());
+            DataSourcePatterns.registerPattern(builder.asDataSource(), pattern);
         }
         
         return builder.asDataSource();
@@ -322,6 +330,12 @@ public class BridgeDBRdfHandler extends RdfBase{
         if (dataSource.getOrganism() != null){
             Organism organism = (Organism)dataSource.getOrganism();
             repositoryConnection.add(id, BridgeDBConstants.ORGANISM_URI, OrganismRdf.getResourceId(organism));
+        }
+        
+        Pattern pattern = DataSourcePatterns.getPatterns().get(dataSource);
+        if (pattern != null){
+            Value patternValue = new LiteralImpl(pattern.toString());
+            repositoryConnection.add(id, BridgeDBConstants.HAS_REGEX_PATTERN_URI, patternValue);            
         }
     }
 
