@@ -58,13 +58,18 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
      * This identifies version of SQL such as Virtuoso that use "TOP" to restrict the number of tuples returned.
      */
     private final boolean useTop;
+    /**
+     * Map between IdSysCodePair and Xref or DataSources 
+     */
+    private final CodeMapper codeMapper;
     
     private static final Logger logger = Logger.getLogger(SQLIdMapper.class);
 
-    public SQLIdMapper(boolean dropTables) throws BridgeDBException{
+    public SQLIdMapper(boolean dropTables, CodeMapper codeMapper) throws BridgeDBException{
         super(dropTables);
         useLimit = SqlFactory.supportsLimit();
         useTop = SqlFactory.supportsTop();
+        this.codeMapper = codeMapper;
      }   
 
     //*** IDMapper Methods 
@@ -76,14 +81,14 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
 
     @Override
     public synchronized Set<Xref> mapID(Xref xref, DataSource... tgtDataSources) throws BridgeDBException {
-        IdSysCodePair ref = IdSysCodePair.toIdSysCodePair(xref);
+        IdSysCodePair ref = codeMapper.toIdSysCodePair(xref);
         if (ref == null) {
             logger.warn("mapId called with a badXref " + xref);
             return new HashSet<Xref>();
         }
-        String[] tgtSysCodes = IdSysCodePair.toCodes(tgtDataSources);
+        String[] tgtSysCodes = codeMapper.toCodes(tgtDataSources);
         Set<IdSysCodePair> pairs = mapID(ref, tgtSysCodes);
-        return IdSysCodePair.toXrefs(pairs);
+        return codeMapper.toXrefs(pairs);
     }
 
     private synchronized Set<IdSysCodePair> mapID(IdSysCodePair ref, String... tgtSysCodes) throws BridgeDBException {
@@ -159,7 +164,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
 	 * @throws IDMapperException if the mapping service is (temporarily) unavailable 
 	 */
     public synchronized Set<Xref> mapID(Xref xref, DataSource tgtDataSource) throws BridgeDBException {
-        IdSysCodePair ref = IdSysCodePair.toIdSysCodePair(xref);
+        IdSysCodePair ref = codeMapper.toIdSysCodePair(xref);
         if (ref == null) {
             logger.warn("mapId called with a badXref " + xref);
             return new HashSet<Xref>();
@@ -167,9 +172,9 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         if (tgtDataSource == null){
             throw new BridgeDBException("Target DataSource can not be null");
         }
-        String tgtSysCode = IdSysCodePair.toCode(tgtDataSource);
+        String tgtSysCode = codeMapper.toCode(tgtDataSource);
         Set<IdSysCodePair> pairs = mapID(ref, tgtSysCode);
-        return IdSysCodePair.toXrefs(pairs);
+        return codeMapper.toXrefs(pairs);
     }
 
     private synchronized Set<IdSysCodePair> mapID(IdSysCodePair ref, String tgtSysCode) throws BridgeDBException {
@@ -206,7 +211,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
 
     @Override
     public synchronized boolean xrefExists(Xref xref) throws BridgeDBException {
-        IdSysCodePair ref = IdSysCodePair.toIdSysCodePair(xref);
+        IdSysCodePair ref = codeMapper.toIdSysCodePair(xref);
         if (ref == null) {
             return false;
         }
@@ -279,7 +284,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         if (logger.isDebugEnabled()){
             logger.debug("Freesearch for " + text + " gave " + pairs.size() + " results");
         }
-        return IdSysCodePair.toXrefs(pairs);
+        return codeMapper.toXrefs(pairs);
     }
 
     @Override
@@ -534,7 +539,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         try {
             while (rs.next()){
                 String sysCode = rs.getString(SYSCODE_COLUMN_NAME);
-                results.add(IdSysCodePair.findDataSource(sysCode));
+                results.add(codeMapper.findDataSource(sysCode));
             }
             return results;
        } catch (SQLException ex) {

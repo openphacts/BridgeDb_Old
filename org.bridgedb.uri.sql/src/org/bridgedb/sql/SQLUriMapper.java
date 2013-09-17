@@ -98,12 +98,15 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     private static SQLUriMapper mapper = null;
     private HashMap<Integer,UriPattern> subjectUriPatterns;
     private HashMap<Integer,UriPattern> targetUriPatterns;
+    private final CodeMapper codeMapper;
+    
     static final Logger logger = Logger.getLogger(SQLListener.class);
 
     public synchronized static SQLUriMapper getExisting() throws BridgeDBException{
         if (mapper == null){
             BridgeDBRdfHandler.init();
-            mapper =  new SQLUriMapper(false);
+            CodeMapper codeMapper = new SyscodeBasedCodeMapper();
+            mapper =  new SQLUriMapper(false, codeMapper);
             Lens.init(mapper);
         }
         return mapper;
@@ -111,7 +114,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     
     public synchronized static SQLUriMapper createNew() throws BridgeDBException{
         BridgeDBRdfHandler.init();
-        mapper =  new SQLUriMapper(true);
+        CodeMapper codeMapper = new SyscodeBasedCodeMapper();
+        mapper =  new SQLUriMapper(true, codeMapper);
         return mapper;
     }
 
@@ -124,8 +128,9 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
      * @param specific Code to hold the things that are different between different SQL implementaions.
      * @throws BridgeDBException
      */
-     private SQLUriMapper(boolean dropTables) throws BridgeDBException{
-        super(dropTables);
+     private SQLUriMapper(boolean dropTables, CodeMapper codeMapper) throws BridgeDBException{
+        super(dropTables, codeMapper);
+        this.codeMapper = codeMapper;
         clearUriPatterns();
         Collection<UriPattern> patterns = UriPattern.getUriPatternsWithDataSource();
         for (UriPattern pattern:patterns){
@@ -297,20 +302,20 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             return mapID(sourceRef, lensUri);
         }
         if (tgtDataSource.length == 1){
-            return mapID(sourceRef, lensUri, IdSysCodePair.toCode(tgtDataSource[0]));
+            return mapID(sourceRef, lensUri, codeMapper.toCode(tgtDataSource[0]));
         }
         HashSet<IdSysCodePair> results = new HashSet<IdSysCodePair>();
         for (DataSource dataSource: tgtDataSource){
-            results.addAll(mapID(sourceRef, lensUri, IdSysCodePair.toCode(dataSource)));
+            results.addAll(mapID(sourceRef, lensUri, codeMapper.toCode(dataSource)));
         }
         return results;
     }
     
     @Override
     public Set<Xref> mapID(Xref sourceXref, String lensUri, DataSource... tgtDataSources) throws BridgeDBException {
-        IdSysCodePair ref = IdSysCodePair.toIdSysCodePair(sourceXref);
+        IdSysCodePair ref = codeMapper.toIdSysCodePair(sourceXref);
         Set<IdSysCodePair> pairs = mapID(ref, lensUri, tgtDataSources);
-        Set<Xref> results = IdSysCodePair.toXrefs(pairs);
+        Set<Xref> results = codeMapper.toXrefs(pairs);
         return results;
     }
     
@@ -331,7 +336,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             return new HashSet<String>();
         }
         DataSource tgtDataSource = tgtUriPattern.getDataSource();
-        String tgtSysCode = IdSysCodePair.toCode(tgtDataSource);
+        String tgtSysCode = codeMapper.toCode(tgtDataSource);
         Set<IdSysCodePair> targetRefs = mapID(sourceRef, lensUri, tgtSysCode);
         HashSet<String> results = new HashSet<String>();
         for (IdSysCodePair target:targetRefs){
@@ -356,7 +361,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     @Override
     public Set<String> mapUri (Xref sourceXref, String lensUri, String graph, UriPattern... tgtUriPatterns) 
             throws BridgeDBException {
-        IdSysCodePair sourceRef = IdSysCodePair.toIdSysCodePair(sourceXref);
+        IdSysCodePair sourceRef = codeMapper.toIdSysCodePair(sourceXref);
         return mapUri(sourceRef, lensUri, graph, tgtUriPatterns);
     }
         
@@ -386,7 +391,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         sourceUri = scrubUri(sourceUri);
         IdSysCodePair sourceRef = toIdSysCodePair(sourceUri);
         DataSource tgtDataSource = tgtUriPattern.getDataSource();
-        String tgtSysCode = IdSysCodePair.toCode(tgtDataSource);
+        String tgtSysCode = codeMapper.toCode(tgtDataSource);
         ResultSet rs = mapBySetOnly(sourceRef, sourceUri, lensUri, tgtSysCode);       
         resultSetAddToMappingsBySet(rs, sourceUri, mappingsBySet, tgtUriPattern);           
         if (sourceRef.getSysCode().equals(tgtSysCode)){
@@ -449,7 +454,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         }    
         Set<Mapping> results = resultSetToMappingSet(sourceRef, rs);
         //Add mapping to self
-        results.add(new Mapping(sourceRef.toXref()));
+        results.add(new Mapping(codeMapper.toXref(sourceRef)));
         //Add targetUris
         for (Mapping mapping: results){
             mapping.addTargetUris(toUris(mapping.getTarget()));
@@ -477,13 +482,13 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         Set<Mapping> results = resultSetToMappingSet(sourceRef, rs);
         //Add map to self if correct
         if (sourceRef.getSysCode().equals(tgtSysCode)){
-            results.add(new Mapping(sourceRef.toXref()));
+            results.add(new Mapping(codeMapper.toXref(sourceRef)));
         }
         return results;
     }
 
 	private synchronized Set<Mapping> mapFull (IdSysCodePair sourceRef, String lensUri, DataSource tgtDataSource) throws BridgeDBException{
-         String tgtSysCode = IdSysCodePair.toCode(tgtDataSource);
+         String tgtSysCode = codeMapper.toCode(tgtDataSource);
         Set<Mapping> results = mapFull(sourceRef, lensUri, tgtSysCode);
         //Add targetUris
         for (Mapping mapping: results){
@@ -510,7 +515,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
            return new HashSet<Mapping>();
         }
         DataSource tgtDataSource = tgtUriPattern.getDataSource();
-        String tgtSysCode = IdSysCodePair.toCode(tgtDataSource);
+        String tgtSysCode = codeMapper.toCode(tgtDataSource);
         Set<Mapping> results = mapFull(sourceRef, lensUri, tgtSysCode);
         for (Mapping result:results){
             result.addTargetUri(tgtUriPattern.getUri(result.getTarget().getId()));
@@ -535,14 +540,14 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     @Override
     public Set<Mapping> mapFull (Xref sourceXref, String lensUri, DataSource... tgtDataSources) 
             throws BridgeDBException{
-        IdSysCodePair sourceRef = IdSysCodePair.toIdSysCodePair(sourceXref);
+        IdSysCodePair sourceRef = codeMapper.toIdSysCodePair(sourceXref);
         return mapFull(sourceRef, lensUri, tgtDataSources);
     }
 
     @Override
     public Set<Mapping> mapFull (Xref sourceXref, String lensUri, String graph, UriPattern... tgtUriPatterns) 
             throws BridgeDBException{
-        IdSysCodePair sourceRef = IdSysCodePair.toIdSysCodePair(sourceXref);
+        IdSysCodePair sourceRef = codeMapper.toIdSysCodePair(sourceXref);
         return mapFull(sourceRef, lensUri, graph, tgtUriPatterns);
     }
 
@@ -715,7 +720,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         if (pair == null){
             return null;
         }
-        return pair.toXref();
+        return codeMapper.toXref(pair);
     }
 
     private synchronized IdSysCodePair toIdSysCodePair(String uri) throws BridgeDBException {
@@ -1319,7 +1324,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     private DataSetInfo findDataSetInfo(String sysCode){
-        DataSource ds = IdSysCodePair.findDataSource(sysCode);
+        DataSource ds = codeMapper.findDataSource(sysCode);
         return new DataSetInfo(sysCode, ds.getFullName());
     }
     
@@ -1405,9 +1410,10 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 if (sourceRef == null){
                     String sourceId = rs.getString(SOURCE_ID_COLUMN_NAME);
                     String sourceSysCode = rs.getString(SOURCE_DATASOURCE_COLUMN_NAME);
-                    source = new IdSysCodePair(sourceId, sourceSysCode).toXref();
+                    IdSysCodePair pair = new IdSysCodePair(sourceId, sourceSysCode);
+                    source = codeMapper.toXref(pair);
                 } else {
-                    source = sourceRef.toXref();
+                    source = codeMapper.toXref(sourceRef);
                 }
                 Mapping uriMapping = new Mapping (source, predicate, target, mappingSetId);       
                 results.add(uriMapping);
@@ -1577,7 +1583,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         try {
             if (rs.next()){
                 String sysCode = rs.getString("dataSource");
-                return IdSysCodePair.findDataSource(sysCode);
+                return codeMapper.findDataSource(sysCode);
             }
             DataSource.Builder builder = DataSource.register(uriSpace, uriSpace).urlPattern(uriSpace+"$id");
             return builder.asDataSource();
@@ -1612,7 +1618,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     private Set<String> toUris(Xref xref) throws BridgeDBException {
-        IdSysCodePair ref = new IdSysCodePair(xref);
+        IdSysCodePair ref = codeMapper.toIdSysCodePair(xref);
         return toUris(ref);
     }
 
@@ -1708,12 +1714,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         }
     }
 
-   public static void main(String[] args) throws BridgeDBException, RDFHandlerException, IOException  {
-        ConfigReader.logToConsole();
-        BridgeDBRdfHandler.init();
-        SQLUriMapper test = new SQLUriMapper(false);
-   }
-   
    public final static String scrubUri(String original){
        if (original == null){
            return null;

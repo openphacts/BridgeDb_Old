@@ -39,6 +39,7 @@ import org.bridgedb.IDMapperCapabilities;
 import org.bridgedb.IDMapperException;
 import org.bridgedb.Xref;
 import org.bridgedb.sql.SQLIdMapper;
+import org.bridgedb.sql.SyscodeBasedCodeMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.ws.bean.CapabilitiesBean;
@@ -73,7 +74,7 @@ public class WSCoreService implements WSCoreInterface {
      * Super classes will have the responsibilities of setting up the idMapper.
      */
     protected WSCoreService() throws BridgeDBException{
-        this(new SQLIdMapper(false));
+        this(new SQLIdMapper(false, new SyscodeBasedCodeMapper()));
     }
     
     public WSCoreService(IDMapper idMapper) throws BridgeDBException {

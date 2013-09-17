@@ -26,6 +26,7 @@ import org.bridgedb.IDMapperException;
 import org.bridgedb.Xref;
 import org.bridgedb.sql.SQLIdMapper;
 import org.bridgedb.sql.SQLListener;
+import org.bridgedb.sql.SyscodeBasedCodeMapper;
 import org.bridgedb.sql.TestSqlFactory;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
@@ -51,7 +52,7 @@ public class MappingListenerTest extends org.bridgedb.mapping.MappingListenerTes
         ConfigReader.useTest();
         listener = new SQLListener(true);
         loadData();
-        sqlIdMapper = new SQLIdMapper(false);
+        sqlIdMapper = new SQLIdMapper(false, new SyscodeBasedCodeMapper());
         idMapper  = sqlIdMapper;
         connectionOk = true;
         capabilities = idMapper.getCapabilities(); 

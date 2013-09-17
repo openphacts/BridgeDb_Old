@@ -23,6 +23,7 @@ import org.bridgedb.sql.SQLAccess;
 import org.bridgedb.sql.SQLIdMapper;
 import org.bridgedb.sql.SQLListener;
 import org.bridgedb.sql.SqlFactory;
+import org.bridgedb.sql.SyscodeBasedCodeMapper;
 import org.bridgedb.sql.TestSqlFactory;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
@@ -46,7 +47,7 @@ public class MappingListenerTest extends org.bridgedb.mapping.MappingListenerTes
         ConfigReader.useTest();
         listener = new SQLListener(true);
         loadData();
-        idMapper = new SQLIdMapper(false);
+        idMapper = new SQLIdMapper(false, new SyscodeBasedCodeMapper());
         connectionOk = true;
         capabilities = idMapper.getCapabilities(); 
         logger.info("Virtuoso Setup successfull");
