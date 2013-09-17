@@ -50,7 +50,6 @@ public abstract class UriListenerTest extends IDMapperTestBase{
     protected static UriPattern uriPattern1;
     protected static UriPattern uriPattern2;
     protected static UriPattern uriPattern3;
-    protected static UriPattern uriPatternBad;
     
     //Must be instantiated by implementation of these tests.
     protected static UriMapper uriMapper;
@@ -175,10 +174,11 @@ public abstract class UriListenerTest extends IDMapperTestBase{
     public static void setupUriPatterns() throws BridgeDBException{
         setupUris();
         connectionOk = true;
-        uriPattern1 = UriPattern.byPrefixOrNameSpace(uriSpace1);
-        uriPattern2 = UriPattern.byPrefixOrNameSpace(uriSpace2);
-        uriPattern3 = UriPattern.byPrefixOrNameSpace(uriSpace3);
-        uriPatternBad = UriPattern.byPrefixOrNameSpace("http://www.example.com/UriMapperTest/Bad");
+        uriPattern1 = UriPattern.register(uriSpace1 + "$id", dataSource1Code);
+        uriPattern2 = UriPattern.register(uriSpace2 + "$id", dataSource2Code);
+        UriPattern.register(uriSpace2a + "$id", dataSource2Code);
+        uriPattern3 = UriPattern.register(uriSpace3 + "$id", dataSource3Code);
+        UriPattern.register(uriSpace3a + "$id", dataSource3Code);
     }
         
     /**
@@ -188,11 +188,6 @@ public abstract class UriListenerTest extends IDMapperTestBase{
      * @throws BridgeDBException
      */
     public static void loadDataPart1() throws BridgeDBException{
-        listener.registerUriPattern(DataSource1, uriSpace1 + "$id");
-        listener.registerUriPattern(DataSource2, uriSpace2 + "$id");
-        listener.registerUriPattern(DataSource2, uriSpace2a + "$id");
-        listener.registerUriPattern(DataSource3, uriSpace3 + "$id");
-        listener.registerUriPattern(DataSource3, uriSpace3a + "$id");
 
         Resource resource = new URIImpl("http://example.com/1to2");
         int mappingSet = listener.registerMappingSet(uriPattern1, TEST_PREDICATE, 

@@ -28,6 +28,9 @@ import org.junit.Ignore;
 @Ignore
 public abstract class IDMapperTestBase {
 	
+    protected static String dataSource1Code;
+    protected static String dataSource2Code;
+    protected static String dataSource3Code;
     //DataSource that MUST be supported.
     protected static DataSource DataSource1;
     protected static DataSource DataSource2;
@@ -78,11 +81,14 @@ public abstract class IDMapperTestBase {
      */
     public static void setupXref() throws IDMapperException{
         //If the actual source to be tested does not contain these please overwrite with ones that do exist.
-        DataSource1 = DataSource.register("ConceptWiki", "ConceptWiki"). urlPattern("http://www.conceptwiki.org/concept/$id")
+        dataSource1Code = "ConceptWiki";
+        DataSource1 = DataSource.register(dataSource1Code, "ConceptWiki"). urlPattern("http://www.conceptwiki.org/concept/$id")
                 .idExample("33a28bb2-35ed-4d94-adfd-3c96053cbaaf").asDataSource();
-        DataSource2 = DataSource.register("Cs", "Chemspider").urlPattern("http://www.chemspider.com/Chemical-Structure.$id.html")
+        dataSource2Code = "Cs";
+        DataSource2 = DataSource.register(dataSource2Code, "Chemspider").urlPattern("http://www.chemspider.com/Chemical-Structure.$id.html")
                 .idExample("56586").asDataSource();
-        DataSource3 = DataSource.register("ChemblMolecule", "Chembl Molecule").urlPattern("http://data.kasabi.com/dataset/chembl-rdf/molecule/m$id")
+        dataSource3Code = "ChemblMolecule";
+        DataSource3 = DataSource.register(dataSource3Code, "Chembl Molecule").urlPattern("http://data.kasabi.com/dataset/chembl-rdf/molecule/m$id")
                 .idExample("1").asDataSource();
         //This DataSource MUST not be supported
         DataSourceBad = DataSource.register("TestDSBad", "TestDSBad")

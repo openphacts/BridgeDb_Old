@@ -21,6 +21,7 @@ package org.bridgedb.statistics;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.bridgedb.DataSource;
 
 /**
  * Holder class for the main Meta Data of MappingSet.
@@ -44,6 +45,9 @@ public class DataSetInfo {
         return sysCode;
     }
 
+    public DataSource getDataSource(){
+        return DataSource.getExistingBySystemCode(sysCode);
+    }
     /**
      * @return the fullName
      */
@@ -70,4 +74,5 @@ public class DataSetInfo {
             return sysCode;
         }
     }
+    
  }

@@ -54,7 +54,7 @@ public class GraphResolver {
     }
     
     private void addPattern(String graph, String pattern) throws BridgeDBException{
-        UriPattern uriPattern = UriPattern.alreadyExistingByPattern(pattern);
+        UriPattern uriPattern = UriPattern.byPattern(pattern);
         if (uriPattern == null){
             throw new BridgeDBException("no UriPattern known for " + pattern);
         }

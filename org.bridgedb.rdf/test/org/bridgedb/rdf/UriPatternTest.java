@@ -19,6 +19,7 @@
 //
 package org.bridgedb.rdf;
 
+import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.TestUtils;
 import static org.hamcrest.number.OrderingComparison.*;
 import org.junit.After;
@@ -326,11 +327,11 @@ public class UriPatternTest extends TestUtils{
      * Test of compareTo method, of class UriPattern.
      */
     @Test
-    public void testCompareTo() {
+    public void testCompareTo() throws BridgeDBException {
         report("compareTo");
-        UriPattern pattern1 = UriPattern.byPrefixOrNameSpace("http://www.example.com/UriPatternTest/testCompareTo/1");
-        UriPattern pattern1s = UriPattern.byPrefixOrNameSpace("https://www.example.com/UriPatternTest/testCompareTo/1");
-        UriPattern pattern2 = UriPattern.byPrefixOrNameSpace("http://www.example.com/UriPatternTest/testCompareTo/2");
+        UriPattern pattern1 = UriPattern.register("http://www.example.com/UriPatternTest/testCompareTo/1$id", "UriPatternTest" );
+        UriPattern pattern1s = UriPattern.register("https://www.example.com/UriPatternTest/testCompareTo/1$id", "UriPatternTest");
+        UriPattern pattern2 = UriPattern.register("http://www.example.com/UriPatternTest/testCompareTo/2$id", "UriPatternTest");
         assertThat(pattern2.compareTo(pattern1), greaterThan(0));
         assertThat(pattern1.compareTo(pattern2), lessThan(0));
         assertThat(pattern2.compareTo(pattern1s), greaterThan(0));

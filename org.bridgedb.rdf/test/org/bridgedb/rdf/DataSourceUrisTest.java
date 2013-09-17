@@ -110,9 +110,8 @@ public class DataSourceUrisTest extends TestUtils{
         System.out.println("start parse");
         BridgeDBRdfHandler.parseRdfFile(file1);
         System.out.println("end parse");
-        DataSource dataSource =  DataSource.getExistingBySystemCode("Cs");
-        Set<UriPattern> result = UriPattern.getUriPatterns(dataSource);
-        UriPattern pattern = UriPattern.existingOrCreateByPattern("http://www.chemspider.com/Chemical-Structure.$id.html");
+        Set<UriPattern> result = UriPattern.byCode("Cs");
+        UriPattern pattern = UriPattern.existingByPattern("http://www.chemspider.com/Chemical-Structure.$id.html");
         assertThat (result, hasItem(pattern));
 //        pattern = UriPattern.existingOrCreateByPattern("http://identifiers.org/chemspider/$id");
 //        assertThat (result, hasItem(pattern));

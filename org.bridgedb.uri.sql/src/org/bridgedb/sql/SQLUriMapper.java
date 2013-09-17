@@ -131,11 +131,10 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         super(dropTables, codeMapper);
         this.extendedCodeMapper = codeMapper;
         clearUriPatterns();
-        Collection<UriPattern> patterns = UriPattern.getUriPatternsWithDataSource();
+        Collection<UriPattern> patterns = UriPattern.getUriPatterns();
         for (UriPattern pattern:patterns){
             this.registerUriPattern(pattern);
         }
-        checkDataSources();
         subjectUriPatterns = new HashMap<Integer,UriPattern>();
         targetUriPatterns = new HashMap<Integer,UriPattern>();
         Lens.init(this);
@@ -233,28 +232,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return SQL_COMPAT_VERSION + 1;
     }
     
-    private void checkDataSources() throws BridgeDBException{
-        checkDataSources(SOURCE_DATASOURCE_COLUMN_NAME);
-        checkDataSources(TARGET_DATASOURCE_COLUMN_NAME);
-    }
-    
-    private void checkDataSources(String columnName) throws BridgeDBException{
-        Set<String> toCheckNames = getPatternDataSources(columnName);
-        for (String toCheckName:toCheckNames){
-            UriPattern pattern = UriPattern.possibleExistingByPattern(toCheckName);
-            if (pattern != null){
-                DataSource ds = pattern.getDataSource();
-                String code;
-                if (ds.getSystemCode() == null && ds.getSystemCode().isEmpty()){
-                    code = "_" + ds.getFullName();
-                } else {
-                    code = ds.getSystemCode();
-                }
-                replaceSysCode (toCheckName, code);
-            }
-        }
-    }
-
     private synchronized Set<IdSysCodePair> mapID(IdSysCodePair sourcePair, String lensUri, String tgtSysCode) throws BridgeDBException {
         if (sourcePair == null || tgtSysCode == null){
             return new HashSet<IdSysCodePair>();
@@ -388,8 +365,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     private void mapBySet(String sourceUri, MappingsBySet mappingsBySet, String lensUri, UriPattern tgtUriPattern) throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         IdSysCodePair sourceRef = toIdSysCodePair(sourceUri);
-        DataSource tgtDataSource = tgtUriPattern.getDataSource();
-        String tgtSysCode = extendedCodeMapper.toCode(tgtDataSource);
+        String tgtSysCode = extendedCodeMapper.toCode(tgtUriPattern);
         ResultSet rs = mapBySetOnly(sourceRef, sourceUri, lensUri, tgtSysCode);       
         resultSetAddToMappingsBySet(rs, sourceUri, mappingsBySet, tgtUriPattern);           
         if (sourceRef.getSysCode().equals(tgtSysCode)){
@@ -512,8 +488,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         if (tgtUriPattern == null){
            return new HashSet<Mapping>();
         }
-        DataSource tgtDataSource = tgtUriPattern.getDataSource();
-        String tgtSysCode = extendedCodeMapper.toCode(tgtDataSource);
+        String tgtSysCode = extendedCodeMapper.toCode(tgtUriPattern);
         Set<Mapping> results = mapFull(sourceRef, lensUri, tgtSysCode);
         for (Mapping result:results){
             result.addTargetUri(tgtUriPattern.getUri(result.getTarget().getId()));
@@ -721,7 +696,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return extendedCodeMapper.toXref(pair);
     }
 
-    private synchronized IdSysCodePair toIdSysCodePair(String uri) throws BridgeDBException {
+    @Override
+    public synchronized IdSysCodePair toIdSysCodePair(String uri) throws BridgeDBException {
         if (uri == null || uri.isEmpty()){
             return null;
         }
@@ -817,7 +793,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                         postfix = newPostfix;
                     }
                 }
-                UriPattern result = UriPattern.byPrefixAndPostfix(prefix, postfix);
+                UriPattern result = UriPattern.byPattern(prefix + "$id" + postfix);
                 if (logger.isDebugEnabled()){
                     logger.debug(uri + " toXref " + result);
                 }
@@ -997,32 +973,11 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     // **** UriListener Methods
-    
-    @Override
-    public synchronized void registerUriPattern(DataSource source, String uriPattern) throws BridgeDBException {
-        //checkDataSourceInDatabase(source);
-        int pos = uriPattern.indexOf("$id");
-        if (pos == -1) {
-            throw new BridgeDBException ("uriPattern " + uriPattern + " does not contain \"$id\"");
-        }
-        String prefix = uriPattern.substring(0, pos);
-		String postfix = uriPattern.substring(pos + 3);
-        this.registerUriPattern(source, prefix, postfix);
-    }
-    
+        
     private void registerUriPattern (UriPattern uriPattern) throws BridgeDBException{
-        DataSource dataSource = uriPattern.getDataSource();
+        String code = uriPattern.getCode();
         String prefix = uriPattern.getPrefix();
         String postfix = uriPattern.getPostfix();
-        registerUriPattern(dataSource, prefix, postfix);
-    }
-    
-    @Override
-    public synchronized void registerUriPattern(DataSource dataSource, String prefix, String postfix) throws BridgeDBException {
-        //checkDataSourceInDatabase(dataSource);
-        if (postfix == null){
-            postfix = "";
-        }
         if (prefix.length() > PREFIX_LENGTH){
             throw new BridgeDBException("Prefix Length ( " + prefix.length() + ") is too long for " + prefix);
         }
@@ -1034,15 +989,15 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         postfix = insertEscpaeCharacters(postfix);
         String dataSourceKey = getDataSourceKey(prefix, postfix);
         if (dataSourceKey != null){
-            if (getDataSourceKey(dataSource).equals(dataSourceKey)) return; //Already known so fine.
+            if (code.equals(dataSourceKey)) return; //Already known so fine.
             throw new BridgeDBException ("UriPattern " + prefix + "$id" + postfix + " already mapped to " + dataSourceKey 
-                    + " Which does not match " + getDataSourceKey(dataSource));
+                    + " Which does not match " + code);
         }
         String query = "INSERT INTO " + URI_TABLE_NAME + " (" 
                 + DATASOURCE_COLUMN_NAME + ", " 
                 + PREFIX_COLUMN_NAME + ", " 
                 + POSTFIX_COLUMN_NAME + ") VALUES "
-                + " ('" + getDataSourceKey(dataSource) + "', "
+                + " ('" + code + "', "
                 + "  '" + prefix + "',"
                 + "  '" + postfix + "')";
         Statement statement = createStatement();
@@ -1059,8 +1014,10 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             Set<Integer> chainedLinkSets) throws BridgeDBException {
         checkUriPattern(sourceUriPattern);
         checkUriPattern(targetUriPattern);
-        DataSource source = sourceUriPattern.getDataSource();
-        DataSource target = targetUriPattern.getDataSource();      
+        String sourceCode = sourceUriPattern.getCode();
+        DataSource source = DataSource.getExistingBySystemCode(sourceCode);
+        String targetCode = targetUriPattern.getCode();
+        DataSource target = DataSource.getExistingBySystemCode(targetCode);        
         int mappingSetId = registerMappingSet(source, target, predicate, justification, mappingResource, mappingSource, 0);
         registerVia(mappingSetId, viaLabels);
         registerChain(mappingSetId, chainedLinkSets);
@@ -1130,12 +1087,12 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     	try {
 			ResultSet rs = statement.executeQuery(query);
 			if (rs.next()) {
-				String storedKey = rs.getString(DATASOURCE_COLUMN_NAME);
-                String newKey = getDataSourceKey(pattern.getDataSource());
-                if (!storedKey.equals(newKey)){
-                    logger.error("WARNING " + pattern + " has a different Datasource to what was registered.");
-                    logger.error("  pattern has " + pattern.getDataSource() + " with key " + newKey);
-                    logger.error("  sql has " + keyToDataSource(storedKey) + " obtained from " + storedKey);
+				String storedCode = rs.getString(DATASOURCE_COLUMN_NAME);
+                String newCode = pattern.getCode();
+                if (!storedCode.equals(newCode)){
+                    logger.error("WARNING " + pattern + " has a different Code to what was registered.");
+                    logger.error("  pattern has code " + pattern.getCode());
+                    logger.error("  sql has " + storedCode);
                 }
 			} else {
                throw new BridgeDBException("Unregistered pattern. " + pattern);
@@ -1673,7 +1630,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         }
     }
 
-    private Set<String> getPatternDataSources(String column) throws BridgeDBException {
+    private Set<String> getPatternCodes(String column) throws BridgeDBException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT ");
         query.append(column);
@@ -1694,22 +1651,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         } catch (SQLException ex) {
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }    
-    }
-
-    private void replaceSysCode(String oldCode, String newCode) throws BridgeDBException {
-        replaceSysCode (SOURCE_DATASOURCE_COLUMN_NAME, oldCode, newCode);
-        replaceSysCode (TARGET_DATASOURCE_COLUMN_NAME, oldCode, newCode);
-    }
-
-    private void replaceSysCode(String columnName, String oldCode, String newCode) throws BridgeDBException {
-        String update = "UPDATE " + MAPPING_SET_TABLE_NAME + " SET " + columnName + " =\"" + newCode + "\" WHERE " 
-                + columnName + " = \"" + oldCode + "\""; 
-        Statement statement = this.createStatement();
-        try {
-            statement.executeUpdate(update);
-        } catch (SQLException ex) {
-            throw new BridgeDBException("Error updating " + update, ex);
-        }
     }
 
    public final static String scrubUri(String original){

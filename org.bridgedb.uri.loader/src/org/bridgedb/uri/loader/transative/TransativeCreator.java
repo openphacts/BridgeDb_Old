@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
 import org.apache.log4j.Logger;
+import org.bridgedb.DataSource;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.sql.SQLAccess;
 import org.bridgedb.sql.SQLUriMapper;
@@ -159,12 +160,9 @@ public class TransativeCreator {
     }
     
     private UriPattern getUriPattern(DataSetInfo info) throws BridgeDBException {
-        Set<String> patterns = mapper.getUriPatterns(info.getSysCode());
-        if (patterns.isEmpty()){
-            throw new BridgeDBException("No URI pattern known for " + info.getSysCode());
-        }
-        String pattern = patterns.iterator().next();
-        return UriPattern.existingOrCreateByPattern(pattern);
+        DataSource dataSource = info.getDataSource();
+        String pattern = dataSource.getKnownUrl("$id");
+        return UriPattern.existingByPattern(pattern);
     }
 
     private void checkTransativeLegal(MappingSetInfo left, MappingSetInfo right) throws BridgeDBException {

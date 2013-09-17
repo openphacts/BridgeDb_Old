@@ -27,6 +27,7 @@ import org.bridgedb.IDMapperCapabilities;
 import org.bridgedb.IDMapperException;
 import org.bridgedb.Xref;
 import org.bridgedb.rdf.UriPattern;
+import org.bridgedb.sql.IdSysCodePair;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
 import org.bridgedb.utils.BridgeDBException;
@@ -258,6 +259,8 @@ public interface UriMapper extends IDMapper{
      * @throws BridgeDBException Only for an SQl exception
      */
     public Xref toXref(String uri) throws BridgeDBException;
+    
+    public IdSysCodePair toIdSysCodePair(String uri) throws BridgeDBException;
     
     /*
      * Gets a Sample of mappings.

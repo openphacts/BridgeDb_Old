@@ -22,6 +22,7 @@ package org.bridgedb.mysql;
 import java.util.Set;
 import org.bridgedb.DataSource;
 import org.bridgedb.rdf.UriPattern;
+import org.bridgedb.sql.IdSysCodePair;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.sql.TestSqlFactory;
 import org.bridgedb.uri.UriListenerTest;
@@ -53,26 +54,17 @@ public abstract class SQLUriMapperTest extends UriListenerTest{
     @Test 
     public void testToUriPattern() throws BridgeDBException{
         report("ToUriPattern");
-        UriPattern result = sqlUriMapper.toUriPattern(map1Uri1);
-        assertEquals(uriPattern1, result);
+        IdSysCodePair result = sqlUriMapper.toIdSysCodePair(map1Uri1);
+        IdSysCodePair expected = new IdSysCodePair (ds1Id1, dataSource1Code);
+        assertEquals(expected, result);
     }
 
     @Test 
     public void testToUriPatternUsingLike() throws BridgeDBException{
         report("ToUriPatternUsingLike");
-        UriPattern result = sqlUriMapper.toUriPattern("http://bio2rdf.org/chebi:1234");
-        UriPattern target = UriPattern.byPrefixOrNameSpace("http://bio2rdf.org/chebi:");
-        assertEquals(target, result);
-    }
-
-    @Test 
-    public void testToUriPatternUsingLike2() throws BridgeDBException{
-        report("ToUriPatternUsingLike2");
-        DataSource test2 = DataSource.register("testToUriPatternUsingLike2", "testToUriPatternUsingLike2").asDataSource();
-        UriPattern target = UriPattern.byPrefixAndPostfix("http://bio2rdf.org/junk:", ".html");
-        sqlUriMapper.registerUriPattern(test2, "http://bio2rdf.org/junk:$id.html");
-        UriPattern result = sqlUriMapper.toUriPattern("http://bio2rdf.org/junk:1234.html");
-        assertEquals(target, result);
+        IdSysCodePair result = sqlUriMapper.toIdSysCodePair("http://bio2rdf.org/chebi:1234");
+        IdSysCodePair expected = new IdSysCodePair ("Chebi", dataSource1Code); //will be "Ce"
+       assertEquals(expected, result);
     }
     
     @Test 

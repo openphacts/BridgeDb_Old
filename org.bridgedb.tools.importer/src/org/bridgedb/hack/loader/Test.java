@@ -72,7 +72,6 @@ public class Test {
             if (uriSpace.equals("$id")){
                 uriSpace = "www.example.com/" + source.getSystemCode() + "/";
             }
-            sqlMapper.registerUriPattern(source, uriSpace);        
         }
     }
     

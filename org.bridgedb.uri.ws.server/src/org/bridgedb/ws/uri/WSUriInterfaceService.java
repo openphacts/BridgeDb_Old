@@ -789,7 +789,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         }
         HashSet<UriPattern> targets = new HashSet<UriPattern>();
         for (String targetUriPattern:targetUriPatterns){
-            UriPattern pattern = UriPattern.alreadyExistingByPattern(targetUriPattern);
+            UriPattern pattern = UriPattern.existingByPattern(targetUriPattern);
             if (pattern != null){
                 targets.add(pattern);
             } else {

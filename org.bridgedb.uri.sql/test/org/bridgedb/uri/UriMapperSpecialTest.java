@@ -70,14 +70,7 @@ public abstract class UriMapperSpecialTest extends UriListenerTest{
         assertTrue(results.size() <= 1);
     }
 
-    @Test (expected = BridgeDBException.class)
-    public void testMapNoneExistingDataSource() throws BridgeDBException{
-        report("MapNoneExistingDataSource");
-        Set<String> results = uriMapper.mapUri(map1Uri2, Lens.getDefaultLens(), NULL_GRAPH, uriPatternBad);
-        assertEquals(0,results.size());
-    }
-
-    @Test
+     @Test
     public void testUriSupported() throws Exception {
         report("UriSupported");
         assertTrue(uriMapper.uriExists(map1Uri1));
@@ -215,12 +208,12 @@ public abstract class UriMapperSpecialTest extends UriListenerTest{
     public void testCheckUriPatterns() throws Exception {
         //Date start = new Date();
         report("getCheckUriPatterns");
-        for (UriPattern pattern:UriPattern.getUriPatternsWithDataSource()){
+        for (UriPattern pattern:UriPattern.getUriPatterns()){
             String uri = pattern.getPrefix() + "1234" + pattern.getPostfix();
-            DataSource dataSource = pattern.getDataSource();
+            DataSource dataSource = DataSource.getExistingBySystemCode(pattern.getCode());
             if (dataSource.getSystemCode() != null && !uri.startsWith("http://www.example.com/")){
                 Xref xref = uriMapper.toXref(uri);
-                assertEquals(pattern.getDataSource(), xref.getDataSource());
+                assertEquals(pattern.getCode(), xref.getDataSource().getSystemCode());
             }
         }
         //Date end = new Date();

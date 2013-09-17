@@ -28,6 +28,7 @@ import javax.ws.rs.core.Response;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
 import org.bridgedb.rdf.UriPattern;
+import org.bridgedb.sql.IdSysCodePair;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
 import org.bridgedb.uri.Mapping;
@@ -340,6 +341,11 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
 
     @Override
     public List<Mapping> getSampleMapping() throws BridgeDBException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public IdSysCodePair toIdSysCodePair(String uri) throws BridgeDBException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

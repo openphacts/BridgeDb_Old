@@ -54,7 +54,6 @@ public class TransativeFinderTest {
         //Check database is running and settup correctly or kill the test. 
         TestSqlFactory.checkSQLAccess();
         ConfigReader.useTest();
-        mapper = SQLUriMapper.createNew();
 //        linksetLoader = new LinksetLoader();
 //        linksetLoader.clearExistingData( StoreType.TEST);  
         setupPattern("TransativeTestA", "http://www.example.com/DS_A/$id");
@@ -63,14 +62,15 @@ public class TransativeFinderTest {
         setupPattern("TransativeTestD", "http://www.example.com/DS_D/$id");
         setupPattern("TransativeTestE", "http://www.example.com/DS_E/$id");
         setupPattern("TransativeTestF", "http://www.example.com/DS_F/$id");
+        mapper = SQLUriMapper.createNew();
  	}
 
     private void setupPattern (String name, String pattern) throws BridgeDBException{
-        DataSource dataSource = DataSource.register(name, name).asDataSource();
+        DataSource dataSource = DataSource.register(name, name)
+                .urlPattern(pattern)
+                .asDataSource();
         TransativeFinder.addAcceptableVai(dataSource);
-        UriPattern uriPattern = UriPattern.existingOrCreateByPattern(pattern);
-        uriPattern.setDataSource(dataSource);
-        mapper.registerUriPattern(dataSource, pattern);     
+        UriPattern uriPattern = UriPattern.register(pattern, name);
     }
     
     protected void load(String path) throws BridgeDBException{
