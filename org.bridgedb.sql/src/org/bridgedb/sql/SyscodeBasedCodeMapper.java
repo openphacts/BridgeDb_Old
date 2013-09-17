@@ -6,6 +6,7 @@ package org.bridgedb.sql;
 
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
+import org.bridgedb.utils.BridgeDBException;
 
 /**
  *
@@ -14,25 +15,25 @@ import org.bridgedb.Xref;
 public class SyscodeBasedCodeMapper extends AbstractCodeMapper implements  CodeMapper{
 
     @Override
-    public DataSource findDataSource(String code) {
+    public DataSource findDataSource(String code) throws BridgeDBException {
         if (code.startsWith("_")){
             String fullName = code.substring(1);
             try {
-                return DataSource.getByFullName(fullName);
+                return DataSource.getExistingByFullName(fullName);
             } catch (IllegalArgumentException ex){
-                return DataSource.register(null, fullName).asDataSource();
+                throw new BridgeDBException ("No DataSource known for " + code + " using fullName " + fullName);
             }
         } else {
             try {
-                return DataSource.getBySystemCode(code);
+                return DataSource.getExistingBySystemCode(code);
             } catch (IllegalArgumentException ex){
-                return DataSource.register(code, code).asDataSource();
+                throw new BridgeDBException ("No DataSource known for " + code);
             }
         }
     }
 
    @Override
-   String toCodeNoNull(DataSource dataSource) {
+   protected String toCodeNoNull(DataSource dataSource) {
         if (dataSource.getSystemCode() == null || dataSource.getSystemCode().isEmpty()){
             return "_" + dataSource.getFullName();
         }
@@ -40,14 +41,14 @@ public class SyscodeBasedCodeMapper extends AbstractCodeMapper implements  CodeM
     }
 
     @Override
-    IdSysCodePair toIdSysCodePairNoNull(Xref xref) {
+    protected IdSysCodePair toIdSysCodePairNoNull(Xref xref) {
         String id = xref.getId();
         String sysCode = toCodeNoNull(xref.getDataSource());
         return new IdSysCodePair(id, sysCode);
     }
 
     @Override
-    public Xref toXref(IdSysCodePair pair) {
+    public Xref toXref(IdSysCodePair pair) throws BridgeDBException{
         DataSource dataSource = findDataSource(pair.getSysCode());
         String id = pair.getId();
         return new Xref(id, dataSource);

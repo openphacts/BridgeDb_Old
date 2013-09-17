@@ -1,0 +1,77 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.bridgedb.uri.sql;
+
+import java.util.HashMap;
+import org.bridgedb.DataSource;
+import org.bridgedb.Xref;
+import org.bridgedb.rdf.UriPattern;
+import org.bridgedb.sql.IdSysCodePair;
+import org.bridgedb.sql.SyscodeBasedCodeMapper;
+import org.bridgedb.utils.BridgeDBException;
+
+/**
+ *
+ * @author Christian
+ */
+public class HardCodedCodeMapper extends SyscodeBasedCodeMapper implements  ExtendedCodeMapper{
+
+    HashMap<String,String> xrefExtensions = new HashMap<String,String>();
+    HashMap<UriPattern,String> patternMappings = new HashMap<UriPattern,String>();
+                
+    public HardCodedCodeMapper() throws BridgeDBException{
+        xrefExtensions.put("Ce","CHEBI:");
+        xrefExtensions.put("T","GO");
+        xrefExtensions.put("M","MGI:");
+        patternMappings.put(UriPattern.existingOrCreateByPattern("http://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:$id"),"Ce");   
+        patternMappings.put(UriPattern.existingOrCreateByPattern("http://identifiers.org/chebi/CHEBI:$id"),"Ce");   
+        patternMappings.put(UriPattern.existingOrCreateByPattern("http://identifiers.org/obo.chebi/CHEBI:$id"),"Ce");   
+        patternMappings.put(UriPattern.existingOrCreateByPattern("http://purl.org/obo/owl/CHEBI#CHEBI_$id"),"Ce");   
+        patternMappings.put(UriPattern.existingOrCreateByPattern("http://bio2rdf.org/chebi:$id"),"Ce");   
+        patternMappings.put(UriPattern.existingOrCreateByPattern("http://purl.obolibrary.org/obo/CHEBI_$id"),"Ce");   
+        patternMappings.put(UriPattern.existingOrCreateByPattern("http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:$id"),"T");   
+        patternMappings.put(UriPattern.existingOrCreateByPattern("http://identifiers.org/obo.go/GO:$id"),"T");   
+        patternMappings.put(UriPattern.existingOrCreateByPattern("http://purl.org/obo/owl/GO#GO_$id"),"T");   
+        patternMappings.put(UriPattern.existingOrCreateByPattern("http://identifiers.org/go/GO:$id"),"T");   
+        patternMappings.put(UriPattern.existingOrCreateByPattern("http://www.informatics.jax.org/marker/MGI:$id"),"M");   
+        patternMappings.put(UriPattern.existingOrCreateByPattern("http://identifiers.org/mgd/MGI:$id"),"M");   
+        patternMappings.put(UriPattern.existingOrCreateByPattern("http://purl.uniprot.org/mgi/$id"),"M");   
+    }
+    
+    @Override
+    protected IdSysCodePair toIdSysCodePairNoNull(Xref xref) {
+        String sysCode = toCodeNoNull(xref.getDataSource());
+        String id;
+        if (xrefExtensions.containsValue(sysCode)){
+            id = xref.getId().substring(xrefExtensions.get(sysCode).length());
+        } else {
+            id = xref.getId();
+        }
+        return new IdSysCodePair(id, sysCode);
+    }
+
+    @Override
+    public Xref toXref(IdSysCodePair pair) throws BridgeDBException{
+        DataSource dataSource = findDataSource(pair.getSysCode());
+        String id;
+        if (xrefExtensions.containsValue(pair.getSysCode())){
+            id = xrefExtensions.get(pair.getSysCode()) + pair.getId();
+        } else {
+            id = pair.getId();
+        }
+        return new Xref(id, dataSource);
+    }
+            
+    @Override
+    public String toCode(UriPattern pattern) throws BridgeDBException {
+        if (patternMappings.containsKey(pattern)){
+            return patternMappings.get(pattern);
+        }
+        DataSource dataSource = pattern.getDataSource();
+        String code = toCode(dataSource);
+        return toCode(dataSource);
+    }
+       
+}

@@ -7,6 +7,7 @@ package org.bridgedb.sql;
 import java.util.Set;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
+import org.bridgedb.utils.BridgeDBException;
 
 /**
  *
@@ -14,17 +15,17 @@ import org.bridgedb.Xref;
  */
 public interface CodeMapper {
    
-    public DataSource findDataSource(String code);
+    public DataSource findDataSource(String code) throws BridgeDBException;
 
-    public String toCode (DataSource dataSource);
+    public String toCode (DataSource dataSource) throws BridgeDBException;
 
-    public String[] toCodes(DataSource[] dataSources);
+    public String[] toCodes(DataSource[] dataSources) throws BridgeDBException;
         
-    public IdSysCodePair toIdSysCodePair(Xref xref);
+    public IdSysCodePair toIdSysCodePair(Xref xref) throws BridgeDBException;
     
-    public Set<Xref> toXrefs(Set<IdSysCodePair> pairs);
+    public Set<Xref> toXrefs(Set<IdSysCodePair> pairs) throws BridgeDBException;
 
-    public Xref toXref(IdSysCodePair pair);
+    public Xref toXref(IdSysCodePair pair) throws BridgeDBException;
 
     
 }

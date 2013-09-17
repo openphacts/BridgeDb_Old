@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
+import org.bridgedb.utils.BridgeDBException;
 
 /**
  *
@@ -15,18 +16,18 @@ import org.bridgedb.Xref;
  */
 public abstract class AbstractCodeMapper implements  CodeMapper{
 
-    abstract String toCodeNoNull(DataSource dataSource);
+    protected abstract String toCodeNoNull(DataSource dataSource) throws BridgeDBException;
     
-    abstract IdSysCodePair toIdSysCodePairNoNull(Xref xref);
+    protected abstract IdSysCodePair toIdSysCodePairNoNull(Xref xref) throws BridgeDBException;
 
     @Override
-    public abstract DataSource findDataSource(String code);
+    public abstract DataSource findDataSource(String code) throws BridgeDBException;
     
     @Override
-    public abstract Xref toXref(IdSysCodePair pair);
+    public abstract Xref toXref(IdSysCodePair pair) throws BridgeDBException;
     
     @Override
-    public String toCode(DataSource dataSource) {
+    public String toCode(DataSource dataSource) throws BridgeDBException {
         if (dataSource == null){
             return null;
         }
@@ -34,7 +35,7 @@ public abstract class AbstractCodeMapper implements  CodeMapper{
     }
 
     @Override
-    public String[] toCodes(DataSource[] dataSources) {
+    public String[] toCodes(DataSource[] dataSources) throws BridgeDBException {
         if (dataSources == null){
             return null;
         }
@@ -48,7 +49,7 @@ public abstract class AbstractCodeMapper implements  CodeMapper{
     }
     
     @Override
-    public IdSysCodePair toIdSysCodePair(Xref xref) {
+    public IdSysCodePair toIdSysCodePair(Xref xref) throws BridgeDBException {
         if (xref == null) {
             return null;
         }
@@ -61,7 +62,7 @@ public abstract class AbstractCodeMapper implements  CodeMapper{
         return toIdSysCodePairNoNull(xref);
     }
 
-    public Set<Xref> toXrefs(Set<IdSysCodePair> pairs){
+    public Set<Xref> toXrefs(Set<IdSysCodePair> pairs) throws BridgeDBException{
         HashSet<Xref> refs = new HashSet<Xref>();
         for (IdSysCodePair pair:pairs){
             refs.add(toXref(pair));
