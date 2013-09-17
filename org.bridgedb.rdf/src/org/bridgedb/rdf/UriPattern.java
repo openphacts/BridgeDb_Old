@@ -113,7 +113,6 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         for (HashMap<String,UriPattern> map:byPrefixAndPostFix.values()){
             patterns.addAll(map.values());
         }
-        patterns.remove(null);
         return patterns;
     }
 

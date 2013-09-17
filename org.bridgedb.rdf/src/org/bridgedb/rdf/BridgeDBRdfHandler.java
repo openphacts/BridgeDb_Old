@@ -306,13 +306,16 @@ public class BridgeDBRdfHandler extends RdfBase{
 
         String url = dataSource.getKnownUrl("$id");
         if (url != null){
-            URIImpl URL = new URIImpl(url);
-            repositoryConnection.add(id, BridgeDBConstants.HAS_URL_PATTERN_URI, URL);
+            //HACK as SwissProt and Trembl share same URL
+            if (!dataSource.getSystemCode().equals("Sp")){
+                URIImpl URL = new URIImpl(url);
+                repositoryConnection.add(id, BridgeDBConstants.HAS_URL_PATTERN_URI, URL);
+            }
         }
 
         String identifersOrgPattern = dataSource.getIdentifiersOrgUri("$id");
-        if (identifersOrgPattern == null){
-            URIImpl URL = new URIImpl(url);
+        if (identifersOrgPattern != null){
+            URIImpl URL = new URIImpl(identifersOrgPattern);
             repositoryConnection.add(id, BridgeDBConstants.HAS_IDENTIFERS_ORG_PATTERN_URI, URL);
         }
 
