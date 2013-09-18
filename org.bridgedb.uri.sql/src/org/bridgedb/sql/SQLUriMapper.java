@@ -37,6 +37,7 @@ import org.bridgedb.pairs.CodeMapper;
 import org.bridgedb.pairs.IdSysCodePair;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.rdf.UriPattern;
+import org.bridgedb.rdf.pairs.RdfBasedCodeMapper;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
@@ -46,7 +47,6 @@ import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.UriListener;
 import org.bridgedb.uri.UriMapper;
-import org.bridgedb.uri.sql.HardCodedCodeMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.openrdf.model.Resource;
 
@@ -104,7 +104,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     public synchronized static SQLUriMapper getExisting() throws BridgeDBException{
         if (mapper == null){
             BridgeDBRdfHandler.init();
-            CodeMapper codeMapper = new HardCodedCodeMapper();
+            CodeMapper codeMapper = new RdfBasedCodeMapper();
             mapper =  new SQLUriMapper(false, codeMapper);
             Lens.init(mapper);
         }
@@ -113,7 +113,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     
     public synchronized static SQLUriMapper createNew() throws BridgeDBException{
         BridgeDBRdfHandler.init();
-        CodeMapper codeMapper = new HardCodedCodeMapper();
+        CodeMapper codeMapper = new RdfBasedCodeMapper();
         mapper =  new SQLUriMapper(true, codeMapper);
         return mapper;
     }
