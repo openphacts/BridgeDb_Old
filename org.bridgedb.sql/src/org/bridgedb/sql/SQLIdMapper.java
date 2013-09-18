@@ -63,7 +63,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
     /**
      * Map between IdSysCodePair and Xref or DataSources 
      */
-    private final CodeMapper codeMapper;
+    protected final CodeMapper codeMapper1;
     
     private static final Logger logger = Logger.getLogger(SQLIdMapper.class);
 
@@ -71,7 +71,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         super(dropTables);
         useLimit = SqlFactory.supportsLimit();
         useTop = SqlFactory.supportsTop();
-        this.codeMapper = codeMapper;
+        this.codeMapper1 = codeMapper;
      }   
 
     //*** IDMapper Methods 
@@ -83,14 +83,14 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
 
     @Override
     public synchronized Set<Xref> mapID(Xref xref, DataSource... tgtDataSources) throws BridgeDBException {
-        IdSysCodePair ref = codeMapper.toIdSysCodePair(xref);
+        IdSysCodePair ref = toIdSysCodePair(xref);
         if (ref == null) {
             logger.warn("mapId called with a badXref " + xref);
             return new HashSet<Xref>();
         }
-        String[] tgtSysCodes = codeMapper.toCodes(tgtDataSources);
+        String[] tgtSysCodes = toCodes(tgtDataSources);
         Set<IdSysCodePair> pairs = mapID(ref, tgtSysCodes);
-        return codeMapper.toXrefs(pairs);
+        return toXrefs(pairs);
     }
 
     private synchronized Set<IdSysCodePair> mapID(IdSysCodePair ref, String... tgtSysCodes) throws BridgeDBException {
@@ -166,7 +166,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
 	 * @throws IDMapperException if the mapping service is (temporarily) unavailable 
 	 */
     public synchronized Set<Xref> mapID(Xref xref, DataSource tgtDataSource) throws BridgeDBException {
-        IdSysCodePair ref = codeMapper.toIdSysCodePair(xref);
+        IdSysCodePair ref = toIdSysCodePair(xref);
         if (ref == null) {
             logger.warn("mapId called with a badXref " + xref);
             return new HashSet<Xref>();
@@ -174,9 +174,9 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         if (tgtDataSource == null){
             throw new BridgeDBException("Target DataSource can not be null");
         }
-        String tgtSysCode = codeMapper.toCode(tgtDataSource);
+        String tgtSysCode = toCode(tgtDataSource);
         Set<IdSysCodePair> pairs = mapID(ref, tgtSysCode);
-        return codeMapper.toXrefs(pairs);
+        return toXrefs(pairs);
     }
 
     private synchronized Set<IdSysCodePair> mapID(IdSysCodePair ref, String tgtSysCode) throws BridgeDBException {
@@ -213,7 +213,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
 
     @Override
     public synchronized boolean xrefExists(Xref xref) throws BridgeDBException {
-        IdSysCodePair ref = codeMapper.toIdSysCodePair(xref);
+        IdSysCodePair ref = toIdSysCodePair(xref);
         if (ref == null) {
             return false;
         }
@@ -286,7 +286,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         if (logger.isDebugEnabled()){
             logger.debug("Freesearch for " + text + " gave " + pairs.size() + " results");
         }
-        return codeMapper.toXrefs(pairs);
+        return toXrefs(pairs);
     }
 
     @Override
@@ -541,7 +541,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         try {
             while (rs.next()){
                 String sysCode = rs.getString(SYSCODE_COLUMN_NAME);
-                results.add(codeMapper.findDataSource(sysCode));
+                results.add(DataSource.getExistingBySystemCode(sysCode));
             }
             return results;
        } catch (SQLException ex) {
@@ -596,5 +596,38 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         query.append(MAPPING_SET_DOT_ID_COLUMN_NAME);
      }
 
+    protected final String[] toCodes(DataSource[] tgtDataSources) {
+        if (tgtDataSources == null || tgtDataSources.length == 0){
+            return new String[0];
+        }
+        String[] results = new String[tgtDataSources.length];
+        for (int i = 0; i < tgtDataSources.length; i++){
+            results[i] =  tgtDataSources[i].getSystemCode();
+        }
+        return results;
+    }
 
+    protected final IdSysCodePair toIdSysCodePair(Xref xref) throws BridgeDBException {
+        if (xref == null || xref.getId() == null || xref.getDataSource() == null){
+            return null;
+        }
+        return codeMapper1.toIdSysCodePair(xref);
+    }
+
+    protected final Set<Xref> toXrefs(Set<IdSysCodePair> pairs) throws BridgeDBException {
+        HashSet<Xref> results = new HashSet<Xref>();
+        for (IdSysCodePair pair:pairs){
+            results.add(codeMapper1.toXref(pair));
+        }
+        return results;
+    }
+
+    protected final String toCode(DataSource tgtDataSource) {
+        if (tgtDataSource == null){
+            return null;
+        }
+        return tgtDataSource.getSystemCode();
+    }
+
+ 
 }

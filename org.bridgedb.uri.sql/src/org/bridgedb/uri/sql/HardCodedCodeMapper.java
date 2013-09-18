@@ -9,14 +9,13 @@ import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
 import org.bridgedb.pairs.IdSysCodePair;
 import org.bridgedb.pairs.SyscodeBasedCodeMapper;
-import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.utils.BridgeDBException;
 
 /**
  *
  * @author Christian
  */
-public class HardCodedCodeMapper extends SyscodeBasedCodeMapper implements  ExtendedCodeMapper{
+public class HardCodedCodeMapper extends SyscodeBasedCodeMapper {
 
     HashMap<String,String> xrefExtensions = new HashMap<String,String>();
                 
@@ -27,8 +26,8 @@ public class HardCodedCodeMapper extends SyscodeBasedCodeMapper implements  Exte
     }
     
     @Override
-    protected IdSysCodePair toIdSysCodePairNoNull(Xref xref) {
-        String sysCode = toCodeNoNull(xref.getDataSource());
+    public IdSysCodePair toIdSysCodePair(Xref xref) {
+        String sysCode = xref.getDataSource().getSystemCode();
         String id;
         if (xrefExtensions.containsValue(sysCode)){
             id = xref.getId().substring(xrefExtensions.get(sysCode).length());
@@ -40,7 +39,7 @@ public class HardCodedCodeMapper extends SyscodeBasedCodeMapper implements  Exte
 
     @Override
     public Xref toXref(IdSysCodePair pair) throws BridgeDBException{
-        DataSource dataSource = findDataSource(pair.getSysCode());
+        DataSource dataSource = DataSource.getExistingBySystemCode(pair.getSysCode());
         String id;
         if (xrefExtensions.containsValue(pair.getSysCode())){
             id = xrefExtensions.get(pair.getSysCode()) + pair.getId();
@@ -49,10 +48,5 @@ public class HardCodedCodeMapper extends SyscodeBasedCodeMapper implements  Exte
         }
         return new Xref(id, dataSource);
     }
-            
-    @Override
-    public String toCode(UriPattern pattern) throws BridgeDBException {
-         return pattern.getCode();
-    }
-       
+                   
 }
