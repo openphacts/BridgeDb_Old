@@ -27,6 +27,7 @@ import org.bridgedb.IDMapper;
 import org.bridgedb.bio.BioDataSource;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
+import org.bridgedb.utils.Reporter;
 
 /**
  *
@@ -55,7 +56,7 @@ public class CreateRdf {
         //Load the existing DataSource file 
         File dsfile = new File("../org.bridgedb.utils/resources/DataSource.ttl");
         BridgeDBRdfHandler.parseRdfFile(dsfile);             
-        System.out.println("Parsing finished");
+        Reporter.println("Parsing finished");
                 
      }
 

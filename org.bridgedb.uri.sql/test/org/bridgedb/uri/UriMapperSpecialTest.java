@@ -129,8 +129,7 @@ public abstract class UriMapperSpecialTest extends UriListenerTest{
     public void testGetOverallStatistics() throws BridgeDBException {
         report("GetOverallStatistics()");
         OverallStatistics results = uriMapper.getOverallStatistics(Lens.getDefaultLens());
-        System.out.println(results);
-        assertThat (results.getNumberOfMappings(), greaterThanOrEqualTo(18));
+       assertThat (results.getNumberOfMappings(), greaterThanOrEqualTo(18));
         assertThat (results.getNumberOfMappingSets(), greaterThanOrEqualTo(6));
         assertThat (results.getNumberOfSourceDataSources(), greaterThanOrEqualTo(3));
         assertThat (results.getNumberOfTargetDataSources(), greaterThanOrEqualTo(3));

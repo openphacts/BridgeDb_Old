@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.Set;
 import org.bridgedb.DataSource;
 import org.bridgedb.utils.BridgeDBException;
+import org.bridgedb.utils.Reporter;
 import org.bridgedb.utils.TestUtils;
 import static org.hamcrest.Matchers.*;
 import org.junit.After;
@@ -107,9 +108,8 @@ public class DataSourceUrisTest extends TestUtils{
     
     @Test
     public void testGetUriPatterns() throws BridgeDBException{
-        System.out.println("start parse");
+        Reporter.println("GetUriPatterns");
         BridgeDBRdfHandler.parseRdfFile(file1);
-        System.out.println("end parse");
         Set<UriPattern> result = UriPattern.byCode("Cs");
         UriPattern pattern = UriPattern.existingByPattern("http://www.chemspider.com/Chemical-Structure.$id.html");
         assertThat (result, hasItem(pattern));
