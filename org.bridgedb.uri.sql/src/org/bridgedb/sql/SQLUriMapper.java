@@ -130,6 +130,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
      */
      private SQLUriMapper(boolean dropTables, ExtendedCodeMapper codeMapper) throws BridgeDBException{
         super(dropTables, codeMapper);
+        BridgeDBRdfHandler.init();
         this.extendedCodeMapper = codeMapper;
         clearUriPatterns();
         Collection<UriPattern> patterns = UriPattern.getUriPatterns();

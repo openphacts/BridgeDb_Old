@@ -26,7 +26,6 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.mapping.MappingListener;
-import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.utils.BridgeDBException;
 
 /**
@@ -95,7 +94,6 @@ public class SQLListener extends SQLBase implements MappingListener{
 
     public SQLListener(boolean dropTables) throws BridgeDBException{
         super();
-        BridgeDBRdfHandler.init();
         this.autoIncrement = SqlFactory.getAutoIncrementCommand();
         if (dropTables){
             dropSQLTables();
