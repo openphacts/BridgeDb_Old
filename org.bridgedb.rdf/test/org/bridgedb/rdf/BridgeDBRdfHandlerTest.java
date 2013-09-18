@@ -4,7 +4,8 @@
  */
 package org.bridgedb.rdf;
 
-import org.junit.Ignore;
+import org.bridgedb.utils.Reporter;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
@@ -18,8 +19,16 @@ public class BridgeDBRdfHandlerTest {
      */
     @Test
     public void testInit() throws Exception {
-        System.out.println("init");
+        Reporter.println("init");
         BridgeDBRdfHandler.init();
+        UriPattern pattern = UriPattern.byPattern("http://identifiers.org/mgd/MGI:$id");
+        assertEquals("M", pattern.getCode());
+        
+        pattern = UriPattern.byPattern("http://www.informatics.jax.org/marker/MGI:$id");
+        assertEquals("M", pattern.getCode());
+        
+        pattern = UriPattern.byPattern("http://purl.uniprot.org/mgi/$id");
+        assertEquals("M", pattern.getCode());
     }
 
 }

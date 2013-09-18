@@ -98,8 +98,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
     }
                
     public static UriPattern register(String pattern, String code) throws BridgeDBException{
-        System.out.println("register " + pattern + " -> " + code);
-         if (pattern == null || pattern.isEmpty()){
+        if (pattern == null || pattern.isEmpty()){
             throw new BridgeDBException ("Illegal empty or null uriPattern: " + pattern);
         }
         if (code == null || code.isEmpty()){
@@ -162,16 +161,23 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         }
     }        
     
-    public static UriPattern readUriPattern(RepositoryConnection repositoryConnection, Resource uriPatternId, String code) 
-            throws BridgeDBException, RepositoryException{
+    public static UriPattern readUriPattern(RepositoryConnection repositoryConnection, Resource uriPatternId, 
+            String code, String xrefPrefix) throws BridgeDBException, RepositoryException{
         //TODO handle the extra statements
         //checkStatements(repositoryConnection, uriPatternId);
         UriPattern pattern;      
         String prefix = getPossibleSingletonString(repositoryConnection, uriPatternId, BridgeDBConstants.HAS_PREFIX_URI);
         if (prefix == null){
-            pattern = register(uriPatternId.stringValue(), code);
+            String uriPattern = uriPatternId.stringValue();
+            if (xrefPrefix != null){
+                uriPattern = uriPattern.replace("$id", xrefPrefix + "$id");
+            }
+            pattern = register(uriPattern, code);
         } else {
             String postfix = getPossibleSingletonString(repositoryConnection, uriPatternId, BridgeDBConstants.HAS_POSTFIX_URI);
+            if (xrefPrefix != null){
+                prefix = prefix + xrefPrefix;
+            }
             if (postfix == null){
                 pattern = register(prefix + "$id", code);
             } else {
@@ -211,7 +217,6 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
     }
 
     public static Set<UriPattern> byCode(String code){
-        System.out.println(byCode);
         return byCode.get(code);
     }
 

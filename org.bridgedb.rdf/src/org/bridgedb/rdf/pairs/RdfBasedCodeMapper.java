@@ -17,9 +17,9 @@ import org.bridgedb.utils.BridgeDBException;
  */
 public class RdfBasedCodeMapper implements CodeMapper {
 
-    private static HashMap<String,String> xrefExtensions = new HashMap<String,String>();
+    private static HashMap<String,String> xrefPrefixes = new HashMap<String,String>();
     
-    public static void addMapping(String sysCode, String extension) throws BridgeDBException {
+    public static void addXrefPrefix(String sysCode, String extension) throws BridgeDBException {
         if (sysCode == null || sysCode.isEmpty()){
             throw new BridgeDBException ("Illegal sysCode:" + sysCode);
         }
@@ -27,13 +27,13 @@ public class RdfBasedCodeMapper implements CodeMapper {
             throw new BridgeDBException ("Extension should not be null or empty. "
                     + "Just don't call this method if no extension is needed." );
         }
-        if (xrefExtensions.containsKey(sysCode)){
-            if (!extension.equals(xrefExtensions.get(sysCode))){
+        if (xrefPrefixes.containsKey(sysCode)){
+            if (!extension.equals(xrefPrefixes.get(sysCode))){
                 throw new BridgeDBException ("Illegal attempt to change extension for sysCode:" + sysCode 
-                        + " was " + xrefExtensions.get(sysCode) + " so can not set it to " + sysCode);               
+                        + " was " + xrefPrefixes.get(sysCode) + " so can not set it to " + sysCode);               
             } 
         } else {
-            xrefExtensions.put(sysCode, extension);
+            xrefPrefixes.put(sysCode, extension);
         }
     }
     
@@ -41,8 +41,8 @@ public class RdfBasedCodeMapper implements CodeMapper {
     public IdSysCodePair toIdSysCodePair(Xref xref) {
         String sysCode = xref.getDataSource().getSystemCode();
         String id;
-        if (xrefExtensions.containsKey(sysCode)){
-            id = xref.getId().substring(xrefExtensions.get(sysCode).length());
+        if (xrefPrefixes.containsKey(sysCode)){
+            id = xref.getId().substring(xrefPrefixes.get(sysCode).length());
         } else {
             id = xref.getId();
         }
@@ -53,8 +53,8 @@ public class RdfBasedCodeMapper implements CodeMapper {
     public Xref toXref(IdSysCodePair pair) throws BridgeDBException{
         DataSource dataSource = DataSource.getExistingBySystemCode(pair.getSysCode());
         String id;
-        if (xrefExtensions.containsKey(pair.getSysCode())){
-            id = xrefExtensions.get(pair.getSysCode()) + pair.getId();
+        if (xrefPrefixes.containsKey(pair.getSysCode())){
+            id = xrefPrefixes.get(pair.getSysCode()) + pair.getId();
         } else {
             id = pair.getId();
         }

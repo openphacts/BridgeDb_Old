@@ -119,21 +119,13 @@ bridgeDB:DataSource_ChEBI a bridgeDB:DataSource ;
 	bridgeDB:idExample "CHEBI:36927" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "metabolite" ;
-    bridgeDB:isDepricatedBy bridgeDB:DataSource_Chebi ; #depricated to allow place CHEBI: in the prefix
-	bridgeDB:hasOutputUrlPattern <http://www.ebi.ac.uk/chebi/searchId.do?chebiId=$id> ;
-	bridgeDB:hasOutputIdentifiersOrgPattern <http://identifiers.org/obo.chebi/$id> .
+ 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/chebi/searchId.do?chebiId=$id> ;
+	bridgeDB:hasUriPattern <http://identifiers.org/obo.chebi/CHEBI:$id> ; #Deprecated
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/obo.chebi/$id> .
 
-bridgeDB:DataSource_Chebi a bridgeDB:DataSource ;
-	bridgeDB:fullName "Chebi" ;
-	bridgeDB:systemCode "Chebi" ;
-	bridgeDB:mainUrl "http://www.ebi.ac.uk/chebi/" ;
-	bridgeDB:idExample "36927" ;
-	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "metabolite" ;
-    bridgeDB:hasDataType ChemInf:SIO_010004 ;
-	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:$id> ;
-    bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/chebi/CHEBI:$id> ;
-	bridgeDB:hasUriPattern <http://identifiers.org/obo.chebi/CHEBI:$id> ;
+bridgeDB:CodeMapper_ChEBI a bridgeDB:CodeMapper ;
+	bridgeDB:systemCode "Ce" ;
+    bridgeDB:xrefPrefix "CHEBI:";
 	bridgeDB:hasUriPattern <http://purl.org/obo/owl/CHEBI#CHEBI_$id> ;
 	bridgeDB:hasUriPattern <http://bio2rdf.org/chebi:$id> ;
     bridgeDB:hasUriPattern <http://purl.obolibrary.org/obo/CHEBI_$id> .
@@ -402,24 +394,15 @@ bridgeDB:DataSource_GeneOntology a bridgeDB:DataSource ;
 	bridgeDB:mainUrl "http://www.ebi.ac.uk/QuickGO/" ;
 	bridgeDB:idExample "GO:0006915" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "probe" .
-	#bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/QuickGO/GTerm?id=$id> ;
-	#bridgeDB:hasUriPattern <http://identifiers.org/obo.go/$id> ; #Deprecated
-	#bridgeDB:hasUriPattern <http://purl.org/obo/owl/GO#$id> ;
-	#bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/go/$id> ;
-	#bridgeDB:hasWikiPathwaysPattern <http://www.ebi.ac.uk/QuickGO/GTerm?id=$id>
-
-bridgeDB:DataSource_GeneOntology_URI a bridgeDB:DataSource ;
-	bridgeDB:fullName "Gene Ontology URI" ;
-	bridgeDB:systemCode "go/GO:" ;
-	bridgeDB:mainUrl "http://www.ebi.ac.uk/QuickGO/" ;
-	bridgeDB:idExample "0006915" ; #GO: moved to nameSpace to support http://purl.org/obo/owl/GO which uses a _ instead of the :
-	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "probe" ;
-	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:$id> ;
-	bridgeDB:hasUriPattern <http://identifiers.org/obo.go/GO:$id> ; #Deprecated
-	bridgeDB:hasUriPattern <http://purl.org/obo/owl/GO#GO_$id> ;
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/go/GO:$id> .
+	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/QuickGO/GTerm?id=$id> ;
+	bridgeDB:hasUriPattern <http://identifiers.org/obo.go/$id> ; #Deprecated
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/go/$id> .
+
+bridgeDB:CodeMapper_GeneOntology a bridgeDB:CodeMapper ;
+	bridgeDB:systemCode "T" ;
+    bridgeDB:xrefPrefix "GO:";
+	bridgeDB:hasUriPattern <http://purl.org/obo/owl/GO#GO_$id> .
 
 bridgeDB:DataSource_GOA a bridgeDB:DataSource ;
 	bridgeDB:fullName "GOA" ;
@@ -731,8 +714,7 @@ bridgeDB:DataSource_MeSH a bridgeDB:DataSource ;
 	bridgeDB:type "unknown" ;
 	bridgeDB:hasUrlPattern <http://bioportal.bioontology.org/ontologies/1351?p=terms&conceptid=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/mesh/$id> ;
-	bridgeDB:hasUriPattern <http://bio2rdf.org/mesh:$id> ;
-	bridgeDB:hasWikiPathwaysPattern <http://bio2rdf.org/mesh:$id> .
+	bridgeDB:hasUriPattern <http://bio2rdf.org/mesh:$id> .
 
 bridgeDB:DataSource_MGI a bridgeDB:DataSource ;
  	bridgeDB:fullName "MGI" ;
@@ -741,27 +723,14 @@ bridgeDB:DataSource_MGI a bridgeDB:DataSource ;
 	bridgeDB:idExample "MGI:2442292" ;
  	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
  	bridgeDB:type "gene" ;
-	#bridgeDB:hasUrlPattern <http://www.informatics.jax.org/marker/$id> ;
-	#bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/mgd/$id> ;
- 	bridgeDB:Organism bridgeDB:Organism_Mm .
-   ##TO BE confirmed if these are with our without the MGI: prefix
-	##bridgeDB:hasUriPattern <http://bio2rdf.org/mgi:$id> ;
-	##bridgeDB:hasWikiPathwaysPattern <http://bio2rdf.org/mgi:$id> .
-
-bridgeDB:DataSource_MGI_URI a bridgeDB:DataSource ;
-	bridgeDB:fullName "MGI URI" ;
-	bridgeDB:systemCode "MGI_URI" ;
-	bridgeDB:mainUrl "http://www.informatics.jax.org/" ;
-	bridgeDB:idExample "2442292" ;
-	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "gene" ;
-	bridgeDB:hasUrlPattern <http://www.informatics.jax.org/marker/MGI:$id> ;
-	#bridgeDB:hasUriPattern <http://identifiers.org/mgi/MGI%3A$id> ;  #HACK to load linksets for now
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/mgd/MGI:$id> ;
-	bridgeDB:Organism bridgeDB:Organism_Mm ;
-    bridgeDB:hasUriPattern <http://purl.uniprot.org/mgi/$id> .
-   ##TO BE confirmed if these are with our without the MGI: prefix
- 	##bridgeDB:hasUriPattern <http://bio2rdf.org/mgi:MGI:$id> .
+ 	bridgeDB:Organism bridgeDB:Organism_Mm ;
+	bridgeDB:hasUrlPattern <http://www.informatics.jax.org/marker/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/mgd/$id> .
+   
+bridgeDB:CodeMapper_MGI a bridgeDB:CodeMapper ;
+	bridgeDB:systemCode "M" ;
+    bridgeDB:xrefPrefix "MGI:";
+	bridgeDB:hasUriPattern <http://purl.uniprot.org/mgi/$id>  .
 
 bridgeDB:DataSource_miRBase_mature_sequence a bridgeDB:DataSource ;
 	bridgeDB:fullName "miRBase mature sequence" ;

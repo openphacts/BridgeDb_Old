@@ -88,6 +88,13 @@ public class BridgeDBConstants {
     private static final String IDENTIFERS_ORG_PATTERN = "IdentifiersOrgPattern";
     public static final URI HAS_IDENTIFERS_ORG_PATTERN_URI = new URIImpl(PREFIX + "has" + IDENTIFERS_ORG_PATTERN);
  
+    //CodeMapper feilds
+    private static final String CODE_MAPPER = "CodeMapper";
+    public static final URI CODE_MAPPER_URI = new URIImpl(PREFIX + CODE_MAPPER);
+    private static final String XREF_PREFIX = "xrefPrefix";
+    public static final URI XREF_PREFIX_URI = new URIImpl(PREFIX + XREF_PREFIX);
+ 
+    
     public static final URI HAS_DATA_SOURCE = new URIImpl(PREFIX + "hasDataSource");
     public static final URI IS_URI_PATTERN_OF = new URIImpl(PREFIX + "isUriPatternOf");
     
