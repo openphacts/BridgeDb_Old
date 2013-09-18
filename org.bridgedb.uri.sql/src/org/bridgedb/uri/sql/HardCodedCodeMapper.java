@@ -7,9 +7,9 @@ package org.bridgedb.uri.sql;
 import java.util.HashMap;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
+import org.bridgedb.pairs.IdSysCodePair;
+import org.bridgedb.pairs.SyscodeBasedCodeMapper;
 import org.bridgedb.rdf.UriPattern;
-import org.bridgedb.sql.IdSysCodePair;
-import org.bridgedb.sql.SyscodeBasedCodeMapper;
 import org.bridgedb.utils.BridgeDBException;
 
 /**

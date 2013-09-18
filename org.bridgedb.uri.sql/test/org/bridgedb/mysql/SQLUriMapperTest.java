@@ -20,9 +20,7 @@
 package org.bridgedb.mysql;
 
 import java.util.Set;
-import org.bridgedb.DataSource;
-import org.bridgedb.rdf.UriPattern;
-import org.bridgedb.sql.IdSysCodePair;
+import org.bridgedb.pairs.IdSysCodePair;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.sql.TestSqlFactory;
 import org.bridgedb.uri.UriListenerTest;

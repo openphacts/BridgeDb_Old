@@ -33,6 +33,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
+import org.bridgedb.pairs.IdSysCodePair;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.DataSetInfo;

@@ -33,6 +33,8 @@ import org.bridgedb.IDMapperCapabilities;
 import org.bridgedb.IDMapperException;
 import org.bridgedb.Xref;
 import org.bridgedb.impl.InternalUtils;
+import org.bridgedb.pairs.CodeMapper;
+import org.bridgedb.pairs.IdSysCodePair;
 import org.bridgedb.utils.BridgeDBException;
 
 /**

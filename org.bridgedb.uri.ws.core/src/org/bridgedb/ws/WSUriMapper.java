@@ -27,8 +27,8 @@ import java.util.Set;
 import javax.ws.rs.core.Response;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
+import org.bridgedb.pairs.IdSysCodePair;
 import org.bridgedb.rdf.UriPattern;
-import org.bridgedb.sql.IdSysCodePair;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
 import org.bridgedb.uri.Mapping;
@@ -42,7 +42,6 @@ import org.bridgedb.ws.bean.MappingsBean;
 import org.bridgedb.ws.bean.MappingsBySetBean;
 import org.bridgedb.ws.bean.OverallStatisticsBean;
 import org.bridgedb.ws.bean.UriExistsBean;
-import org.bridgedb.ws.bean.UriMappings;
 import org.bridgedb.ws.bean.UriSearchBean;
 import org.bridgedb.ws.bean.XrefBean;
 

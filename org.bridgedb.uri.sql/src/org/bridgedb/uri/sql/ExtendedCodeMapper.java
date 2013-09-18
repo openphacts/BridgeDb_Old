@@ -4,8 +4,8 @@
  */
 package org.bridgedb.uri.sql;
 
+import org.bridgedb.pairs.CodeMapper;
 import org.bridgedb.rdf.UriPattern;
-import org.bridgedb.sql.CodeMapper;
 import org.bridgedb.utils.BridgeDBException;
 
 /**

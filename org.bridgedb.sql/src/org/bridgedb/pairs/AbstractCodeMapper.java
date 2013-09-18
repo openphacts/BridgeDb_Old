@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.bridgedb.sql;
+package org.bridgedb.pairs;
 
 import java.util.HashSet;
 import java.util.Set;
