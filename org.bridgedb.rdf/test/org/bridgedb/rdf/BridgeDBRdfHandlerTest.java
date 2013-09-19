@@ -4,6 +4,7 @@
  */
 package org.bridgedb.rdf;
 
+import java.io.File;
 import org.bridgedb.utils.Reporter;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -29,6 +30,10 @@ public class BridgeDBRdfHandlerTest {
         
         pattern = UriPattern.byPattern("http://purl.uniprot.org/mgi/$id");
         assertEquals("M", pattern.getCode());
+        
+        File file = new File ("test-data/GeneratedDataSource.ttl");
+        System.out.println("writing to " + file.getAbsolutePath());
+        BridgeDBRdfHandler.writeRdfToFile(file);
     }
 
 }

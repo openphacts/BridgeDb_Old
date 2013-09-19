@@ -90,7 +90,8 @@ public class BridgeDBConstants {
  
     //CodeMapper feilds
     private static final String CODE_MAPPER = "CodeMapper";
-    public static final URI CODE_MAPPER_URI = new URIImpl(PREFIX + CODE_MAPPER);
+    public static final String CODE_MAPPER1 = PREFIX + CODE_MAPPER;
+    public static final URI CODE_MAPPER_URI = new URIImpl(CODE_MAPPER1);
     private static final String XREF_PREFIX = "xrefPrefix";
     public static final URI XREF_PREFIX_URI = new URIImpl(PREFIX + XREF_PREFIX);
  

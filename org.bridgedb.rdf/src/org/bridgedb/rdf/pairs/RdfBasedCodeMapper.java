@@ -36,6 +36,10 @@ public class RdfBasedCodeMapper implements CodeMapper {
             xrefPrefixes.put(sysCode, extension);
         }
     }
+
+    public static String getXrefPrefix(String sysCode) {
+        return xrefPrefixes.get(sysCode);
+    }
     
     @Override
     public IdSysCodePair toIdSysCodePair(Xref xref) {

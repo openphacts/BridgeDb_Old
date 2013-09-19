@@ -26,18 +26,15 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import org.bridgedb.DataSource;
 import org.bridgedb.rdf.constants.BridgeDBConstants;
 import org.bridgedb.rdf.constants.RdfConstants;
 import org.bridgedb.utils.BridgeDBException;
 import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.LiteralImpl;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.RepositoryResult;
 
 /**
  *
@@ -47,7 +44,8 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
 
     private final String prefix;
     private final String postfix;
-    private String code;
+    private final String code;
+    private final boolean isDataSourceData;
     
     private static HashMap<String,UriPattern> byPattern = new HashMap<String,UriPattern>();
     private static HashMap<String,Set<UriPattern>> byCode = new HashMap<String,Set<UriPattern>>();
@@ -60,7 +58,8 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         BridgeDBConstants.IS_URI_PATTERN_OF
     }));
               
-    private UriPattern(String pattern, String sysCode) throws BridgeDBException{
+    private UriPattern(String pattern, String sysCode, boolean isDataSourceData) throws BridgeDBException{        
+        System.out.println(pattern + " -> " + sysCode + " " + isDataSourceData);
         int pos = pattern.indexOf("$id");
         if (pos == -1) {
             throw new BridgeDBException("Pattern " + pattern + " does not have $id in it and is not known.");
@@ -75,6 +74,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         }
         patterns.add(this);
         byCode.put(code, patterns);
+        this.isDataSourceData = isDataSourceData;
     }
     
      public String getPrefix(){
@@ -97,7 +97,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         return new TreeSet(byPattern.values());
     }
                
-    public static UriPattern register(String pattern, String code) throws BridgeDBException{
+    public static UriPattern register(String pattern, String code, boolean isDataSourceData) throws BridgeDBException{
         if (pattern == null || pattern.isEmpty()){
             throw new BridgeDBException ("Illegal empty or null uriPattern: " + pattern);
         }
@@ -106,7 +106,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         }
         UriPattern result = byPattern.get(pattern);
         if (result == null){
-            return new UriPattern(pattern, code);
+            return new UriPattern(pattern, code, isDataSourceData);
         }
         if (result.getCode().equals(code)){
             return result;
@@ -162,7 +162,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
     }        
     
     public static UriPattern readUriPattern(RepositoryConnection repositoryConnection, Resource uriPatternId, 
-            String code, String xrefPrefix) throws BridgeDBException, RepositoryException{
+            String code, String xrefPrefix, boolean isDataSourceData) throws BridgeDBException, RepositoryException{
         //TODO handle the extra statements
         //checkStatements(repositoryConnection, uriPatternId);
         UriPattern pattern;      
@@ -172,16 +172,16 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
             if (xrefPrefix != null){
                 uriPattern = uriPattern.replace("$id", xrefPrefix + "$id");
             }
-            pattern = register(uriPattern, code);
+            pattern = register(uriPattern, code, isDataSourceData);
         } else {
             String postfix = getPossibleSingletonString(repositoryConnection, uriPatternId, BridgeDBConstants.HAS_POSTFIX_URI);
             if (xrefPrefix != null){
                 prefix = prefix + xrefPrefix;
             }
             if (postfix == null){
-                pattern = register(prefix + "$id", code);
+                pattern = register(prefix + "$id", code, isDataSourceData);
             } else {
-                pattern = register(prefix + "$id" + postfix, code);
+                pattern = register(prefix + "$id" + postfix, code, isDataSourceData);
             }
         }
         //Add any ither stuff here
@@ -225,5 +225,12 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
      */
     public String getCode() {
         return code;
+    }
+
+    /**
+     * @return the isDataSourceData
+     */
+    public boolean isDataSourceData() {
+        return isDataSourceData;
     }
  }

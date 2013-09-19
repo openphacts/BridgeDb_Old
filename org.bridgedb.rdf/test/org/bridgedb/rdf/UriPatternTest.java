@@ -60,9 +60,9 @@ public class UriPatternTest extends TestUtils{
     @Test
     public void testCompareTo() throws BridgeDBException {
         report("compareTo");
-        UriPattern pattern1 = UriPattern.register("http://www.example.com/UriPatternTest/testCompareTo/1$id", "UriPatternTest" );
-        UriPattern pattern1s = UriPattern.register("https://www.example.com/UriPatternTest/testCompareTo/1$id", "UriPatternTest");
-        UriPattern pattern2 = UriPattern.register("http://www.example.com/UriPatternTest/testCompareTo/2$id", "UriPatternTest");
+        UriPattern pattern1 = UriPattern.register("http://www.example.com/UriPatternTest/testCompareTo/1$id", "UriPatternTest", false );
+        UriPattern pattern1s = UriPattern.register("https://www.example.com/UriPatternTest/testCompareTo/1$id", "UriPatternTest", false);
+        UriPattern pattern2 = UriPattern.register("http://www.example.com/UriPatternTest/testCompareTo/2$id", "UriPatternTest", false);
         assertThat(pattern2.compareTo(pattern1), greaterThan(0));
         assertThat(pattern1.compareTo(pattern2), lessThan(0));
         assertThat(pattern2.compareTo(pattern1s), greaterThan(0));

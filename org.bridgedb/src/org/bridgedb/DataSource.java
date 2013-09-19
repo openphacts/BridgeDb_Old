@@ -481,7 +481,6 @@ public final class DataSource
                 } else if (base.endsWith("/")){
                     base = base.substring(0, base.length()-1);
                 }
-                System.out.println("identifiersOrgBase " + base);
                 return miriamBase(base.substring(IDENTIFIERS_ORG_PREFIX.length()));
             } else {
                 throw new IllegalArgumentException("identifiers.org base must start with " + IDENTIFIERS_ORG_PREFIX + " so can not accept " + base);
