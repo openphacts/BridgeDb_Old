@@ -5,6 +5,7 @@
 package org.bridgedb.rdf;
 
 import java.io.File;
+import org.bridgedb.bio.BioDataSource;
 import org.bridgedb.utils.Reporter;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -21,6 +22,7 @@ public class BridgeDBRdfHandlerTest {
     @Test
     public void testInit() throws Exception {
         Reporter.println("init");
+        BioDataSource.init();
         BridgeDBRdfHandler.init();
         UriPattern pattern = UriPattern.byPattern("http://identifiers.org/mgd/MGI:$id");
         assertEquals("M", pattern.getCode());

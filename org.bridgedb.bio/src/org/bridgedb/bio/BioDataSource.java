@@ -61,7 +61,7 @@ public class BioDataSource
 	public static final DataSource HMDB = DataSource.register (
 		"Ch", "HMDB").asDataSource();
 	public static final DataSource KEGG_COMPOUND = DataSource.register (
-		"Ck", "Kegg Compound").asDataSource();
+		"Ck", "KEGG Compound").asDataSource();
 	public static final DataSource PUBCHEM_SUBSTANCE = DataSource.register (
 		"Cps", "PubChem-substance").asDataSource();
 	public static final DataSource PUBCHEM_COMPOUND = DataSource.register (
@@ -606,6 +606,15 @@ public class BioDataSource
 				if (fields.length > 6 && fields[6].length() > 0) builder.organism(Organism.fromLatinName(fields[6]));					      
 				if (fields.length > 7 && fields[7].length() > 0) builder.primary (fields[7].equals ("1"));					      
 				if (fields.length > 8) builder.urnBase(fields[8]);
+				if (fields.length > 9) {
+                    String patternString = fields[9];
+                    try {
+                        Pattern pattern = Pattern.compile(patternString);
+                        DataSourcePatterns.registerPattern(builder.asDataSource(), pattern);
+                    } catch (Exception ex){
+                        throw new IllegalArgumentException("Unable to parse pattern " + patternString + " for " + builder.asDataSource(), ex);
+                    }    
+                }
 			}
 			
 			InternalUtils.readXmlConfig(

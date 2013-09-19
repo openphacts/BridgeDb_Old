@@ -30,9 +30,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
+import org.bridgedb.DataSourcePatterns;
 import org.bridgedb.Xref;
+import org.bridgedb.bio.BioDataSource;
 import org.bridgedb.pairs.CodeMapper;
 import org.bridgedb.pairs.IdSysCodePair;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
@@ -65,6 +68,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     private static final int POSTFIX_LENGTH = 100;
     private static final int PREDICATE_LENGTH = 100;
     private static final int PREFIX_LENGTH = 400;
+    private static final int REGEX_LENGTH = 400;
 
     public static final String CHAIN_TABLE_NAME = "chain";
     private static final String VIA_TABLE_NAME = "via";
@@ -93,6 +97,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     static final String MAPPING_TARGET_COUNT_COLUMN_NAME = "mappingTargetCount";
     private static final String MIMETYPE_COLUMN_NAME = "mimetype";
     private static final String NAME_COLUMN_NAME = "name";
+    private static final String REGEX_COLUMN_NAME = "regex";
+    
     static final String VIA_DATASOURCE_COLUMN_NAME = "viaDataSource";
     
     private static SQLUriMapper mapper = null;
@@ -103,6 +109,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 
     public synchronized static SQLUriMapper getExisting() throws BridgeDBException{
         if (mapper == null){
+            BioDataSource.init();
             BridgeDBRdfHandler.init();
             CodeMapper codeMapper = new RdfBasedCodeMapper();
             mapper =  new SQLUriMapper(false, codeMapper);
@@ -112,6 +119,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     public synchronized static SQLUriMapper createNew() throws BridgeDBException{
+        BioDataSource.init();
         BridgeDBRdfHandler.init();
         CodeMapper codeMapper = new RdfBasedCodeMapper();
         mapper =  new SQLUriMapper(true, codeMapper);
@@ -162,6 +170,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             sh.execute("CREATE TABLE " + URI_TABLE_NAME
                     + "  (  " + DATASOURCE_COLUMN_NAME + " VARCHAR(" + SYSCODE_LENGTH + ") NOT NULL,   "
                     + "     " + PREFIX_COLUMN_NAME + " VARCHAR(" + PREFIX_LENGTH + ") NOT NULL, "
+                    + "     " + REGEX_COLUMN_NAME + " VARCHAR(" + REGEX_LENGTH + "), "
                     + "     " + POSTFIX_COLUMN_NAME + " VARCHAR(" + POSTFIX_LENGTH + ") NOT NULL "
                     + "  ) ");
             sh.execute("CREATE TABLE " + MIMETYPE_TABLE_NAME
@@ -979,10 +988,19 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     private void registerUriPattern (UriPattern uriPattern) throws BridgeDBException{
         String code = uriPattern.getCode();
         String prefix = uriPattern.getPrefix();
-        String postfix = uriPattern.getPostfix();
         if (prefix.length() > PREFIX_LENGTH){
             throw new BridgeDBException("Prefix Length ( " + prefix.length() + ") is too long for " + prefix);
         }
+        DataSource dataSource = DataSource.getExistingBySystemCode(code);
+        Pattern pattern = DataSourcePatterns.getPatterns().get(dataSource);
+        String regex = null;
+        if (pattern != null){
+            regex = pattern.toString();
+            if (regex.length() > REGEX_LENGTH){
+                throw new BridgeDBException("pattern length ( " + regex.length() + ") is too long for " + regex);
+            }
+        }
+        String postfix = uriPattern.getPostfix();
         if (postfix.length() > POSTFIX_LENGTH){
             throw new BridgeDBException("Postfix Length ( " + prefix.length() + ") is too long for " + prefix);
         }
@@ -995,18 +1013,24 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             throw new BridgeDBException ("UriPattern " + prefix + "$id" + postfix + " already mapped to " + dataSourceKey 
                     + " Which does not match " + code);
         }
-        String query = "INSERT INTO " + URI_TABLE_NAME + " (" 
-                + DATASOURCE_COLUMN_NAME + ", " 
-                + PREFIX_COLUMN_NAME + ", " 
-                + POSTFIX_COLUMN_NAME + ") VALUES "
-                + " ('" + code + "', "
-                + "  '" + prefix + "',"
-                + "  '" + postfix + "')";
+        StringBuilder query = new StringBuilder("INSERT INTO ").append(URI_TABLE_NAME).append(" (") 
+                .append(DATASOURCE_COLUMN_NAME).append(", ") 
+                .append(PREFIX_COLUMN_NAME).append(", ");
+        if (regex != null){
+            query.append(REGEX_COLUMN_NAME).append(", ");
+        }
+        query.append(POSTFIX_COLUMN_NAME).append(") VALUES ")
+                .append(" ('").append(code).append("', ")
+                .append("  '").append(prefix).append("',");
+        if (regex != null){
+            query.append("  '").append(regex).append("',");
+        }
+        query.append("  '").append(postfix).append("')");
         Statement statement = createStatement();
         try {
-            int changed = statement.executeUpdate(query);
+            int changed = statement.executeUpdate(query.toString());
         } catch (SQLException ex) {
-            throw new BridgeDBException ("Error inserting prefix " + prefix + " and postfix " + postfix , ex, query);
+            throw new BridgeDBException ("Error inserting prefix " + prefix + " and postfix " + postfix , ex, query.toString());
         }
     }
 

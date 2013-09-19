@@ -40,7 +40,7 @@ public class SQLListener extends SQLBase implements MappingListener{
 
     //Numbering should not clash with any GDB_COMPAT_VERSION;
     //version number must be even as URI extension uses SQL_COMPAT_VERSION + 1
-	public static final int SQL_COMPAT_VERSION = 24;
+	public static final int SQL_COMPAT_VERSION = 26;
   
     //Maximumn size in database
     protected static final int SYSCODE_LENGTH = 100;
