@@ -16,7 +16,7 @@ bridgeDB:DataSource_Affy a bridgeDB:DataSource ;
 	bridgeDB:idExample "1851_s_at" ;
 	bridgeDB:primary "false"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "probe" ;
-	bridgeDB:hasUrlPattern <http://www.ensembl.org/common/Lucene/Results?species=all;feature=OligoProbe;q=$id> ;
+	bridgeDB:hasUrlPattern <https://www.affymetrix.com/LinkServlet?probeset=$id> ;
 	bridgeDB:hasUriPattern <http://bio2rdf.org/affymetrix:$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://bio2rdf.org/affymetrix:$id> .
 
@@ -32,7 +32,7 @@ bridgeDB:DataSource_BIND a bridgeDB:DataSource ;
     bridgeDB:systemCode "Bi" ;
 	bridgeDB:mainUrl "http://www.bind.ca/" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "pathway" ;
+	bridgeDB:type "interaction" ;
 	bridgeDB:hasUrlPattern <http://www.bind.ca/Action?identifier=bindid&idsearch=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/bind/$id> ;
 	bridgeDB:hasUriPattern <http://bio2rdf.org/bind:$id> ;
@@ -44,7 +44,7 @@ bridgeDB:DataSource_BioCyc a bridgeDB:DataSource ;
 	bridgeDB:mainUrl "http://biocyc.org" ;
 	bridgeDB:idExample "ECOLI:CYT-D-UBIOX-CPLX" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "unknown" ;
+	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://biocyc.org/getid?id=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/biocyc/$id> ;
 	bridgeDB:hasUriPattern <http://bio2rdf.org/biocyc:$id> ;
@@ -56,7 +56,7 @@ bridgeDB:DataSource_BioGrid a bridgeDB:DataSource ;
 	bridgeDB:mainUrl "http://thebiogrid.org/" ;
 	bridgeDB:idExample "31623" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "probe" ;
+	bridgeDB:type "interaction" ;
 	bridgeDB:hasUrlPattern <http://thebiogrid.org/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/biogrid/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://thebiogrid.org/$id> .
@@ -108,7 +108,7 @@ bridgeDB:DataSource_CCDS a bridgeDB:DataSource ;
 	bridgeDB:systemCode "Cc" ;
 	bridgeDB:idExample "CCDS43989" ;
 	bridgeDB:primary "false"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "probe" ;
+	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi?REQUEST=ALLFIELDS&DATA=$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi?REQUEST=ALLFIELDS&DATA=$id> .
 
@@ -293,8 +293,8 @@ bridgeDB:DataSource_drugbankDrugs a bridgeDB:DataSource ;
 	bridgeDB:hasUriPattern <http://bio2rdf.org/drugbank:$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugs/$id> .
 
-bridgeDB:DataSource_Ecoli a bridgeDB:DataSource ;
-	bridgeDB:fullName "Ecoli" ;
+bridgeDB:DataSource_EcoGene a bridgeDB:DataSource ;
+	bridgeDB:fullName "EcoGene" ;
 	bridgeDB:systemCode "Ec" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
@@ -307,8 +307,8 @@ bridgeDB:DataSource_EMBL a bridgeDB:DataSource ;
 	bridgeDB:idExample "X58356" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
-	bridgeDB:hasUrlPattern <http://srs.ebi.ac.uk/srsbin/cgi-bin/wgetz?-page+EntryPage+-e+[EMBL:$id]+-view+EmblEntry> ;
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/insdc/$id> ;
+    bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/ena/data/view/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/ena.embl/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://srs.ebi.ac.uk/srsbin/cgi-bin/wgetz?-page+EntryPage+-e+[EMBL:$id]+-view+EmblEntry> .
 
 bridgeDB:DataSource_Ena a bridgeDB:DataSource ;
@@ -374,7 +374,7 @@ bridgeDB:DataSource_GenBank a bridgeDB:DataSource ;
 	bridgeDB:fullName "GenBank" ;
 	bridgeDB:systemCode "G" ;
 	bridgeDB:primary "false"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "probe" ;
+	bridgeDB:type "gene" ;
 	bridgeDB:hasUriPattern <http://bio2rdf.org/genbank:$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://bio2rdf.org/genbank:$id> .
 
@@ -394,7 +394,7 @@ bridgeDB:DataSource_GeneOntology a bridgeDB:DataSource ;
 	bridgeDB:mainUrl "http://www.ebi.ac.uk/QuickGO/" ;
 	bridgeDB:idExample "GO:0006915" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "probe" ;
+	bridgeDB:type "ontology" ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/QuickGO/GTerm?id=$id> ;
 	bridgeDB:hasUriPattern <http://identifiers.org/obo.go/$id> ; #Deprecated
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/go/$id> .
@@ -443,7 +443,7 @@ bridgeDB:DataSource_Gramene_Literature a bridgeDB:DataSource ;
 	bridgeDB:mainUrl "http://www.gramene.org/" ;
 	bridgeDB:idExample "6200" ;
 	bridgeDB:primary "false"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "probe" ;
+	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.gramene.org/db/literature/pub_search?ref_id=$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.gramene.org/db/literature/pub_search?ref_id=$id> .
 
@@ -463,7 +463,7 @@ bridgeDB:DataSource_Gramene_Pathway a bridgeDB:DataSource ;
 	bridgeDB:mainUrl "http://www.gramene.org/pathway" ;
 	bridgeDB:idExample "AAH72400" ;
 	bridgeDB:primary "false"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "probe" .
+	bridgeDB:type "pathway" .
 
 bridgeDB:DataSource_Gramene_Rice a bridgeDB:DataSource ;
 	bridgeDB:fullName "Gramene Rice" ;
@@ -523,7 +523,7 @@ bridgeDB:DataSource_HMDB a bridgeDB:DataSource ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.hmdb.ca/metabolites/$id> .
 
 bridgeDB:DataSource_HomoloGene a bridgeDB:DataSource ;
-	bridgeDB:fullName "HomoloGene" ;
+	bridgeDB:fullName "Hg" ;
     bridgeDB:systemCode "homologene" ;
 	bridgeDB:mainUrl "http://www.ncbi.nlm.nih.gov/homologene/" ;
 	bridgeDB:idExample "1000" ;
@@ -566,7 +566,7 @@ bridgeDB:DataSource_IPI a bridgeDB:DataSource ;
 	bridgeDB:mainUrl "http://www.ebi.ac.uk/IPI" ;
 	bridgeDB:idExample "IPI00000001" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "probe" ;
+	bridgeDB:type "protein" ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/cgi-bin/dbfetch?db=IPI&id=$id&format=default> ;
     bridgeDB:hasUriPattern <http://purl.uniprot.org/ipi/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/ipi/$id> ;
@@ -582,7 +582,7 @@ bridgeDB:DataSource_IRGSP_Gene a bridgeDB:DataSource ;
 	bridgeDB:type "gene" .
 
 bridgeDB:DataSource_Kegg_Compound a bridgeDB:DataSource ;
-	bridgeDB:fullName "Kegg Compound" ;
+	bridgeDB:fullName "KEGG Compound" ;
 	bridgeDB:systemCode "Ck" ;
 	bridgeDB:mainUrl "http://www.genome.jp/kegg/ligand.html" ;
 	bridgeDB:idExample "C12345" ;
@@ -677,7 +677,7 @@ bridgeDB:DataSource_KEGG_Reaction a bridgeDB:DataSource ;
 
 bridgeDB:DataSource_LIPID_MAPS a bridgeDB:DataSource ;
 	bridgeDB:fullName "LIPID MAPS" ;
-	bridgeDB:systemCode "lipidmaps" ;
+	bridgeDB:systemCode "Lm" ;
 	bridgeDB:mainUrl "http://www.lipidmaps.org" ;
 	bridgeDB:idExample "LMPR0102010012" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
@@ -738,7 +738,7 @@ bridgeDB:DataSource_miRBase_mature_sequence a bridgeDB:DataSource ;
 	bridgeDB:mainUrl "http://www.mirbase.org/" ;
 	bridgeDB:idExample "MIMAT0000001" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "unknown" ;
+	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.mirbase.org/cgi-bin/mature.pl?mature_acc=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/mirbase.mature/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.mirbase.org/cgi-bin/mature.pl?mature_acc=$id> .
@@ -1018,21 +1018,24 @@ bridgeDB:DataSource_UCSC_Genome_Browser a bridgeDB:DataSource ;
 bridgeDB:DataSource_UniGene a bridgeDB:DataSource ;
 	bridgeDB:fullName "UniGene" ;
 	bridgeDB:systemCode "U" ;
+    bridgeDB:idExample "Hs.553708" ;
+	bridgeDB:mainUrl "http://www.ncbi.nlm.nih.gov/unigene" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "gene" ;
+    bridgeDB:hasUrlPattern <http://www.ncbi.nlm.nih.gov/UniGene/clust.cgi?UGID=1548618&SEARCH=$id> ;
+	bridgeDB:hasUriPattern <http://purl.uniprot.org/unigene/$id> .
+
+bridgeDB:DataSource_UniGene_URI a bridgeDB:DataSource ;
+	bridgeDB:fullName "UniGene number" ;
+	bridgeDB:systemCode "unigene" ;
 	bridgeDB:mainUrl "http://www.ncbi.nlm.nih.gov/unigene" ;
 	bridgeDB:idExample "4900" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "unknown" ;
+	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.ncbi.nlm.nih.gov/unigene?term=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/unigene/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.ncbi.nlm.nih.gov/unigene?term=$id> .
 
-bridgeDB:DataSource_UniGene_URI a bridgeDB:DataSource ;
-	bridgeDB:fullName "UniGene URI" ;
-	bridgeDB:systemCode "UniGene_URI" ;
-	bridgeDB:mainUrl "http://www.ncbi.nlm.nih.gov/unigene" ;
-	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "unknown" ;
-	bridgeDB:hasUrlPattern <http://purl.uniprot.org/unigene/$id> .
 
 bridgeDB:DataSource_Uniprot_Enzyme a bridgeDB:DataSource ;
 	bridgeDB:fullName "Uniprot Enzyme" ;
@@ -1043,19 +1046,18 @@ bridgeDB:DataSource_Uniprot_Enzyme a bridgeDB:DataSource ;
 	bridgeDB:hasWikiPathwaysPattern <http://purl.uniprot.org/enzyme/$id> .
 
 bridgeDB:DataSource_Uniprot_TrEMBL a bridgeDB:DataSource ;
-	bridgeDB:fullName "Uniprot" ;
+	bridgeDB:fullName "Uniprot-TrEMBL" ;
 	bridgeDB:alternativeFullName "Uniprot/TrEMBL" ;
 	bridgeDB:systemCode "S" ;
-	bridgeDB:mainUrl "http://www.ebi.uniprot.org/" ;
+	bridgeDB:mainUrl "http://www.uniprot.org/" ;
 	bridgeDB:idExample "P62158" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "protein" ;
-	bridgeDB:hasUrlPattern <http://www.ebi.uniprot.org/entry/$id> ;
+	bridgeDB:hasUrlPattern <http://www.uniprot.org/uniprot/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/uniprot/$id> ;
+	bridgeDB:hasUriPattern <http://www.ebi.uniprot.org/entry/$id> ;
 	bridgeDB:hasUriPattern <http://purl.uniprot.org/uniprot/$id> ;
-	bridgeDB:hasWikiPathwaysPattern <http://purl.uniprot.org/uniprot/$id> ;
-    bridgeDB:hasUriPattern <http://bio2rdf.org/uniprot:$id> ;
-	bridgeDB:hasUriPattern <http://www.uniprot.org/uniprot/$id> .
+    bridgeDB:hasUriPattern <http://bio2rdf.org/uniprot:$id> .
 
 bridgeDB:DataSource_Wheat_gene_catalog a bridgeDB:DataSource ;
 	bridgeDB:fullName "Wheat gene catalog" ;
