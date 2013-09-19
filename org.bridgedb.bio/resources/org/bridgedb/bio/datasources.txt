@@ -42,7 +42,7 @@ Enzyme Nomenclature	E	http://www.ebi.ac.uk/intenz/	http://www.ebi.ac.uk/intenz/q
 FlyBase	F	http://flybase.org/	http://flybase.org/reports/$id.html	FBgn0011293	gene	Drosophila melanogaster	1	urn:miriam:flybase	^FB\w{2}\d{7}$	FlyBase
 GenBank	G	http://www.ncbi.nlm.nih.gov/genbank/	http://www.ncbi.nlm.nih.gov/nuccore/$id	NW_004190323	gene		0	G	(\w\d{5})|(\w{2}\d{6})|(\w{3}\d{5})	GenBank
 Gene Wiki	Gw	http://en.wikipedia.org/wiki/Portal:Gene_Wiki	http://plugins.biogps.org/cgi-bin/wp.cgi?id=$id	1017	gene		0	Gw	\d+	Gene Wiki
-GeneOntology	T	http://www.ebi.ac.uk/QuickGO/	http://www.ebi.ac.uk/QuickGO/GTerm?id=$id	GO:0006915	ontology		0	urn:miriam:obo.go	^GO:\d{7}$	Gene Ontology
+GeneOntology	T	http://www.ebi.ac.uk/QuickGO/	http://www.ebi.ac.uk/QuickGO/GTerm?id=$id	GO:0006915	ontology		0	urn:miriam:go	^GO:\d{7}$	Gene Ontology
 Gramene Arabidopsis	EnAt	http://www.gramene.org/	http://www.gramene.org/Arabidopsis_thaliana/Gene/Summary?g=$id	ATMG01360-TAIR-G	gene	Arabidopsis thaliana	1	EnAt	AT[\dCM]G\d{5}\-TAIR\-G	Grameen Arabidopsis
 Gramene Genes DB	Gg	http://www.gramene.org/	http://www.gramene.org/db/genes/search_gene?acc=$id	GR:0060184	gene		1	Gg	GR:\d+	Gramene Genes
 Gramene Literature	Gl	http://www.gramene.org/	http://www.gramene.org/db/literature/pub_search?ref_id=$id	6200	gene		0	Gl		Gramene Literature
@@ -118,7 +118,7 @@ TTD Drug	Td	http://bidd.nus.edu.sg/group/cjttd/TTD_HOME.asp	http://bidd.nus.edu.
 TTD Target	Tt	http://bidd.nus.edu.sg/group/cjttd/TTD_HOME.asp	http://bidd.nus.edu.sg/group/cjttd/ZFTTDDetail.asp?ID=$id	TTDS00056	protein		1	urn:miriam:ttd.target	^TTDS\d+$	TTD Target
 TubercuList	Tb	http://tuberculist.epfl.ch	http://tuberculist.epfl.ch/quicksearch.php?gene+name=$id	Rv0064	gene	Mycobacterium tuberculosis	1	Tb	Rv\d{4}(A|B|c|\.\d)?	TubercuList
 UCSC Genome Browser	Uc	http://genome.ucsc.edu/	http://genome.ucsc.edu/cgi-bin/hgTracks?position=$id	uc001tyh.1	gene		1	Uc	uc\d{3}[a-z]{3}\.\d	UCSC Genome Browser
-UniGene	U	http://www.ncbi.nlm.nih.gov/sites/entrez?db=unigene	http://www.ncbi.nlm.nih.gov/UniGene/clust.cgi?UGID=1548618&SEARCH=$id	Hs.553708	gene		1	U	[A-Z][a-z][a-z]?\.\d+	UniGene
+UniGene	U	http://www.ncbi.nlm.nih.gov/unigene	http://www.ncbi.nlm.nih.gov/UniGene/clust.cgi?UGID=1548618&SEARCH=$id	Hs.553708	gene		1	U	[A-Z][a-z][a-z]?\.\d+	UniGene
 Unipathway	Up	http://www.grenoble.prabi.fr/obiwarehouse/unipathway	http://www.grenoble.prabi.fr/obiwarehouse/unipathway/upa?upid=$id	UPA00206	pathway		1	urn:miriam:unipathway	^UPA\d{5}$	Unipathway
 Uniprot-TrEMBL	S	http://www.uniprot.org/	http://www.uniprot.org/uniprot/$id	P62158	protein		1	urn:miriam:uniprot	^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])$	UniProtKB/TrEMBL
 Uniprot-SwissProt	Sp	http://www.uniprot.org/	http://www.uniprot.org/uniprot/$id	CALM_HUMAN	protein		1	Sp	^[A-Z0-9]+_[A-Z]+$	UniProtKB/Swiss-Prot
