@@ -67,11 +67,9 @@ import org.openrdf.sail.memory.MemoryStore;
 public class BridgeDBRdfHandler extends RdfBase{
    
     static boolean initialized = false;
-    public static String DEFAULT_BASE_URI = "http://no/BaseURI/Set/";
-    public static RDFFormat DEFAULT_FILE_FORMAT = RDFFormat.TURTLE;
     public static final String CONFIG_FILE_NAME = "DataSource.ttl";
 
-    static final Logger logger = Logger.getLogger(BridgeDBRdfHandler.class);
+    private static final Logger logger = Logger.getLogger(BridgeDBRdfHandler.class);
 
     private HashMap<Resource, DataSource> dataSourceRegister = new HashMap<Resource, DataSource>();
     private HashMap<Resource, UriPattern> uriPatternRegister = new HashMap<Resource, UriPattern>();

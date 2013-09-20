@@ -32,6 +32,7 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
+import org.openrdf.rio.RDFFormat;
 
 /**
  *
@@ -39,6 +40,7 @@ import org.openrdf.repository.RepositoryResult;
  */
 public abstract class RdfBase {
     public static String DEFAULT_BASE_URI = "http://no/BaseURI/Set/";
+    public static RDFFormat DEFAULT_FILE_FORMAT = RDFFormat.TURTLE;
 
     private static final Logger logger = Logger.getLogger(RdfBase.class);
     
@@ -136,7 +138,7 @@ public abstract class RdfBase {
         return results;
     }
     
-    static void shutDown(Repository repository, RepositoryConnection repositoryConnection){
+    public static void shutDown(Repository repository, RepositoryConnection repositoryConnection){
         if (repositoryConnection != null){
             try {            
                 repositoryConnection.close();
