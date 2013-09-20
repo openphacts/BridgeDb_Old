@@ -484,7 +484,8 @@ bridgeDB:DataSource_HGNC a bridgeDB:DataSource ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.genenames.org/data/hgnc_data.php?match=$id> ;
 	bridgeDB:Organism bridgeDB:Organism_Hs ;
-	bridgeDB:hasWikiPathwaysPattern <http://www.genenames.org/data/hgnc_data.php?match=$id> .
+ 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/hgnc.symbol/$id> .
+
 
 bridgeDB:DataSource_HGNC_Accession_number a bridgeDB:DataSource ;
 	bridgeDB:fullName "HGNC Accession number" ;
@@ -498,17 +499,6 @@ bridgeDB:DataSource_HGNC_Accession_number a bridgeDB:DataSource ;
 	bridgeDB:Organism bridgeDB:Organism_Hs ;
 	bridgeDB:hasUriPattern <http://bio2rdf.org/hgnc:$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://bio2rdf.org/hgnc:$id> .
-
-bridgeDB:DataSource_HGNC_Symbol a bridgeDB:DataSource ;
-	bridgeDB:fullName "HGNC Symbol Collection has restriction(s) logo" ;
-	bridgeDB:systemCode "hgnc.symbol" ;
-	bridgeDB:mainUrl "http://www.genenames.org" ;
-	bridgeDB:idExample "DAPK1" ;
-	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "gene" ;
-	#Unused as shared with HGNC bridgeDB:hasUrlPattern <http://www.genenames.org/data/hgnc_data.php?match=$id> ;
-    bridgeDB:hasUrlPattern <http://identifiers.org/hgnc.symbol/$id>;
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/hgnc.symbol/$id> .
 
 bridgeDB:DataSource_HMDB a bridgeDB:DataSource ;
 	bridgeDB:fullName "HMDB" ;

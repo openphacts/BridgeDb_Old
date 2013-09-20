@@ -771,16 +771,6 @@ bridgeDB:DataSource_HGNC_Accession_number a bridgeDB:DataSource ;
 	bridgeDB:hasRegexPattern "^(HGNC:)?\\d{1,5}$" ;
 	bridgeDB:hasUriPattern <http://bio2rdf.org/hgnc:$id> .
 
-bridgeDB:DataSource_HGNC_Symbol_Collection_has_restriction_s_logo a bridgeDB:DataSource ;
-	bridgeDB:fullName "HGNC Symbol Collection has restriction(s) logo" ;
-	bridgeDB:systemCode "hgnc.symbol" ;
-	bridgeDB:mainUrl "http://www.genenames.org" ;
-	bridgeDB:idExample "DAPK1" ;
-	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "gene" ;
-	bridgeDB:hasUrlPattern <http://identifiers.org/hgnc.symbol/$id> ;
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/hgnc.symbol/$id> .
-
 bridgeDB:DataSource_HMDB a bridgeDB:DataSource ;
 	bridgeDB:fullName "HMDB" ;
 	bridgeDB:systemCode "Ch" ;
@@ -1709,7 +1699,7 @@ bridgeDB:DataSource_WikiGenes a bridgeDB:DataSource ;
 	bridgeDB:primary "false"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.wikigenes.org/e/gene/e/$id.html> ;
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/wikigene/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/wikigenes/$id> ;
 	bridgeDB:hasRegexPattern "" .
 
 bridgeDB:DataSource_WikiPathways a bridgeDB:DataSource ;
@@ -2268,8 +2258,8 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/uniprot/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/uniprot/" .
 
-<http://identifiers.org/wikigene/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/wikigene/" .
+<http://identifiers.org/wikigenes/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/wikigenes/" .
 
 <http://identifiers.org/wikipathways/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/wikipathways/" .
