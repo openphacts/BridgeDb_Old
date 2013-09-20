@@ -817,6 +817,9 @@ public final class DataSource
 		DataSource current = null;
 		
         String key = base.substring(IDENTIFIERS_ORG_PREFIX.length());
+        if (key.endsWith("/")){
+            key = key.substring(0, key.length()-1);
+        }
         return byMiriamBase.get(key);
     }
 	
