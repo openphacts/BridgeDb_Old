@@ -48,6 +48,7 @@ public class IdentifersOrgReader extends RdfBase {
         multiples.add("http://purl.uniprot.org/uniprot/$id");
         multiples.add("http://www.gramene.org/db/genes/search_gene?acc=$id");
         multiples.add("http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=$id");
+        multiples.add("http://www.ncbi.nlm.nih.gov/protein/$id");
     }
  
     private void doParseRdfInputStream(InputStream stream) throws BridgeDBException {
@@ -73,7 +74,8 @@ public class IdentifersOrgReader extends RdfBase {
 
     public static void main(String[] args) throws Exception {
         BioDataSource.init();
-        BridgeDBRdfHandler.init();
+        UriPattern.registerUriPatterns();
+        //BridgeDBRdfHandler.init();
         URL url = new URL("http://www.ebi.ac.uk/miriam/demo/export/registry.ttl");
         InputStream stream = url.openStream();
         //File file = new File("c:/Temp/registry.ttl");
@@ -81,6 +83,10 @@ public class IdentifersOrgReader extends RdfBase {
         IdentifersOrgReader reader = new IdentifersOrgReader();
         reader.doParseRdfInputStream(stream);
         stream.close();
+        
+        File mergedFile = new File("resources/IdentifiersOrgDataSource.ttl");
+        BridgeDBRdfHandler.writeRdfToFile(mergedFile);
+        BridgeDBRdfHandler.parseRdfFile(mergedFile);  
     }
 
     private void showVoidUriSpaces(RepositoryConnection repositoryConnection) throws Exception{
@@ -95,7 +101,6 @@ public class IdentifersOrgReader extends RdfBase {
             if (dataSource == null){
                 dataSource = readDataSource(repositoryConnection, catalogRecord);
             }
-            System.out.println(dataSource + "  " + statement.getObject().stringValue());
             loadUriPatterns(repositoryConnection, catalogRecord, dataSource);
             count++;
         }
@@ -105,6 +110,9 @@ public class IdentifersOrgReader extends RdfBase {
     private DataSource readDataSource(RepositoryConnection repositoryConnection, Resource catalogRecord) throws Exception{
         String sysCode = getSingletonString(repositoryConnection, catalogRecord, IdenitifiersOrgConstants.NAMESPACE_URI);
         String fullName = getSingletonString(repositoryConnection, catalogRecord, DCatConstants.TITLE_URI);
+        if (fullName.equals("UniGene")){
+            fullName = "UniGene (identifiers.org)";
+        }
         DataSource ds = DataSource.register(sysCode, fullName).asDataSource();
         return ds;
     }
