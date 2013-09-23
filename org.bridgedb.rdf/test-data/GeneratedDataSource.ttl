@@ -145,7 +145,7 @@ bridgeDB:DataSource_ChEBI a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "metabolite" ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/chebi/searchId.do?chebiId=$id> ;
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/obo.chebi/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/chebi/$id> ;
 	bridgeDB:hasRegexPattern "^CHEBI:\\d+$" .
 
 bridgeDB:CodeMapper_ChEBI a bridgeDB:CodeMapper ;
@@ -1183,14 +1183,17 @@ bridgeDB:DataSource_Pathway_Commons a bridgeDB:DataSource ;
 
 bridgeDB:DataSource_Pathway_Ontology a bridgeDB:DataSource ;
 	bridgeDB:fullName "Pathway Ontology" ;
-	bridgeDB:systemCode "obo.pw/PW:" ;
+	bridgeDB:systemCode "pw" ;
 	bridgeDB:mainUrl "http://rgd.mcw.edu/rgdweb/ontology/search.html" ;
-	bridgeDB:idExample "0000208" ;
+	bridgeDB:idExample "PW:0000208" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "unknown" ;
-	bridgeDB:hasUrlPattern <http://rgd.mcw.edu/rgdweb/ontology/annot.html?acc_id=PW:$id> ;
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/obo.pw/PW:$id/$id> ;
-	bridgeDB:hasUriPattern <http://purl.bioontology.org/ontology/PW/PW:$id> , <http://purl.obolibrary.org/obo/PW_$id> , <http://www.ebi.ac.uk/ontology-lookup/?termId=PW:$id> .
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/pw/$id> .
+
+bridgeDB:CodeMapper_Pathway_Ontology a bridgeDB:CodeMapper ;
+	bridgeDB:systemCode "pw" ;
+	bridgeDB:xrefPrefix "PW:" ;
+	bridgeDB:hasUriPattern <http://identifiers.org/obo.pw/PW:$id> , <http://purl.bioontology.org/ontology/PW/PW:$id> , <http://purl.obolibrary.org/obo/PW_$id> , <http://rgd.mcw.edu/rgdweb/ontology/annot.html?acc_id=PW:$id> , <http://www.ebi.ac.uk/ontology-lookup/?termId=PW:$id> .
 
 bridgeDB:DataSource_PDB a bridgeDB:DataSource ;
 	bridgeDB:fullName "PDB" ;
@@ -2099,6 +2102,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/cas/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/cas/" .
 
+<http://identifiers.org/chebi/CHEBI:$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/chebi/CHEBI:" .
+
 <http://identifiers.org/chembl.compound/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/chembl.compound/" .
 
@@ -2204,9 +2210,6 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/ncbigene/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/ncbigene/" .
 
-<http://identifiers.org/obo.chebi/CHEBI:$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/obo.chebi/CHEBI:" .
-
 <http://identifiers.org/obo.chebi/CHEBI:CHEBI:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/obo.chebi/CHEBI:CHEBI:" .
 
@@ -2233,6 +2236,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://identifiers.org/pubmed/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/pubmed/" .
+
+<http://identifiers.org/pw/PW:$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/pw/PW:" .
 
 <http://identifiers.org/reactome/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/reactome/" .
