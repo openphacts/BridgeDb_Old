@@ -61,7 +61,7 @@ public abstract class RdfBase {
         return id;
     }
 
-    static String getSingletonString(RepositoryConnection repositoryConnection, Resource id, URI predicate) 
+    public static String getSingletonString(RepositoryConnection repositoryConnection, Resource id, URI predicate) 
             throws BridgeDBException, RepositoryException {
         String result = getPossibleSingletonString(repositoryConnection, id, predicate);
         if (result == null){
