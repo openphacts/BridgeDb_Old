@@ -41,15 +41,21 @@ public class IdentifersOrgReader extends RdfBase {
     
     static {
         multiples = new HashSet();
-        multiples.add("http://www.ebi.ac.uk/ena/data/view/$id");
-        multiples.add("http://www.genome.jp/dbget-bin/www_bget?$id");
-        multiples.add("http://www.chemspider.com/$id");
-        multiples.add("http://www.uniprot.org/uniprot/$id");
+        multiples.add("http://arabidopsis.org/servlets/TairObject?accession=$id");
         multiples.add("http://purl.uniprot.org/uniprot/$id");
+        multiples.add("http://www.chemspider.com/$id");
+        multiples.add("http://www.ebi.ac.uk/ena/data/view/$id");
+        multiples.add("http://www.ebi.ac.uk/ontology-lookup/?termId=$id");
+        multiples.add("http://www.genome.jp/dbget-bin/www_bget?$id");
+        multiples.add("http://www.genome.jp/kegg-bin/show_organism?org=$id");
         multiples.add("http://www.gramene.org/db/genes/search_gene?acc=$id");
+        multiples.add("http://linkedchemistry.info/chembl/chemblid/$id");
         multiples.add("http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=$id");
+        multiples.add("http://www.ncbi.nlm.nih.gov/nucest/$id");
         multiples.add("http://www.ncbi.nlm.nih.gov/protein/$id");
-    }
+        multiples.add("http://stke.sciencemag.org/cgi/cm/stkecm;$id");
+        multiples.add("http://www.uniprot.org/uniprot/$id");
+     }
  
     private void doParseRdfInputStream(InputStream stream) throws BridgeDBException {
         Repository repository = null;
@@ -99,7 +105,7 @@ public class IdentifersOrgReader extends RdfBase {
             DataSource dataSource = DataSource.getByIdentiferOrgBase(statement.getObject().stringValue());
             Resource catalogRecord = statement.getSubject();  
             if (dataSource == null){
-                dataSource = readDataSource(repositoryConnection, catalogRecord);
+                dataSource = readDataSource(repositoryConnection, catalogRecord, statement.getObject().stringValue());
             }
             loadUriPatterns(repositoryConnection, catalogRecord, dataSource);
             count++;
@@ -107,17 +113,21 @@ public class IdentifersOrgReader extends RdfBase {
         System.out.println("found " + count);
     }
 
-    private DataSource readDataSource(RepositoryConnection repositoryConnection, Resource catalogRecord) throws Exception{
+    private DataSource readDataSource(RepositoryConnection repositoryConnection, Resource catalogRecord, 
+            String identiferOrgBase) throws Exception{
         String sysCode = getSingletonString(repositoryConnection, catalogRecord, IdenitifiersOrgConstants.NAMESPACE_URI);
         String fullName = getSingletonString(repositoryConnection, catalogRecord, DCatConstants.TITLE_URI);
         if (fullName.equals("UniGene")){
-            fullName = "UniGene (identifiers.org)";
+            fullName = "UniGene number";
         }
-        DataSource ds = DataSource.register(sysCode, fullName).asDataSource();
+        DataSource ds = DataSource.register(sysCode, fullName)
+                .identifiersOrgBase(identiferOrgBase)
+                .asDataSource();
         return ds;
     }
 
     private void loadUriPatterns(RepositoryConnection repositoryConnection, Resource CatalogRecord, DataSource dataSource) throws Exception{
+        System.out.println("Looking for " + CatalogRecord);
         RepositoryResult<Statement> statements = 
                 repositoryConnection.getStatements(CatalogRecord, DCatConstants.DISTRIBUTION_URI, null, true);
         while(statements.hasNext()) {
@@ -132,7 +142,8 @@ public class IdentifersOrgReader extends RdfBase {
                     System.out.println("\t Skipping shared " + patternString);
                 } else {
                     System.out.println("\t" + patternString);
-                    UriPattern pattern = UriPattern.byPattern(accessUrlStatement.getObject().stringValue());
+                    //UriPattern pattern = UriPattern.byPattern(accessUrlStatement.getObject().stringValue());
+                    UriPattern pattern = UriPattern.register(patternString, dataSource.getSystemCode(), false);
                     String dataSourceSysCode = null;
                     if (dataSource != null){
                         dataSourceSysCode = dataSource.getSystemCode();
