@@ -23,6 +23,8 @@ public class BridgeDBRdfHandlerTest {
     public void testInit() throws Exception {
         Reporter.println("init");
         BioDataSource.init();
+        UriPattern.registerUriPatterns();
+        UriPattern.refreshUriPatterns(); 
         BridgeDBRdfHandler.init();
         UriPattern pattern = UriPattern.byPattern("http://identifiers.org/mgd/MGI:$id");
         assertEquals("M", pattern.getCode());

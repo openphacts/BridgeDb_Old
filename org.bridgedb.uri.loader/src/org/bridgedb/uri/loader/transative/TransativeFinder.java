@@ -538,7 +538,7 @@ public class TransativeFinder extends SQLBase{
             limitedSysCodes.add(DataSource.getExistingByFullName("ChEMBL target component").getSystemCode());
             limitedSysCodes.add(DataSource.getExistingByFullName("Uniprot-TrEMBL").getSystemCode());
             limitedSysCodes.add(DataSource.getExistingByFullName("Ensembl").getSystemCode());
-            limitedSysCodes.add(DataSource.getExistingByFullName("Drugbank Drugs").getSystemCode());
+            limitedSysCodes.add(DataSource.getExistingByFullName("DrugBank").getSystemCode());
             limitedSysCodes.add(DataSource.getExistingByFullName("HMDB").getSystemCode());
         }
         return limitedSysCodes;

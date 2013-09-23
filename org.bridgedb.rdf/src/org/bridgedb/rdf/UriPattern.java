@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import org.bridgedb.DataSource;
 import org.bridgedb.rdf.constants.BridgeDBConstants;
 import org.bridgedb.rdf.constants.RdfConstants;
 import org.bridgedb.utils.BridgeDBException;
@@ -59,7 +60,6 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
     }));
               
     private UriPattern(String pattern, String sysCode, boolean isDataSourceData) throws BridgeDBException{        
-        System.out.println(pattern + " -> " + sysCode + " " + isDataSourceData);
         int pos = pattern.indexOf("$id");
         if (pos == -1) {
             throw new BridgeDBException("Pattern " + pattern + " does not have $id in it and is not known.");
@@ -91,6 +91,22 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
     
     public static void refreshUriPatterns() throws BridgeDBException{
         BridgeDBRdfHandler.init();
+        registerUriPatterns();
+    }
+
+    public static void registerUriPatterns() throws BridgeDBException{
+        for (DataSource dataSource:DataSource.getDataSources()){
+            if (!dataSource.getSystemCode().equals("Sp")){
+                String url = dataSource.getKnownUrl("$id");
+                if (url != null){
+                    register(url, dataSource.getSystemCode(), true);
+                }
+            }
+            String identifersOrgUrl = dataSource.getIdentifiersOrgUri("$id");
+            if (identifersOrgUrl != null){
+                register(identifersOrgUrl, dataSource.getSystemCode(), true);
+            }
+        }
     }
 
     public static SortedSet<UriPattern> getUriPatterns() {
