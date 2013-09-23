@@ -281,8 +281,8 @@ bridgeDB:DataSource_drugbankTarget a bridgeDB:DataSource ;
 	bridgeDB:hasWikiPathwaysPattern <http://www4.wiwiss.fu-berlin.de/drugbank/resource/targets/$id> .
 
 bridgeDB:DataSource_drugbankDrugs a bridgeDB:DataSource ;
-	bridgeDB:fullName "Drugbank Drugs" ;
-	bridgeDB:systemCode "drugbankDrugs" ;
+	bridgeDB:fullName "DrugBank" ;
+	bridgeDB:systemCode "Dr" ;
 	bridgeDB:mainUrl "http://www.drugbank.ca/" ;
 	bridgeDB:idExample "DB00001" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
@@ -309,16 +309,7 @@ bridgeDB:DataSource_EMBL a bridgeDB:DataSource ;
 	bridgeDB:type "gene" ;
     bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/ena/data/view/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/ena.embl/$id> ;
-	bridgeDB:hasWikiPathwaysPattern <http://srs.ebi.ac.uk/srsbin/cgi-bin/wgetz?-page+EntryPage+-e+[EMBL:$id]+-view+EmblEntry> .
-
-bridgeDB:DataSource_Ena a bridgeDB:DataSource ;
-	bridgeDB:fullName "European Nucleotide Archive" ;
-	bridgeDB:systemCode "Ena" ;
-	bridgeDB:mainUrl "http://www.ebi.ac.uk/ena/" ;
-	bridgeDB:idExample "DAAA02031803" ;
-	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/ena/data/view/$id> ;
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/ena.embl/$id> .
+	bridgeDB:hasUriPattern <http://srs.ebi.ac.uk/srsbin/cgi-bin/wgetz?-page+EntryPage+-e+[EMBL:$id]+-view+EmblEntry> .
 
 bridgeDB:DataSource_Ensembl a bridgeDB:DataSource ;
 	bridgeDB:fullName "Ensembl" ;
@@ -513,12 +504,12 @@ bridgeDB:DataSource_HMDB a bridgeDB:DataSource ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.hmdb.ca/metabolites/$id> .
 
 bridgeDB:DataSource_HomoloGene a bridgeDB:DataSource ;
-	bridgeDB:fullName "Hg" ;
-    bridgeDB:systemCode "homologene" ;
+	bridgeDB:fullName "HomoloGene" ;
+    bridgeDB:systemCode "Hg" ;
 	bridgeDB:mainUrl "http://www.ncbi.nlm.nih.gov/homologene/" ;
 	bridgeDB:idExample "1000" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "unknown" ;
+	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.ncbi.nlm.nih.gov/homologene/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/homologene/$id> ;
 	bridgeDB:hasUriPattern <http://bio2rdf.org/homologen:$id> ;
