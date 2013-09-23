@@ -366,7 +366,7 @@ public class BridgeDBRdfHandler extends RdfBase{
         }
         
         Pattern pattern = DataSourcePatterns.getPatterns().get(dataSource);
-        if (pattern != null){
+        if (pattern != null && !pattern.toString().isEmpty()){
             Value patternValue = new LiteralImpl(pattern.toString());
             repositoryConnection.add(id, BridgeDBConstants.HAS_REGEX_PATTERN_URI, patternValue);            
         }
