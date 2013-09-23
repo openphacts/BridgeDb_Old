@@ -119,6 +119,7 @@ public class ConfigReader {
     }
     
     private ConfigReader(String fileName) throws BridgeDBException{
+        Reporter.println("Looking for " + fileName);
         try {
             if (loadDirectly(fileName)) return;
             if (loadByEnviromentVariable(fileName)) return;
@@ -174,7 +175,7 @@ public class ConfigReader {
         findMethod = "Loaded from run Directory.";
         foundAt = file.getAbsolutePath();
         if (loggerSetup){
-            logger.info("Loaded file " + fileName + " directly from " + foundAt);    
+            Reporter.println("Loaded file " + fileName + " directly from " + foundAt);    
         }
         return true;
     }
@@ -206,7 +207,7 @@ public class ConfigReader {
             findMethod = "Loaded from Environment Variable.";
             foundAt = file.getAbsolutePath();
             if (loggerSetup){
-                logger.info("Loaded file " + fileName + " using OPS_IMS_CONFIG from " + foundAt);    
+                Reporter.println("Loaded file " + fileName + " using OPS_IMS_CONFIG from " + foundAt);    
             }
             return true;
         } else {
@@ -250,7 +251,7 @@ public class ConfigReader {
             findMethod = "Loaded from CATALINA_HOME configs.";
             foundAt = file.getAbsolutePath();
             if (loggerSetup){
-                logger.info("Loaded file " + fileName + " using CATALINA_HOME from " + foundAt);    
+                Reporter.println("Loaded file " + fileName + " using CATALINA_HOME from " + foundAt);    
             }
             return true;
         } else {
@@ -285,7 +286,7 @@ public class ConfigReader {
             findMethod = "Loaded from directory: " + directoryName;
             foundAt = file.getAbsolutePath();
             if (loggerSetup){
-                logger.info("Loaded file " + fileName + " from " + foundAt);    
+                Reporter.println("Loaded file " + fileName + " from " + foundAt);    
             }
             return true;
     }
@@ -305,12 +306,12 @@ public class ConfigReader {
             findMethod = "Loaded with class loader";
             foundAt = url.getPath();
             if (loggerSetup){
-                logger.info("Loaded " + fileName + " from "+ url + " with class loader. ");    
+                Reporter.println("Loaded " + fileName + " from "+ url + " with class loader. ");    
             }
             return true;
         }
         if (loggerSetup){
-            logger.info("Not found by class loader. ");    
+            Reporter.println("Not found by class loader. ");    
         }
         return false;
     }
@@ -327,7 +328,7 @@ public class ConfigReader {
             findMethod = "Loaded from Resource URI";
             foundAt = file.getAbsolutePath();
             if (loggerSetup){
-                logger.info("Loaded file " + fileName + " from Jar ");    
+                Reporter.println("Loaded file " + fileName + " from Jar ");    
             }
             return true;
         }
@@ -345,7 +346,7 @@ public class ConfigReader {
                 findMethod = "Loaded by unzipping jar";
                 foundAt = "Inside jar file";
                 if (loggerSetup){
-                    logger.info("Loaded file " + name + " by unziiping the Jar ");    
+                    Reporter.println("Loaded file " + name + " by unziiping the Jar ");    
                 }
                 return true;
             }
