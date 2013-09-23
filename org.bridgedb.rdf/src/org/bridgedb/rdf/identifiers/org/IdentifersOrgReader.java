@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 import org.apache.log4j.Logger;
@@ -73,8 +74,10 @@ public class IdentifersOrgReader extends RdfBase {
     public static void main(String[] args) throws Exception {
         BioDataSource.init();
         BridgeDBRdfHandler.init();
-        File file = new File("c:/Temp/registry.ttl");
-        FileInputStream stream = new FileInputStream(file);
+        URL url = new URL("http://www.ebi.ac.uk/miriam/demo/export/registry.ttl");
+        InputStream stream = url.openStream();
+        //File file = new File("c:/Temp/registry.ttl");
+        //FileInputStream stream = new FileInputStream(file);
         IdentifersOrgReader reader = new IdentifersOrgReader();
         reader.doParseRdfInputStream(stream);
         stream.close();
