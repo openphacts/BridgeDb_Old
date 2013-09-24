@@ -4,7 +4,10 @@
  */
 package org.bridgedb.rdf.identifiers.org;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -13,6 +16,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.bio.BioDataSource;
+import org.bridgedb.bio.DataSourceTxt;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.rdf.RdfBase;
 import org.bridgedb.rdf.UriPattern;
@@ -93,6 +97,12 @@ public class IdentifersOrgReader extends RdfBase {
         File mergedFile = new File("resources/IdentifiersOrgDataSource.ttl");
         BridgeDBRdfHandler.writeRdfToFile(mergedFile);
         BridgeDBRdfHandler.parseRdfFile(mergedFile);  
+        
+        File textFile = new File("resources/IdentifiersOrgDataSource.txt");
+        BufferedWriter writer = new BufferedWriter(new FileWriter(textFile));
+        DataSourceTxt.writeToBuffer(writer);
+        InputStream is = new FileInputStream(textFile);
+        DataSourceTxt.loadInputStrem(is);
     }
 
     private void showVoidUriSpaces(RepositoryConnection repositoryConnection) throws Exception{
@@ -157,6 +167,9 @@ public class IdentifersOrgReader extends RdfBase {
                     String dataSourceSysCode = null;
                     if (dataSource != null){
                         dataSourceSysCode = dataSource.getSystemCode();
+                        if (dataSource.getKnownUrl("$id") == null){
+                            DataSource.register(dataSourceSysCode, dataSource.getFullName()).urlPattern(patternString);
+                        }
                     }
                     String patternSysCode = null;
                     if (pattern != null){
