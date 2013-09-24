@@ -140,4 +140,20 @@ public class DataSourceTest {
 		Assert.assertNull(source.isDeprecatedBy());
 	}
 
+	@Test
+	public void testBuildingAlternative() {
+		DataSource source = DataSource.register("F", "MetaboLoci")
+		    .alternative("MetaboLoci Alternative")
+		    .asDataSource();
+		Assert.assertEquals("MetaboLoci Alternative", source.getAlternative());
+	}
+    
+	@Test
+	public void testBuildingDescription() {
+		DataSource source = DataSource.register("F", "MetaboLoci")
+		    .description("MetaboLoci description")
+		    .asDataSource();
+		Assert.assertEquals("MetaboLoci description", source.getDescription());
+	}
+
 }

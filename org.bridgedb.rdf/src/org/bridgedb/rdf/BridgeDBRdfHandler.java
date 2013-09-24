@@ -36,6 +36,8 @@ import org.bridgedb.DataSource;
 import org.bridgedb.DataSourcePatterns;
 import org.bridgedb.bio.Organism;
 import org.bridgedb.rdf.constants.BridgeDBConstants;
+import org.bridgedb.rdf.constants.DCTermsConstants;
+import org.bridgedb.rdf.constants.DCatConstants;
 import org.bridgedb.rdf.constants.RdfConstants;
 import org.bridgedb.rdf.pairs.RdfBasedCodeMapper;
 import org.bridgedb.utils.BridgeDBException;
@@ -178,6 +180,16 @@ public class BridgeDBRdfHandler extends RdfBase{
             builder.identifiersOrgBase(pattern);
         }
         
+        String alternative = getPossibleSingletonString(repositoryConnection, dataSourceId, DCTermsConstants.ALTERNATIVE_URI);
+        if (alternative != null){
+            builder.alternative(alternative);
+        }
+        
+        String description = getPossibleSingletonString(repositoryConnection, dataSourceId, DCatConstants.DESCRIPTION_URI);
+        if (description != null){
+            builder.description(description);
+        }
+
         readUriPatterns(repositoryConnection, dataSourceId, systemCode, xrefPrefix);
  
         return builder.asDataSource();
@@ -371,6 +383,14 @@ public class BridgeDBRdfHandler extends RdfBase{
             repositoryConnection.add(id, BridgeDBConstants.HAS_REGEX_PATTERN_URI, patternValue);            
         }
         
+        if (dataSource.getAlternative() != null){
+            repositoryConnection.add(id, DCTermsConstants.ALTERNATIVE_URI, new LiteralImpl(dataSource.getAlternative()));
+        } 
+        
+        if (dataSource.getDescription() != null){
+            repositoryConnection.add(id, DCatConstants.DESCRIPTION_URI, new LiteralImpl(dataSource.getDescription()));
+        } 
+        
         writeUrisOrCodeMapper(repositoryConnection, dataSource);
     }
 
@@ -409,6 +429,8 @@ public class BridgeDBRdfHandler extends RdfBase{
     private static void writeRDF(RepositoryConnection repositoryConnection, RDFWriter rdfWriter) 
             throws IOException, RDFHandlerException, RepositoryException{ 
         rdfWriter.handleNamespace(BridgeDBConstants.PREFIX_NAME1, BridgeDBConstants.PREFIX);
+        rdfWriter.handleNamespace(DCatConstants.PREFIX_NAME, DCatConstants.voidns);
+        rdfWriter.handleNamespace(DCTermsConstants.PREFIX_NAME, DCTermsConstants.voidns);
         rdfWriter.handleNamespace("", DEFAULT_BASE_URI);
         rdfWriter.startRDF();
         RepositoryResult<Statement> statements = 

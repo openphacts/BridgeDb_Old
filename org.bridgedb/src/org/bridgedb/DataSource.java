@@ -63,6 +63,8 @@ public final class DataSource
 
 	private final String sysCode;
 	private final String fullName;
+    private String alternative = null;
+    private String description = null;
 	private String mainUrl = null;
 	private String prefix = null;
 	private String postfix = null;
@@ -238,7 +240,15 @@ public final class DataSource
 		return this.IDENTIFIERS_ORG_PREFIX + miriamBase + "/" + id;
     }
 
-	/**
+    public String getAlternative(){
+        return alternative;
+    }
+    
+    public String getDescription(){
+        return description;
+    }
+    
+ 	/**
 	 * Uses builder pattern to set optional attributes for a DataSource. For example, this allows you to use the 
 	 * following code:
 	 * <pre>
@@ -494,15 +504,45 @@ public final class DataSource
                 byMiriamBase.put(base, current);
             } else {
                 if (!current.miriamBase.equals(base)){
-                    throw new IllegalArgumentException("illegal attemp to change miriam base from " 
-                            + current.miriamBase + " to " + base);
+                    throw new IllegalArgumentException("Illegal attempt to change miriam base for " + current 
+                            + " from " + current.miriamBase + " to " + base);
                 }
             }           
 			return this;            
         }
+        
+        public Builder alternative(String alternative){
+            if (alternative == null || alternative.isEmpty()){
+                return this;
+            }
+            if (current.alternative == null){
+                current.alternative = alternative;
+            } else {
+                if (!current.alternative.equals(alternative)){
+                    throw new IllegalArgumentException("Illegal attempt to change alternative for " + current 
+                            + " from " + current.alternative + " to " + alternative);
+                }
+            } 
+            return this;
+        }
+
+        public Builder description(String description){
+            if (description == null || description.isEmpty()){
+                return this;
+            }
+            if (current.description == null){
+                current.description = description;
+            } else {
+                if (!current.description.equals(description)){
+                    throw new IllegalArgumentException("Illegal attempt to change description for " + current 
+                            + " from " + current.description + " to " + description);
+                }
+            } 
+            return this;
+        }
 	}
 
-	/** 
+    /** 
 	 * Register a new DataSource with (optional) detailed information.
 	 * This can be used by other modules to define new DataSources.
      * 

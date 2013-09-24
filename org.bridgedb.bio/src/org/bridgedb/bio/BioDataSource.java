@@ -615,6 +615,7 @@ public class BioDataSource
                         throw new IllegalArgumentException("Unable to parse pattern " + patternString + " for " + builder.asDataSource(), ex);
                     }    
                 }
+				if (fields.length > 10) builder.alternative(fields[10]);
 			}
 			
 			InternalUtils.readXmlConfig(

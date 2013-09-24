@@ -13,10 +13,12 @@ import org.openrdf.model.impl.URIImpl;
  */
 public class DCatConstants {
     public static final String voidns = "http://www.w3.org/ns/dcat#";
-    public static final String PREFIX_NAME = "dcat:";
+    public static final String PREFIX_NAME = "dcat";
     
     public static final String ACCESS_URL = "accessURL";
     public static final URI ACCESS_URL_URI = new URIImpl(voidns + ACCESS_URL);
+    public static final String DESCRIPTION = "description";
+    public static final URI DESCRIPTION_URI = new URIImpl(voidns + DESCRIPTION);
     public static final String DISTRIBUTION = "distribution";
     public static final URI DISTRIBUTION_URI = new URIImpl(voidns + DISTRIBUTION);
     public static final String TITLE = "title";
