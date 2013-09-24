@@ -25,6 +25,7 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.sail.memory.MemoryStore;
@@ -107,6 +108,7 @@ public class IdentifersOrgReader extends RdfBase {
             if (dataSource == null){
                 dataSource = readDataSource(repositoryConnection, catalogRecord, statement.getObject().stringValue());
             }
+            loadExtraDataSourceInfo(repositoryConnection, catalogRecord, dataSource);
             loadUriPatterns(repositoryConnection, catalogRecord, dataSource);
             count++;
         }
@@ -126,7 +128,16 @@ public class IdentifersOrgReader extends RdfBase {
         return ds;
     }
 
-    private void loadUriPatterns(RepositoryConnection repositoryConnection, Resource CatalogRecord, DataSource dataSource) throws Exception{
+    private void loadExtraDataSourceInfo(RepositoryConnection repositoryConnection, Resource catalogRecord, 
+            DataSource dataSource) throws RepositoryException, BridgeDBException {
+        if (dataSource.getExample().getId() == null){
+            String id = getPossibleSingletonString(repositoryConnection, catalogRecord, VoidConstants.EXAMPLE_RESOURCE);
+            DataSource.register(dataSource.getSystemCode(), dataSource.getFullName()).idExample(id);
+        }
+   }
+
+    private void loadUriPatterns(RepositoryConnection repositoryConnection, Resource CatalogRecord, 
+            DataSource dataSource) throws Exception{
         System.out.println("Looking for " + CatalogRecord);
         RepositoryResult<Statement> statements = 
                 repositoryConnection.getStatements(CatalogRecord, DCatConstants.DISTRIBUTION_URI, null, true);
@@ -161,7 +172,6 @@ public class IdentifersOrgReader extends RdfBase {
             }
         }       
     }
-
 
 }
 //http://www.ebi.ac.uk/ena/data/view/$id
