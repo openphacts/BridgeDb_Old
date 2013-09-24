@@ -588,36 +588,9 @@ public class BioDataSource
 	public static void init() 
 	{
 		InputStream is = BioDataSource.class.getClassLoader().getResourceAsStream("org/bridgedb/bio/datasources.txt");
-		BufferedReader reader = new BufferedReader (
-				new InputStreamReader (is));
-		String line;
 		try
 		{
-			while ((line = reader.readLine()) != null)
-			{
-				String[] fields = line.split ("\\t");
-				DataSource.Builder builder = DataSource.register
-					(fields[1], // system code 
-					fields[0]); // gpml name
-				if (fields.length > 2 && fields[2].length() > 0) builder.mainUrl(fields[2]);
-				if (fields.length > 3 && fields[3].length() > 0) builder.urlPattern(fields[3]);
-				if (fields.length > 4 && fields[4].length() > 0) builder.idExample(fields[4]);
-				if (fields.length > 5 && fields[5].length() > 0) builder.type(fields[5]);
-				if (fields.length > 6 && fields[6].length() > 0) builder.organism(Organism.fromLatinName(fields[6]));					      
-				if (fields.length > 7 && fields[7].length() > 0) builder.primary (fields[7].equals ("1"));					      
-				if (fields.length > 8) builder.urnBase(fields[8]);
-				if (fields.length > 9) {
-                    String patternString = fields[9];
-                    try {
-                        Pattern pattern = Pattern.compile(patternString);
-                        DataSourcePatterns.registerPattern(builder.asDataSource(), pattern);
-                    } catch (Exception ex){
-                        throw new IllegalArgumentException("Unable to parse pattern " + patternString + " for " + builder.asDataSource(), ex);
-                    }    
-                }
-				if (fields.length > 10) builder.alternative(fields[10]);
-			}
-			
+            DataSourceTxt.loadInputStrem(is);
 			InternalUtils.readXmlConfig(
 					new InputSource(
 							BioDataSource.class.getClassLoader().getResourceAsStream(

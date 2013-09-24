@@ -22,6 +22,7 @@ package org.bridgedb.rdf;
 import java.io.File;
 import java.util.Set;
 import org.bridgedb.DataSource;
+import org.bridgedb.bio.DataSourceComparator;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.Reporter;
 import org.bridgedb.utils.TestUtils;

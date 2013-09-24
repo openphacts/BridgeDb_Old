@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.DataSourcePatterns;
+import org.bridgedb.bio.DataSourceComparator;
 import org.bridgedb.bio.Organism;
 import org.bridgedb.rdf.constants.BridgeDBConstants;
 import org.bridgedb.rdf.constants.DCTermsConstants;
