@@ -426,6 +426,7 @@ bridgeDB:DataSource_Gramene_Genes_DB a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.gramene.org/db/genes/search_gene?acc=$id> ;
+    bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/gramene.gene/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.gramene.org/db/genes/search_gene?acc=$id> .
 
 bridgeDB:DataSource_Gramene_Literature a bridgeDB:DataSource ;
