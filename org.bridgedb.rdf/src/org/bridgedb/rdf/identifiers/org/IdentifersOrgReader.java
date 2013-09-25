@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Set;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
-import org.bridgedb.bio.BioDataSource;
 import org.bridgedb.bio.DataSourceTxt;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.rdf.RdfBase;
@@ -26,6 +25,8 @@ import org.bridgedb.rdf.constants.VoidConstants;
 import org.bridgedb.utils.BridgeDBException;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -52,7 +53,7 @@ public class IdentifersOrgReader extends RdfBase {
         multiples.add("http://www.ebi.ac.uk/ontology-lookup/?termId=$id");
         multiples.add("http://www.genome.jp/dbget-bin/www_bget?$id");
         multiples.add("http://www.genome.jp/kegg-bin/show_organism?org=$id");
-        multiples.add("http://www.gramene.org/db/genes/search_gene?acc=$id");
+        //multiples.add("http://www.gramene.org/db/genes/search_gene?acc=$id");
         multiples.add("http://linkedchemistry.info/chembl/chemblid/$id");
         multiples.add("http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=$id");
         multiples.add("http://www.ncbi.nlm.nih.gov/nucest/$id");
@@ -69,7 +70,10 @@ public class IdentifersOrgReader extends RdfBase {
             repository.initialize();
             repositoryConnection = repository.getConnection();
             repositoryConnection.add(stream, DEFAULT_BASE_URI, DEFAULT_FILE_FORMAT);
-            showVoidUriSpaces(repositoryConnection);
+//            for (String multiple:multiples){
+//                checkMultiple(repositoryConnection, multiple);
+//            }
+            loadData(repositoryConnection);
         } catch (Exception ex) {
             throw new BridgeDBException ("Error parsing Rdf inputStream ", ex);
         } finally {
@@ -83,9 +87,9 @@ public class IdentifersOrgReader extends RdfBase {
     }
 
     public static void main(String[] args) throws Exception {
-        BioDataSource.init();
+        DataSourceTxt.init();
         UriPattern.registerUriPatterns();
-        //BridgeDBRdfHandler.init();
+        BridgeDBRdfHandler.init();
         URL url = new URL("http://www.ebi.ac.uk/miriam/demo/export/registry.ttl");
         InputStream stream = url.openStream();
         //File file = new File("c:/Temp/registry.ttl");
@@ -105,18 +109,19 @@ public class IdentifersOrgReader extends RdfBase {
         DataSourceTxt.loadInputStrem(is);
     }
 
-    private void showVoidUriSpaces(RepositoryConnection repositoryConnection) throws Exception{
+    private void loadData(RepositoryConnection repositoryConnection) throws Exception{
         int count = 0;
         RepositoryResult<Statement> statements = 
                 repositoryConnection.getStatements(null, VoidConstants.URI_SPACE_URI, null, true);
         while(statements.hasNext()) {
             Statement statement = statements.next();
-         
             DataSource dataSource = DataSource.getByIdentiferOrgBase(statement.getObject().stringValue());
             Resource catalogRecord = statement.getSubject();  
+            //ystem.out.println(statement.getObject().stringValue() + " -> " + dataSource);
             if (dataSource == null){
                 dataSource = readDataSource(repositoryConnection, catalogRecord, statement.getObject().stringValue());
             }
+            //ystem.out.println(statement.getObject().stringValue() + " -> " + dataSource);
             loadExtraDataSourceInfo(repositoryConnection, catalogRecord, dataSource);
             loadUriPatterns(repositoryConnection, catalogRecord, dataSource);
             count++;
@@ -147,7 +152,7 @@ public class IdentifersOrgReader extends RdfBase {
 
     private void loadUriPatterns(RepositoryConnection repositoryConnection, Resource CatalogRecord, 
             DataSource dataSource) throws Exception{
-        System.out.println("Looking for " + CatalogRecord);
+        //ystem.out.println("Looking for " + CatalogRecord);
         RepositoryResult<Statement> statements = 
                 repositoryConnection.getStatements(CatalogRecord, DCatConstants.DISTRIBUTION_URI, null, true);
         while(statements.hasNext()) {
@@ -159,9 +164,9 @@ public class IdentifersOrgReader extends RdfBase {
                 Statement accessUrlStatement = accessUrlStatements.next();
                 String patternString =  accessUrlStatement.getObject().stringValue();
                 if (multiples.contains(patternString)){
-                    System.out.println("\t Skipping shared " + patternString);
+                    //ystem.out.println("\t Skipping shared " + patternString);
                 } else {
-                    System.out.println("\t" + patternString);
+                    //ystem.out.println("\t" + patternString);
                     //UriPattern pattern = UriPattern.byPattern(accessUrlStatement.getObject().stringValue());
                     UriPattern pattern = UriPattern.register(patternString, dataSource.getSystemCode(), false);
                     String dataSourceSysCode = null;
@@ -175,7 +180,7 @@ public class IdentifersOrgReader extends RdfBase {
                     if (pattern != null){
                         patternSysCode = pattern.getCode();
                     }
-                    System.out.println("\t\t" + dataSourceSysCode + "   " + patternSysCode);
+                    //ystem.out.println("\t\t" + dataSourceSysCode + "   " + patternSysCode);
                     if (patternSysCode != null && !patternSysCode.equals(dataSourceSysCode)){
                         throw new BridgeDBException (patternString +" maps to " + patternSysCode 
                                 + " but Datasource is " + dataSourceSysCode + " from " + dataSource);
@@ -184,12 +189,32 @@ public class IdentifersOrgReader extends RdfBase {
             }
         }       
     }
+    
+    private void checkMultiple(RepositoryConnection repositoryConnection, String multiple) throws Exception{
+        System.out.println(multiple);
+        URI uri = new URIImpl(multiple);
+        RepositoryResult<Statement> accessStatements = 
+                repositoryConnection.getStatements(null, null, uri, true);
+        while(accessStatements.hasNext()) {
+            Statement accessStatement = accessStatements.next();
+            //ystem.out.println(accessStatement);
+            Resource distribution = accessStatement.getSubject();
+            RepositoryResult<Statement> distributionStatements = 
+                    repositoryConnection.getStatements(null, null, distribution , true);
+            while(distributionStatements.hasNext()) {
+               Statement distributionStatement = distributionStatements.next();
+               //ystem.out.println("\t" + distributionStatement);
+               Resource catalog = distributionStatement.getSubject();
+               RepositoryResult<Statement> regexStatements = 
+                    repositoryConnection.getStatements(catalog, IdenitifiersOrgConstants.REGEX_URI, null,  true);
+               while(regexStatements.hasNext()) {
+                   Statement regexStatement = regexStatements.next();
+                   String regex = regexStatement.getObject().stringValue();
+                   System.out.println("\t" + regex);
+               }
+            }
+        }
+    }
+
 
 }
-//http://www.ebi.ac.uk/ena/data/view/$id
-//http://www.genome.jp/dbget-bin/www_bget?$id
-//http://www.chemspider.com/$id
-//http://www.uniprot.org/uniprot/$id
-//http://purl.uniprot.org/uniprot/$id
-//http://www.gramene.org/db/genes/search_gene?acc=$id
-//http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=$id
