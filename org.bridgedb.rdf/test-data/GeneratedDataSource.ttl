@@ -2051,23 +2051,29 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://aers.data2semantics.org/resource/drug/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://aers.data2semantics.org/resource/drug/" .
 
-<http://arabidopsis.org/servlets/TairObject?type=locus&name=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://arabidopsis.org/servlets/TairObject?type=locus&name=" .
+<http://arabidopsis.org/servlets/TairObject?type=locus&name=^AT[1-5]G\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://arabidopsis.org/servlets/TairObject?type=locus&name=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^AT[1-5]G\\d{5}$" .
 
-<http://bacteria.ensembl.org/Bacillus/B_subtilis/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://bacteria.ensembl.org/Bacillus/B_subtilis/Gene/Summary?g=" .
+<http://bacteria.ensembl.org/Bacillus/B_subtilis/Gene/Summary?g=EBBACG\\d{11}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://bacteria.ensembl.org/Bacillus/B_subtilis/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "EBBACG\\d{11}" .
 
-<http://bacteria.ensembl.org/Escherichia_Shigella/E_coli_K12/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://bacteria.ensembl.org/Escherichia_Shigella/E_coli_K12/Gene/Summary?g=" .
+<http://bacteria.ensembl.org/Escherichia_Shigella/E_coli_K12/Gene/Summary?g=EBESCG\\d{11}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://bacteria.ensembl.org/Escherichia_Shigella/E_coli_K12/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "EBESCG\\d{11}" .
 
-<http://bacteria.ensembl.org/Mycobacterium/M_tuberculosis_H37Rv/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://bacteria.ensembl.org/Mycobacterium/M_tuberculosis_H37Rv/Gene/Summary?g=" .
+<http://bacteria.ensembl.org/Mycobacterium/M_tuberculosis_H37Rv/Gene/Summary?g=EBMYCG\\d{11}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://bacteria.ensembl.org/Mycobacterium/M_tuberculosis_H37Rv/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "EBMYCG\\d{11}" .
 
-<http://bidd.nus.edu.sg/group/cjttd/ZFTTDDetail.asp?ID=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://bidd.nus.edu.sg/group/cjttd/ZFTTDDetail.asp?ID=" .
+<http://bidd.nus.edu.sg/group/cjttd/ZFTTDDetail.asp?ID=^TTDS\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://bidd.nus.edu.sg/group/cjttd/ZFTTDDetail.asp?ID=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^TTDS\\d+$" .
 
-<http://bidd.nus.edu.sg/group/cjttd/ZFTTDDRUG.asp?ID=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://bidd.nus.edu.sg/group/cjttd/ZFTTDDRUG.asp?ID=" .
+<http://bidd.nus.edu.sg/group/cjttd/ZFTTDDRUG.asp?ID=^DAP\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://bidd.nus.edu.sg/group/cjttd/ZFTTDDRUG.asp?ID=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^DAP\\d+$" .
 
 <http://bio2rdf.org/affymetrix:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://bio2rdf.org/affymetrix:" .
@@ -2138,15 +2144,17 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://bio2rdf.org/uniprot:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://bio2rdf.org/uniprot:" .
 
-<http://biocyc.org/getid?id=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://biocyc.org/getid?id=" .
+<http://biocyc.org/getid?id=^\\w+\\:[A-Za-z0-9-]+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://biocyc.org/getid?id=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w+\\:[A-Za-z0-9-]+$" .
 
 <http://bioportal.bioontology.org/ontologies/1351?p=terms&conceptid=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://bioportal.bioontology.org/ontologies/1351?p=terms&conceptid=" .
 
-<http://cbg.garvan.unsw.edu.au/pina/interactome.oneP.do?ac=$id&showExtend=null> a bridgeDB:uriPattern ;
+<http://cbg.garvan.unsw.edu.au/pina/interactome.oneP.do?ac=^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])$&showExtend=null> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://cbg.garvan.unsw.edu.au/pina/interactome.oneP.do?ac=" ;
-	bridgeDB:hasPostfix "&showExtend=null" .
+	bridgeDB:hasPostfix "&showExtend=null" ;
+	<http://identifiers.org/terms#idRegexPattern> "^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])$" .
 
 <http://chem.sis.nlm.nih.gov/chemidplus/direct.jsp?regno=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://chem.sis.nlm.nih.gov/chemidplus/direct.jsp?regno=" .
@@ -2157,8 +2165,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://chem2bio2rdf.org/chembl/resource/chembl_targets/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://chem2bio2rdf.org/chembl/resource/chembl_targets/" .
 
-<http://commonchemistry.org/ChemicalDetail.aspx?ref=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://commonchemistry.org/ChemicalDetail.aspx?ref=" .
+<http://commonchemistry.org/ChemicalDetail.aspx?ref=^\\d{1,7}\\-\\d{2}\\-\\d$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://commonchemistry.org/ChemicalDetail.aspx?ref=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d{1,7}\\-\\d{2}\\-\\d$" .
 
 <http://ctdbase.org/basicQuery.go?bqCat=gene&bq=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://ctdbase.org/basicQuery.go?bqCat=gene&bq=" .
@@ -2175,57 +2184,72 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://dbpedia.org/resource/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://dbpedia.org/resource/" .
 
-<http://dip.doe-mbi.ucla.edu/dip/DIPview.cgi?ID=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://dip.doe-mbi.ucla.edu/dip/DIPview.cgi?ID=" .
+<http://dip.doe-mbi.ucla.edu/dip/DIPview.cgi?ID=^DIP[\\:\\-]\\d{3}[EN]$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://dip.doe-mbi.ucla.edu/dip/DIPview.cgi?ID=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^DIP[\\:\\-]\\d{3}[EN]$" .
 
 <http://ecocyc.org/ECOLI/NEW-IMAGE?type=NIL&object=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://ecocyc.org/ECOLI/NEW-IMAGE?type=NIL&object=" .
 
-<http://ecogene.org/geneInfo.php?eg_id=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://ecogene.org/geneInfo.php?eg_id=" .
+<http://ecogene.org/geneInfo.php?eg_id=^EG\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://ecogene.org/geneInfo.php?eg_id=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^EG\\d+$" .
 
 <http://en.wikipedia.org/wiki/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://en.wikipedia.org/wiki/" .
 
-<http://flybase.org/reports/$id.html> a bridgeDB:uriPattern ;
+<http://flybase.org/reports/^FB\\w{2}\\d{7}$.html> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://flybase.org/reports/" ;
-	bridgeDB:hasPostfix ".html" .
+	bridgeDB:hasPostfix ".html" ;
+	<http://identifiers.org/terms#idRegexPattern> "^FB\\w{2}\\d{7}$" .
 
-<http://genome.ucsc.edu/cgi-bin/hgTracks?position=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://genome.ucsc.edu/cgi-bin/hgTracks?position=" .
+<http://genome.ucsc.edu/cgi-bin/hgTracks?position=uc\\d{3}[a-z]{3}\\.\\d> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://genome.ucsc.edu/cgi-bin/hgTracks?position=" ;
+	<http://identifiers.org/terms#idRegexPattern> "uc\\d{3}[a-z]{3}\\.\\d" .
 
-<http://identifiers.org/affy.probeset/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/affy.probeset/" .
+<http://identifiers.org/affy.probeset/\\d{4,}((_[asx])?_at)?> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/affy.probeset/" ;
+	<http://identifiers.org/terms#idRegexPattern> "\\d{4,}((_[asx])?_at)?" .
 
-<http://identifiers.org/bind/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/bind/" .
+<http://identifiers.org/bind/^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/bind/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://identifiers.org/biocyc/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/biocyc/" .
+<http://identifiers.org/biocyc/^\\w+\\:[A-Za-z0-9-]+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/biocyc/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w+\\:[A-Za-z0-9-]+$" .
 
-<http://identifiers.org/biogrid/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/biogrid/" .
+<http://identifiers.org/biogrid/^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/biogrid/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://identifiers.org/biomodels.db/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/biomodels.db/" .
+<http://identifiers.org/biomodels.db/^((BIOMD|MODEL)\\d{10})|(BMID\\d{12})$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/biomodels.db/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^((BIOMD|MODEL)\\d{10})|(BMID\\d{12})$" .
 
-<http://identifiers.org/biomodels.sbo/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/biomodels.sbo/" .
+<http://identifiers.org/biomodels.sbo/^SBO:\\d{7}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/biomodels.sbo/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^SBO:\\d{7}$" .
 
-<http://identifiers.org/biosystems/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/biosystems/" .
+<http://identifiers.org/biosystems/^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/biosystems/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://identifiers.org/brenda/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/brenda/" .
+<http://identifiers.org/brenda/^((\\d+\\.-\\.-\\.-)|(\\d+\\.\\d+\\.-\\.-)|(\\d+\\.\\d+\\.\\d+\\.-)|(\\d+\\.\\d+\\.\\d+\\.\\d+))$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/brenda/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^((\\d+\\.-\\.-\\.-)|(\\d+\\.\\d+\\.-\\.-)|(\\d+\\.\\d+\\.\\d+\\.-)|(\\d+\\.\\d+\\.\\d+\\.\\d+))$" .
 
-<http://identifiers.org/cas/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/cas/" .
+<http://identifiers.org/cas/^\\d{1,7}\\-\\d{2}\\-\\d$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/cas/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d{1,7}\\-\\d{2}\\-\\d$" .
 
-<http://identifiers.org/ccds/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/ccds/" .
+<http://identifiers.org/ccds/^CCDS\\d+\\.\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/ccds/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^CCDS\\d+\\.\\d+$" .
 
-<http://identifiers.org/chebi/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/chebi/" .
+<http://identifiers.org/chebi/^CHEBI:\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/chebi/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^CHEBI:\\d+$" .
 
 <http://identifiers.org/chebi/CHEBI:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/chebi/CHEBI:" .
@@ -2236,44 +2260,55 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/chemidplus/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/chemidplus/" .
 
-<http://identifiers.org/chemspider/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/chemspider/" .
+<http://identifiers.org/chemspider/^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/chemspider/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
 <http://identifiers.org/ctd.gene/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/ctd.gene/" .
 
-<http://identifiers.org/dbsnp/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/dbsnp/" .
+<http://identifiers.org/dbsnp/^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/dbsnp/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://identifiers.org/dip/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/dip/" .
+<http://identifiers.org/dip/^DIP[\\:\\-]\\d{3}[EN]$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/dip/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^DIP[\\:\\-]\\d{3}[EN]$" .
 
 <http://identifiers.org/drugbank.target/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/drugbank.target/" .
 
-<http://identifiers.org/drugbank/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/drugbank/" .
+<http://identifiers.org/drugbank/^DB\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/drugbank/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^DB\\d{5}$" .
 
-<http://identifiers.org/ec-code/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/ec-code/" .
+<http://identifiers.org/ec-code/^\\d+\\.-\\.-\\.-|\\d+\\.\\d+\\.-\\.-|\\d+\\.\\d+\\.\\d+\\.-|\\d+\\.\\d+\\.\\d+\\.(n)?\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/ec-code/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+\\.-\\.-\\.-|\\d+\\.\\d+\\.-\\.-|\\d+\\.\\d+\\.\\d+\\.-|\\d+\\.\\d+\\.\\d+\\.(n)?\\d+$" .
 
-<http://identifiers.org/ecogene/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/ecogene/" .
+<http://identifiers.org/ecogene/^EG\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/ecogene/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^EG\\d+$" .
 
-<http://identifiers.org/ena.embl/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/ena.embl/" .
+<http://identifiers.org/ena.embl/^[A-Z]+[0-9]+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/ena.embl/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^[A-Z]+[0-9]+$" .
 
-<http://identifiers.org/ensembl.plant/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/ensembl.plant/" .
+<http://identifiers.org/ensembl.plant/^\\w+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/ensembl.plant/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w+$" .
 
-<http://identifiers.org/ensembl/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/ensembl/" .
+<http://identifiers.org/ensembl/^ENS[A-Z]*[FPTG]\\d{11}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/ensembl/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^ENS[A-Z]*[FPTG]\\d{11}$" .
 
-<http://identifiers.org/flybase/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/flybase/" .
+<http://identifiers.org/flybase/^FB\\w{2}\\d{7}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/flybase/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^FB\\w{2}\\d{7}$" .
 
-<http://identifiers.org/go/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/go/" .
+<http://identifiers.org/go/^GO:\\d{7}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/go/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^GO:\\d{7}$" .
 
 <http://identifiers.org/go/GO:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/go/GO:" .
@@ -2281,47 +2316,60 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/goa/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/goa/" .
 
-<http://identifiers.org/gramene.gene/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/gramene.gene/" .
+<http://identifiers.org/gramene.gene/GR:\\d+> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/gramene.gene/" ;
+	<http://identifiers.org/terms#idRegexPattern> "GR:\\d+" .
 
-<http://identifiers.org/hgnc.symbol/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/hgnc.symbol/" .
+<http://identifiers.org/hgnc.symbol/^[A-Za-z0-9]+> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/hgnc.symbol/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^[A-Za-z0-9]+" .
 
-<http://identifiers.org/hgnc/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/hgnc/" .
+<http://identifiers.org/hgnc/^(HGNC:)?\\d{1,5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/hgnc/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^(HGNC:)?\\d{1,5}$" .
 
-<http://identifiers.org/hmdb/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/hmdb/" .
+<http://identifiers.org/hmdb/^HMDB\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/hmdb/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^HMDB\\d{5}$" .
 
-<http://identifiers.org/homologene/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/homologene/" .
+<http://identifiers.org/homologene/^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/homologene/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
 <http://identifiers.org/hprd/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/hprd/" .
 
-<http://identifiers.org/insdc/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/insdc/" .
+<http://identifiers.org/insdc/(\\w\\d{5})|(\\w{2}\\d{6})|(\\w{3}\\d{5})> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/insdc/" ;
+	<http://identifiers.org/terms#idRegexPattern> "(\\w\\d{5})|(\\w{2}\\d{6})|(\\w{3}\\d{5})" .
 
-<http://identifiers.org/intact/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/intact/" .
+<http://identifiers.org/intact/^EBI\\-[0-9]+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/intact/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^EBI\\-[0-9]+$" .
 
-<http://identifiers.org/interpro/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/interpro/" .
+<http://identifiers.org/interpro/^IPR\\d{6}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/interpro/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^IPR\\d{6}$" .
 
-<http://identifiers.org/ipi/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/ipi/" .
+<http://identifiers.org/ipi/^IPI\\d{8}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/ipi/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^IPI\\d{8}$" .
 
-<http://identifiers.org/kegg.compound/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/kegg.compound/" .
+<http://identifiers.org/kegg.compound/^C\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/kegg.compound/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^C\\d+$" .
 
-<http://identifiers.org/kegg.drug/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/kegg.drug/" .
+<http://identifiers.org/kegg.drug/^D\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/kegg.drug/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^D\\d+$" .
 
-<http://identifiers.org/kegg.genes/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/kegg.genes/" .
+<http://identifiers.org/kegg.genes/^\\w+:[\\w\\d\\.-]*$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/kegg.genes/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w+:[\\w\\d\\.-]*$" .
 
-<http://identifiers.org/kegg.glycan/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/kegg.glycan/" .
+<http://identifiers.org/kegg.glycan/^G\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/kegg.glycan/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^G\\d+$" .
 
 <http://identifiers.org/kegg.metagenome/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/kegg.metagenome/" .
@@ -2329,53 +2377,66 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/kegg.orthology/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/kegg.orthology/" .
 
-<http://identifiers.org/kegg.pathway/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/kegg.pathway/" .
+<http://identifiers.org/kegg.pathway/^\\w{2,4}\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/kegg.pathway/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w{2,4}\\d{5}$" .
 
-<http://identifiers.org/kegg.reaction/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/kegg.reaction/" .
+<http://identifiers.org/kegg.reaction/^R\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/kegg.reaction/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^R\\d+$" .
 
-<http://identifiers.org/lipidbank/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/lipidbank/" .
+<http://identifiers.org/lipidbank/^\\w+\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/lipidbank/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w+\\d+$" .
 
-<http://identifiers.org/lipidmaps/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/lipidmaps/" .
+<http://identifiers.org/lipidmaps/^LM(FA|GL|GP|SP|ST|PR|SL|PK)[0-9]{4}([0-9a-zA-Z]{4,6})?$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/lipidmaps/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^LM(FA|GL|GP|SP|ST|PR|SL|PK)[0-9]{4}([0-9a-zA-Z]{4,6})?$" .
 
 <http://identifiers.org/lrg/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/lrg/" .
 
-<http://identifiers.org/macie/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/macie/" .
+<http://identifiers.org/macie/^M\\d{4}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/macie/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^M\\d{4}$" .
 
-<http://identifiers.org/matrixdb.association/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/matrixdb.association/" .
+<http://identifiers.org/matrixdb.association/^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])_.*|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9]_.*)|(GAG_.*)|(MULT_.*)|(PFRAG_.*)|(LIP_.*)|(CAT_.*)$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/matrixdb.association/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])_.*|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9]_.*)|(GAG_.*)|(MULT_.*)|(PFRAG_.*)|(LIP_.*)|(CAT_.*)$" .
 
 <http://identifiers.org/mesh/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/mesh/" .
 
-<http://identifiers.org/mgd/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/mgd/" .
+<http://identifiers.org/mgd/^MGI:\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/mgd/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^MGI:\\d+$" .
 
 <http://identifiers.org/mgd/MGI:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/mgd/MGI:" .
 
-<http://identifiers.org/mint/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/mint/" .
+<http://identifiers.org/mint/^MINT\\-\\d{1,5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/mint/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^MINT\\-\\d{1,5}$" .
 
-<http://identifiers.org/mirbase.mature/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/mirbase.mature/" .
+<http://identifiers.org/mirbase.mature/MIMAT\\d{7}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/mirbase.mature/" ;
+	<http://identifiers.org/terms#idRegexPattern> "MIMAT\\d{7}" .
 
-<http://identifiers.org/mirbase/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/mirbase/" .
+<http://identifiers.org/mirbase/MI\\d{7}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/mirbase/" ;
+	<http://identifiers.org/terms#idRegexPattern> "MI\\d{7}" .
 
-<http://identifiers.org/myco.tuber/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/myco.tuber/" .
+<http://identifiers.org/myco.tuber/Rv\\d{4}(A|B|c|\\.\\d)?> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/myco.tuber/" ;
+	<http://identifiers.org/terms#idRegexPattern> "Rv\\d{4}(A|B|c|\\.\\d)?" .
 
-<http://identifiers.org/ncbigene/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/ncbigene/" .
+<http://identifiers.org/ncbigene/^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/ncbigene/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://identifiers.org/ncbiprotein/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/ncbiprotein/" .
+<http://identifiers.org/ncbiprotein/^\\w+\\d+(\\.\\d+)?$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/ncbiprotein/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w+\\d+(\\.\\d+)?$" .
 
 <http://identifiers.org/obo.chebi/CHEBI:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/obo.chebi/CHEBI:" .
@@ -2386,47 +2447,61 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/obo.pw/PW:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/obo.pw/PW:" .
 
-<http://identifiers.org/omim/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/omim/" .
+<http://identifiers.org/omim/^[*#+%^]?\\d{6}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/omim/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^[*#+%^]?\\d{6}$" .
 
-<http://identifiers.org/pathwaycommons/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/pathwaycommons/" .
+<http://identifiers.org/pathwaycommons/^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/pathwaycommons/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://identifiers.org/pdb/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/pdb/" .
+<http://identifiers.org/pdb/^[0-9][A-Za-z0-9]{3}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/pdb/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^[0-9][A-Za-z0-9]{3}$" .
 
-<http://identifiers.org/pfam/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/pfam/" .
+<http://identifiers.org/pfam/^PF\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/pfam/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^PF\\d{5}$" .
 
-<http://identifiers.org/pharmgkb.drug/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/pharmgkb.drug/" .
+<http://identifiers.org/pharmgkb.drug/^PA\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/pharmgkb.drug/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^PA\\d+$" .
 
-<http://identifiers.org/pharmgkb.gene/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/pharmgkb.gene/" .
+<http://identifiers.org/pharmgkb.gene/^PA\\w+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/pharmgkb.gene/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^PA\\w+$" .
 
-<http://identifiers.org/pharmgkb.pathways/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/pharmgkb.pathways/" .
+<http://identifiers.org/pharmgkb.pathways/^PA\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/pharmgkb.pathways/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^PA\\d+$" .
 
-<http://identifiers.org/phosphosite.protein/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/phosphosite.protein/" .
+<http://identifiers.org/phosphosite.protein/^\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/phosphosite.protein/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d{5}$" .
 
-<http://identifiers.org/pid.pathway/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/pid.pathway/" .
+<http://identifiers.org/pid.pathway/^\\w+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/pid.pathway/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w+$" .
 
-<http://identifiers.org/pina/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/pina/" .
+<http://identifiers.org/pina/^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/pina/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])$" .
 
-<http://identifiers.org/pmap.substratedb/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/pmap.substratedb/" .
+<http://identifiers.org/pmap.substratedb/^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/pmap.substratedb/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://identifiers.org/pubchem.bioassay/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/pubchem.bioassay/" .
+<http://identifiers.org/pubchem.bioassay/^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/pubchem.bioassay/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://identifiers.org/pubchem.compound/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/pubchem.compound/" .
+<http://identifiers.org/pubchem.compound/^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/pubchem.compound/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://identifiers.org/pubchem.substance/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/pubchem.substance/" .
+<http://identifiers.org/pubchem.substance/^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/pubchem.substance/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
 <http://identifiers.org/pubmed/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/pubmed/" .
@@ -2437,83 +2512,106 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/pw/PW:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/pw/PW:" .
 
-<http://identifiers.org/reactome/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/reactome/" .
+<http://identifiers.org/reactome/^REACT_\\d+(\\.\\d+)?$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/reactome/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^REACT_\\d+(\\.\\d+)?$" .
 
-<http://identifiers.org/refseq/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/refseq/" .
+<http://identifiers.org/refseq/^(NC|AC|NG|NT|NW|NZ|NM|NR|XM|XR|NP|AP|XP|ZP)_\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/refseq/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^(NC|AC|NG|NT|NW|NZ|NM|NR|XM|XR|NP|AP|XP|ZP)_\\d+$" .
 
-<http://identifiers.org/resid/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/resid/" .
+<http://identifiers.org/resid/^AA\\d{4}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/resid/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^AA\\d{4}$" .
 
-<http://identifiers.org/rfam/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/rfam/" .
+<http://identifiers.org/rfam/RF\\d+> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/rfam/" ;
+	<http://identifiers.org/terms#idRegexPattern> "RF\\d+" .
 
-<http://identifiers.org/rgd/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/rgd/" .
+<http://identifiers.org/rgd/^\\d{4,7}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/rgd/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d{4,7}$" .
 
-<http://identifiers.org/rhea/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/rhea/" .
+<http://identifiers.org/rhea/^\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/rhea/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d{5}$" .
 
-<http://identifiers.org/sgd/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/sgd/" .
+<http://identifiers.org/sgd/^S\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/sgd/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^S\\d+$" .
 
-<http://identifiers.org/smart/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/smart/" .
+<http://identifiers.org/smart/^SM\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/smart/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^SM\\d{5}$" .
 
-<http://identifiers.org/smpdb/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/smpdb/" .
+<http://identifiers.org/smpdb/^SMP\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/smpdb/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^SMP\\d{5}$" .
 
-<http://identifiers.org/spike.map/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/spike.map/" .
+<http://identifiers.org/spike.map/^spike\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/spike.map/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^spike\\d{5}$" .
 
-<http://identifiers.org/sprint/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/sprint/" .
+<http://identifiers.org/sprint/^PR\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/sprint/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^PR\\d{5}$" .
 
-<http://identifiers.org/string/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/string/" .
+<http://identifiers.org/string/^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])|([0-9][A-Za-z0-9]{3})$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/string/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])|([0-9][A-Za-z0-9]{3})$" .
 
-<http://identifiers.org/subtiwiki/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/subtiwiki/" .
+<http://identifiers.org/subtiwiki/^BSU\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/subtiwiki/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^BSU\\d{5}$" .
 
-<http://identifiers.org/supfam/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/supfam/" .
+<http://identifiers.org/supfam/^\\w+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/supfam/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w+$" .
 
-<http://identifiers.org/swiss-model/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/swiss-model/" .
+<http://identifiers.org/swiss-model/^\\w+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/swiss-model/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w+$" .
 
-<http://identifiers.org/tair.locus/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/tair.locus/" .
+<http://identifiers.org/tair.locus/^AT[1-5]G\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/tair.locus/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^AT[1-5]G\\d{5}$" .
 
-<http://identifiers.org/ttd.drug/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/ttd.drug/" .
+<http://identifiers.org/ttd.drug/^DAP\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/ttd.drug/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^DAP\\d+$" .
 
-<http://identifiers.org/ttd.target/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/ttd.target/" .
+<http://identifiers.org/ttd.target/^TTDS\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/ttd.target/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^TTDS\\d+$" .
 
 <http://identifiers.org/unigene/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/unigene/" .
 
-<http://identifiers.org/unipathway/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/unipathway/" .
+<http://identifiers.org/unipathway/^UPA\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/unipathway/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^UPA\\d{5}$" .
 
-<http://identifiers.org/uniprot/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/uniprot/" .
+<http://identifiers.org/uniprot/^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/uniprot/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])$" .
 
 <http://identifiers.org/wikigenes/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/wikigenes/" .
 
-<http://identifiers.org/wikipathways/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/wikipathways/" .
+<http://identifiers.org/wikipathways/WP\\d{1,5}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/wikipathways/" ;
+	<http://identifiers.org/terms#idRegexPattern> "WP\\d{1,5}" .
 
 <http://identifiers.org/wikipedia.en/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/wikipedia.en/" .
 
-<http://identifiers.org/wormbase/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/wormbase/" .
+<http://identifiers.org/wormbase/^WBGene\\d{8}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/wormbase/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^WBGene\\d{8}$" .
 
-<http://identifiers.org/zfin/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/zfin/" .
+<http://identifiers.org/zfin/ZDB\\-GENE\\-\\d+\\-\\d+> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/zfin/" ;
+	<http://identifiers.org/terms#idRegexPattern> "ZDB\\-GENE\\-\\d+\\-\\d+" .
 
 <http://linkedchemistry.info/chembl/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://linkedchemistry.info/chembl/" .
@@ -2524,21 +2622,26 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://linkedchemistry.info/chembl/target/t$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://linkedchemistry.info/chembl/target/t" .
 
-<http://lipidbank.jp/cgi-bin/detail.cgi?id=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://lipidbank.jp/cgi-bin/detail.cgi?id=" .
+<http://lipidbank.jp/cgi-bin/detail.cgi?id=^\\w+\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://lipidbank.jp/cgi-bin/detail.cgi?id=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w+\\d+$" .
 
-<http://matrixdb.ibcp.fr/cgi-bin/model/report/default?name=$id&class=Association> a bridgeDB:uriPattern ;
+<http://matrixdb.ibcp.fr/cgi-bin/model/report/default?name=^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])_.*|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9]_.*)|(GAG_.*)|(MULT_.*)|(PFRAG_.*)|(LIP_.*)|(CAT_.*)$&class=Association> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://matrixdb.ibcp.fr/cgi-bin/model/report/default?name=" ;
-	bridgeDB:hasPostfix "&class=Association" .
+	bridgeDB:hasPostfix "&class=Association" ;
+	<http://identifiers.org/terms#idRegexPattern> "^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])_.*|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9]_.*)|(GAG_.*)|(MULT_.*)|(PFRAG_.*)|(LIP_.*)|(CAT_.*)$" .
 
-<http://microrna.sanger.ac.uk/cgi-bin/sequences/mirna_entry.pl?acc=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://microrna.sanger.ac.uk/cgi-bin/sequences/mirna_entry.pl?acc=" .
+<http://microrna.sanger.ac.uk/cgi-bin/sequences/mirna_entry.pl?acc=MI\\d{7}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://microrna.sanger.ac.uk/cgi-bin/sequences/mirna_entry.pl?acc=" ;
+	<http://identifiers.org/terms#idRegexPattern> "MI\\d{7}" .
 
-<http://mint.bio.uniroma2.it/mint/search/inFrameInteraction.do?interactionAc=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://mint.bio.uniroma2.it/mint/search/inFrameInteraction.do?interactionAc=" .
+<http://mint.bio.uniroma2.it/mint/search/inFrameInteraction.do?interactionAc=^MINT\\-\\d{1,5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://mint.bio.uniroma2.it/mint/search/inFrameInteraction.do?interactionAc=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^MINT\\-\\d{1,5}$" .
 
-<http://omim.org/entry/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://omim.org/entry/" .
+<http://omim.org/entry/^[*#+%^]?\\d{6}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://omim.org/entry/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^[*#+%^]?\\d{6}$" .
 
 <http://ops.rsc-us.org/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://ops.rsc-us.org/" .
@@ -2546,34 +2649,42 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://ops.rsc.org/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://ops.rsc.org/" .
 
-<http://pathman.smpdb.ca/pathways/$id/pathway> a bridgeDB:uriPattern ;
+<http://pathman.smpdb.ca/pathways/^SMP\\d{5}$/pathway> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://pathman.smpdb.ca/pathways/" ;
-	bridgeDB:hasPostfix "/pathway" .
+	bridgeDB:hasPostfix "/pathway" ;
+	<http://identifiers.org/terms#idRegexPattern> "^SMP\\d{5}$" .
 
-<http://pfam.sanger.ac.uk/family/$id/> a bridgeDB:uriPattern ;
+<http://pfam.sanger.ac.uk/family/^PF\\d{5}$/> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://pfam.sanger.ac.uk/family/" ;
-	bridgeDB:hasPostfix "/" .
+	bridgeDB:hasPostfix "/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^PF\\d{5}$" .
 
-<http://pid.nci.nih.gov/search/pathway_landing.shtml?what=graphic&jpg=on&pathway_id=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://pid.nci.nih.gov/search/pathway_landing.shtml?what=graphic&jpg=on&pathway_id=" .
+<http://pid.nci.nih.gov/search/pathway_landing.shtml?what=graphic&jpg=on&pathway_id=^\\w+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://pid.nci.nih.gov/search/pathway_landing.shtml?what=graphic&jpg=on&pathway_id=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w+$" .
 
-<http://plants.ensembl.org/id/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://plants.ensembl.org/id/" .
+<http://plants.ensembl.org/id/^\\w+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://plants.ensembl.org/id/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w+$" .
 
-<http://plugins.biogps.org/cgi-bin/wp.cgi?id=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://plugins.biogps.org/cgi-bin/wp.cgi?id=" .
+<http://plugins.biogps.org/cgi-bin/wp.cgi?id=\\d+> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://plugins.biogps.org/cgi-bin/wp.cgi?id=" ;
+	<http://identifiers.org/terms#idRegexPattern> "\\d+" .
 
-<http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=" .
+<http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://pubchem.ncbi.nlm.nih.gov/assay/assay.cgi?aid=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
 <http://pubchem.ncbi.nlm.nih.gov/rest/rdf/compound/CID$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://pubchem.ncbi.nlm.nih.gov/rest/rdf/compound/CID" .
 
-<http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?cid=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?cid=" .
+<http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?cid=^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?cid=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?sid=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?sid=" .
+<http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?sid=^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?sid=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
 <http://purl.bioontology.org/ontology/MSH/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://purl.bioontology.org/ontology/MSH/" .
@@ -2674,38 +2785,47 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://rgd.mcw.edu/rgdweb/report/gene/main.html?id=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://rgd.mcw.edu/rgdweb/report/gene/main.html?id=" .
 
-<http://rgd.mcw.edu/tools/genes/genes_view.cgi?id=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://rgd.mcw.edu/tools/genes/genes_view.cgi?id=" .
+<http://rgd.mcw.edu/tools/genes/genes_view.cgi?id=^\\d{4,7}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://rgd.mcw.edu/tools/genes/genes_view.cgi?id=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d{4,7}$" .
 
-<http://smart.embl-heidelberg.de/smart/do_annotation.pl?DOMAIN=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://smart.embl-heidelberg.de/smart/do_annotation.pl?DOMAIN=" .
+<http://smart.embl-heidelberg.de/smart/do_annotation.pl?DOMAIN=^SM\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://smart.embl-heidelberg.de/smart/do_annotation.pl?DOMAIN=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^SM\\d{5}$" .
 
-<http://srs.ebi.ac.uk/srsbin/cgi-bin/wgetz?-id+6JSUg1NA6u4+-e+[RESID:'$id']> a bridgeDB:uriPattern ;
+<http://srs.ebi.ac.uk/srsbin/cgi-bin/wgetz?-id+6JSUg1NA6u4+-e+[RESID:'^AA\\d{4}$']> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://srs.ebi.ac.uk/srsbin/cgi-bin/wgetz?-id+6JSUg1NA6u4+-e+[RESID:'" ;
-	bridgeDB:hasPostfix "']" .
+	bridgeDB:hasPostfix "']" ;
+	<http://identifiers.org/terms#idRegexPattern> "^AA\\d{4}$" .
 
 <http://srs.ebi.ac.uk/srsbin/cgi-bin/wgetz?-page+EntryPage+-e+[EMBL:$id]+-view+EmblEntry> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://srs.ebi.ac.uk/srsbin/cgi-bin/wgetz?-page+EntryPage+-e+[EMBL:" ;
 	bridgeDB:hasPostfix "]+-view+EmblEntry" .
 
-<http://string.embl.de/interactions/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://string.embl.de/interactions/" .
+<http://string.embl.de/interactions/^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])|([0-9][A-Za-z0-9]{3})$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://string.embl.de/interactions/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])|([0-9][A-Za-z0-9]{3})$" .
 
-<http://substrate.burnham.org/protein/annotation/$id/html> a bridgeDB:uriPattern ;
+<http://substrate.burnham.org/protein/annotation/^\\d+$/html> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://substrate.burnham.org/protein/annotation/" ;
-	bridgeDB:hasPostfix "/html" .
+	bridgeDB:hasPostfix "/html" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://supfam.org/SUPERFAMILY/cgi-bin/scop.cgi?ipid=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://supfam.org/SUPERFAMILY/cgi-bin/scop.cgi?ipid=" .
+<http://supfam.org/SUPERFAMILY/cgi-bin/scop.cgi?ipid=^\\w+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://supfam.org/SUPERFAMILY/cgi-bin/scop.cgi?ipid=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w+$" .
 
-<http://swissmodel.expasy.org/repository/smr.php?sptr_ac=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://swissmodel.expasy.org/repository/smr.php?sptr_ac=" .
+<http://swissmodel.expasy.org/repository/smr.php?sptr_ac=^\\w+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://swissmodel.expasy.org/repository/smr.php?sptr_ac=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w+$" .
 
-<http://thebiogrid.org/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://thebiogrid.org/" .
+<http://thebiogrid.org/^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://thebiogrid.org/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://tuberculist.epfl.ch/quicksearch.php?gene+name=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://tuberculist.epfl.ch/quicksearch.php?gene+name=" .
+<http://tuberculist.epfl.ch/quicksearch.php?gene+name=Rv\\d{4}(A|B|c|\\.\\d)?> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://tuberculist.epfl.ch/quicksearch.php?gene+name=" ;
+	<http://identifiers.org/terms#idRegexPattern> "Rv\\d{4}(A|B|c|\\.\\d)?" .
 
 <http://wheat.pw.usda.gov/cgi-bin/graingenes/report.cgi?class=reference&name=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://wheat.pw.usda.gov/cgi-bin/graingenes/report.cgi?class=reference&name=" .
@@ -2719,39 +2839,46 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://wiki.nugo.org/index.php/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://wiki.nugo.org/index.php/" .
 
-<https://www.affymetrix.com/LinkServlet?probeset=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "https://www.affymetrix.com/LinkServlet?probeset=" .
+<https://www.affymetrix.com/LinkServlet?probeset=\\d{4,}((_[asx])?_at)?> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "https://www.affymetrix.com/LinkServlet?probeset=" ;
+	<http://identifiers.org/terms#idRegexPattern> "\\d{4,}((_[asx])?_at)?" .
 
-<http://www.bind.ca/Action?identifier=bindid&idsearch=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.bind.ca/Action?identifier=bindid&idsearch=" .
+<http://www.bind.ca/Action?identifier=bindid&idsearch=^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.bind.ca/Action?identifier=bindid&idsearch=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://www.bioinf.manchester.ac.uk/cgi-bin/dbbrowser/sprint/searchprintss.cgi?prints_accn=$id&display_opts=Prints&category=None&queryform=false&regexpr=off> a bridgeDB:uriPattern ;
+<http://www.bioinf.manchester.ac.uk/cgi-bin/dbbrowser/sprint/searchprintss.cgi?prints_accn=^PR\\d{5}$&display_opts=Prints&category=None&queryform=false&regexpr=off> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.bioinf.manchester.ac.uk/cgi-bin/dbbrowser/sprint/searchprintss.cgi?prints_accn=" ;
-	bridgeDB:hasPostfix "&display_opts=Prints&category=None&queryform=false&regexpr=off" .
+	bridgeDB:hasPostfix "&display_opts=Prints&category=None&queryform=false&regexpr=off" ;
+	<http://identifiers.org/terms#idRegexPattern> "^PR\\d{5}$" .
 
-<http://www.brenda-enzymes.org/php/result_flat.php4?ecno=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.brenda-enzymes.org/php/result_flat.php4?ecno=" .
+<http://www.brenda-enzymes.org/php/result_flat.php4?ecno=^((\\d+\\.-\\.-\\.-)|(\\d+\\.\\d+\\.-\\.-)|(\\d+\\.\\d+\\.\\d+\\.-)|(\\d+\\.\\d+\\.\\d+\\.\\d+))$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.brenda-enzymes.org/php/result_flat.php4?ecno=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^((\\d+\\.-\\.-\\.-)|(\\d+\\.\\d+\\.-\\.-)|(\\d+\\.\\d+\\.\\d+\\.-)|(\\d+\\.\\d+\\.\\d+\\.\\d+))$" .
 
 <http://www.chemspider.com/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.chemspider.com/" .
-
-<http://www.chemspider.com/Chemical-Structure.$id.html> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.chemspider.com/Chemical-Structure." ;
-	bridgeDB:hasPostfix ".html" .
 
 <http://www.chemspider.com/Chemical-Structure.$id.rdf> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.chemspider.com/Chemical-Structure." ;
 	bridgeDB:hasPostfix ".rdf" .
 
+<http://www.chemspider.com/Chemical-Structure.^\\d+$.html> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.chemspider.com/Chemical-Structure." ;
+	bridgeDB:hasPostfix ".html" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
+
 <http://www.conceptwiki.org/concept/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.conceptwiki.org/concept/" .
 
-<http://www.cs.tau.ac.il/~spike/maps/$id.html> a bridgeDB:uriPattern ;
+<http://www.cs.tau.ac.il/~spike/maps/^spike\\d{5}$.html> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.cs.tau.ac.il/~spike/maps/" ;
-	bridgeDB:hasPostfix ".html" .
+	bridgeDB:hasPostfix ".html" ;
+	<http://identifiers.org/terms#idRegexPattern> "^spike\\d{5}$" .
 
-<http://www.drugbank.ca/drugs/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.drugbank.ca/drugs/" .
+<http://www.drugbank.ca/drugs/^DB\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.drugbank.ca/drugs/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^DB\\d{5}$" .
 
 <http://www.drugbank.ca/molecules/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.drugbank.ca/molecules/" .
@@ -2760,15 +2887,18 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 	bridgeDB:hasPrefix "http://www.drugbank.ca/molecules/" ;
 	bridgeDB:hasPostfix "?as=target" .
 
-<http://www.ebi.ac.uk/biomodels-main/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ebi.ac.uk/biomodels-main/" .
+<http://www.ebi.ac.uk/biomodels-main/^((BIOMD|MODEL)\\d{10})|(BMID\\d{12})$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ebi.ac.uk/biomodels-main/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^((BIOMD|MODEL)\\d{10})|(BMID\\d{12})$" .
 
-<http://www.ebi.ac.uk/cgi-bin/dbfetch?db=IPI&id=$id&format=default> a bridgeDB:uriPattern ;
+<http://www.ebi.ac.uk/cgi-bin/dbfetch?db=IPI&id=^IPI\\d{8}$&format=default> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.ebi.ac.uk/cgi-bin/dbfetch?db=IPI&id=" ;
-	bridgeDB:hasPostfix "&format=default" .
+	bridgeDB:hasPostfix "&format=default" ;
+	<http://identifiers.org/terms#idRegexPattern> "^IPI\\d{8}$" .
 
-<http://www.ebi.ac.uk/chebi/searchId.do?chebiId=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ebi.ac.uk/chebi/searchId.do?chebiId=" .
+<http://www.ebi.ac.uk/chebi/searchId.do?chebiId=^CHEBI:\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ebi.ac.uk/chebi/searchId.do?chebiId=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^CHEBI:\\d+$" .
 
 <http://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:" .
@@ -2776,17 +2906,21 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <https://www.ebi.ac.uk/chembldb/index.php/compound/inspect/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "https://www.ebi.ac.uk/chembldb/index.php/compound/inspect/" .
 
-<http://www.ebi.ac.uk/ena/data/view/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ebi.ac.uk/ena/data/view/" .
+<http://www.ebi.ac.uk/ena/data/view/^[A-Z]+[0-9]+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ebi.ac.uk/ena/data/view/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^[A-Z]+[0-9]+$" .
 
-<http://www.ebi.ac.uk/intact/pages/details/details.xhtml?interactionAc=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ebi.ac.uk/intact/pages/details/details.xhtml?interactionAc=" .
+<http://www.ebi.ac.uk/intact/pages/details/details.xhtml?interactionAc=^EBI\\-[0-9]+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ebi.ac.uk/intact/pages/details/details.xhtml?interactionAc=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^EBI\\-[0-9]+$" .
 
-<http://www.ebi.ac.uk/intenz/query?cmd=SearchEC&ec=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ebi.ac.uk/intenz/query?cmd=SearchEC&ec=" .
+<http://www.ebi.ac.uk/intenz/query?cmd=SearchEC&ec=^\\d+\\.-\\.-\\.-|\\d+\\.\\d+\\.-\\.-|\\d+\\.\\d+\\.\\d+\\.-|\\d+\\.\\d+\\.\\d+\\.(n)?\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ebi.ac.uk/intenz/query?cmd=SearchEC&ec=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+\\.-\\.-\\.-|\\d+\\.\\d+\\.-\\.-|\\d+\\.\\d+\\.\\d+\\.-|\\d+\\.\\d+\\.\\d+\\.(n)?\\d+$" .
 
-<http://www.ebi.ac.uk/interpro/DisplayIproEntry?ac=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ebi.ac.uk/interpro/DisplayIproEntry?ac=" .
+<http://www.ebi.ac.uk/interpro/DisplayIproEntry?ac=^IPR\\d{6}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ebi.ac.uk/interpro/DisplayIproEntry?ac=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^IPR\\d{6}$" .
 
 <http://www.ebi.ac.uk/ontology-lookup/?termId=PW:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.ebi.ac.uk/ontology-lookup/?termId=PW:" .
@@ -2794,104 +2928,133 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://www.ebi.ac.uk/QuickGO/GProtein?ac=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.ebi.ac.uk/QuickGO/GProtein?ac=" .
 
-<http://www.ebi.ac.uk/QuickGO/GTerm?id=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ebi.ac.uk/QuickGO/GTerm?id=" .
+<http://www.ebi.ac.uk/QuickGO/GTerm?id=^GO:\\d{7}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ebi.ac.uk/QuickGO/GTerm?id=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^GO:\\d{7}$" .
 
 <http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.ebi.ac.uk/QuickGO/GTerm?id=GO:" .
 
-<http://www.ebi.ac.uk/rhea/reaction.xhtml?id=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ebi.ac.uk/rhea/reaction.xhtml?id=" .
+<http://www.ebi.ac.uk/rhea/reaction.xhtml?id=^\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ebi.ac.uk/rhea/reaction.xhtml?id=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d{5}$" .
 
-<http://www.ebi.ac.uk/sbo/main/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ebi.ac.uk/sbo/main/" .
+<http://www.ebi.ac.uk/sbo/main/^SBO:\\d{7}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ebi.ac.uk/sbo/main/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^SBO:\\d{7}$" .
 
-<http://www.ebi.ac.uk/thornton-srv/databases/cgi-bin/MACiE/entry/getPage.pl?id=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ebi.ac.uk/thornton-srv/databases/cgi-bin/MACiE/entry/getPage.pl?id=" .
+<http://www.ebi.ac.uk/thornton-srv/databases/cgi-bin/MACiE/entry/getPage.pl?id=^M\\d{4}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ebi.ac.uk/thornton-srv/databases/cgi-bin/MACiE/entry/getPage.pl?id=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^M\\d{4}$" .
 
 <http://www.ebi.uniprot.org/entry/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.ebi.uniprot.org/entry/" .
 
-<http://www.ensembl.org/Anopheles_gambiae/Gene/Summary?_q=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ensembl.org/Anopheles_gambiae/Gene/Summary?_q=" .
+<http://www.ensembl.org/Anopheles_gambiae/Gene/Summary?_q=AGAP\\d{6}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ensembl.org/Anopheles_gambiae/Gene/Summary?_q=" ;
+	<http://identifiers.org/terms#idRegexPattern> "AGAP\\d{6}" .
 
-<http://www.ensembl.org/Bos_taurus/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ensembl.org/Bos_taurus/Gene/Summary?g=" .
+<http://www.ensembl.org/Bos_taurus/Gene/Summary?g=ENSBTAG\\d{11}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ensembl.org/Bos_taurus/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "ENSBTAG\\d{11}" .
 
 <http://www.ensembl.org/Caenorhabditis_elegans/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.ensembl.org/Caenorhabditis_elegans/Gene/Summary?g=" .
 
-<http://www.ensembl.org/Canis_familiaris/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ensembl.org/Canis_familiaris/Gene/Summary?g=" .
+<http://www.ensembl.org/Canis_familiaris/Gene/Summary?g=ENSCAFG\\d{11}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ensembl.org/Canis_familiaris/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "ENSCAFG\\d{11}" .
 
-<http://www.ensembl.org/Danio_rerio/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ensembl.org/Danio_rerio/Gene/Summary?g=" .
+<http://www.ensembl.org/Danio_rerio/Gene/Summary?g=ENSDARG\\d{11}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ensembl.org/Danio_rerio/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "ENSDARG\\d{11}" .
 
-<http://www.ensembl.org/Drosophila_melanogaster/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ensembl.org/Drosophila_melanogaster/Gene/Summary?g=" .
+<http://www.ensembl.org/Drosophila_melanogaster/Gene/Summary?g=FBgn\\d{7}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ensembl.org/Drosophila_melanogaster/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "FBgn\\d{7}" .
 
-<http://www.ensembl.org/Equus_caballus/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ensembl.org/Equus_caballus/Gene/Summary?g=" .
+<http://www.ensembl.org/Equus_caballus/Gene/Summary?g=ENSECAG\\d{11}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ensembl.org/Equus_caballus/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "ENSECAG\\d{11}" .
 
-<http://www.ensembl.org/Gallus_gallus/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ensembl.org/Gallus_gallus/Gene/Summary?g=" .
+<http://www.ensembl.org/Gallus_gallus/Gene/Summary?g=ENSGALG\\d{11}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ensembl.org/Gallus_gallus/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "ENSGALG\\d{11}" .
 
-<http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=" .
+<http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=ENSG\\d{11}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "ENSG\\d{11}" .
 
-<http://www.ensembl.org/id/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ensembl.org/id/" .
+<http://www.ensembl.org/id/^ENS[A-Z]*[FPTG]\\d{11}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ensembl.org/id/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^ENS[A-Z]*[FPTG]\\d{11}$" .
 
-<http://www.ensembl.org/Mus_musculus/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ensembl.org/Mus_musculus/Gene/Summary?g=" .
+<http://www.ensembl.org/Mus_musculus/Gene/Summary?g=ENSMUSG\\d{11}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ensembl.org/Mus_musculus/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "ENSMUSG\\d{11}" .
 
-<http://www.ensembl.org/Pan_troglodytes/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ensembl.org/Pan_troglodytes/Gene/Summary?g=" .
+<http://www.ensembl.org/Pan_troglodytes/Gene/Summary?g=ENSPTRG\\d{11}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ensembl.org/Pan_troglodytes/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "ENSPTRG\\d{11}" .
 
-<http://www.ensembl.org/Rattus_norvegicus/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ensembl.org/Rattus_norvegicus/Gene/Summary?g=" .
+<http://www.ensembl.org/Rattus_norvegicus/Gene/Summary?g=ENSRNOG\\d{11}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ensembl.org/Rattus_norvegicus/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "ENSRNOG\\d{11}" .
 
-<http://www.ensembl.org/Saccharomyces_cerevisiae/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ensembl.org/Saccharomyces_cerevisiae/Gene/Summary?g=" .
+<http://www.ensembl.org/Saccharomyces_cerevisiae/Gene/Summary?g=Y[A-Z][RL]\\d{3}[WC](?:\\-[A-Z])?> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ensembl.org/Saccharomyces_cerevisiae/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "Y[A-Z][RL]\\d{3}[WC](?:\\-[A-Z])?" .
 
-<http://www.ensembl.org/Sus_scrofa/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ensembl.org/Sus_scrofa/Gene/Summary?g=" .
+<http://www.ensembl.org/Sus_scrofa/Gene/Summary?g=ENSSSCG\\d{11}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ensembl.org/Sus_scrofa/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "ENSSSCG\\d{11}" .
 
-<http://www.ensembl.org/Xenopus_tropicalis/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ensembl.org/Xenopus_tropicalis/Gene/Summary?g=" .
+<http://www.ensembl.org/Xenopus_tropicalis/Gene/Summary?g=ENSXETG\\d{11}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ensembl.org/Xenopus_tropicalis/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "ENSXETG\\d{11}" .
 
-<http://www.genenames.org/data/hgnc_data.php?hgnc_id=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.genenames.org/data/hgnc_data.php?hgnc_id=" .
+<http://www.genenames.org/data/hgnc_data.php?hgnc_id=^(HGNC:)?\\d{1,5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.genenames.org/data/hgnc_data.php?hgnc_id=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^(HGNC:)?\\d{1,5}$" .
 
-<http://www.genenames.org/data/hgnc_data.php?match=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.genenames.org/data/hgnc_data.php?match=" .
+<http://www.genenames.org/data/hgnc_data.php?match=^[A-Za-z0-9]+> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.genenames.org/data/hgnc_data.php?match=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^[A-Za-z0-9]+" .
 
-<http://www.genome.jp/dbget-bin/www_bget?$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?" .
+<http://www.genome.jp/dbget-bin/www_bget?^\\w+:[\\w\\d\\.-]*$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w+:[\\w\\d\\.-]*$" .
 
-<http://www.genome.jp/dbget-bin/www_bget?cpd:$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?cpd:" .
+<http://www.genome.jp/dbget-bin/www_bget?cpd:^C\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?cpd:" ;
+	<http://identifiers.org/terms#idRegexPattern> "^C\\d+$" .
 
-<http://www.genome.jp/dbget-bin/www_bget?dr:$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?dr:" .
+<http://www.genome.jp/dbget-bin/www_bget?dr:^D\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?dr:" ;
+	<http://identifiers.org/terms#idRegexPattern> "^D\\d+$" .
 
-<http://www.genome.jp/dbget-bin/www_bget?gl:$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?gl:" .
+<http://www.genome.jp/dbget-bin/www_bget?gl:^G\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?gl:" ;
+	<http://identifiers.org/terms#idRegexPattern> "^G\\d+$" .
 
 <http://www.genome.jp/dbget-bin/www_bget?ko+$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?ko+" .
 
-<http://www.genome.jp/dbget-bin/www_bget?pathway+$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?pathway+" .
+<http://www.genome.jp/dbget-bin/www_bget?pathway+^\\w{2,4}\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?pathway+" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w{2,4}\\d{5}$" .
 
-<http://www.genome.jp/dbget-bin/www_bget?rn:$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?rn:" .
+<http://www.genome.jp/dbget-bin/www_bget?rn:^R\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?rn:" ;
+	<http://identifiers.org/terms#idRegexPattern> "^R\\d+$" .
 
-<http://www.gramene.org/Arabidopsis_thaliana/Gene/Summary?g=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.gramene.org/Arabidopsis_thaliana/Gene/Summary?g=" .
+<http://www.gramene.org/Arabidopsis_thaliana/Gene/Summary?g=AT[\\dCM]G\\d{5}\\-TAIR\\-G> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.gramene.org/Arabidopsis_thaliana/Gene/Summary?g=" ;
+	<http://identifiers.org/terms#idRegexPattern> "AT[\\dCM]G\\d{5}\\-TAIR\\-G" .
 
-<http://www.gramene.org/db/genes/search_gene?acc=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.gramene.org/db/genes/search_gene?acc=" .
+<http://www.gramene.org/db/genes/search_gene?acc=GR:\\d+> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.gramene.org/db/genes/search_gene?acc=" ;
+	<http://identifiers.org/terms#idRegexPattern> "GR:\\d+" .
 
 <http://www.gramene.org/db/literature/pub_search?ref_id=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.gramene.org/db/literature/pub_search?ref_id=" .
@@ -2902,20 +3065,24 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://www.gramene.org/Oryza_sativa/geneview?gene=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.gramene.org/Oryza_sativa/geneview?gene=" .
 
-<http://www.grenoble.prabi.fr/obiwarehouse/unipathway/upa?upid=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.grenoble.prabi.fr/obiwarehouse/unipathway/upa?upid=" .
+<http://www.grenoble.prabi.fr/obiwarehouse/unipathway/upa?upid=^UPA\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.grenoble.prabi.fr/obiwarehouse/unipathway/upa?upid=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^UPA\\d{5}$" .
 
-<http://www.hmdb.ca/metabolites/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.hmdb.ca/metabolites/" .
+<http://www.hmdb.ca/metabolites/^HMDB\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.hmdb.ca/metabolites/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^HMDB\\d{5}$" .
 
-<http://www.informatics.jax.org/marker/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.informatics.jax.org/marker/" .
+<http://www.informatics.jax.org/marker/^MGI:\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.informatics.jax.org/marker/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^MGI:\\d+$" .
 
 <http://www.informatics.jax.org/marker/MGI:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.informatics.jax.org/marker/MGI:" .
 
-<http://www.lipidmaps.org/data/get_lm_lipids_dbgif.php?LM_ID=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.lipidmaps.org/data/get_lm_lipids_dbgif.php?LM_ID=" .
+<http://www.lipidmaps.org/data/get_lm_lipids_dbgif.php?LM_ID=^LM(FA|GL|GP|SP|ST|PR|SL|PK)[0-9]{4}([0-9a-zA-Z]{4,6})?$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.lipidmaps.org/data/get_lm_lipids_dbgif.php?LM_ID=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^LM(FA|GL|GP|SP|ST|PR|SL|PK)[0-9]{4}([0-9a-zA-Z]{4,6})?$" .
 
 <http://www.maizegdb.org/cgi-bin/displaylocusresults.cgi?term=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.maizegdb.org/cgi-bin/displaylocusresults.cgi?term=" .
@@ -2926,94 +3093,117 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://www.metacyc.org/META/NEW-IMAGE?type=NIL&object=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.metacyc.org/META/NEW-IMAGE?type=NIL&object=" .
 
-<http://www.mirbase.org/cgi-bin/mature.pl?mature_acc=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.mirbase.org/cgi-bin/mature.pl?mature_acc=" .
+<http://www.mirbase.org/cgi-bin/mature.pl?mature_acc=MIMAT\\d{7}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.mirbase.org/cgi-bin/mature.pl?mature_acc=" ;
+	<http://identifiers.org/terms#idRegexPattern> "MIMAT\\d{7}" .
 
-<http://www.ncbi.nlm.nih.gov/biosystems/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/biosystems/" .
+<http://www.ncbi.nlm.nih.gov/biosystems/^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/biosystems/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi?REQUEST=ALLFIELDS&DATA=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi?REQUEST=ALLFIELDS&DATA=" .
+<http://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi?REQUEST=ALLFIELDS&DATA=^CCDS\\d+\\.\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/CCDS/CcdsBrowse.cgi?REQUEST=ALLFIELDS&DATA=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^CCDS\\d+\\.\\d+$" .
 
-<http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=" .
+<http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=^(NC|AC|NG|NT|NW|NZ|NM|NR|XM|XR|NP|AP|XP|ZP)_\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^(NC|AC|NG|NT|NW|NZ|NM|NR|XM|XR|NP|AP|XP|ZP)_\\d+$" .
 
-<http://www.ncbi.nlm.nih.gov/gene/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/gene/" .
+<http://www.ncbi.nlm.nih.gov/gene/^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/gene/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://www.ncbi.nlm.nih.gov/homologene/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/homologene/" .
+<http://www.ncbi.nlm.nih.gov/homologene/^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/homologene/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://www.ncbi.nlm.nih.gov/nuccore/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/nuccore/" .
+<http://www.ncbi.nlm.nih.gov/nuccore/(\\w\\d{5})|(\\w{2}\\d{6})|(\\w{3}\\d{5})> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/nuccore/" ;
+	<http://identifiers.org/terms#idRegexPattern> "(\\w\\d{5})|(\\w{2}\\d{6})|(\\w{3}\\d{5})" .
 
-<http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=" .
+<http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
-<http://www.ncbi.nlm.nih.gov/protein/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/protein/" .
+<http://www.ncbi.nlm.nih.gov/protein/^\\w+\\d+(\\.\\d+)?$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/protein/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\w+\\d+(\\.\\d+)?$" .
 
 <http://www.ncbi.nlm.nih.gov/pubmed/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/pubmed/" .
 
-<http://www.ncbi.nlm.nih.gov/UniGene/clust.cgi?UGID=1548618&SEARCH=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/UniGene/clust.cgi?UGID=1548618&SEARCH=" .
+<http://www.ncbi.nlm.nih.gov/UniGene/clust.cgi?UGID=1548618&SEARCH=[A-Z][a-z][a-z]?\\.\\d+> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/UniGene/clust.cgi?UGID=1548618&SEARCH=" ;
+	<http://identifiers.org/terms#idRegexPattern> "[A-Z][a-z][a-z]?\\.\\d+" .
 
 <http://www.ncbi.nlm.nih.gov/unigene?term=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.ncbi.nlm.nih.gov/unigene?term=" .
 
-<http://www.pathwaycommons.org/pc/record2.do?id=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.pathwaycommons.org/pc/record2.do?id=" .
+<http://www.pathwaycommons.org/pc/record2.do?id=^\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.pathwaycommons.org/pc/record2.do?id=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d+$" .
 
 <http://www.pdb.org/pdb/explore/explore.do?pdbId=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.pdb.org/pdb/explore/explore.do?pdbId=" .
 
-<http://www.pharmgkb.org/drug/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.pharmgkb.org/drug/" .
+<http://www.pharmgkb.org/drug/^PA\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.pharmgkb.org/drug/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^PA\\d+$" .
 
-<http://www.pharmgkb.org/gene/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.pharmgkb.org/gene/" .
+<http://www.pharmgkb.org/gene/^PA\\w+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.pharmgkb.org/gene/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^PA\\w+$" .
 
-<http://www.pharmgkb.org/pathway/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.pharmgkb.org/pathway/" .
+<http://www.pharmgkb.org/pathway/^PA\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.pharmgkb.org/pathway/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^PA\\d+$" .
 
-<http://www.phosphosite.org/proteinAction.do?id=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.phosphosite.org/proteinAction.do?id=" .
+<http://www.phosphosite.org/proteinAction.do?id=^\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.phosphosite.org/proteinAction.do?id=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^\\d{5}$" .
 
-<http://www.rcsb.org/pdb/explore/explore.do?structureId=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.rcsb.org/pdb/explore/explore.do?structureId=" .
+<http://www.rcsb.org/pdb/explore/explore.do?structureId=^[0-9][A-Za-z0-9]{3}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.rcsb.org/pdb/explore/explore.do?structureId=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^[0-9][A-Za-z0-9]{3}$" .
 
-<http://www.reactome.org/cgi-bin/eventbrowser_st_id?FROM_REACTOME=1&ST_ID=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.reactome.org/cgi-bin/eventbrowser_st_id?FROM_REACTOME=1&ST_ID=" .
+<http://www.reactome.org/cgi-bin/eventbrowser_st_id?FROM_REACTOME=1&ST_ID=^REACT_\\d+(\\.\\d+)?$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.reactome.org/cgi-bin/eventbrowser_st_id?FROM_REACTOME=1&ST_ID=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^REACT_\\d+(\\.\\d+)?$" .
 
-<http://www.sanger.ac.uk/cgi-bin/Rfam/getacc?$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.sanger.ac.uk/cgi-bin/Rfam/getacc?" .
+<http://www.sanger.ac.uk/cgi-bin/Rfam/getacc?RF\\d+> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.sanger.ac.uk/cgi-bin/Rfam/getacc?" ;
+	<http://identifiers.org/terms#idRegexPattern> "RF\\d+" .
 
 <http://www.shigen.nig.ac.jp/rice/oryzabase/gateway/gatewayAction.do?target=symbol&id=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.shigen.nig.ac.jp/rice/oryzabase/gateway/gatewayAction.do?target=symbol&id=" .
 
-<http://www.subtiwiki.uni-goettingen.de/wiki/index.php/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.subtiwiki.uni-goettingen.de/wiki/index.php/" .
+<http://www.subtiwiki.uni-goettingen.de/wiki/index.php/^BSU\\d{5}$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.subtiwiki.uni-goettingen.de/wiki/index.php/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^BSU\\d{5}$" .
 
-<http://www.uniprot.org/uniprot/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.uniprot.org/uniprot/" .
+<http://www.uniprot.org/uniprot/^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.uniprot.org/uniprot/" ;
+	<http://identifiers.org/terms#idRegexPattern> "^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])$" .
 
 <http://www.wikigenes.org/e/gene/e/$id.html> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.wikigenes.org/e/gene/e/" ;
 	bridgeDB:hasPostfix ".html" .
 
-<http://www.wikipathways.org/index.php/Pathway:$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.wikipathways.org/index.php/Pathway:" .
+<http://www.wikipathways.org/index.php/Pathway:WP\\d{1,5}> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.wikipathways.org/index.php/Pathway:" ;
+	<http://identifiers.org/terms#idRegexPattern> "WP\\d{1,5}" .
 
 <http://www.wikipathways.org/instance/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.wikipathways.org/instance/" .
 
-<http://www.wormbase.org/db/gene/gene?name=$id;class=Gene> a bridgeDB:uriPattern ;
+<http://www.wormbase.org/db/gene/gene?name=^WBGene\\d{8}$;class=Gene> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.wormbase.org/db/gene/gene?name=" ;
-	bridgeDB:hasPostfix ";class=Gene" .
+	bridgeDB:hasPostfix ";class=Gene" ;
+	<http://identifiers.org/terms#idRegexPattern> "^WBGene\\d{8}$" .
 
-<http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=" .
+<http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=^S\\d+$> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=" ;
+	<http://identifiers.org/terms#idRegexPattern> "^S\\d+$" .
 
 <http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugs/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www4.wiwiss.fu-berlin.de/drugbank/resource/drugs/" .
@@ -3021,5 +3211,6 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://www4.wiwiss.fu-berlin.de/drugbank/resource/targets/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www4.wiwiss.fu-berlin.de/drugbank/resource/targets/" .
 
-<http://zfin.org/action/marker/view/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://zfin.org/action/marker/view/" .
+<http://zfin.org/action/marker/view/ZDB\\-GENE\\-\\d+\\-\\d+> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://zfin.org/action/marker/view/" ;
+	<http://identifiers.org/terms#idRegexPattern> "ZDB\\-GENE\\-\\d+\\-\\d+" .

@@ -36,8 +36,11 @@ public class BridgeDBRdfHandlerTest {
         assertEquals("M", pattern.getCode());
         
         File file = new File ("test-data/GeneratedDataSource.ttl");
-        System.out.println("writing to " + file.getAbsolutePath());
+        Reporter.println("writing to " + file.getAbsolutePath());
         BridgeDBRdfHandler.writeRdfToFile(file);
+        
+        Reporter.println("Reading back in " + file.getAbsolutePath());
+        BridgeDBRdfHandler.parseRdfFile(file);
     }
 
 }

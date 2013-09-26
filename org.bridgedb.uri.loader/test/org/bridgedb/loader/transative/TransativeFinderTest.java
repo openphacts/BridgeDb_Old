@@ -70,7 +70,7 @@ public class TransativeFinderTest {
                 .urlPattern(pattern)
                 .asDataSource();
         TransativeFinder.addAcceptableVai(dataSource);
-        UriPattern uriPattern = UriPattern.register(pattern, name, false);
+        UriPattern uriPattern = UriPattern.register(pattern, null, name, false);
     }
     
     protected void load(String path) throws BridgeDBException{

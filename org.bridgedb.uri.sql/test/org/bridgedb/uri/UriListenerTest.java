@@ -174,11 +174,11 @@ public abstract class UriListenerTest extends IDMapperTestBase{
     public static void setupUriPatterns() throws BridgeDBException{
         setupUris();
         connectionOk = true;
-        uriPattern1 = UriPattern.register(uriSpace1 + "$id", dataSource1Code, false);
-        uriPattern2 = UriPattern.register(uriSpace2 + "$id", dataSource2Code, false);
-        UriPattern.register(uriSpace2a + "$id", dataSource2Code, false);
-        uriPattern3 = UriPattern.register(uriSpace3 + "$id", dataSource3Code, false);
-        UriPattern.register(uriSpace3a + "$id", dataSource3Code, false);
+        uriPattern1 = UriPattern.register(uriSpace1 + "$id", null, dataSource1Code, false);
+        uriPattern2 = UriPattern.register(uriSpace2 + "$id", null, dataSource2Code, false);
+        UriPattern.register(uriSpace2a + "$id", null, dataSource2Code, false);
+        uriPattern3 = UriPattern.register(uriSpace3 + "$id", null, dataSource3Code, false);
+        UriPattern.register(uriSpace3a + "$id", null, dataSource3Code, false);
     }
         
     /**

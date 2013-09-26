@@ -13,8 +13,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
+import org.bridgedb.DataSourcePatterns;
 import org.bridgedb.bio.DataSourceTxt;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.rdf.RdfBase;
@@ -23,6 +25,7 @@ import org.bridgedb.rdf.constants.DCatConstants;
 import org.bridgedb.rdf.constants.IdenitifiersOrgConstants;
 import org.bridgedb.rdf.constants.VoidConstants;
 import org.bridgedb.utils.BridgeDBException;
+import org.bridgedb.utils.Reporter;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
@@ -46,20 +49,20 @@ public class IdentifersOrgReader extends RdfBase {
     
     static {
         multiples = new HashSet();
-        multiples.add("http://arabidopsis.org/servlets/TairObject?accession=$id");
-        multiples.add("http://purl.uniprot.org/uniprot/$id");
-        multiples.add("http://www.chemspider.com/$id");
-        multiples.add("http://www.ebi.ac.uk/ena/data/view/$id");
-        multiples.add("http://www.ebi.ac.uk/ontology-lookup/?termId=$id");
-        multiples.add("http://www.genome.jp/dbget-bin/www_bget?$id");
-        multiples.add("http://www.genome.jp/kegg-bin/show_organism?org=$id");
+//        multiples.add("http://arabidopsis.org/servlets/TairObject?accession=$id");
+//        multiples.add("http://purl.uniprot.org/uniprot/$id");
+//        multiples.add("http://www.chemspider.com/$id");
+//        multiples.add("http://www.ebi.ac.uk/ena/data/view/$id");
+//        multiples.add("http://www.ebi.ac.uk/ontology-lookup/?termId=$id");
+//        multiples.add("http://www.genome.jp/dbget-bin/www_bget?$id");
+//        multiples.add("http://www.genome.jp/kegg-bin/show_organism?org=$id");
         //multiples.add("http://www.gramene.org/db/genes/search_gene?acc=$id");
         multiples.add("http://linkedchemistry.info/chembl/chemblid/$id");
-        multiples.add("http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=$id");
-        multiples.add("http://www.ncbi.nlm.nih.gov/nucest/$id");
-        multiples.add("http://www.ncbi.nlm.nih.gov/protein/$id");
-        multiples.add("http://stke.sciencemag.org/cgi/cm/stkecm;$id");
-        multiples.add("http://www.uniprot.org/uniprot/$id");
+//        multiples.add("http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=$id");
+//        multiples.add("http://www.ncbi.nlm.nih.gov/nucest/$id");
+//        multiples.add("http://www.ncbi.nlm.nih.gov/protein/$id");
+//        multiples.add("http://stke.sciencemag.org/cgi/cm/stkecm;$id");
+//        multiples.add("http://www.uniprot.org/uniprot/$id");
      }
  
     private void doParseRdfInputStream(InputStream stream) throws BridgeDBException {
@@ -73,6 +76,7 @@ public class IdentifersOrgReader extends RdfBase {
 //            for (String multiple:multiples){
 //                checkMultiple(repositoryConnection, multiple);
 //            }
+            Reporter.println("Registry read in. Now loading DataSources");
             loadData(repositoryConnection);
         } catch (Exception ex) {
             throw new BridgeDBException ("Error parsing Rdf inputStream ", ex);
@@ -123,7 +127,8 @@ public class IdentifersOrgReader extends RdfBase {
             }
             //ystem.out.println(statement.getObject().stringValue() + " -> " + dataSource);
             loadExtraDataSourceInfo(repositoryConnection, catalogRecord, dataSource);
-            loadUriPatterns(repositoryConnection, catalogRecord, dataSource);
+            Pattern regex = loadRegex(repositoryConnection, catalogRecord, dataSource);
+            loadUriPatterns(repositoryConnection, catalogRecord, dataSource, regex);
             count++;
         }
         System.out.println("found " + count);
@@ -150,8 +155,32 @@ public class IdentifersOrgReader extends RdfBase {
         }
    }
 
+    private Pattern loadRegex(RepositoryConnection repositoryConnection, Resource catalogRecord, DataSource dataSource) 
+            throws RepositoryException, BridgeDBException {
+        String regexSt = getPossibleSingletonString(repositoryConnection, catalogRecord, IdenitifiersOrgConstants.REGEX_URI);
+        Pattern regex = null;
+        if (regexSt != null){
+            regex = Pattern.compile(regexSt);
+        }
+        Pattern dataSourceRegex = DataSourcePatterns.getPatterns().get(dataSource);
+        //if (regex != null){
+            if (dataSourceRegex != null && !dataSourceRegex.pattern().equals(regex.pattern())){
+                System.err.println("Regex patterns do not match for " + catalogRecord 
+                        + " was " + regex + " but BridgeBD has " + dataSourceRegex);
+                //System.err.println("Regex patterns do not match for " + dataSource 
+                //        + " was " + dataSourceRegex + " but miriam has " + regex);
+                //regex = dataSourceRegex;
+                //throw new BridgeDBException ("Regex patterns do not match for " + dataSource 
+                //        + " was " + dataSourceRegex + " but miriam has " + regex);
+            }
+        //} else {
+        //    regex = dataSourceRegex;
+        //}
+        return regex;
+    }
+
     private void loadUriPatterns(RepositoryConnection repositoryConnection, Resource CatalogRecord, 
-            DataSource dataSource) throws Exception{
+            DataSource dataSource, Pattern regex) throws Exception{
         //ystem.out.println("Looking for " + CatalogRecord);
         RepositoryResult<Statement> statements = 
                 repositoryConnection.getStatements(CatalogRecord, DCatConstants.DISTRIBUTION_URI, null, true);
@@ -168,7 +197,7 @@ public class IdentifersOrgReader extends RdfBase {
                 } else {
                     //ystem.out.println("\t" + patternString);
                     //UriPattern pattern = UriPattern.byPattern(accessUrlStatement.getObject().stringValue());
-                    UriPattern pattern = UriPattern.register(patternString, dataSource.getSystemCode(), false);
+                    UriPattern pattern = UriPattern.register(patternString, regex, dataSource.getSystemCode(), false);
                     String dataSourceSysCode = null;
                     if (dataSource != null){
                         dataSourceSysCode = dataSource.getSystemCode();
