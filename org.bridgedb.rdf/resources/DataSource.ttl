@@ -189,16 +189,8 @@ bridgeDB:DataSource_Chembl_Target a bridgeDB:DataSource ;
 	bridgeDB:type "unknown" ;
 	bridgeDB:hasUrlPattern <http://data.kasabi.com/dataset/chembl-rdf/target/t$id> ;
 	bridgeDB:hasUriPattern <http://chem2bio2rdf.org/chembl/resource/chembl_targets/$id> ;
-	bridgeDB:hasWikiPathwaysPattern <http://data.kasabi.com/dataset/chembl-rdf/target/t$id> ;
-	bridgeDB:hasUriPattern <http://linkedchemistry.info/chembl/target/t$id> .
-
-bridgeDB:DataSource_Chembl_16_Target a bridgeDB:DataSource ;
-	bridgeDB:fullName "Chembl 16 Target" ;
-	bridgeDB:systemCode "Chembl16Target" ;
-	bridgeDB:idExample "CHEMBL1293266" ;
-	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
-	bridgeDB:type "unknown" ;
-	bridgeDB:hasUrlPattern <http://rdf.ebi.ac.uk/resource/chembl/target/$id> .
+	bridgeDB:hasUriPattern <http://linkedchemistry.info/chembl/target/t$id> ;
+	bridgeDB:hasUriPattern <http://rdf.ebi.ac.uk/resource/chembl/target/$id> .
 
 bridgeDB:DataSource_ChEMBL_target_component a bridgeDB:DataSource ;
 	bridgeDB:fullName "ChEMBL target component" ;
@@ -477,7 +469,6 @@ bridgeDB:DataSource_HGNC a bridgeDB:DataSource ;
 	bridgeDB:hasUrlPattern <http://www.genenames.org/data/hgnc_data.php?match=$id> ;
 	bridgeDB:Organism bridgeDB:Organism_Hs ;
  	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/hgnc.symbol/$id> .
-
 
 bridgeDB:DataSource_HGNC_Accession_number a bridgeDB:DataSource ;
 	bridgeDB:fullName "HGNC Accession number" ;
@@ -1022,7 +1013,6 @@ bridgeDB:DataSource_UniGene_URI a bridgeDB:DataSource ;
 	bridgeDB:hasUrlPattern <http://www.ncbi.nlm.nih.gov/unigene?term=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/unigene/$id> ;
 	bridgeDB:hasWikiPathwaysPattern <http://www.ncbi.nlm.nih.gov/unigene?term=$id> .
-
 
 bridgeDB:DataSource_Uniprot_Enzyme a bridgeDB:DataSource ;
 	bridgeDB:fullName "Uniprot Enzyme" ;
