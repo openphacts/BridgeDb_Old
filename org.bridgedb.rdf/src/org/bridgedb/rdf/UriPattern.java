@@ -197,8 +197,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
                 if (regex == null || regex.pattern().isEmpty()){
                     return possible;
                 }
-            }
-            if (regex != null && possible.regex.pattern().equals(regex.pattern())){
+            } else if (regex != null && possible.regex.pattern().equals(regex.pattern())){
                 return possible;
             }
         }
