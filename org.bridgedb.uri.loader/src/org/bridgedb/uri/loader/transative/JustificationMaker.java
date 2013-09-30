@@ -49,6 +49,7 @@ public class JustificationMaker {
             ));
     
     private static String CW_GENE_HACK = "http://example.com/ConceptWikiGene";
+    private static String CW_PROTEIN_HACK = "http://example.com/ConceptWikiProtein";
     
     public static String combine(String left, String right) throws BridgeDBException{
         String result = possibleCombine(left, right);
@@ -103,6 +104,8 @@ public class JustificationMaker {
                 return ChemInf.FUNCTIONAL_RNA_CODING_GENE;
             } else if (right.equals(CW_GENE_HACK)) {
                 return CW_GENE_HACK;
+            } else if (right.equals(CW_PROTEIN_HACK)) {
+                return CW_PROTEIN_HACK;
             } else {
                 return null;
             }
@@ -125,6 +128,12 @@ public class JustificationMaker {
         } else if (left.equals(CW_GENE_HACK)){
             if (right.equals(ChemInf.PROTEIN)) {
                 return CW_GENE_HACK;
+            } else {
+                return null;
+            }
+        } else if (left.equals(CW_PROTEIN_HACK)){
+            if (right.equals(ChemInf.PROTEIN)) {
+                return CW_PROTEIN_HACK;
             } else {
                 return null;
             }
