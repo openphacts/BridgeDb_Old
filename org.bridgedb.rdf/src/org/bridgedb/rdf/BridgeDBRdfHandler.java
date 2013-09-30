@@ -161,6 +161,8 @@ public class BridgeDBRdfHandler extends RdfBase{
         if (regexValue != null){
             regex = Pattern.compile(regexValue.stringValue());
             DataSourcePatterns.registerPattern(builder.asDataSource(), regex);
+        } else {
+            regex = DataSourcePatterns.getPatterns().get(builder.asDataSource());
         }
         
         String xrefPrefix = readCodeMapper (repositoryConnection, systemCode);
