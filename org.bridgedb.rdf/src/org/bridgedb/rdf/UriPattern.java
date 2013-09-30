@@ -111,11 +111,9 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
     public static void registerUriPatterns() throws BridgeDBException{
         for (DataSource dataSource:DataSource.getDataSources()){
             Pattern regex = DataSourcePatterns.getPatterns().get(dataSource);
-            if (!dataSource.getSystemCode().equals("Sp")){
-                String url = dataSource.getKnownUrl("$id");
-                if (url != null){
-                    register(url, regex, dataSource.getSystemCode(), true);
-                }
+            String url = dataSource.getKnownUrl("$id");
+            if (url != null){
+                register(url, regex, dataSource.getSystemCode(), true);
             }
             String identifersOrgUrl = dataSource.getIdentifiersOrgUri("$id");
             if (identifersOrgUrl != null){

@@ -367,10 +367,7 @@ public class BridgeDBRdfHandler extends RdfBase{
         String url = dataSource.getKnownUrl("$id");
         UriPattern urlPattern = UriPattern.existingByPattern(url, regex);
         if (url != null){
-            //HACK as SwissProt and Trembl share same URL
-            if (!dataSource.getSystemCode().equals("Sp")){
-                repositoryConnection.add(id, BridgeDBConstants.HAS_URL_PATTERN_URI, urlPattern.getResourceId());
-            }
+            repositoryConnection.add(id, BridgeDBConstants.HAS_URL_PATTERN_URI, urlPattern.getResourceId());
         }
 
         String identifersOrg = dataSource.getIdentifiersOrgUri("$id");
