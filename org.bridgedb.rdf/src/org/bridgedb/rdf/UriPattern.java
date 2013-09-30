@@ -70,7 +70,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         }
         prefix = pattern.substring(0, pos);
         postfix = pattern.substring(pos + 3);
-        Set<UriPattern> byPatterns = byPattern.get(this);
+        Set<UriPattern> byPatterns = byPattern.get(pattern);
         if (byPatterns == null){
             byPatterns = new HashSet<UriPattern>();
         }
