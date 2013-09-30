@@ -18,25 +18,14 @@ package org.bridgedb.bio;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
-
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.bridgedb.DataSource;
 import org.bridgedb.DataSourcePatterns;
-import org.bridgedb.impl.InternalUtils;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 public class DataSourceTxt 
 {
