@@ -163,19 +163,25 @@ public class IdentifersOrgReader extends RdfBase {
             regex = Pattern.compile(regexSt);
         }
         Pattern dataSourceRegex = DataSourcePatterns.getPatterns().get(dataSource);
-        //if (regex != null){
-            if (dataSourceRegex != null && !dataSourceRegex.pattern().equals(regex.pattern())){
-                System.err.println("Regex patterns do not match for " + catalogRecord 
-                        + " was " + regex + " but BridgeBD has " + dataSourceRegex);
-                //System.err.println("Regex patterns do not match for " + dataSource 
-                //        + " was " + dataSourceRegex + " but miriam has " + regex);
-                //regex = dataSourceRegex;
-                //throw new BridgeDBException ("Regex patterns do not match for " + dataSource 
-                //        + " was " + dataSourceRegex + " but miriam has " + regex);
+        if (dataSourceRegex != null && !dataSourceRegex.pattern().equals(regex.pattern())){
+            System.err.println("Regex patterns do not match for " + catalogRecord 
+                    + " was " + regex + " but BridgeBD has " + dataSourceRegex);
+            for (UriPattern pattern:UriPattern.byCode(dataSource.getSystemCode())){
+                if (pattern.getRegex() == null){
+                    pattern.setRegex(regex);
+                } else if (pattern.getRegex().pattern().equals(dataSourceRegex.pattern())){
+                    pattern.setRegex(regex);
+                } else {
+                    throw new BridgeDBException("Unable to change regex pattern for " + pattern + " to " + regex);
+                }    
             }
-        //} else {
-        //    regex = dataSourceRegex;
-        //}
+        }
+        if (regex != null){
+            DataSourcePatterns.registerPattern(dataSource, regex);
+        }
+        UriPattern identifiersOrgPattern = 
+                UriPattern.register(dataSource.getIdentifiersOrgUri("$id"), regex, dataSource.getSystemCode(), true);
+             
         return regex;
     }
 

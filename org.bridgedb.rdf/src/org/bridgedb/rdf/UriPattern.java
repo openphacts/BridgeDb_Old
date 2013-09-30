@@ -48,7 +48,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
 
     private final String prefix;
     private final String postfix;
-    private final Pattern regex;
+    private Pattern regex;
     private final String code;
     private final boolean isDataSourceData;
     
@@ -142,12 +142,12 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         Set<UriPattern> possibles = byPattern.get(pattern);
         if (possibles != null){
             for (UriPattern possible:possibles){
-                if (possible.regex == null || possible.regex.pattern().isEmpty()){
+                if (possible.getRegex() == null || possible.getRegex().pattern().isEmpty()){
                     if (regex == null || regex.pattern().isEmpty()) {
                         result = possible;
                     }
                 } else {
-                    if (regex != null && possible.regex.pattern().equals(regex.pattern())){
+                    if (regex != null && possible.getRegex().pattern().equals(regex.pattern())){
                         return possible;
                     }
                 }
@@ -193,11 +193,16 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
             throw new BridgeDBException ("No UriPatterns known for: " + pattern);            
         } 
         for (UriPattern possible:possibles){
-            if (possible.regex == null || possible.regex.pattern().isEmpty()){
+            if (possible.getRegex() == null || possible.getRegex().pattern().isEmpty()){
                 if (regex == null || regex.pattern().isEmpty()){
                     return possible;
                 }
-            } else if (regex != null && possible.regex.pattern().equals(regex.pattern())){
+            } else if (regex != null && possible.getRegex().pattern().equals(regex.pattern())){
+                return possible;
+            }
+        }
+        for (UriPattern possible:possibles){
+            if (possible.getRegex() == null){
                 return possible;
             }
         }
@@ -217,13 +222,13 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
     }
 
     public String getUriPattern() {
-        if (regex == null){
+        if (getRegex() == null){
             return  getUriPatternWithId();
         }
         if (postfix == null){
-            return prefix + encode(regex);
+            return prefix + encode(getRegex());
         } else {
-            return prefix + encode(regex) + postfix;
+            return prefix + encode(getRegex()) + postfix;
         }
     }
 
@@ -246,13 +251,13 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         if (!postfix.isEmpty()){
             repositoryConnection.add(id, BridgeDBConstants.HAS_POSTFIX_URI,  new LiteralImpl(postfix));
         }
-        if (regex != null && !regex.pattern().isEmpty()){
-            repositoryConnection.add(id, IdenitifiersOrgConstants.REGEX_URI,  new LiteralImpl(regex.pattern()));
+        if (getRegex() != null && !regex.pattern().isEmpty()){
+            repositoryConnection.add(id, IdenitifiersOrgConstants.REGEX_URI,  new LiteralImpl(getRegex().pattern()));
         }
     }        
     
     public static UriPattern readUriPattern(RepositoryConnection repositoryConnection, Resource uriPatternId, 
-            Pattern dataSourceRegex, String code, String xrefPrefix, boolean isDataSourceData) throws BridgeDBException, RepositoryException{
+            Pattern dataSourceRegex, String code, boolean isDataSourceData) throws BridgeDBException, RepositoryException{
         //TODO handle the extra statements
         //checkStatements(repositoryConnection, uriPatternId);
         UriPattern pattern;      
@@ -266,15 +271,9 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         }
         if (prefix == null){
             String uriPattern = uriPatternId.stringValue();
-            if (xrefPrefix != null){
-                uriPattern = uriPattern.replace("$id", xrefPrefix + "$id");
-            }
             pattern = register(uriPattern, regex, code, isDataSourceData);
         } else {
             String postfix = getPossibleSingletonString(repositoryConnection, uriPatternId, BridgeDBConstants.HAS_POSTFIX_URI);
-            if (xrefPrefix != null){
-                prefix = prefix + xrefPrefix;
-            }
             if (postfix == null){
                 pattern = register(prefix + "$id", regex, code, isDataSourceData);
             } else {
@@ -329,6 +328,20 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
      */
     public boolean isDataSourceData() {
         return isDataSourceData;
+    }
+
+    /**
+     * @return the regex
+     */
+    public Pattern getRegex() {
+        return regex;
+    }
+
+    /**
+     * @param regex the regex to set
+     */
+    public void setRegex(Pattern regex) {
+        this.regex = regex;
     }
 
  }

@@ -26,10 +26,10 @@ public class BridgeDBRdfHandlerTest {
         UriPattern.registerUriPatterns();
         UriPattern.refreshUriPatterns(); 
         BridgeDBRdfHandler.init();
-        UriPattern pattern = UriPattern.byPattern("http://identifiers.org/mgd/MGI:$id");
+        UriPattern pattern = UriPattern.byPattern("http://identifiers.org/mgd/$id");
         assertEquals("M", pattern.getCode());
         
-        pattern = UriPattern.byPattern("http://www.informatics.jax.org/marker/MGI:$id");
+        pattern = UriPattern.byPattern("http://www.informatics.jax.org/marker/$id");
         assertEquals("M", pattern.getCode());
         
         pattern = UriPattern.byPattern("http://purl.uniprot.org/mgi/$id");
