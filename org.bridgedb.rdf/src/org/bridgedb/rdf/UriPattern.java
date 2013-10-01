@@ -120,26 +120,28 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
             result = new UriPattern(pattern, patternType);
         }
         result.registerSysCode(sysCode);
-        if (result.patternType != patternType){
-            if (result.sysCodes.size() == 1){
-                if (result.patternType == UriPatternType.mainUrlPattern && patternType == UriPatternType.dataSourceUriPattern){
-                    //do nothing ok;
-                } else if (result.patternType == UriPatternType.dataSourceUriPattern && patternType == UriPatternType.mainUrlPattern){
-                    result.patternType = UriPatternType.mainUrlPattern;
-                } else {
-                    throw new BridgeDBException("UriPattern " + pattern + " already set to type " + result.patternType 
+        if (result.patternType == patternType){
+            return result;
+        }
+        switch (patternType){
+            case mainUrlPattern:
+                if (result.patternType == UriPatternType.dataSourceUriPattern){
+                    if (result.sysCodes.size() == 1){
+                        result.patternType = UriPatternType.mainUrlPattern;
+                    }
+                    return result;
+                }
+                break;
+            case dataSourceUriPattern:
+                if (result.patternType == UriPatternType.mainUrlPattern){
+                    if (result.sysCodes.size() > 1){
+                        result.patternType = UriPatternType.dataSourceUriPattern;
+                    }
+                    return result;
+                }
+            default:
+                throw new BridgeDBException("UriPattern " + pattern + " already set to type " + result.patternType 
                         + " so unable to set to " + patternType);
-                }
-            } else {
-                if (result.patternType == UriPatternType.mainUrlPattern && patternType == UriPatternType.dataSourceUriPattern){
-                    result.patternType =  UriPatternType.dataSourceUriPattern;
-                } else if (result.patternType == UriPatternType.dataSourceUriPattern && patternType == UriPatternType.mainUrlPattern){
-                    //do nothing
-                } else {
-                    throw new BridgeDBException("UriPattern " + pattern + " already set to type " + result.patternType 
-                           + " so unable to set to " + patternType + " and used in " + result.sysCodes.size() + " dataSources.");
-                }
-            }
         }
         return result;
     }
@@ -264,4 +266,9 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         return results;
     }
 
+    //public static checkRegexPatterns(){
+    //    for (UriPattern uriPattern:byPattern.values()){
+    //        uriPattern.sysCodes;
+    //    }
+    //}
 }
