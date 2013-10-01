@@ -270,6 +270,7 @@ public class BridgeDBRdfHandler extends RdfBase{
         } catch (IOException ex) {
             throw new BridgeDBException ("Error accessing file " + file.getAbsolutePath(), ex);
         }
+        UriPattern.checkRegexPatterns();
     }
     
     static void parseRdfInputStream(InputStream stream) throws BridgeDBException {

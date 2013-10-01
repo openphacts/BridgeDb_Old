@@ -50,20 +50,7 @@ public class IdentifersOrgReader extends RdfBase {
     
     static {
         multiples = new HashSet();
-//        multiples.add("http://arabidopsis.org/servlets/TairObject?accession=$id");
-//        multiples.add("http://purl.uniprot.org/uniprot/$id");
-//        multiples.add("http://www.chemspider.com/$id");
-//        multiples.add("http://www.ebi.ac.uk/ena/data/view/$id");
-//        multiples.add("http://www.ebi.ac.uk/ontology-lookup/?termId=$id");
-//        multiples.add("http://www.genome.jp/dbget-bin/www_bget?$id");
-//        multiples.add("http://www.genome.jp/kegg-bin/show_organism?org=$id");
-        //multiples.add("http://www.gramene.org/db/genes/search_gene?acc=$id");
         multiples.add("http://linkedchemistry.info/chembl/chemblid/$id");
-//        multiples.add("http://www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?val=$id");
-//        multiples.add("http://www.ncbi.nlm.nih.gov/nucest/$id");
-//        multiples.add("http://www.ncbi.nlm.nih.gov/protein/$id");
-//        multiples.add("http://stke.sciencemag.org/cgi/cm/stkecm;$id");
-//        multiples.add("http://www.uniprot.org/uniprot/$id");
      }
  
     private void doParseRdfInputStream(InputStream stream) throws BridgeDBException {

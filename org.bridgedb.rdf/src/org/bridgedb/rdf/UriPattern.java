@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 import org.bridgedb.DataSource;
 import org.bridgedb.DataSourcePatterns;
 import org.bridgedb.rdf.constants.BridgeDBConstants;
@@ -266,9 +267,26 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         return results;
     }
 
-    //public static checkRegexPatterns(){
-    //    for (UriPattern uriPattern:byPattern.values()){
-    //        uriPattern.sysCodes;
-    //    }
-    //}
+    public static void checkRegexPatterns() throws BridgeDBException{
+        for (UriPattern uriPattern:byPattern.values()){
+            if (uriPattern.sysCodes.size() > 1){
+                Set<String> patterns = new HashSet<String>();
+                for (String sysCode:uriPattern.sysCodes){
+                    DataSource dataSource = DataSource.getExistingBySystemCode(sysCode);
+                    Pattern regex = DataSourcePatterns.getPatterns().get(dataSource);
+                    if (regex == null || regex.pattern().isEmpty()){
+                        throw new BridgeDBException("UriPattern " + uriPattern 
+                                + " is registered to " + uriPattern.sysCodes + " but DataSource " + dataSource 
+                                + " has regex pattern " + regex);
+                    }
+                    if (patterns.contains(regex.pattern())){
+                        throw new BridgeDBException("UriPattern " + uriPattern 
+                                + " is registered to " + uriPattern.sysCodes 
+                                + " but at least two have the regex pattern " + regex);
+                    }
+                    patterns.add(regex.pattern());
+                }
+            }
+        }
+    }
 }
