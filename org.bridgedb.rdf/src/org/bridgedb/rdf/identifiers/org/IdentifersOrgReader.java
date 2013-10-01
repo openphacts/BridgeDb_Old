@@ -21,6 +21,7 @@ import org.bridgedb.bio.DataSourceTxt;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.rdf.RdfBase;
 import org.bridgedb.rdf.UriPattern;
+import org.bridgedb.rdf.UriPatternType;
 import org.bridgedb.rdf.constants.DCatConstants;
 import org.bridgedb.rdf.constants.IdenitifiersOrgConstants;
 import org.bridgedb.rdf.constants.VoidConstants;
@@ -141,6 +142,9 @@ public class IdentifersOrgReader extends RdfBase {
         if (fullName.equals("UniGene")){
             fullName = "UniGene number";
         }
+        UriPattern identifiersOrgPattern = 
+            UriPattern.register(identiferOrgBase + "$id", sysCode, UriPatternType.identifiersOrgPattern);
+             
         DataSource ds = DataSource.register(sysCode, fullName)
                 .identifiersOrgBase(identiferOrgBase)
                 .asDataSource();
@@ -166,22 +170,10 @@ public class IdentifersOrgReader extends RdfBase {
         if (dataSourceRegex != null && !dataSourceRegex.pattern().equals(regex.pattern())){
             System.err.println("Regex patterns do not match for " + catalogRecord 
                     + " was " + regex + " but BridgeBD has " + dataSourceRegex);
-            for (UriPattern pattern:UriPattern.byCode(dataSource.getSystemCode())){
-                if (pattern.getRegex() == null){
-                    pattern.setRegex(regex);
-                } else if (pattern.getRegex().pattern().equals(dataSourceRegex.pattern())){
-                    pattern.setRegex(regex);
-                } else {
-                    throw new BridgeDBException("Unable to change regex pattern for " + pattern + " to " + regex);
-                }    
-            }
         }
         if (regex != null){
             DataSourcePatterns.registerPattern(dataSource, regex);
         }
-        UriPattern identifiersOrgPattern = 
-                UriPattern.register(dataSource.getIdentifiersOrgUri("$id"), regex, dataSource.getSystemCode(), true);
-             
         return regex;
     }
 
@@ -203,22 +195,13 @@ public class IdentifersOrgReader extends RdfBase {
                 } else {
                     //ystem.out.println("\t" + patternString);
                     //UriPattern pattern = UriPattern.byPattern(accessUrlStatement.getObject().stringValue());
-                    UriPattern pattern = UriPattern.register(patternString, regex, dataSource.getSystemCode(), false);
+                    UriPattern pattern = UriPattern.register(patternString, dataSource.getSystemCode(), UriPatternType.dataSourceUriPattern);
                     String dataSourceSysCode = null;
                     if (dataSource != null){
                         dataSourceSysCode = dataSource.getSystemCode();
                         if (dataSource.getKnownUrl("$id") == null){
                             DataSource.register(dataSourceSysCode, dataSource.getFullName()).urlPattern(patternString);
                         }
-                    }
-                    String patternSysCode = null;
-                    if (pattern != null){
-                        patternSysCode = pattern.getCode();
-                    }
-                    //ystem.out.println("\t\t" + dataSourceSysCode + "   " + patternSysCode);
-                    if (patternSysCode != null && !patternSysCode.equals(dataSourceSysCode)){
-                        throw new BridgeDBException (patternString +" maps to " + patternSysCode 
-                                + " but Datasource is " + dataSourceSysCode + " from " + dataSource);
                     }
                 }
             }

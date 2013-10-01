@@ -165,10 +165,11 @@ public class BridgeDBRdfHandler extends RdfBase{
             regex = DataSourcePatterns.getPatterns().get(builder.asDataSource());
         }
         
-        Value uriValue = getPossibleSingleton(repositoryConnection, dataSourceId, BridgeDBConstants.HAS_URL_PATTERN_URI);
-        if (uriValue != null){
-            String pattern = getUriPatternWithoutXrefPrefix(repositoryConnection, (Resource)uriValue, regex, systemCode);
-            builder.urlPattern(pattern);
+        Value urlValue = getPossibleSingleton(repositoryConnection, dataSourceId, BridgeDBConstants.HAS_URL_PATTERN_URI);
+        if (urlValue != null){
+            UriPattern urlPattern = getUriPattern(repositoryConnection, (Resource)urlValue, 
+                    systemCode, UriPatternType.mainUrlPattern);
+            builder.urlPattern(urlPattern.getUriPattern());
         }
         
         String urnBase = getPossibleSingletonString(repositoryConnection, dataSourceId, BridgeDBConstants.URN_BASE_URI);
@@ -178,8 +179,9 @@ public class BridgeDBRdfHandler extends RdfBase{
         
         Value identifiersOrgValue = getPossibleSingleton(repositoryConnection, dataSourceId, BridgeDBConstants.HAS_IDENTIFERS_ORG_PATTERN_URI);
         if (identifiersOrgValue != null){
-            String pattern = getUriPatternWithoutXrefPrefix(repositoryConnection, (Resource)identifiersOrgValue, regex, systemCode);
-            builder.identifiersOrgBase(pattern);
+            UriPattern identifiersOrgPattern = getUriPattern(repositoryConnection, (Resource)identifiersOrgValue, 
+                    systemCode, UriPatternType.identifiersOrgPattern);
+            builder.identifiersOrgBase(identifiersOrgPattern.getUriPattern());
         }
         
         String alternative = getPossibleSingletonString(repositoryConnection, dataSourceId, DCTermsConstants.ALTERNATIVE_URI);
@@ -192,17 +194,11 @@ public class BridgeDBRdfHandler extends RdfBase{
             builder.description(description);
         }
 
-        readUriPatterns(repositoryConnection, dataSourceId, regex, systemCode);
+        readUriPatterns(repositoryConnection, dataSourceId, systemCode, UriPatternType.dataSourceUriPattern);
  
         readCodeMapper (repositoryConnection, systemCode, regex);
         
         return builder.asDataSource();
-    }
-    
-    private String getUriPatternWithoutXrefPrefix(RepositoryConnection repositoryConnection, Resource uriPatternId, 
-            Pattern regex, String sysCode) throws BridgeDBException, RepositoryException{
-         UriPattern uriPattern = getUriPattern(repositoryConnection, uriPatternId, regex, sysCode, true);
-         return uriPattern.getUriPatternWithId();
     }
     
     private void readCodeMapper(RepositoryConnection repositoryConnection, String systemCode, Pattern regex) throws RepositoryException, BridgeDBException {
@@ -225,29 +221,28 @@ public class BridgeDBRdfHandler extends RdfBase{
                 }
                 codeMapperReseource = subject;
                 RdfBasedCodeMapper.addXrefPrefix(systemCode, xrefPrefix);
-                this.readUriPatterns(repositoryConnection, codeMapperReseource, regex, systemCode);
+                this.readUriPatterns(repositoryConnection, codeMapperReseource, systemCode, UriPatternType.codeMapperPattern);
             }
         }
     }
 
-    private void readUriPatterns(RepositoryConnection repositoryConnection, Resource subject, Pattern regex, String sysCode)
-            throws BridgeDBException, RepositoryException {
+    private void readUriPatterns(RepositoryConnection repositoryConnection, Resource subject, String sysCode, 
+            UriPatternType patternType)  throws BridgeDBException, RepositoryException {
        RepositoryResult<Statement> statements = 
                 repositoryConnection.getStatements(subject, BridgeDBConstants.HAS_URI_PATTERN_URI, null, true);
                 //repositoryConnection.getStatements(null, null, null, true);
         while (statements.hasNext()) {
             Statement statement = statements.next();
             Value uriValue = statement.getObject();
-            UriPattern uriPattern = getUriPattern(repositoryConnection, (Resource)uriValue, regex, sysCode, false);
+            UriPattern uriPattern = getUriPattern(repositoryConnection, (Resource)uriValue, sysCode, patternType);
          }
     }
 
     private UriPattern getUriPattern(RepositoryConnection repositoryConnection, Resource uriPatternResource, 
-            Pattern regex, String code, boolean isDataSourceData) 
-            throws BridgeDBException, RepositoryException {
+            String code, UriPatternType patternType) throws BridgeDBException, RepositoryException {
         UriPattern result = uriPatternRegister.get(uriPatternResource);
         if (result == null){
-            result = UriPattern.readUriPattern(repositoryConnection, uriPatternResource, regex, code, isDataSourceData);
+            result = UriPattern.readUriPattern(repositoryConnection, uriPatternResource, code, patternType);
             uriPatternRegister.put(uriPatternResource, result);
         }
         return result;
@@ -358,14 +353,14 @@ public class BridgeDBRdfHandler extends RdfBase{
         Pattern regex = DataSourcePatterns.getPatterns().get(dataSource);
         System.out.println(dataSource + " -> " + regex);
         String url = dataSource.getKnownUrl("$id");
-        UriPattern urlPattern = UriPattern.existingByPattern(url, regex);
+        UriPattern urlPattern = UriPattern.byPattern(url);
         if (url != null){
             repositoryConnection.add(id, BridgeDBConstants.HAS_URL_PATTERN_URI, urlPattern.getResourceId());
         }
 
         String identifersOrg = dataSource.getIdentifiersOrgUri("$id");
-        UriPattern identifersOrgPattern = UriPattern.existingByPattern(identifersOrg, regex);
-         if (identifersOrgPattern != null){
+        UriPattern identifersOrgPattern = UriPattern.byPattern(identifersOrg);
+        if (identifersOrgPattern != null){
             repositoryConnection.add(id, BridgeDBConstants.HAS_IDENTIFERS_ORG_PATTERN_URI, identifersOrgPattern.getResourceId());
         }
 
@@ -388,33 +383,37 @@ public class BridgeDBRdfHandler extends RdfBase{
             repositoryConnection.add(id, DCatConstants.DESCRIPTION_URI, new LiteralImpl(dataSource.getDescription()));
         } 
         
-        writeUrisOrCodeMapper(repositoryConnection, dataSource);
-    }
-
-    private static void writeUrisOrCodeMapper(RepositoryConnection repositoryConnection, DataSource dataSource) throws RepositoryException {
-        String xrefPrefix = RdfBasedCodeMapper.getXrefPrefix(dataSource.getSystemCode());
-        Set<UriPattern> patterns = UriPattern.byCode(dataSource.getSystemCode());
-        Resource id;
-        if (xrefPrefix == null){
-            id = asResource(dataSource);
-        } else {
-            id = asCodeMapperResource(dataSource);
-            repositoryConnection.add(id, RdfConstants.TYPE_URI, BridgeDBConstants.CODE_MAPPER_URI);
-            repositoryConnection.add(id, BridgeDBConstants.SYSTEM_CODE_URI, new LiteralImpl(dataSource.getSystemCode()));
-            Value prefixValue = new LiteralImpl(xrefPrefix);
-            repositoryConnection.add(id, BridgeDBConstants.XREF_PREFIX_URI, prefixValue);            
+       SortedSet<UriPattern> sortedPatterns = UriPattern.byCodeAndType(dataSource.getSystemCode(), UriPatternType.dataSourceUriPattern);
+       if (sortedPatterns != null){
+            for (UriPattern uriPattern:sortedPatterns){
+                repositoryConnection.add(id, BridgeDBConstants.HAS_URI_PATTERN_URI, uriPattern.getResourceId());
+            }
         }
-        if (patterns != null && !patterns.isEmpty()){
-            TreeSet<UriPattern> sortedPatterns = new TreeSet<UriPattern>(patterns);
+       
+        writeCodeMapper(repositoryConnection, dataSource);
+
+    }
+ 
+    private static void writeCodeMapper(RepositoryConnection repositoryConnection, DataSource dataSource) throws RepositoryException {
+        String xrefPrefix = RdfBasedCodeMapper.getXrefPrefix(dataSource.getSystemCode());
+        if (xrefPrefix == null){
+            return;
+        }
+        Resource id = asCodeMapperResource(dataSource);
+        repositoryConnection.add(id, RdfConstants.TYPE_URI, BridgeDBConstants.CODE_MAPPER_URI);
+        repositoryConnection.add(id, BridgeDBConstants.SYSTEM_CODE_URI, new LiteralImpl(dataSource.getSystemCode()));
+        Value prefixValue = new LiteralImpl(xrefPrefix);
+        repositoryConnection.add(id, BridgeDBConstants.XREF_PREFIX_URI, prefixValue);            
+   
+        SortedSet<UriPattern> sortedPatterns = UriPattern.byCodeAndType(dataSource.getSystemCode(), UriPatternType.codeMapperPattern);
+        if (sortedPatterns != null){
             for (UriPattern pattern:sortedPatterns){
-                if (!pattern.isDataSourceData()){
-                    repositoryConnection.add(id, BridgeDBConstants.HAS_URI_PATTERN_URI, pattern.getResourceId());
-                }
+                repositoryConnection.add(id, BridgeDBConstants.HAS_URI_PATTERN_URI, pattern.getResourceId());
             }
         }
     }
-
-   private static void writeRDF(RepositoryConnection repositoryConnection, File file) 
+        
+    private static void writeRDF(RepositoryConnection repositoryConnection, File file) 
             throws IOException, RDFHandlerException, RepositoryException{
         Writer writer = new FileWriter (file);
         TurtleWriter turtleWriter = new TurtleWriter(writer);

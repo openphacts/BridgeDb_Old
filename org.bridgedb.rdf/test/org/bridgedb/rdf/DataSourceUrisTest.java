@@ -111,8 +111,8 @@ public class DataSourceUrisTest extends TestUtils{
     public void testGetUriPatterns() throws BridgeDBException{
         Reporter.println("GetUriPatterns");
         BridgeDBRdfHandler.parseRdfFile(file1);
-        Set<UriPattern> result = UriPattern.byCode("Cs");
-        UriPattern pattern = UriPattern.existingByPattern("http://www.chemspider.com/Chemical-Structure.$id.html");
+        Set<UriPattern> result = UriPattern.byCodeAndType("Cs", UriPatternType.dataSourceUriPattern);
+        UriPattern pattern = UriPattern.existingByPattern("http://www.chemspider.com/Chemical-Structure.$id.rdf");
         assertThat (result, hasItem(pattern));
 //        pattern = UriPattern.existingOrCreateByPattern("http://identifiers.org/chemspider/$id");
 //        assertThat (result, hasItem(pattern));

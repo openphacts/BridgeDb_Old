@@ -5,10 +5,13 @@
 package org.bridgedb.rdf;
 
 import java.io.File;
+import java.util.SortedSet;
 import org.bridgedb.bio.BioDataSource;
 import org.bridgedb.utils.Reporter;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  *
@@ -26,14 +29,21 @@ public class BridgeDBRdfHandlerTest {
         UriPattern.registerUriPatterns();
         UriPattern.refreshUriPatterns(); 
         BridgeDBRdfHandler.init();
-        UriPattern pattern = UriPattern.byPattern("http://identifiers.org/mgd/$id");
-        assertEquals("M", pattern.getCode());
         
-        pattern = UriPattern.byPattern("http://www.informatics.jax.org/marker/$id");
-        assertEquals("M", pattern.getCode());
+        SortedSet<UriPattern> result = UriPattern.byCodeAndType("M", UriPatternType.mainUrlPattern);
+        UriPattern expected = UriPattern.byPattern("http://www.informatics.jax.org/marker/$id");
+        assertThat(result, hasItem(expected));
+        assertEquals(1, result.size());
         
-        pattern = UriPattern.byPattern("http://purl.uniprot.org/mgi/$id");
-        assertEquals("M", pattern.getCode());
+        result = UriPattern.byCodeAndType("M", UriPatternType.identifiersOrgPattern);
+        expected = UriPattern.byPattern("http://identifiers.org/mgd/$id");
+        assertThat(result, hasItem(expected));
+        assertEquals(1, result.size());
+        
+        result = UriPattern.byCodeAndType("M", UriPatternType.codeMapperPattern);
+        expected = UriPattern.byPattern("http://purl.uniprot.org/mgi/$id");
+        assertThat(result, hasItem(expected));
+        assertThat(result.size(), greaterThanOrEqualTo(1));
         
         File file = new File ("test-data/GeneratedDataSource.ttl");
         Reporter.println("writing to " + file.getAbsolutePath());

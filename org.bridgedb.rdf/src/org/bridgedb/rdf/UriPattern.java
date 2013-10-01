@@ -26,7 +26,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.regex.Pattern;
 import org.bridgedb.DataSource;
 import org.bridgedb.DataSourcePatterns;
 import org.bridgedb.rdf.constants.BridgeDBConstants;
@@ -48,11 +47,10 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
 
     private final String prefix;
     private final String postfix;
-    private Pattern regex;
-    private final String code;
-    private final boolean isDataSourceData;
+    private UriPatternType patternType;
+    private final Set<String>sysCodes;
     
-    private static HashMap<String,Set<UriPattern>> byPattern = new HashMap<String,Set<UriPattern>>();
+    private static HashMap<String,UriPattern> byPattern = new HashMap<String,UriPattern>();
     private static HashMap<String,Set<UriPattern>> byCode = new HashMap<String,Set<UriPattern>>();
     
     private static HashSet<URI> expectedPredicates = new HashSet<URI>(Arrays.asList(new URI[] {
@@ -63,32 +61,16 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         BridgeDBConstants.IS_URI_PATTERN_OF
     }));
               
-    private UriPattern(String pattern, Pattern regex, String sysCode, boolean isDataSourceData) throws BridgeDBException{        
+    private UriPattern(String pattern, UriPatternType patternType) throws BridgeDBException{        
         int pos = pattern.indexOf("$id");
         if (pos == -1) {
             throw new BridgeDBException("Pattern " + pattern + " does not have $id in it and is not known.");
         }
         prefix = pattern.substring(0, pos);
         postfix = pattern.substring(pos + 3);
-        Set<UriPattern> byPatterns = byPattern.get(pattern);
-        if (byPatterns == null){
-            byPatterns = new HashSet<UriPattern>();
-        }
-        byPatterns.add(this);
-        byPattern.put(pattern, byPatterns);
-        if (regex != null && !regex.pattern().isEmpty()){
-            this.regex = regex;
-        } else {
-            this.regex = null;
-        }
-        code = sysCode;
-        Set<UriPattern> patterns = byCode.get(code);
-        if (patterns == null){
-            patterns = new HashSet<UriPattern>();
-        }
-        patterns.add(this);
-        byCode.put(code, patterns);
-        this.isDataSourceData = isDataSourceData;
+        byPattern.put(pattern, this);
+        this.patternType = patternType;
+        sysCodes = new HashSet<String>();
      }
     
      public String getPrefix(){
@@ -110,70 +92,78 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
 
     public static void registerUriPatterns() throws BridgeDBException{
         for (DataSource dataSource:DataSource.getDataSources()){
-            Pattern regex = DataSourcePatterns.getPatterns().get(dataSource);
             String url = dataSource.getKnownUrl("$id");
             if (url != null){
-                register(url, regex, dataSource.getSystemCode(), true);
+                register(url, dataSource.getSystemCode(), UriPatternType.mainUrlPattern);
             }
             String identifersOrgUrl = dataSource.getIdentifiersOrgUri("$id");
             if (identifersOrgUrl != null){
-                register(identifersOrgUrl, regex, dataSource.getSystemCode(), true);
+                register(identifersOrgUrl, dataSource.getSystemCode(), UriPatternType.identifiersOrgPattern);
             }
         }
     }
 
     public static SortedSet<UriPattern> getUriPatterns() {
-        TreeSet<UriPattern> results = new TreeSet<UriPattern>();
-        for (Set<UriPattern> patterns:byPattern.values()){
-            results.addAll(patterns);
-        }
-        return results;
+        return new TreeSet<UriPattern>(byPattern.values());
     }
-               
-    public static UriPattern register(String pattern, Pattern regex, String code, boolean isDataSourceData) throws BridgeDBException{
-        System.out.println(pattern + " " + regex);
+             
+    public static UriPattern register(String pattern, String sysCode, UriPatternType patternType) throws BridgeDBException{
+        System.out.println(pattern);
         if (pattern == null || pattern.isEmpty()){
             throw new BridgeDBException ("Illegal empty or null uriPattern: " + pattern);
         }
-        if (code == null || code.isEmpty()){
-            throw new BridgeDBException ("Illegal empty or null code: " + code);
+        if (sysCode == null || sysCode.isEmpty()){
+            throw new BridgeDBException ("Illegal empty or null sysCode: " + sysCode);
         }
-        UriPattern result = null;;
-        Set<UriPattern> possibles = byPattern.get(pattern);
-        if (possibles != null){
-            for (UriPattern possible:possibles){
-                if (possible.getRegex() == null || possible.getRegex().pattern().isEmpty()){
-                    if (regex == null || regex.pattern().isEmpty()) {
-                        result = possible;
-                    }
+        UriPattern result = byPattern.get(pattern);
+        if (result == null){
+            result = new UriPattern(pattern, patternType);
+        }
+        result.registerSysCode(sysCode);
+        if (result.patternType != patternType){
+            if (result.sysCodes.size() == 1){
+                if (result.patternType == UriPatternType.mainUrlPattern && patternType == UriPatternType.dataSourceUriPattern){
+                    //do nothing ok;
+                } else if (result.patternType == UriPatternType.dataSourceUriPattern && patternType == UriPatternType.mainUrlPattern){
+                    result.patternType = UriPatternType.mainUrlPattern;
                 } else {
-                    if (regex != null && possible.getRegex().pattern().equals(regex.pattern())){
-                        return possible;
-                    }
+                    throw new BridgeDBException("UriPattern " + pattern + " already set to type " + result.patternType 
+                        + " so unable to set to " + patternType);
+                }
+            } else {
+                if (result.patternType == UriPatternType.mainUrlPattern && patternType == UriPatternType.dataSourceUriPattern){
+                    result.patternType =  UriPatternType.dataSourceUriPattern;
+                } else if (result.patternType == UriPatternType.dataSourceUriPattern && patternType == UriPatternType.mainUrlPattern){
+                    //do nothing
+                } else {
+                    throw new BridgeDBException("UriPattern " + pattern + " already set to type " + result.patternType 
+                           + " so unable to set to " + patternType + " and used in " + result.sysCodes.size() + " dataSources.");
                 }
             }
         }
-        if (result == null){
-            return new UriPattern(pattern, regex, code, isDataSourceData);
-        }
-        if (result.getCode().equals(code)){
-            return result;
-        }
-        throw new BridgeDBException ("Unable to register " + result + " to code " + code +
-                " as it is already regsistered to " + result.getCode());
+        return result;
     }
-
+    
+    private void registerSysCode(String sysCode){
+        for (String knownCode: sysCodes){
+            if (knownCode.equals(sysCode)){
+                return;
+            }
+        }
+        sysCodes.add(sysCode);
+        Set<UriPattern> patterns = byCode.get(sysCode);
+        if (patterns == null){
+            patterns = new HashSet<UriPattern>();
+        }
+        patterns.add(this);
+        byCode.put(sysCode, patterns);        
+    }
+    
     public static UriPattern byPattern(String pattern) throws BridgeDBException {
         if (pattern == null || pattern.isEmpty()){
             return null;
         }
-        Set<UriPattern> possibles = byPattern.get(pattern);
-        if (possibles == null){
-            return null;
-        } else if (possibles.size() > 1){
-            throw new BridgeDBException ("Multiple UriPatterns known for: " + pattern);            
-        }
-        return possibles.iterator().next();
+        return byPattern.get(pattern);
     }
 
     public static UriPattern existingByPattern(String pattern) throws BridgeDBException {
@@ -184,57 +174,16 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         return result;
     }
 
-    static UriPattern existingByPattern(String pattern, Pattern regex) throws BridgeDBException {
-        if (pattern == null || pattern.isEmpty()){
-            return null;
-        }
-        Set<UriPattern> possibles = byPattern.get(pattern);
-        if (possibles == null){
-            throw new BridgeDBException ("No UriPatterns known for: " + pattern);            
-        } 
-        for (UriPattern possible:possibles){
-            if (possible.getRegex() == null || possible.getRegex().pattern().isEmpty()){
-                if (regex == null || regex.pattern().isEmpty()){
-                    return possible;
-                }
-            } else if (regex != null && possible.getRegex().pattern().equals(regex.pattern())){
-                return possible;
-            }
-        }
-        for (UriPattern possible:possibles){
-            if (possible.getRegex() == null){
-                return possible;
-            }
-        }
-        throw new BridgeDBException ("No UriPattern known for: " + pattern + " and regex " + regex);            
-    }
-
     public final URI getResourceId(){
         return new URIImpl(getUriPattern());
     }
     
-    public String getUriPatternWithId() {
+    public String getUriPattern() {
         if (postfix == null){
             return prefix + "$id";
         } else {
             return prefix + "$id" + postfix;
         }
-    }
-
-    public String getUriPattern() {
-        if (getRegex() == null){
-            return  getUriPatternWithId();
-        }
-        if (postfix == null){
-            return prefix + encode(getRegex());
-        } else {
-            return prefix + encode(getRegex()) + postfix;
-        }
-    }
-
-    private String encode(Pattern regex) {
-        String pattern = regex.pattern();
-        return pattern;
     }
 
     public static void addAll(RepositoryConnection repositoryConnection) 
@@ -251,33 +200,23 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         if (!postfix.isEmpty()){
             repositoryConnection.add(id, BridgeDBConstants.HAS_POSTFIX_URI,  new LiteralImpl(postfix));
         }
-        if (getRegex() != null && !regex.pattern().isEmpty()){
-            repositoryConnection.add(id, IdenitifiersOrgConstants.REGEX_URI,  new LiteralImpl(getRegex().pattern()));
-        }
     }        
     
     public static UriPattern readUriPattern(RepositoryConnection repositoryConnection, Resource uriPatternId, 
-            Pattern dataSourceRegex, String code, boolean isDataSourceData) throws BridgeDBException, RepositoryException{
+            String code, UriPatternType patternType) throws BridgeDBException, RepositoryException{
         //TODO handle the extra statements
         //checkStatements(repositoryConnection, uriPatternId);
         UriPattern pattern;      
         String prefix = getPossibleSingletonString(repositoryConnection, uriPatternId, BridgeDBConstants.HAS_PREFIX_URI);
-        String regexSt = getPossibleSingletonString(repositoryConnection, uriPatternId, IdenitifiersOrgConstants.REGEX_URI);
-        Pattern regex = null;
-        if (regexSt != null){
-            regex = Pattern.compile(regexSt);
-        } else {
-            regex = dataSourceRegex;
-        }
         if (prefix == null){
             String uriPattern = uriPatternId.stringValue();
-            pattern = register(uriPattern, regex, code, isDataSourceData);
+            pattern = register(uriPattern, code, patternType);
         } else {
             String postfix = getPossibleSingletonString(repositoryConnection, uriPatternId, BridgeDBConstants.HAS_POSTFIX_URI);
             if (postfix == null){
-                pattern = register(prefix + "$id", regex, code, isDataSourceData);
+                pattern = register(prefix + "$id", code, patternType);
             } else {
-                pattern = register(prefix + "$id" + postfix, regex, code, isDataSourceData);
+                pattern = register(prefix + "$id" + postfix, code, patternType);
             }
         }
         //Add any ither stuff here
@@ -312,36 +251,17 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         return uri.substring(prefix.length(), uri.length() - postfix.length());
     }
 
-    public static Set<UriPattern> byCode(String code){
-        return byCode.get(code);
+    public static SortedSet<UriPattern> byCodeAndType(String code, UriPatternType patternType){
+        TreeSet<UriPattern> results = new TreeSet<UriPattern>();
+        Set<UriPattern> possibles = byCode.get(code);
+        if (possibles != null){
+            for (UriPattern possible:possibles){
+                if (possible.patternType == patternType){
+                    results.add(possible);
+                }
+            }
+        }
+        return results;
     }
 
-    /**
-     * @return the code
-     */
-    public String getCode() {
-        return code;
-    }
-
-    /**
-     * @return the isDataSourceData
-     */
-    public boolean isDataSourceData() {
-        return isDataSourceData;
-    }
-
-    /**
-     * @return the regex
-     */
-    public Pattern getRegex() {
-        return regex;
-    }
-
-    /**
-     * @param regex the regex to set
-     */
-    public void setRegex(Pattern regex) {
-        this.regex = regex;
-    }
-
- }
+}
