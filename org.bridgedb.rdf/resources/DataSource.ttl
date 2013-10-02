@@ -111,6 +111,7 @@ bridgeDB:DataSource_ChEBI a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "metabolite" ;
  	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/chebi/searchId.do?chebiId=$id> ;
+	bridgeDB:hasUriPattern <http://identifiers.org/obo.chebi/$id> ; #Deprecated
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/chebi/$id> .
 
 bridgeDB:CodeMapper_ChEBI a bridgeDB:CodeMapper ;
@@ -118,7 +119,6 @@ bridgeDB:CodeMapper_ChEBI a bridgeDB:CodeMapper ;
     bridgeDB:xrefPrefix "CHEBI:";
 	bridgeDB:hasUriPattern <http://purl.org/obo/owl/CHEBI#CHEBI_$id> ;
 	bridgeDB:hasUriPattern <http://bio2rdf.org/chebi:$id> ;
-	bridgeDB:hasUriPattern <http://identifiers.org/obo.chebi/CHEBI:$id> ; #Deprecated
     bridgeDB:hasUriPattern <http://purl.obolibrary.org/obo/CHEBI_$id> .
 
 bridgeDB:DataSource_ChemIDplus a bridgeDB:DataSource ;
