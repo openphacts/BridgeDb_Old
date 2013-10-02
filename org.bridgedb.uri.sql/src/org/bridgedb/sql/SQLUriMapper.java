@@ -240,10 +240,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 		}
 	}
     
-    private int getSQL_COMPAT_VERSION() {
-        return SQL_COMPAT_VERSION + 1;
-    }
-    
     private synchronized Set<IdSysCodePair> mapID(IdSysCodePair sourcePair, String lensUri, String tgtSysCode) throws BridgeDBException {
         if (sourcePair == null || tgtSysCode == null){
             return new HashSet<IdSysCodePair>();

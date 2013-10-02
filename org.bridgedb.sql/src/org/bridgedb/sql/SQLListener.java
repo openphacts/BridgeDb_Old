@@ -38,8 +38,6 @@ import org.bridgedb.utils.BridgeDBException;
  */
 public class SQLListener extends SQLBase implements MappingListener{
 
-    //Numbering should not clash with any GDB_COMPAT_VERSION;
-    //version number must be even as URI extension uses SQL_COMPAT_VERSION + 1
 	public static final int SQL_COMPAT_VERSION = 26;
   
     //Maximumn size in database
@@ -359,7 +357,7 @@ public class SQLListener extends SQLBase implements MappingListener{
 					+ " (    " + SCHEMA_VERSION_COLUMN_NAME + " INTEGER PRIMARY KEY	"
                     + ")");
   			sh.execute( //Add compatibility version of GDB
-					"INSERT INTO " + INFO_TABLE_NAME + " VALUES ( " + getSQL_COMPAT_VERSION() + ")");
+					"INSERT INTO " + INFO_TABLE_NAME + " VALUES ( " + SQL_COMPAT_VERSION + ")");
             query = "CREATE TABLE " + MAPPING_TABLE_NAME 
                     + "( " + SOURCE_ID_COLUMN_NAME      + " VARCHAR(" + ID_LENGTH + ") NOT NULL, "
         			+ "  " + TARGET_ID_COLUMN_NAME      + " VARCHAR(" + ID_LENGTH + ") NOT NULL, " 
@@ -400,13 +398,7 @@ public class SQLListener extends SQLBase implements MappingListener{
  			throw new BridgeDBException ("Error creating the MappingSet table using " + query, e);
 		}
 	}
-    
-    private int getSQL_COMPAT_VERSION() {
-        return SQL_COMPAT_VERSION;
-    }
-    
-
-    
+       
     /**
      * Checks that the schema is for this version.
      * 
@@ -437,7 +429,8 @@ public class SQLListener extends SQLBase implements MappingListener{
                 throw new BridgeDBException("Please use the SimpleGdbFactory in the org.bridgedb.rdb package");
             //NB add future schema versions here
             default:
-                throw new BridgeDBException ("Unrecognized schema version '" + version + "', please make sure you have the latest " +
+                throw new BridgeDBException ("Unrecognized schema version '" + version + "', expected " 
+                        + SQL_COMPAT_VERSION + " Please make sure you have the latest " +
 					"version of this software and databases");
 		}		
 	}

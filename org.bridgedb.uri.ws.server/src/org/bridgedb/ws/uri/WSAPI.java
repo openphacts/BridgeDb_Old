@@ -38,6 +38,7 @@ import org.bridgedb.uri.GraphResolver;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.MappingsBySet;
+import org.bridgedb.uri.RegexUriPattern;
 import org.bridgedb.uri.SetMappings;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WsConstants;
@@ -160,8 +161,8 @@ public class WSAPI extends WSFrame {
         Xref targetXref2 = mapping2.getTarget();
         String targetUriSpace2;
         if (uriListener != null){
-            UriPattern pattern = uriListener.toUriPattern(targetUri2);
-            targetUriSpace2 = pattern.toString();
+            RegexUriPattern pattern = uriListener.toUriPattern(targetUri2);
+            targetUriSpace2 = pattern.getUriPattern();
         } else {
             targetUriSpace2 = targetUri2.substring(0, targetUri2.length()- targetXref2.getId().length());
         }

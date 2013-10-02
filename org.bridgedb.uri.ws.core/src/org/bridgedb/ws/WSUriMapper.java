@@ -33,6 +33,7 @@ import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
 import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.MappingsBySet;
+import org.bridgedb.uri.RegexUriPattern;
 import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.bean.DataSourceUriPatternBean;
@@ -81,7 +82,7 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     }
     
     @Override
-    public Set<String> mapUri(String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException {
+    public Set<String> mapUri(String sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) throws BridgeDBException {
         Collection<Mapping> beans = mapFull(sourceUri, lensUri, graph, tgtUriPatterns);
         return extractUris(beans);
      }
@@ -95,23 +96,23 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     }
     
     @Override
-    public Set<String> mapUri(Xref sourceXref, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException {
+    public Set<String> mapUri(Xref sourceXref, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) throws BridgeDBException {
         Collection<Mapping> beans = mapFull(sourceXref, lensUri, graph, tgtUriPatterns);
         return extractUris(beans);
     }
 
     @Override
-    public MappingsBySet mapBySet(String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException {
+    public MappingsBySet mapBySet(String sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) throws BridgeDBException {
         Set<String> sourceUris = new HashSet<String>();
         sourceUris.add(sourceUri);
         return mapBySet(sourceUris, lensUri, graph, tgtUriPatterns);
     }
 
     @Override
-    public MappingsBySet mapBySet(Set<String> sourceUris, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException {
+    public MappingsBySet mapBySet(Set<String> sourceUris, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) throws BridgeDBException {
         ArrayList<String> soureUrisList = new ArrayList(sourceUris);
         ArrayList<String> tgtUriPatternStrings = new ArrayList<String>();
-        for (UriPattern tgtUriPattern:tgtUriPatterns){
+        for (RegexUriPattern tgtUriPattern:tgtUriPatterns){
             if (tgtUriPattern != null){
                 tgtUriPatternStrings.add(tgtUriPattern.getUriPattern());
             }
@@ -145,7 +146,7 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     }
  
     @Override
-    public Set<Mapping> mapFull(Xref sourceXref, String lensUri, String graph, UriPattern... tgtUriPatterns)
+    public Set<Mapping> mapFull(Xref sourceXref, String lensUri, String graph, RegexUriPattern... tgtUriPatterns)
             throws BridgeDBException {
         if (sourceXref == null){
             return new HashSet<Mapping>();
@@ -154,7 +155,7 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
             return mapFull(sourceXref, lensUri, graph);
         }
         ArrayList<String> tgtUriPatternStrings = new ArrayList<String>();
-        for (UriPattern tgtUriPattern:tgtUriPatterns){
+        for (RegexUriPattern tgtUriPattern:tgtUriPatterns){
             if (tgtUriPattern != null){
                 tgtUriPatternStrings.add(tgtUriPattern.getUriPattern());
             }
@@ -223,7 +224,7 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     }
 
     @Override
-    public Set<Mapping> mapFull(String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException {
+    public Set<Mapping> mapFull(String sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) throws BridgeDBException {
         if (tgtUriPatterns == null || tgtUriPatterns.length == 0){
             return mapFull(sourceUri, lensUri, graph);
         }
@@ -231,7 +232,7 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
             return new HashSet<Mapping>();
         }
         ArrayList<String> tgtUriPatternStrings = new ArrayList<String>();
-        for (UriPattern tgtUriPattern:tgtUriPatterns){
+        for (RegexUriPattern tgtUriPattern:tgtUriPatterns){
             if (tgtUriPattern != null){
                 tgtUriPatternStrings.add(tgtUriPattern.getUriPattern());
             }

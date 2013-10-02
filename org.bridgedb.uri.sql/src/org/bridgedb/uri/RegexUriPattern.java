@@ -79,6 +79,12 @@ public class RegexUriPattern {
         }
         return result;
     }
+    
+    public String getUriPattern() {
+        //TODO handle regex
+        return getUri("$id");
+    }
+
     private static Pattern shortenRegex(Pattern regex, String sysCode) throws BridgeDBException{
         if (regex == null){
             return null;
@@ -135,13 +141,13 @@ public class RegexUriPattern {
         return results;
     }
 
-    static RegexUriPattern byPattern(String pattern) throws BridgeDBException {
+    public static RegexUriPattern byPattern(String pattern) throws BridgeDBException {
         //todo regex in pattern
         UriPattern uriPattern = UriPattern.existingByPattern(pattern);
         return byPattern(uriPattern);
     }
     
-    static RegexUriPattern byPattern(UriPattern uriPattern) throws BridgeDBException {
+    public static RegexUriPattern byPattern(UriPattern uriPattern) throws BridgeDBException {
         Set<String> possibles = uriPattern.getSysCodes();
         if (possibles.size() != 1){
             throw new BridgeDBException("Multiple DataSource known for " + uriPattern);
