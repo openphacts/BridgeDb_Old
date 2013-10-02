@@ -118,7 +118,7 @@ public interface UriMapper extends IDMapper{
 	 * Set when no cross references could be found. This method does not return null.
 	 * @throws IDMapperException if the mapping service is (temporarily) unavailable 
      */
-    public Set<String> mapUri(String sourceUri, String LensUri, String graph, UriPattern... tgtUriPatterns) 
+    public Set<String> mapUri(String sourceUri, String LensUri, String graph, RegexUriPattern... tgtUriPatterns) 
             throws BridgeDBException;
 
     /**
@@ -133,12 +133,12 @@ public interface UriMapper extends IDMapper{
 	 * Set when no cross references could be found. This method does not return null.
 	 * @throws IDMapperException if the mapping service is (temporarily) unavailable 
      */
-    public Set<String> mapUri(Xref sourceXref, String LensUri, String graph, UriPattern... tgtUriPatterns) 
+    public Set<String> mapUri(Xref sourceXref, String LensUri, String graph, RegexUriPattern... tgtUriPatterns) 
             throws BridgeDBException;
 
-    public MappingsBySet mapBySet(String sourceUri, String lensUri, String graph, UriPattern... tgtUriPatterns) throws BridgeDBException;
+    public MappingsBySet mapBySet(String sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) throws BridgeDBException;
    
-    public MappingsBySet mapBySet(Set<String> sourceUris, String lensUri, String graph, UriPattern... tgtUriPatterns) 
+    public MappingsBySet mapBySet(Set<String> sourceUris, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) 
            throws BridgeDBException;
    /**
 	 * Get the set of mappings based the parameters supplied.
@@ -166,7 +166,7 @@ public interface UriMapper extends IDMapper{
      *    This method does not return null.
 	 * @throws IDMapperException if the mapping service is (temporarily) unavailable 
 	 */
-    public Set<Mapping> mapFull(Xref sourceXref, String LensUri, String graph, UriPattern... tgtUriPatterns) 
+    public Set<Mapping> mapFull(Xref sourceXref, String LensUri, String graph, RegexUriPattern... tgtUriPatterns) 
             throws BridgeDBException;
 
     /**
@@ -195,7 +195,7 @@ public interface UriMapper extends IDMapper{
      *    This method does not return null.
 	 * @throws IDMapperException if the mapping service is (temporarily) unavailable 
 	 */
-    public Set<Mapping> mapFull(String sourceUri, String LensUri, String graph, UriPattern... tgtUriPatterns)
+    public Set<Mapping> mapFull(String sourceUri, String LensUri, String graph, RegexUriPattern... tgtUriPatterns)
             throws BridgeDBException;
 
     /**

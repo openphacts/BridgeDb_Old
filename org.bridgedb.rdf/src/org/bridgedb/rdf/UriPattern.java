@@ -177,6 +177,13 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         return result;
     }
 
+    public static UriPattern existingByPrefixAndPostfix(String prefix, String postfix) throws BridgeDBException {
+        if (postfix == null){
+            return existingByPattern(prefix + "$id");
+        }
+        return existingByPattern(prefix + "$id" + postfix);
+    }
+
     public final URI getResourceId(){
         return new URIImpl(getUriPattern());
     }
@@ -267,6 +274,14 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         return results;
     }
 
+    public UriPatternType getType(){
+        return patternType;
+    }
+    
+    public Set<String> getSysCodes(){
+        return sysCodes;
+    }
+    
     public static void checkRegexPatterns() throws BridgeDBException{
         for (UriPattern uriPattern:byPattern.values()){
             if (uriPattern.sysCodes.size() > 1){
