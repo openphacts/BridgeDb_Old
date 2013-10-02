@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.bridgedb.DataSource;
 import org.bridgedb.rdf.UriPattern;
+import org.bridgedb.rdf.UriPatternType;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.sql.TestSqlFactory;
 import org.bridgedb.statistics.OverallStatistics;
@@ -70,7 +71,7 @@ public class TransativeFinderTest {
                 .urlPattern(pattern)
                 .asDataSource();
         TransativeFinder.addAcceptableVai(dataSource);
-        UriPattern uriPattern = UriPattern.register(pattern, null, name, false);
+        UriPattern uriPattern = UriPattern.register(pattern, name, UriPatternType.dataSourceUriPattern);
     }
     
     protected void load(String path) throws BridgeDBException{

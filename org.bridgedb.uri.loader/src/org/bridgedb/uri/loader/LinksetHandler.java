@@ -22,6 +22,7 @@ package org.bridgedb.uri.loader;
 import java.util.Set;
 import org.apache.log4j.Logger;
 import org.bridgedb.rdf.UriPattern;
+import org.bridgedb.uri.RegexUriPattern;
 import org.bridgedb.uri.UriListener;
 import org.bridgedb.utils.BridgeDBException;
 import org.openrdf.model.Resource;
@@ -117,11 +118,11 @@ public class LinksetHandler extends RDFHandlerBase{
                 if (!(object instanceof URI)){
                     throw new RDFHandlerException ("None URI object in " + st);
                 }
-                UriPattern sourcePattern = uriListener.toUriPattern(subject.stringValue());
+                RegexUriPattern sourcePattern = uriListener.toUriPattern(subject.stringValue());
                 if (sourcePattern == null){
                      throw new RDFHandlerException("Unable to get a pattern for " + subject.stringValue());
                 }
-                UriPattern targetPattern = uriListener.toUriPattern(object.stringValue());
+                RegexUriPattern targetPattern = uriListener.toUriPattern(object.stringValue());
                 if (targetPattern == null){
                     throw new RDFHandlerException("Unable to get a pattern for " + object.stringValue());
                 }

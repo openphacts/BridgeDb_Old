@@ -29,9 +29,9 @@
 	dcterms:title "ChEMBL Molecule"^^xsd:string ;
     void:uriSpace <http://data.kasabi.com/dataset/chembl-rdf/molecule/> .
    
-<http://rdf.chemspider.com/187440_A> skos:exactMatch <http://data.kasabi.com/dataset/chembl-rdf/molecule/m276734> .
-<http://rdf.chemspider.com/18_A> skos:exactMatch <http://data.kasabi.com/dataset/chembl-rdf/molecule/m370186> .
-<http://rdf.chemspider.com/50_A> skos:exactMatch <http://data.kasabi.com/dataset/chembl-rdf/molecule/m520018> . 
+<http://rdf.chemspider.com/000187440> skos:exactMatch <http://data.kasabi.com/dataset/chembl-rdf/molecule/m276734> .
+<http://rdf.chemspider.com/00018> skos:exactMatch <http://data.kasabi.com/dataset/chembl-rdf/molecule/m370186> .
+<http://rdf.chemspider.com/00050> skos:exactMatch <http://data.kasabi.com/dataset/chembl-rdf/molecule/m520018> . 
 <http://rdf.chemspider.com/187440> skos:exactMatch <http://data.kasabi.com/dataset/chembl-rdf/molecule/m276734_A> .
 <http://rdf.chemspider.com/18> skos:exactMatch <http://data.kasabi.com/dataset/chembl-rdf/molecule/m370186_A> .
 <http://rdf.chemspider.com/50> skos:exactMatch <http://data.kasabi.com/dataset/chembl-rdf/molecule/m520018_A> . 
