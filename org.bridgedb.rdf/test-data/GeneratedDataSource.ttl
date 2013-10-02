@@ -159,12 +159,13 @@ bridgeDB:DataSource_ChEBI a bridgeDB:DataSource ;
 	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/chebi/searchId.do?chebiId=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/chebi/$id> ;
 	bridgeDB:hasRegexPattern "^CHEBI:\\d+$" ;
-	dcterms:alternative "ChEBI" .
+	dcterms:alternative "ChEBI" ;
+	bridgeDB:hasUriPattern <http://identifiers.org/obo.chebi/$id> .
 
 bridgeDB:CodeMapper_ChEBI a bridgeDB:CodeMapper ;
 	bridgeDB:systemCode "Ce" ;
 	bridgeDB:xrefPrefix "CHEBI:" ;
-	bridgeDB:hasUriPattern <http://bio2rdf.org/chebi:$id> , <http://identifiers.org/obo.chebi/CHEBI:$id> , <http://purl.obolibrary.org/obo/CHEBI_$id> , <http://purl.org/obo/owl/CHEBI#CHEBI_$id> .
+	bridgeDB:hasUriPattern <http://bio2rdf.org/chebi:$id> , <http://purl.obolibrary.org/obo/CHEBI_$id> , <http://purl.org/obo/owl/CHEBI#CHEBI_$id> .
 
 bridgeDB:DataSource_Chembl_16_Molecule a bridgeDB:DataSource ;
 	bridgeDB:fullName "Chembl 16 Molecule" ;
@@ -2369,8 +2370,8 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/ncbiprotein/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/ncbiprotein/" .
 
-<http://identifiers.org/obo.chebi/CHEBI:$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/obo.chebi/CHEBI:" .
+<http://identifiers.org/obo.chebi/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/obo.chebi/" .
 
 <http://identifiers.org/obo.go/GO:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/obo.go/GO:" .

@@ -70,13 +70,6 @@ public class GraphResolver {
         allowedUriPattern.put(graph, patterns);
     }
 
-    /**
-     * @return the allowedNamespaces
-     */
-    public HashMap<String,Set<RegexUriPattern>> getAllowedUriPatterns() {
-        return allowedUriPattern;
-    }
-
     public static Set<RegexUriPattern> getUriPatternsForGraph(String graph) throws BridgeDBException {
         if (graph == null || graph.isEmpty()){
             return new HashSet<RegexUriPattern>();
@@ -105,7 +98,7 @@ public class GraphResolver {
     }
 
     private Set<RegexUriPattern> getAllowedPatterns(String graph) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return allowedUriPattern.get(graph);
     }
 
  }

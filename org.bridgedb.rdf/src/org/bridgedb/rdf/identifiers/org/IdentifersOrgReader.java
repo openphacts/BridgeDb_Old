@@ -119,7 +119,6 @@ public class IdentifersOrgReader extends RdfBase {
             loadUriPatterns(repositoryConnection, catalogRecord, dataSource, regex);
             count++;
         }
-        System.out.println("found " + count);
     }
 
     private DataSource readDataSource(RepositoryConnection repositoryConnection, Resource catalogRecord, 
@@ -196,7 +195,6 @@ public class IdentifersOrgReader extends RdfBase {
     }
     
     private void checkMultiple(RepositoryConnection repositoryConnection, String multiple) throws Exception{
-        System.out.println(multiple);
         URI uri = new URIImpl(multiple);
         RepositoryResult<Statement> accessStatements = 
                 repositoryConnection.getStatements(null, null, uri, true);
@@ -215,7 +213,6 @@ public class IdentifersOrgReader extends RdfBase {
                while(regexStatements.hasNext()) {
                    Statement regexStatement = regexStatements.next();
                    String regex = regexStatement.getObject().stringValue();
-                   System.out.println("\t" + regex);
                }
             }
         }

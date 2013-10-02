@@ -352,7 +352,6 @@ public class BridgeDBRdfHandler extends RdfBase{
         } 
 
         Pattern regex = DataSourcePatterns.getPatterns().get(dataSource);
-        System.out.println(dataSource + " -> " + regex);
         String url = dataSource.getKnownUrl("$id");
         UriPattern urlPattern = UriPattern.byPattern(url);
         if (url != null){

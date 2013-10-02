@@ -989,14 +989,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             throw new BridgeDBException("Prefix Length ( " + prefix.length() + ") is too long for " + prefix);
         }
         DataSource dataSource = DataSource.getExistingBySystemCode(code);
-        Pattern pattern = uriPattern.getRegex();
-        String regex = null;
-        if (pattern != null){
-            regex = pattern.toString();
-            if (regex.length() > REGEX_LENGTH){
-                throw new BridgeDBException("pattern length ( " + regex.length() + ") is too long for " + regex);
-            }
-        }
+        Pattern regex = uriPattern.getRegex();
         String postfix = uriPattern.getPostfix();
         if (postfix.length() > POSTFIX_LENGTH){
             throw new BridgeDBException("Postfix Length ( " + prefix.length() + ") is too long for " + prefix);
@@ -1010,24 +1003,32 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             throw new BridgeDBException ("UriPattern " + prefix + "$id" + postfix + " already mapped to " + dataSourceKey 
                     + " Which does not match " + code);
         }
+        registerUriPattern(prefix, postfix, code, regex);
+    }
+
+    private void registerUriPattern (String prefix, String postfix, String code, Pattern regex) throws BridgeDBException{
         StringBuilder query = new StringBuilder("INSERT INTO ").append(URI_TABLE_NAME).append(" (") 
+                .append(PREFIX_COLUMN_NAME).append(", ")
+                .append(POSTFIX_COLUMN_NAME).append(", ")
                 .append(DATASOURCE_COLUMN_NAME).append(", ") 
-                .append(PREFIX_COLUMN_NAME).append(", ");
+                .append(REGEX_COLUMN_NAME).append(") VALUES ")
+                .append(" (?, ?, ?, ?)");
+        PreparedStatement statement = this.createPreparedStatement(query.toString());
+        String regexSt = null;
         if (regex != null){
-            query.append(REGEX_COLUMN_NAME).append(", ");
+            regexSt = regex.toString();
+            if (regexSt.length() > REGEX_LENGTH){
+                throw new BridgeDBException("pattern length ( " + regexSt.length() + ") is too long for " + regex);
+            }
         }
-        query.append(POSTFIX_COLUMN_NAME).append(") VALUES ")
-                .append(" ('").append(code).append("', ")
-                .append("  '").append(prefix).append("',");
-        if (regex != null){
-            query.append("  '").append(regex).append("',");
-        }
-        query.append("  '").append(postfix).append("')");
-        Statement statement = createStatement();
-        try {
-            int changed = statement.executeUpdate(query.toString());
+       try {
+            statement.setString(1, prefix);
+            statement.setString(2, postfix);
+            statement.setString(3, code);
+            statement.setString(4, regexSt);
+            int changed = statement.executeUpdate();
         } catch (SQLException ex) {
-            throw new BridgeDBException ("Error inserting prefix " + prefix + " and postfix " + postfix , ex, query.toString());
+            throw new BridgeDBException ("Error inserting prefix " + prefix + " and postfix " + postfix , ex, statement.toString());
         }
     }
 
@@ -1062,7 +1063,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         StringBuilder query = new StringBuilder("INSERT INTO ");
         query.append(MAPPING_SET_TABLE_NAME);
         query.append(" ("); 
-         query.append(SOURCE_DATASOURCE_COLUMN_NAME);
+        query.append(SOURCE_DATASOURCE_COLUMN_NAME);
         query.append(", ");
         query.append(PREDICATE_COLUMN_NAME);
         query.append(", "); 
@@ -1100,20 +1101,27 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         if (postfix == null){
             postfix = "";
         }
-        String regex = null;
-        if (pattern.getRegex() != null){
-            regex = pattern.getRegex().pattern();
+        String query;
+        if (pattern.getRegex() == null){
+            query = "SELECT " + DATASOURCE_COLUMN_NAME  
+                	+ " FROM " + URI_TABLE_NAME
+                    + " WHERE " + PREFIX_COLUMN_NAME 
+                    + " = ? AND " + POSTFIX_COLUMN_NAME + " = ? "
+                    + " AND " + REGEX_COLUMN_NAME + " is NULL"; 
+        } else {
+            query = "SELECT " + DATASOURCE_COLUMN_NAME  
+                	+ " FROM " + URI_TABLE_NAME
+                    + " WHERE " + PREFIX_COLUMN_NAME 
+                    + " = ? AND " + POSTFIX_COLUMN_NAME 
+                    + " = ? AND " + REGEX_COLUMN_NAME + " = ?";            
         }
-    	String query = "SELECT " + DATASOURCE_COLUMN_NAME  
-    			+ " FROM " + URI_TABLE_NAME
-                + " WHERE " + PREFIX_COLUMN_NAME 
-                + " = ? AND " + POSTFIX_COLUMN_NAME 
-                + " = ? AND " + REGEX_COLUMN_NAME + " = ?";
     	PreparedStatement statement = this.createPreparedStatement(query);
     	try {
             statement.setString(1, pattern.getPrefix());
             statement.setString(2, postfix);
-            statement.setString(3, regex);
+            if (pattern.getRegex() != null){
+                statement.setString(3, pattern.getRegex().pattern());
+            }
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
 				String storedCode = rs.getString(DATASOURCE_COLUMN_NAME);

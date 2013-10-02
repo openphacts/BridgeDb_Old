@@ -109,7 +109,6 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
     }
              
     public static UriPattern register(String pattern, String sysCode, UriPatternType patternType) throws BridgeDBException{
-        System.out.println(pattern);
         if (pattern == null || pattern.isEmpty()){
             throw new BridgeDBException ("Illegal empty or null uriPattern: " + pattern);
         }

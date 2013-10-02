@@ -72,6 +72,31 @@ public class RegexUriPattern {
         return prefix + id + postfix;
     }
 
+    public String toString(){
+        String result = getUri("$id") + " -> " + sysCode;
+        if (regex != null){
+            result = result + " (" + regex.pattern() + ")";
+        }
+        return result;
+    }
+    private static Pattern shortenRegex(Pattern regex, String sysCode) throws BridgeDBException{
+        if (regex == null){
+            return null;
+        }
+        String xrefPrefix = RdfBasedCodeMapper.getXrefPrefix(sysCode);
+        String fullPattern = regex.pattern();
+        if (fullPattern.startsWith(xrefPrefix)){
+            String partPattern = fullPattern.substring(xrefPrefix.length());
+            return Pattern.compile(partPattern);
+        } else if (fullPattern.startsWith("^" + xrefPrefix)){
+            String partPattern = "^" + fullPattern.substring(1 + xrefPrefix.length());
+            return Pattern.compile(partPattern);
+        } else {
+            throw new BridgeDBException ("Unable to convert Pattern " + regex.pattern() + " for code " + sysCode 
+                    + " based on xrefprefix " + xrefPrefix);
+        }
+    }
+
     public static RegexUriPattern factory(String prefix, String postfix, String sysCode) throws BridgeDBException {
         return new RegexUriPattern(prefix, postfix, sysCode, null);
     }
@@ -80,34 +105,36 @@ public class RegexUriPattern {
         return new RegexUriPattern(prefix, postfix, sysCode, regexPattern);
     }
 
+    public static RegexUriPattern factory(UriPattern uriPattern, String sysCode) throws BridgeDBException{
+        DataSource dataSource = DataSource.getExistingBySystemCode(sysCode);
+        Pattern regex = DataSourcePatterns.getPatterns().get(dataSource);
+        String xrefPrefix = RdfBasedCodeMapper.getXrefPrefix(sysCode);
+        String prefix;
+        String postfix = uriPattern.getPostfix();
+        if (xrefPrefix == null){
+            prefix = uriPattern.getPrefix();
+        } else if (uriPattern.getType() == UriPatternType.codeMapperPattern){
+            //prefix should not include the xrefPrefix
+            prefix = uriPattern.getPrefix();
+            regex = shortenRegex(regex, sysCode);
+        } else {
+            //prefix should include the xrefPrefix as regex and IDs no longer do
+            prefix = uriPattern.getPrefix() + xrefPrefix;
+            regex = shortenRegex(regex, sysCode);
+        }
+        return new RegexUriPattern(prefix, postfix, sysCode, regex);
+    }
+    
     public static Collection<RegexUriPattern> getUriPatterns() throws BridgeDBException {
         HashSet<RegexUriPattern> results = new HashSet<RegexUriPattern>();
         for (UriPattern pattern:UriPattern.getUriPatterns()){
             for (String sysCode:pattern.getSysCodes()){
-                Pattern regex = getRegex(pattern, sysCode);
-                results.add(new RegexUriPattern(pattern.getPrefix(), pattern.getPostfix(), sysCode, regex));
+                results.add(factory(pattern, sysCode));
             }
         }
         return results;
     }
 
-    private static Pattern getRegex(UriPattern pattern, String sysCode){
-        DataSource dataSource = DataSource.getExistingBySystemCode(sysCode);
-        Pattern regex = DataSourcePatterns.getPatterns().get(dataSource);
-        if (regex != null && pattern.getType() == UriPatternType.codeMapperPattern){
-            String xrefPrefix = RdfBasedCodeMapper.getXrefPrefix(sysCode);
-            String fullPattern = regex.pattern();
-            if (fullPattern.startsWith(xrefPrefix)){
-                String partPattern = fullPattern.substring(xrefPrefix.length());
-                regex = Pattern.compile(partPattern);
-            } else if (fullPattern.startsWith("^" + xrefPrefix)){
-                String partPattern = "^" + fullPattern.substring(1 + xrefPrefix.length());
-                regex = Pattern.compile(partPattern);
-            }
-        }
-        return regex;
-    }
-    
     static RegexUriPattern byPattern(String pattern) throws BridgeDBException {
         //todo regex in pattern
         UriPattern uriPattern = UriPattern.existingByPattern(pattern);
@@ -120,12 +147,7 @@ public class RegexUriPattern {
             throw new BridgeDBException("Multiple DataSource known for " + uriPattern);
         }
         String sysCode = possibles.iterator().next();
-        Pattern regex = getRegex(uriPattern, sysCode);
-        return new RegexUriPattern (uriPattern.getPrefix(), uriPattern.getPostfix(), sysCode, regex);
+        return factory(uriPattern, sysCode);
     }
-
-
-
-    
-    
+        
 }
