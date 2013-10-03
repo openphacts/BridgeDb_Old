@@ -20,13 +20,17 @@
 package org.bridgedb.uri;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 import org.bridgedb.DataSource;
 import org.bridgedb.DataSourcePatterns;
+import org.bridgedb.bio.DataSourceTxt;
+import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.rdf.UriPatternType;
+import org.bridgedb.rdf.identifiers.org.IdentifersOrgReader;
 import org.bridgedb.rdf.pairs.RdfBasedCodeMapper;
 import org.bridgedb.utils.BridgeDBException;
 
@@ -40,6 +44,8 @@ public class RegexUriPattern {
     private final String postfix;
     private final String sysCode;
     private final Pattern regex;
+    
+    private static HashMap<String, Set<RegexUriPattern>> byShortNames = new HashMap<String, Set<RegexUriPattern>>();
     
     private RegexUriPattern(String prefix, String postfix, String sysCode, Pattern regex) throws BridgeDBException{
         if (prefix == null || prefix.isEmpty()){
@@ -170,5 +176,81 @@ public class RegexUriPattern {
         }
         return results;
     }
-            
+ 
+    private static String extractShortName (String full) throws BridgeDBException {
+        String withoutStart;
+        if (full.startsWith("ftp://")){
+            withoutStart = full.substring(6);
+        } else if (full.startsWith("http://")){
+            withoutStart = full.substring(7);
+        } else if (full.startsWith("https://")){
+            withoutStart = full.substring(8);
+        } else {
+            withoutStart = full;
+        }
+        if (withoutStart.startsWith("ftp.")){
+            withoutStart = withoutStart.substring(4);
+        }
+        if (withoutStart.startsWith("rdf.")){
+            withoutStart = withoutStart.substring(4);
+        }
+        if (withoutStart.startsWith("www.")){
+            withoutStart = withoutStart.substring(4);
+        } 
+        return withoutStart.substring(0, withoutStart.indexOf("/"));
+    }
+
+    public static HashMap<String, Integer> getUriGroups() throws BridgeDBException {
+        Set<UriPattern> patterns = UriPattern.getUriPatterns();
+        HashMap<String, Integer> results = new HashMap<String, Integer>();
+        System.out.println (patterns.size() + " patterns found");
+        for (UriPattern pattern:UriPattern.getUriPatterns()){
+            String mid = extractShortName(pattern.getUriPattern());
+            Integer count = results.get(mid);
+            if (count == null){
+                count = pattern.getSysCodes().size();
+            } else {
+                count+= pattern.getSysCodes().size();
+            }
+            results.put(mid, count);
+         }
+        return results;
+    }
+
+    public static void init() throws BridgeDBException {
+        Set<UriPattern> patterns = UriPattern.getUriPatterns();
+        HashMap<String, Integer> results = new HashMap<String, Integer>();
+        for (UriPattern pattern:UriPattern.getUriPatterns()){
+            String mid = extractShortName(pattern.getUriPattern());
+            Set<RegexUriPattern> byShortName = byShortNames.get(mid);
+            if (byShortName == null){
+                byShortName = new HashSet<RegexUriPattern>();
+            }
+            byShortName.addAll(byPattern(pattern));
+            byShortNames.put(mid, byShortName);
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        DataSourceTxt.init();
+        UriPattern.registerUriPatterns();
+        BridgeDBRdfHandler.init();
+        IdentifersOrgReader.init();
+        init();
+
+        HashMap<String, Integer> mappings = getUriGroups();
+        Set<String> groups = mappings.keySet();
+        int count = 0;
+        for (String group:groups){
+            if (mappings.get(group) > 1){
+                System.out.println(group);
+                for (RegexUriPattern pattern:byShortNames.get(group)){
+                    System.out.println("\t" + pattern);
+                }
+                count++;
+            }
+        }
+        System.out.println(groups.size());
+        System.out.println(count++);
+    }
 }
