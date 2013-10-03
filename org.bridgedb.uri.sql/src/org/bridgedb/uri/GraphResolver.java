@@ -2,6 +2,7 @@ package org.bridgedb.uri;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
@@ -101,4 +102,7 @@ public class GraphResolver {
         return allowedUriPattern.get(graph);
     }
 
+    public Map<String, Set<RegexUriPattern>> getAllowedUriPatterns() {
+        return allowedUriPattern;
+    }
  }
