@@ -10,9 +10,11 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
@@ -47,6 +49,7 @@ public class IdentifersOrgReader extends RdfBase {
     private static final Logger logger = Logger.getLogger(IdentifersOrgReader.class);  
     
     private static final Set<String> multiples;
+    private static boolean initRun = false;
     
     static {
         multiples = new HashSet();
@@ -78,17 +81,30 @@ public class IdentifersOrgReader extends RdfBase {
         }
     }
 
+    public static void init() throws BridgeDBException{
+        if (initRun){
+            return;
+        }
+        try {
+            URL url = new URL("http://www.ebi.ac.uk/miriam/main/export/registry.ttl");
+            InputStream stream = url.openStream();
+            IdentifersOrgReader reader = new IdentifersOrgReader();
+            reader.doParseRdfInputStream(stream);
+            stream.close();        
+            initRun = true;
+        } catch (MalformedURLException ex) {
+            throw new BridgeDBException ("Error reading miriam registry.", ex);
+        } catch (IOException ex) {
+            throw new BridgeDBException ("Error reading miriam registry.", ex);
+        }
+    }
+    
     public static void main(String[] args) throws Exception {
         DataSourceTxt.init();
         UriPattern.registerUriPatterns();
         BridgeDBRdfHandler.init();
-        URL url = new URL("http://www.ebi.ac.uk/miriam/demo/export/registry.ttl");
-        InputStream stream = url.openStream();
-        //File file = new File("c:/Temp/registry.ttl");
-        //FileInputStream stream = new FileInputStream(file);
-        IdentifersOrgReader reader = new IdentifersOrgReader();
-        reader.doParseRdfInputStream(stream);
-        stream.close();
+        URL url = new URL("http://www.ebi.ac.uk/miriam/main/export/registry.ttl");
+        init();
         
         File mergedFile = new File("resources/IdentifiersOrgDataSource.ttl");
         BridgeDBRdfHandler.writeRdfToFile(mergedFile);

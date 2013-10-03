@@ -660,10 +660,10 @@ bridgeDB:DataSource_BYKdb a bridgeDB:DataSource ;
 	bridgeDB:idExample "A0AYT5" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "unknown" ;
-	bridgeDB:hasUrlPattern <http://bykdb.ibcp.fr/data/html/$id.html> ;
+	bridgeDB:hasUrlPattern <http://bykdb.ibcp.fr/data/html/annotated/$id.html> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/bykdb/$id> ;
 	bridgeDB:hasRegexPattern "^\\w+$" ;
-	bridgeDB:hasUriPattern <http://bykdb.ibcp.fr/data/html/$id.html> .
+	bridgeDB:hasUriPattern <http://bykdb.ibcp.fr/data/html/annotated/$id.html> .
 
 bridgeDB:DataSource_CABRI a bridgeDB:DataSource ;
 	bridgeDB:fullName "CABRI" ;
@@ -855,12 +855,12 @@ bridgeDB:DataSource_ChEBI a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/chebi/$id> ;
 	bridgeDB:hasRegexPattern "^CHEBI:\\d+$" ;
 	dcterms:alternative "ChEBI" ;
-	bridgeDB:hasUriPattern <http://purl.bioontology.org/ontology/CHEBI/$id> , <http://www.ebi.ac.uk/ontology-lookup/?termId=$id> .
+	bridgeDB:hasUriPattern <http://identifiers.org/obo.chebi/$id> , <http://purl.bioontology.org/ontology/CHEBI/$id> , <http://www.ebi.ac.uk/ontology-lookup/?termId=$id> .
 
 bridgeDB:CodeMapper_ChEBI a bridgeDB:CodeMapper ;
 	bridgeDB:systemCode "Ce" ;
 	bridgeDB:xrefPrefix "CHEBI:" ;
-	bridgeDB:hasUriPattern <http://bio2rdf.org/chebi:$id> , <http://identifiers.org/obo.chebi/CHEBI:$id> , <http://purl.obolibrary.org/obo/CHEBI_$id> , <http://purl.org/obo/owl/CHEBI#CHEBI_$id> .
+	bridgeDB:hasUriPattern <http://bio2rdf.org/chebi:$id> , <http://purl.obolibrary.org/obo/CHEBI_$id> , <http://purl.org/obo/owl/CHEBI#CHEBI_$id> .
 
 bridgeDB:DataSource_ChemBank a bridgeDB:DataSource ;
 	bridgeDB:fullName "ChemBank" ;
@@ -1283,6 +1283,28 @@ bridgeDB:DataSource_Database_of_Quantitative_Cellular_Signaling_Pathway a bridge
 	bridgeDB:hasRegexPattern "^\\d+$" ;
 	bridgeDB:hasUriPattern <http://doqcs.ncbs.res.in/template.php?y=pathwaydetails&pn=$id> .
 
+bridgeDB:DataSource_DATF a bridgeDB:DataSource ;
+	bridgeDB:fullName "DATF" ;
+	bridgeDB:systemCode "datf" ;
+	bridgeDB:idExample "AT1G01030.1" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://datf.cbi.pku.edu.cn/entry-display.php?id=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/datf/$id> ;
+	bridgeDB:hasRegexPattern "^AT[1-5]G\\d{5}(\\.\\d+)?$" ;
+	bridgeDB:hasUriPattern <http://datf.cbi.pku.edu.cn/entry-display.php?id=$id> .
+
+bridgeDB:DataSource_DBD a bridgeDB:DataSource ;
+	bridgeDB:fullName "DBD" ;
+	bridgeDB:systemCode "dbd" ;
+	bridgeDB:idExample "0045310" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.transcriptionfactor.org/index.cgi?Search%2FDomain+domain%3A$id+cat%3ADBD> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/dbd/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
+	bridgeDB:hasUriPattern <http://www.transcriptionfactor.org/index.cgi?Search%2FDomain+domain%3A$id+cat%3ADBD> .
+
 bridgeDB:DataSource_dbEST a bridgeDB:DataSource ;
 	bridgeDB:fullName "dbEST" ;
 	bridgeDB:systemCode "dbest" ;
@@ -1327,6 +1349,17 @@ bridgeDB:DataSource_dbSNP a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/dbsnp/$id> ;
 	bridgeDB:hasRegexPattern "^\\d+$" ;
 	dcterms:alternative "dbSNP" .
+
+bridgeDB:DataSource_Degradome_Database a bridgeDB:DataSource ;
+	bridgeDB:fullName "Degradome Database" ;
+	bridgeDB:systemCode "degradome" ;
+	bridgeDB:idExample "Ax1" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://degradome.uniovi.es/cgi-bin/protease/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/degradome/$id> ;
+	bridgeDB:hasRegexPattern "^[AMCST][0-9x][0-9]$" ;
+	bridgeDB:hasUriPattern <http://degradome.uniovi.es/cgi-bin/protease/$id> .
 
 bridgeDB:DataSource_DEPOD a bridgeDB:DataSource ;
 	bridgeDB:fullName "DEPOD" ;
@@ -1393,6 +1426,17 @@ bridgeDB:DataSource_DOMMINO a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/dommino/$id> ;
 	bridgeDB:hasRegexPattern "^[0-9][A-Za-z0-9]{3}$" ;
 	bridgeDB:hasUriPattern <http://orion.rnet.missouri.edu/~nz953/DOMMINO/index.php/result/show_network/$id> .
+
+bridgeDB:DataSource_DOOR a bridgeDB:DataSource ;
+	bridgeDB:fullName "DOOR" ;
+	bridgeDB:systemCode "door" ;
+	bridgeDB:idExample "60101" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://csbl1.bmb.uga.edu/OperonDB/genedetail.php?id=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/door/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
+	bridgeDB:hasUriPattern <http://csbl1.bmb.uga.edu/OperonDB/genedetail.php?id=$id> .
 
 bridgeDB:DataSource_DPV a bridgeDB:DataSource ;
 	bridgeDB:fullName "DPV" ;
@@ -1957,6 +2001,61 @@ bridgeDB:DataSource_FMA a bridgeDB:DataSource ;
 	bridgeDB:hasRegexPattern "^FMA:\\d+$" ;
 	bridgeDB:hasUriPattern <http://purl.bioontology.org/ontology/FMA_subset/$id> , <http://www.ebi.ac.uk/ontology-lookup/?termId=$id> .
 
+bridgeDB:DataSource_FunCat a bridgeDB:DataSource ;
+	bridgeDB:fullName "FunCat" ;
+	bridgeDB:systemCode "funcat" ;
+	bridgeDB:idExample "32.01.01" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://mips.helmholtz-muenchen.de/cgi-bin/proj/funcatDB/search_advanced.pl?action=2&wert=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/funcat/$id> ;
+	bridgeDB:hasRegexPattern "^\\d{2}|\\d{2}\\.\\d{2}|\\d{2}\\.\\d{2}\\.\\d{2}|\\d{2}\\.\\d{2}\\.\\d{2}\\d{2}$" ;
+	bridgeDB:hasUriPattern <http://mips.helmholtz-muenchen.de/cgi-bin/proj/funcatDB/search_advanced.pl?action=2&wert=$id> .
+
+bridgeDB:DataSource_FuncBase_Fly a bridgeDB:DataSource ;
+	bridgeDB:fullName "FuncBase Fly" ;
+	bridgeDB:systemCode "funcbase.fly" ;
+	bridgeDB:idExample "10194" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://func.mshri.on.ca/fly/genes/list_functional_scores/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/funcbase.fly/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
+	bridgeDB:hasUriPattern <http://func.mshri.on.ca/fly/genes/list_functional_scores/$id> .
+
+bridgeDB:DataSource_FuncBase_Human a bridgeDB:DataSource ;
+	bridgeDB:fullName "FuncBase Human" ;
+	bridgeDB:systemCode "funcbase.human" ;
+	bridgeDB:idExample "119514" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://func.mshri.on.ca/human/genes/list_functional_scores/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/funcbase.human/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
+	bridgeDB:hasUriPattern <http://func.mshri.on.ca/human/genes/list_functional_scores/$id> .
+
+bridgeDB:DataSource_FuncBase_Mouse a bridgeDB:DataSource ;
+	bridgeDB:fullName "FuncBase Mouse" ;
+	bridgeDB:systemCode "funcbase.mouse" ;
+	bridgeDB:idExample "1351341" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://func.mshri.on.ca/mouse/genes/list_functional_scores/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/funcbase.mouse/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
+	bridgeDB:hasUriPattern <http://func.mshri.on.ca/mouse/genes/list_functional_scores/$id> .
+
+bridgeDB:DataSource_FuncBase_Yeast a bridgeDB:DataSource ;
+	bridgeDB:fullName "FuncBase Yeast" ;
+	bridgeDB:systemCode "funcbase.yeast" ;
+	bridgeDB:idExample "2701" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://func.mshri.on.ca/yeast/genes/list_functional_scores/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/funcbase.yeast/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
+	bridgeDB:hasUriPattern <http://func.mshri.on.ca/yeast/genes/list_functional_scores/$id> .
+
 bridgeDB:DataSource_Fungal_Barcode a bridgeDB:DataSource ;
 	bridgeDB:fullName "Fungal Barcode" ;
 	bridgeDB:systemCode "fbol" ;
@@ -2033,7 +2132,8 @@ bridgeDB:DataSource_Gene_Wiki a bridgeDB:DataSource ;
 	bridgeDB:primary "false"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://plugins.biogps.org/cgi-bin/wp.cgi?id=$id> ;
-	bridgeDB:hasRegexPattern "\\d+" ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/genewiki/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
 	dcterms:alternative "Gene Wiki" .
 
 bridgeDB:DataSource_GeneCards a bridgeDB:DataSource ;
@@ -2141,6 +2241,17 @@ bridgeDB:DataSource_GiardiaDB a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/giardiadb/$id> ;
 	bridgeDB:hasRegexPattern "^\\w+$" ;
 	bridgeDB:hasUriPattern <http://giardiadb.org/giardiadb/showRecord.do?name=GeneRecordClasses.GeneRecordClass&source_id=$id> .
+
+bridgeDB:DataSource_GlycoEpitope a bridgeDB:DataSource ;
+	bridgeDB:fullName "GlycoEpitope" ;
+	bridgeDB:systemCode "glycoepitope" ;
+	bridgeDB:idExample "EP0311" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.glyco.is.ritsumei.ac.jp/epitope-bin/epitope.cgi?mode=general&epitope_id=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/glycoepitope/$id> ;
+	bridgeDB:hasRegexPattern "^EP\\d{4}$" ;
+	bridgeDB:hasUriPattern <http://www.glyco.is.ritsumei.ac.jp/epitope-bin/epitope.cgi?mode=general&epitope_id=$id> .
 
 bridgeDB:DataSource_GlycomeDB a bridgeDB:DataSource ;
 	bridgeDB:fullName "GlycomeDB" ;
@@ -2631,6 +2742,28 @@ bridgeDB:DataSource_ICD a bridgeDB:DataSource ;
 	bridgeDB:hasRegexPattern "^[A-Z]\\d+(\\.[-\\d+])?$" ;
 	bridgeDB:hasUriPattern <http://apps.who.int/classifications/icd10/browse/2010/en#/$id> .
 
+bridgeDB:DataSource_ICEberg_element a bridgeDB:DataSource ;
+	bridgeDB:fullName "ICEberg element" ;
+	bridgeDB:systemCode "iceberg.element" ;
+	bridgeDB:idExample "100" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://db-mml.sjtu.edu.cn/ICEberg/feature_page.php?ice_id=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/iceberg.element/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
+	bridgeDB:hasUriPattern <http://db-mml.sjtu.edu.cn/ICEberg/feature_page.php?ice_id=$id> .
+
+bridgeDB:DataSource_ICEberg_family a bridgeDB:DataSource ;
+	bridgeDB:fullName "ICEberg family" ;
+	bridgeDB:systemCode "iceberg.family" ;
+	bridgeDB:idExample "1" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://db-mml.sjtu.edu.cn/ICEberg/browse_result.php?type=fam&fam_id=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/iceberg.family/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
+	bridgeDB:hasUriPattern <http://db-mml.sjtu.edu.cn/ICEberg/browse_result.php?type=fam&fam_id=$id> .
+
 bridgeDB:DataSource_IDEAL a bridgeDB:DataSource ;
 	bridgeDB:fullName "IDEAL" ;
 	bridgeDB:systemCode "ideal" ;
@@ -2855,6 +2988,17 @@ bridgeDB:DataSource_IUPHAR_family a bridgeDB:DataSource ;
 	bridgeDB:hasRegexPattern "^\\d+$" ;
 	bridgeDB:hasUriPattern <http://www.iuphar-db.org/DATABASE/FamilyMenuForward?familyId=$id> .
 
+bridgeDB:DataSource_IUPHAR_ligand a bridgeDB:DataSource ;
+	bridgeDB:fullName "IUPHAR ligand" ;
+	bridgeDB:systemCode "iuphar.ligand" ;
+	bridgeDB:idExample "1755" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.iuphar-db.org/DATABASE/LigandDisplayForward?ligandId=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/iuphar.ligand/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
+	bridgeDB:hasUriPattern <http://www.iuphar-db.org/DATABASE/LigandDisplayForward?ligandId=$id> .
+
 bridgeDB:DataSource_IUPHAR_receptor a bridgeDB:DataSource ;
 	bridgeDB:fullName "IUPHAR receptor" ;
 	bridgeDB:systemCode "iuphar.receptor" ;
@@ -2899,6 +3043,17 @@ bridgeDB:DataSource_JAX_Mice a bridgeDB:DataSource ;
 	bridgeDB:hasRegexPattern "^\\d+$" ;
 	bridgeDB:hasUriPattern <http://jaxmice.jax.org/strain/$id.html> .
 
+bridgeDB:DataSource_JCGGDB a bridgeDB:DataSource ;
+	bridgeDB:fullName "JCGGDB" ;
+	bridgeDB:systemCode "jcggdb" ;
+	bridgeDB:idExample "JCGG-STR008690" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://jcggdb.jp/idb/jcggdb/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/jcggdb/$id> ;
+	bridgeDB:hasRegexPattern "^JCGG-STR\\d{6}$" ;
+	bridgeDB:hasUriPattern <http://jcggdb.jp/idb/jcggdb/$id> .
+
 bridgeDB:DataSource_JSTOR a bridgeDB:DataSource ;
 	bridgeDB:fullName "JSTOR" ;
 	bridgeDB:systemCode "jstor" ;
@@ -2932,7 +3087,18 @@ bridgeDB:DataSource_KEGG_Compound a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/kegg.compound/$id> ;
 	bridgeDB:hasRegexPattern "^C\\d+$" ;
 	dcterms:alternative "KEGG Compound" ;
-	bridgeDB:hasUriPattern <http://bio2rdf.org/cpd:$id> , <http://www.genome.jp/dbget-bin/www_bget?cpd%3A$id> .
+	bridgeDB:hasUriPattern <http://bio2rdf.org/cpd:$id> , <http://www.kegg.jp/entry/$id> .
+
+bridgeDB:DataSource_KEGG_Disease a bridgeDB:DataSource ;
+	bridgeDB:fullName "KEGG Disease" ;
+	bridgeDB:systemCode "kegg.disease" ;
+	bridgeDB:idExample "H00076" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.kegg.jp/entry/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/kegg.disease/$id> ;
+	bridgeDB:hasRegexPattern "^H\\d+$" ;
+	bridgeDB:hasUriPattern <http://www.kegg.jp/entry/$id> .
 
 bridgeDB:DataSource_KEGG_Drug a bridgeDB:DataSource ;
 	bridgeDB:fullName "KEGG Drug" ;
@@ -2945,7 +3111,7 @@ bridgeDB:DataSource_KEGG_Drug a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/kegg.drug/$id> ;
 	bridgeDB:hasRegexPattern "^D\\d+$" ;
 	dcterms:alternative "KEGG Drug" ;
-	bridgeDB:hasUriPattern <http://bio2rdf.org/dr:$id> , <http://www.genome.jp/dbget-bin/www_bget?dr%3A$id> .
+	bridgeDB:hasUriPattern <http://bio2rdf.org/dr:$id> , <http://www.kegg.jp/entry/$id> .
 
 bridgeDB:DataSource_KEGG_Environ a bridgeDB:DataSource ;
 	bridgeDB:fullName "KEGG Environ" ;
@@ -2953,10 +3119,10 @@ bridgeDB:DataSource_KEGG_Environ a bridgeDB:DataSource ;
 	bridgeDB:idExample "ev:E00032" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "unknown" ;
-	bridgeDB:hasUrlPattern <http://www.genome.jp/dbget-bin/www_bget?$id> ;
+	bridgeDB:hasUrlPattern <http://www.kegg.jp/entry/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/kegg.environ/$id> ;
 	bridgeDB:hasRegexPattern "^ev\\:E\\d+$" ;
-	bridgeDB:hasUriPattern <http://www.genome.jp/dbget-bin/www_bget?$id> .
+	bridgeDB:hasUriPattern <http://www.kegg.jp/entry/$id> .
 
 bridgeDB:DataSource_KEGG_Genes a bridgeDB:DataSource ;
 	bridgeDB:fullName "KEGG Genes" ;
@@ -2969,7 +3135,7 @@ bridgeDB:DataSource_KEGG_Genes a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/kegg.genes/$id> ;
 	bridgeDB:hasRegexPattern "^\\w+:[\\w\\d\\.-]*$" ;
 	dcterms:alternative "KEGG Genes" ;
-	bridgeDB:hasUriPattern <http://www.genome.jp/dbget-bin/www_bget?$id> .
+	bridgeDB:hasUriPattern <http://www.kegg.jp/entry/$id> .
 
 bridgeDB:DataSource_KEGG_Genome a bridgeDB:DataSource ;
 	bridgeDB:fullName "KEGG Genome" ;
@@ -2977,10 +3143,10 @@ bridgeDB:DataSource_KEGG_Genome a bridgeDB:DataSource ;
 	bridgeDB:idExample "eco" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "unknown" ;
-	bridgeDB:hasUrlPattern <http://www.genome.jp/kegg-bin/show_organism?org=$id> ;
+	bridgeDB:hasUrlPattern <http://www.kegg.jp/entry/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/kegg.genome/$id> ;
 	bridgeDB:hasRegexPattern "^(T0\\d+|\\w{3,5})$" ;
-	bridgeDB:hasUriPattern <http://www.genome.jp/kegg-bin/show_organism?org=$id> .
+	bridgeDB:hasUriPattern <http://www.kegg.jp/entry/$id> .
 
 bridgeDB:DataSource_KEGG_Glycan a bridgeDB:DataSource ;
 	bridgeDB:fullName "KEGG Glycan" ;
@@ -2993,7 +3159,7 @@ bridgeDB:DataSource_KEGG_Glycan a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/kegg.glycan/$id> ;
 	bridgeDB:hasRegexPattern "^G\\d+$" ;
 	dcterms:alternative "KEGG Glycan" ;
-	bridgeDB:hasUriPattern <http://bio2rdf.org/gl:$id> , <http://www.genome.jp/dbget-bin/www_bget?gl%3A$id> .
+	bridgeDB:hasUriPattern <http://bio2rdf.org/gl:$id> , <http://www.kegg.jp/entry/$id> .
 
 bridgeDB:DataSource_KEGG_Metagenome a bridgeDB:DataSource ;
 	bridgeDB:fullName "KEGG Metagenome" ;
@@ -3002,10 +3168,21 @@ bridgeDB:DataSource_KEGG_Metagenome a bridgeDB:DataSource ;
 	bridgeDB:idExample "T30002" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "unknown" ;
-	bridgeDB:hasUrlPattern <http://www.genome.jp/kegg-bin/show_organism?org=$id> ;
+	bridgeDB:hasUrlPattern <http://www.kegg.jp/entry/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/kegg.metagenome/$id> ;
 	bridgeDB:hasRegexPattern "^T3\\d+$" ;
-	bridgeDB:hasUriPattern <http://www.genome.jp/kegg-bin/show_organism?org=$id> .
+	bridgeDB:hasUriPattern <http://www.kegg.jp/entry/$id> .
+
+bridgeDB:DataSource_KEGG_Module a bridgeDB:DataSource ;
+	bridgeDB:fullName "KEGG Module" ;
+	bridgeDB:systemCode "kegg.module" ;
+	bridgeDB:idExample "M00002" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.kegg.jp/entry/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/kegg.module/$id> ;
+	bridgeDB:hasRegexPattern "^([a-z]{3,5}_)?M\\d{5}$" ;
+	bridgeDB:hasUriPattern <http://www.kegg.jp/entry/$id> .
 
 bridgeDB:DataSource_KEGG_Orthology a bridgeDB:DataSource ;
 	bridgeDB:fullName "KEGG Orthology" ;
@@ -3016,7 +3193,8 @@ bridgeDB:DataSource_KEGG_Orthology a bridgeDB:DataSource ;
 	bridgeDB:type "protein" ;
 	bridgeDB:hasUrlPattern <http://www.genome.jp/dbget-bin/www_bget?ko+$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/kegg.orthology/$id> ;
-	bridgeDB:hasRegexPattern "^K\\d+$" .
+	bridgeDB:hasRegexPattern "^K\\d+$" ;
+	bridgeDB:hasUriPattern <http://www.kegg.jp/entry/$id> .
 
 bridgeDB:DataSource_KEGG_Pathway a bridgeDB:DataSource ;
 	bridgeDB:fullName "KEGG Pathway" ;
@@ -3029,7 +3207,7 @@ bridgeDB:DataSource_KEGG_Pathway a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/kegg.pathway/$id> ;
 	bridgeDB:hasRegexPattern "^\\w{2,4}\\d{5}$" ;
 	dcterms:alternative "KEGG Pathway" ;
-	bridgeDB:hasUriPattern <http://bio2rdf.org/path:$id> .
+	bridgeDB:hasUriPattern <http://bio2rdf.org/path:$id> , <http://www.kegg.jp/entry/$id> .
 
 bridgeDB:DataSource_KEGG_Reaction a bridgeDB:DataSource ;
 	bridgeDB:fullName "KEGG Reaction" ;
@@ -3042,7 +3220,7 @@ bridgeDB:DataSource_KEGG_Reaction a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/kegg.reaction/$id> ;
 	bridgeDB:hasRegexPattern "^R\\d+$" ;
 	dcterms:alternative "KEGG Reaction" ;
-	bridgeDB:hasUriPattern <http://bio2rdf.org/rn:$id> , <http://www.genome.jp/dbget-bin/www_bget?rn%3A$id> .
+	bridgeDB:hasUriPattern <http://bio2rdf.org/rn:$id> , <http://www.kegg.jp/entry/$id> .
 
 bridgeDB:DataSource_KiSAO a bridgeDB:DataSource ;
 	bridgeDB:fullName "KiSAO" ;
@@ -3075,7 +3253,7 @@ bridgeDB:DataSource_Ligand_Expo a bridgeDB:DataSource ;
 	bridgeDB:hasUrlPattern <http://ligand-depot.rutgers.edu/pyapps/ldHandler.py?formid=cc-index-search&target=$id&operation=ccid> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/ligandexpo/$id> ;
 	bridgeDB:hasRegexPattern "^(\\w){3}$" ;
-	bridgeDB:hasUriPattern <http://ligand-depot.rutgers.edu/pyapps/ldHandler.py?formid=cc-index-search&target=$id&operation=ccid> .
+	bridgeDB:hasUriPattern <http://ligand-depot.rutgers.edu/pyapps/ldHandler.py?formid=cc-index-search&target=$id&operation=ccid> , <http://ligand-expo.rcsb.org/pyapps/ldHandler.py?formid=cc-index-search&target=$id&operation=ccid> .
 
 bridgeDB:DataSource_Ligand_Gated_Ion_Channel_database a bridgeDB:DataSource ;
 	bridgeDB:fullName "Ligand-Gated Ion Channel database" ;
@@ -3087,6 +3265,17 @@ bridgeDB:DataSource_Ligand_Gated_Ion_Channel_database a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/lgic/$id> ;
 	bridgeDB:hasRegexPattern "^\\w+$" ;
 	bridgeDB:hasUriPattern <http://www.ebi.ac.uk/compneur-srv/LGICdb/HTML/$id.php> .
+
+bridgeDB:DataSource_LigandBox a bridgeDB:DataSource ;
+	bridgeDB:fullName "LigandBox" ;
+	bridgeDB:systemCode "ligandbox" ;
+	bridgeDB:idExample "D00001" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://ligandbox.protein.osaka-u.ac.jp/ligandbox/cgi-bin/liginf.cgi?id=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/ligandbox/$id> ;
+	bridgeDB:hasRegexPattern "^D\\d{5}" ;
+	bridgeDB:hasUriPattern <http://ligandbox.protein.osaka-u.ac.jp/ligandbox/cgi-bin/liginf.cgi?id=$id> .
 
 bridgeDB:DataSource_LIPID_MAPS a bridgeDB:DataSource ;
 	bridgeDB:fullName "LIPID MAPS" ;
@@ -3179,6 +3368,17 @@ bridgeDB:DataSource_MatrixDB a bridgeDB:DataSource ;
 	bridgeDB:hasRegexPattern "^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])_.*|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9]_.*)|(GAG_.*)|(MULT_.*)|(PFRAG_.*)|(LIP_.*)|(CAT_.*)$" ;
 	dcterms:alternative "MatrixDB" .
 
+bridgeDB:DataSource_MedlinePlus a bridgeDB:DataSource ;
+	bridgeDB:fullName "MedlinePlus" ;
+	bridgeDB:systemCode "medlineplus" ;
+	bridgeDB:idExample "002804" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.nlm.nih.gov/medlineplus/ency/article/$id.htm> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/medlineplus/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
+	bridgeDB:hasUriPattern <http://www.nlm.nih.gov/medlineplus/ency/article/$id.htm> .
+
 bridgeDB:DataSource_Melanoma_Molecular_Map_Project_Biomaps a bridgeDB:DataSource ;
 	bridgeDB:fullName "Melanoma Molecular Map Project Biomaps" ;
 	bridgeDB:systemCode "mmmp:biomaps" ;
@@ -3221,8 +3421,29 @@ bridgeDB:DataSource_MeSH a bridgeDB:DataSource ;
 	bridgeDB:type "unknown" ;
 	bridgeDB:hasUrlPattern <http://bioportal.bioontology.org/ontologies/1351?p=terms&conceptid=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/mesh/$id> ;
+	bridgeDB:hasUriPattern <http://bio2rdf.org/mesh:$id> .
+
+bridgeDB:DataSource_MeSH_2012 a bridgeDB:DataSource ;
+	bridgeDB:fullName "MeSH 2012" ;
+	bridgeDB:systemCode "mesh.2012" ;
+	bridgeDB:idExample "D018377" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?mode=&index=$id&view=expanded> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/mesh.2012/$id> ;
 	bridgeDB:hasRegexPattern "^[A-Za-z0-9]+$" ;
-	bridgeDB:hasUriPattern <http://bio2rdf.org/mesh:$id> , <http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?mode=&index=$id&view=expanded> .
+	bridgeDB:hasUriPattern <http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?mode=&index=$id&view=expanded> .
+
+bridgeDB:DataSource_MeSH_2013 a bridgeDB:DataSource ;
+	bridgeDB:fullName "MeSH 2013" ;
+	bridgeDB:systemCode "mesh.2013" ;
+	bridgeDB:idExample "17165" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.nlm.nih.gov/cgi/mesh/2013/MB_cgi?mode=&index=$id&view=expanded> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/mesh.2013/$id> ;
+	bridgeDB:hasRegexPattern "^[A-Za-z0-9]+$" ;
+	bridgeDB:hasUriPattern <http://www.nlm.nih.gov/cgi/mesh/2013/MB_cgi?mode=&index=$id&view=expanded> .
 
 bridgeDB:DataSource_MetaboLights a bridgeDB:DataSource ;
 	bridgeDB:fullName "MetaboLights" ;
@@ -3431,6 +3652,17 @@ bridgeDB:DataSource_ModelDB a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/modeldb/$id> ;
 	bridgeDB:hasRegexPattern "^\\d+$" ;
 	bridgeDB:hasUriPattern <http://senselab.med.yale.edu/ModelDB/ShowModel.asp?model=$id> .
+
+bridgeDB:DataSource_Molbase a bridgeDB:DataSource ;
+	bridgeDB:fullName "Molbase" ;
+	bridgeDB:systemCode "molbase" ;
+	bridgeDB:idExample "128796-39-4" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.molbase.com/en/index.php?app=search&search_keyword=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/molbase/$id> ;
+	bridgeDB:hasRegexPattern "^(\\d{1,7}\\-\\d{2}\\-\\d)|([A-Za-z0-9\\+\\-\\_]+)$" ;
+	bridgeDB:hasUriPattern <http://www.molbase.com/en/index.php?app=search&search_keyword=$id> .
 
 bridgeDB:DataSource_Molecular_Interactions_Ontology a bridgeDB:DataSource ;
 	bridgeDB:fullName "Molecular Interactions Ontology" ;
@@ -3699,16 +3931,38 @@ bridgeDB:DataSource_NITE_Biological_Research_Center_Catalogue a bridgeDB:DataSou
 	bridgeDB:hasRegexPattern "^\\d+$" ;
 	bridgeDB:hasUriPattern <http://www.nbrc.nite.go.jp/NBRC2/NBRCCatalogueDetailServlet?ID=NBRC&CAT=$id> .
 
-bridgeDB:DataSource_NONCODE a bridgeDB:DataSource ;
-	bridgeDB:fullName "NONCODE" ;
-	bridgeDB:systemCode "noncode" ;
+bridgeDB:DataSource_NONCODE_v3 a bridgeDB:DataSource ;
+	bridgeDB:fullName "NONCODE v3" ;
+	bridgeDB:systemCode "noncodev3" ;
 	bridgeDB:idExample "377550" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "unknown" ;
 	bridgeDB:hasUrlPattern <http://www.noncode.org/NONCODERv3/ncrna.php?ncid=$id> ;
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/noncode/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/noncodev3/$id> ;
 	bridgeDB:hasRegexPattern "^\\d+$" ;
 	bridgeDB:hasUriPattern <http://www.noncode.org/NONCODERv3/ncrna.php?ncid=$id> .
+
+bridgeDB:DataSource_NONCODE_v4_Gene a bridgeDB:DataSource ;
+	bridgeDB:fullName "NONCODE v4 Gene" ;
+	bridgeDB:systemCode "noncodev4.gene" ;
+	bridgeDB:idExample "NONHSAG00001" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.noncode.org/show_gene.php?id=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/noncodev4.gene/$id> ;
+	bridgeDB:hasRegexPattern "^NONHSAG\\d{5}$" ;
+	bridgeDB:hasUriPattern <http://www.noncode.org/show_gene.php?id=$id> .
+
+bridgeDB:DataSource_NONCODE_v4_Transcript a bridgeDB:DataSource ;
+	bridgeDB:fullName "NONCODE v4 Transcript" ;
+	bridgeDB:systemCode "noncodev4.rna" ;
+	bridgeDB:idExample "NONHSAT000001" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.noncode.org/show_rna.php?id=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/noncodev4.rna/$id> ;
+	bridgeDB:hasRegexPattern "^NONHSAT\\d{6}$" ;
+	bridgeDB:hasUriPattern <http://www.noncode.org/show_rna.php?id=$id> .
 
 bridgeDB:DataSource_NucleaRDB a bridgeDB:DataSource ;
 	bridgeDB:fullName "NucleaRDB" ;
@@ -3875,6 +4129,17 @@ bridgeDB:DataSource_OrthoDB a bridgeDB:DataSource ;
 	bridgeDB:hasRegexPattern "^\\w+$" ;
 	bridgeDB:hasUriPattern <http://cegg.unige.ch/orthodb/results?searchtext=$id> .
 
+bridgeDB:DataSource_Oryza_Tag_Line a bridgeDB:DataSource ;
+	bridgeDB:fullName "Oryza Tag Line" ;
+	bridgeDB:systemCode "otl" ;
+	bridgeDB:idExample "AADB12" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://oryzatagline.cirad.fr/cgi-bin/general_mutant.pl?line=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/otl/$id> ;
+	bridgeDB:hasRegexPattern "^A[A-Z]+\\d+$" ;
+	bridgeDB:hasUriPattern <http://oryzatagline.cirad.fr/cgi-bin/general_mutant.pl?line=$id> .
+
 bridgeDB:DataSource_Oryzabase a bridgeDB:DataSource ;
 	bridgeDB:fullName "Oryzabase" ;
 	bridgeDB:systemCode "Ob" ;
@@ -3885,6 +4150,50 @@ bridgeDB:DataSource_Oryzabase a bridgeDB:DataSource ;
 	bridgeDB:hasUrlPattern <http://www.shigen.nig.ac.jp/rice/oryzabase/gateway/gatewayAction.do?target=symbol&id=$id> ;
 	bridgeDB:Organism bridgeDB:Organism_Os ;
 	dcterms:alternative "Oryzabase" .
+
+bridgeDB:DataSource_Oryzabase_Gene a bridgeDB:DataSource ;
+	bridgeDB:fullName "Oryzabase Gene" ;
+	bridgeDB:systemCode "oryzabase.gene" ;
+	bridgeDB:idExample "117" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.shigen.nig.ac.jp/rice/oryzabaseV4/gene/detail/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/oryzabase.gene/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
+	bridgeDB:hasUriPattern <http://www.shigen.nig.ac.jp/rice/oryzabaseV4/gene/detail/$id> .
+
+bridgeDB:DataSource_Oryzabase_Mutant a bridgeDB:DataSource ;
+	bridgeDB:fullName "Oryzabase Mutant" ;
+	bridgeDB:systemCode "oryzabase.mutant" ;
+	bridgeDB:idExample "21393" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.shigen.nig.ac.jp/rice/oryzabaseV4/strain/inducedMutationLine/detail/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/oryzabase.mutant/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
+	bridgeDB:hasUriPattern <http://www.shigen.nig.ac.jp/rice/oryzabaseV4/strain/inducedMutationLine/detail/$id> .
+
+bridgeDB:DataSource_Oryzabase_Stage a bridgeDB:DataSource ;
+	bridgeDB:fullName "Oryzabase Stage" ;
+	bridgeDB:systemCode "oryzabase.stage" ;
+	bridgeDB:idExample "34" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.shigen.nig.ac.jp/rice/oryzabaseV4/devstageineachorgan/detail/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/oryzabase.stage/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
+	bridgeDB:hasUriPattern <http://www.shigen.nig.ac.jp/rice/oryzabaseV4/devstageineachorgan/detail/$id> .
+
+bridgeDB:DataSource_Oryzabase_Strain a bridgeDB:DataSource ;
+	bridgeDB:fullName "Oryzabase Strain" ;
+	bridgeDB:systemCode "oryzabase.strain" ;
+	bridgeDB:idExample "1" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.shigen.nig.ac.jp/rice/oryzabaseV4/strain/wildCore/detail/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/oryzabase.strain/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
+	bridgeDB:hasUriPattern <http://www.shigen.nig.ac.jp/rice/oryzabaseV4/strain/wildCore/detail/$id> .
 
 bridgeDB:DataSource_Other a bridgeDB:DataSource ;
 	bridgeDB:fullName "Other" ;
@@ -3902,7 +4211,7 @@ bridgeDB:DataSource_PaleoDB a bridgeDB:DataSource ;
 	bridgeDB:hasUrlPattern <http://paleodb.geology.wisc.edu/cgi-bin/bridge.pl?a=basicTaxonInfo&taxon_no=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/paleodb/$id> ;
 	bridgeDB:hasRegexPattern "^\\d+$" ;
-	bridgeDB:hasUriPattern <http://museumu03.museumwww.naturkundemuseum-berlin.de/cgi-bin/bridge.pl?a=basicTaxonInfo&taxon_no=$id> , <http://paleodb.geology.wisc.edu/cgi-bin/bridge.pl?a=basicTaxonInfo&taxon_no=$id> , <http://paleodb.org/cgi-bin/bridge.pl?a=basicTaxonInfo&taxon_no=$id> .
+	bridgeDB:hasUriPattern <http://paleodb.geology.wisc.edu/cgi-bin/bridge.pl?a=basicTaxonInfo&taxon_no=$id> , <http://paleodb.org/cgi-bin/bridge.pl?a=basicTaxonInfo&taxon_no=$id> .
 
 bridgeDB:DataSource_PANTHER_Family a bridgeDB:DataSource ;
 	bridgeDB:fullName "PANTHER Family" ;
@@ -3947,6 +4256,17 @@ bridgeDB:DataSource_PANTHER_Pathway_Component a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/panther.pthcmp/$id> ;
 	bridgeDB:hasRegexPattern "^G|P|U|C|S\\d{5}$" ;
 	bridgeDB:hasUriPattern <http://www.pantherdb.org/pathway/pathCatDetail.do?clsAccession=$id> .
+
+bridgeDB:DataSource_PASS2 a bridgeDB:DataSource ;
+	bridgeDB:fullName "PASS2" ;
+	bridgeDB:systemCode "pass2" ;
+	bridgeDB:idExample "46977" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://caps.ncbs.res.in/pass2/superfamily/superfamilydetail.php?superfamilyId=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/pass2/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
+	bridgeDB:hasUriPattern <http://caps.ncbs.res.in/pass2/superfamily/superfamilydetail.php?superfamilyId=$id> .
 
 bridgeDB:DataSource_Pathway_Commons a bridgeDB:DataSource ;
 	bridgeDB:fullName "Pathway Commons" ;
@@ -4972,7 +5292,7 @@ bridgeDB:DataSource_SubstrateDB a bridgeDB:DataSource ;
 	bridgeDB:type "protein" ;
 	bridgeDB:hasUrlPattern <http://substrate.burnham.org/protein/annotation/$id/html> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/pmap.substratedb/$id> ;
-	bridgeDB:hasRegexPattern "^\\w+$" ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
 	dcterms:alternative "SubstrateDB" .
 
 bridgeDB:DataSource_SubtiList a bridgeDB:DataSource ;
@@ -5278,7 +5598,7 @@ bridgeDB:DataSource_TubercuList a bridgeDB:DataSource ;
 	bridgeDB:hasUrlPattern <http://tuberculist.epfl.ch/quicksearch.php?gene+name=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/myco.tuber/$id> ;
 	bridgeDB:Organism bridgeDB:Organism_Mx ;
-	bridgeDB:hasRegexPattern "^\\w+$" ;
+	bridgeDB:hasRegexPattern "^Rv\\d{4}(A|B|c)?$" ;
 	dcterms:alternative "TubercuList" .
 
 bridgeDB:DataSource_UBERON a bridgeDB:DataSource ;
@@ -5410,7 +5730,7 @@ bridgeDB:DataSource_UniParc a bridgeDB:DataSource ;
 	bridgeDB:idExample "UPI000000000A" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "unknown" ;
-	bridgeDB:hasUrlPattern <http://www.uniprot.org/uniparc/$id> ;
+	bridgeDB:hasUrlPattern <http://www.ebi.ac.uk/cgi-bin/dbfetch?db=uniparc&id=$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/uniparc/$id> ;
 	bridgeDB:hasRegexPattern "^UPI[A-F0-9]{10}$" ;
 	bridgeDB:hasUriPattern <http://www.ebi.ac.uk/cgi-bin/dbfetch?db=uniparc&id=$id> , <http://www.uniprot.org/uniparc/$id> .
@@ -5547,6 +5867,28 @@ bridgeDB:DataSource_VectorBase a bridgeDB:DataSource ;
 	bridgeDB:hasRegexPattern "^\\D{4}\\d{6}(\\-\\D{2})?$" ;
 	bridgeDB:hasUriPattern <https://www.vectorbase.org/search/site/$id?site=Genome> .
 
+bridgeDB:DataSource_VFDB_Gene a bridgeDB:DataSource ;
+	bridgeDB:fullName "VFDB Gene" ;
+	bridgeDB:systemCode "vfdb.gene" ;
+	bridgeDB:idExample "VFG2154" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.mgc.ac.cn/cgi-bin/VFs/gene.cgi?GeneID=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/vfdb.gene/$id> ;
+	bridgeDB:hasRegexPattern "^\\w+$" ;
+	bridgeDB:hasUriPattern <http://www.mgc.ac.cn/cgi-bin/VFs/gene.cgi?GeneID=$id> .
+
+bridgeDB:DataSource_VFDB_Genus a bridgeDB:DataSource ;
+	bridgeDB:fullName "VFDB Genus" ;
+	bridgeDB:systemCode "vfdb.genus" ;
+	bridgeDB:idExample "Chlamydia" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.mgc.ac.cn/cgi-bin/VFs/genus.cgi?Genus=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/vfdb.genus/$id> ;
+	bridgeDB:hasRegexPattern "^\\w+$" ;
+	bridgeDB:hasUriPattern <http://www.mgc.ac.cn/cgi-bin/VFs/genus.cgi?Genus=$id> .
+
 bridgeDB:DataSource_ViPR_Strain a bridgeDB:DataSource ;
 	bridgeDB:fullName "ViPR Strain" ;
 	bridgeDB:systemCode "vipr" ;
@@ -5675,6 +6017,17 @@ bridgeDB:DataSource_WormBase a bridgeDB:DataSource ;
 	dcterms:alternative "WormBase" ;
 	bridgeDB:hasUriPattern <http://purl.uniprot.org/wormbase/$id> , <http://www.wormbase.org/db/gene/gene?name=$id%3Bclass%3DGene> .
 
+bridgeDB:DataSource_WormBase_RNAi a bridgeDB:DataSource ;
+	bridgeDB:fullName "WormBase RNAi" ;
+	bridgeDB:systemCode "wormbase.rnai" ;
+	bridgeDB:idExample "WBRNAi00086878" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www.wormbase.org/species/c_elegans/rnai/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/wormbase.rnai/$id> ;
+	bridgeDB:hasRegexPattern "^WBRNAi\\d{8}$" ;
+	bridgeDB:hasUriPattern <http://www.wormbase.org/species/c_elegans/rnai/$id> .
+
 bridgeDB:DataSource_Wormpep a bridgeDB:DataSource ;
 	bridgeDB:fullName "Wormpep" ;
 	bridgeDB:systemCode "wormpep" ;
@@ -5697,6 +6050,28 @@ bridgeDB:DataSource_Xenbase a bridgeDB:DataSource ;
 	bridgeDB:hasRegexPattern "^(XB-GENE-)?\\d+$" ;
 	bridgeDB:hasUriPattern <http://www.xenbase.org/gene/showgene.do?method=displayGeneSummary&geneId=$id> .
 
+bridgeDB:DataSource_YDPM a bridgeDB:DataSource ;
+	bridgeDB:fullName "YDPM" ;
+	bridgeDB:systemCode "ydpm" ;
+	bridgeDB:idExample "YAL001C" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www-deletion.stanford.edu/cgi-bin/YDPM/YDPM_search.cgi?thelist=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/ydpm/$id> ;
+	bridgeDB:hasRegexPattern "^Y[A-Z]{2}\\d+[CW]$" ;
+	bridgeDB:hasUriPattern <http://www-deletion.stanford.edu/cgi-bin/YDPM/YDPM_search.cgi?thelist=$id> .
+
+bridgeDB:DataSource_Yeast_Intron_Database a bridgeDB:DataSource ;
+	bridgeDB:fullName "Yeast Intron Database" ;
+	bridgeDB:systemCode "yid" ;
+	bridgeDB:idExample "SNR17A" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://metarray.ucsc.edu/cgi-bin/intron/yirIntrondb?orfName=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/yid/$id> ;
+	bridgeDB:hasRegexPattern "^[A-Z0-9]+$" ;
+	bridgeDB:hasUriPattern <http://metarray.ucsc.edu/cgi-bin/intron/yirIntrondb?orfName=$id> .
+
 bridgeDB:DataSource_YeTFasCo a bridgeDB:DataSource ;
 	bridgeDB:fullName "YeTFasCo" ;
 	bridgeDB:systemCode "yetfasco" ;
@@ -5707,6 +6082,17 @@ bridgeDB:DataSource_YeTFasCo a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/yetfasco/$id> ;
 	bridgeDB:hasRegexPattern "^\\w+\\_\\d+(\\.\\d+)?$" ;
 	bridgeDB:hasUriPattern <http://yetfasco.ccbr.utoronto.ca/showPFM.php?mot=$id> .
+
+bridgeDB:DataSource_YRC_PDR a bridgeDB:DataSource ;
+	bridgeDB:fullName "YRC PDR" ;
+	bridgeDB:systemCode "yrcpdr" ;
+	bridgeDB:idExample "2673500" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://yeastrc.org/pdr/viewProtein.do?id=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/yrcpdr/$id> ;
+	bridgeDB:hasRegexPattern "^\\d+$" ;
+	bridgeDB:hasUriPattern <http://yeastrc.org/pdr/viewProtein.do?id=$id> .
 
 bridgeDB:DataSource_ZFIN a bridgeDB:DataSource ;
 	bridgeDB:fullName "ZFIN" ;
@@ -6180,13 +6566,16 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 	bridgeDB:hasPrefix "http://bugs.sgul.ac.uk/bugsbase/tabs/protocol.php?protocol_id=" ;
 	bridgeDB:hasPostfix "&amp%3Baction=view" .
 
-<http://bykdb.ibcp.fr/data/html/$id.html> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://bykdb.ibcp.fr/data/html/" ;
+<http://bykdb.ibcp.fr/data/html/annotated/$id.html> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://bykdb.ibcp.fr/data/html/annotated/" ;
 	bridgeDB:hasPostfix ".html" .
 
 <http://cactus.nci.nih.gov/chemical/structure/$id/names> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://cactus.nci.nih.gov/chemical/structure/" ;
 	bridgeDB:hasPostfix "/names" .
+
+<http://caps.ncbs.res.in/pass2/superfamily/superfamilydetail.php?superfamilyId=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://caps.ncbs.res.in/pass2/superfamily/superfamilydetail.php?superfamilyId=" .
 
 <http://catalog.loc.gov/cgi-bin/Pwebrecon.cgi?Search_Arg=0745-4570$id&PID=le0kCQllk84KcxI3gMhUTowLMnn9H> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://catalog.loc.gov/cgi-bin/Pwebrecon.cgi?Search_Arg=0745-4570" ;
@@ -6260,6 +6649,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://cryptodb.org/cryptodb/showRecord.do?name=GeneRecordClasses.GeneRecordClass&source_id=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://cryptodb.org/cryptodb/showRecord.do?name=GeneRecordClasses.GeneRecordClass&source_id=" .
 
+<http://csbl1.bmb.uga.edu/OperonDB/genedetail.php?id=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://csbl1.bmb.uga.edu/OperonDB/genedetail.php?id=" .
+
 <http://ctdbase.org/basicQuery.go?bqCat=gene&bq=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://ctdbase.org/basicQuery.go?bqCat=gene&bq=" .
 
@@ -6290,6 +6682,15 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://data.kasabi.com/dataset/chembl-rdf/target/t$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://data.kasabi.com/dataset/chembl-rdf/target/t" .
 
+<http://datf.cbi.pku.edu.cn/entry-display.php?id=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://datf.cbi.pku.edu.cn/entry-display.php?id=" .
+
+<http://db-mml.sjtu.edu.cn/ICEberg/browse_result.php?type=fam&fam_id=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://db-mml.sjtu.edu.cn/ICEberg/browse_result.php?type=fam&fam_id=" .
+
+<http://db-mml.sjtu.edu.cn/ICEberg/feature_page.php?ice_id=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://db-mml.sjtu.edu.cn/ICEberg/feature_page.php?ice_id=" .
+
 <https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/Summarize_Peptide?query=QUERY&searchForThis=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/Summarize_Peptide?query=QUERY&searchForThis=" .
 
@@ -6298,6 +6699,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://dbpedia.org/resource/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://dbpedia.org/resource/" .
+
+<http://degradome.uniovi.es/cgi-bin/protease/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://degradome.uniovi.es/cgi-bin/protease/" .
 
 <http://diana.cslab.ece.ntua.gr/DianaToolsNew/index.php?r=tarbase%2Findex&mirnas=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://diana.cslab.ece.ntua.gr/DianaToolsNew/index.php?r=tarbase%2Findex&mirnas=" .
@@ -6378,6 +6782,18 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://flystocks.bio.indiana.edu/Reports/$id.html> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://flystocks.bio.indiana.edu/Reports/" ;
 	bridgeDB:hasPostfix ".html" .
+
+<http://func.mshri.on.ca/fly/genes/list_functional_scores/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://func.mshri.on.ca/fly/genes/list_functional_scores/" .
+
+<http://func.mshri.on.ca/human/genes/list_functional_scores/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://func.mshri.on.ca/human/genes/list_functional_scores/" .
+
+<http://func.mshri.on.ca/mouse/genes/list_functional_scores/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://func.mshri.on.ca/mouse/genes/list_functional_scores/" .
+
+<http://func.mshri.on.ca/yeast/genes/list_functional_scores/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://func.mshri.on.ca/yeast/genes/list_functional_scores/" .
 
 <http://fungi.ensembl.org/id/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://fungi.ensembl.org/id/" .
@@ -6764,6 +7180,12 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/darc/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/darc/" .
 
+<http://identifiers.org/datf/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/datf/" .
+
+<http://identifiers.org/dbd/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/dbd/" .
+
 <http://identifiers.org/dbest/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/dbest/" .
 
@@ -6775,6 +7197,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://identifiers.org/dbsnp/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/dbsnp/" .
+
+<http://identifiers.org/degradome/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/degradome/" .
 
 <http://identifiers.org/depod/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/depod/" .
@@ -6799,6 +7224,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://identifiers.org/dommino/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/dommino/" .
+
+<http://identifiers.org/door/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/door/" .
 
 <http://identifiers.org/doqcs.model/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/doqcs.model/" .
@@ -6893,6 +7321,21 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/fma/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/fma/" .
 
+<http://identifiers.org/funcat/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/funcat/" .
+
+<http://identifiers.org/funcbase.fly/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/funcbase.fly/" .
+
+<http://identifiers.org/funcbase.human/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/funcbase.human/" .
+
+<http://identifiers.org/funcbase.mouse/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/funcbase.mouse/" .
+
+<http://identifiers.org/funcbase.yeast/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/funcbase.yeast/" .
+
 <http://identifiers.org/fungidb/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/fungidb/" .
 
@@ -6914,6 +7357,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/genetree/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/genetree/" .
 
+<http://identifiers.org/genewiki/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/genewiki/" .
+
 <http://identifiers.org/genpept/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/genpept/" .
 
@@ -6925,6 +7371,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://identifiers.org/giardiadb/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/giardiadb/" .
+
+<http://identifiers.org/glycoepitope/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/glycoepitope/" .
 
 <http://identifiers.org/glycomedb/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/glycomedb/" .
@@ -7043,6 +7492,12 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/icd/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/icd/" .
 
+<http://identifiers.org/iceberg.element/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/iceberg.element/" .
+
+<http://identifiers.org/iceberg.family/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/iceberg.family/" .
+
 <http://identifiers.org/ideal/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/ideal/" .
 
@@ -7103,11 +7558,17 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/iuphar.family/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/iuphar.family/" .
 
+<http://identifiers.org/iuphar.ligand/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/iuphar.ligand/" .
+
 <http://identifiers.org/iuphar.receptor/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/iuphar.receptor/" .
 
 <http://identifiers.org/jaxmice/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/jaxmice/" .
+
+<http://identifiers.org/jcggdb/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/jcggdb/" .
 
 <http://identifiers.org/jcm/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/jcm/" .
@@ -7123,6 +7584,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://identifiers.org/kegg.compound/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/kegg.compound/" .
+
+<http://identifiers.org/kegg.disease/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/kegg.disease/" .
 
 <http://identifiers.org/kegg.drug/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/kegg.drug/" .
@@ -7142,6 +7606,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/kegg.metagenome/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/kegg.metagenome/" .
 
+<http://identifiers.org/kegg.module/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/kegg.module/" .
+
 <http://identifiers.org/kegg.orthology/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/kegg.orthology/" .
 
@@ -7156,6 +7623,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://identifiers.org/lgic/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/lgic/" .
+
+<http://identifiers.org/ligandbox/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/ligandbox/" .
 
 <http://identifiers.org/ligandexpo/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/ligandexpo/" .
@@ -7184,11 +7654,20 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/matrixdb.association/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/matrixdb.association/" .
 
+<http://identifiers.org/medlineplus/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/medlineplus/" .
+
 <http://identifiers.org/merops.family/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/merops.family/" .
 
 <http://identifiers.org/merops/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/merops/" .
+
+<http://identifiers.org/mesh.2012/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/mesh.2012/" .
+
+<http://identifiers.org/mesh.2013/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/mesh.2013/" .
 
 <http://identifiers.org/mesh/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/mesh/" .
@@ -7246,6 +7725,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://identifiers.org/modeldb/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/modeldb/" .
+
+<http://identifiers.org/molbase/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/molbase/" .
 
 <http://identifiers.org/mpid/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/mpid/" .
@@ -7313,8 +7795,14 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/niaest/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/niaest/" .
 
-<http://identifiers.org/noncode/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/noncode/" .
+<http://identifiers.org/noncodev3/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/noncodev3/" .
+
+<http://identifiers.org/noncodev4.gene/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/noncodev4.gene/" .
+
+<http://identifiers.org/noncodev4.rna/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/noncodev4.rna/" .
 
 <http://identifiers.org/nuclearbd/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/nuclearbd/" .
@@ -7322,8 +7810,8 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/obi/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/obi/" .
 
-<http://identifiers.org/obo.chebi/CHEBI:$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/obo.chebi/CHEBI:" .
+<http://identifiers.org/obo.chebi/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/obo.chebi/" .
 
 <http://identifiers.org/obo.go/GO:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/obo.go/GO:" .
@@ -7364,6 +7852,21 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/orthodb/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/orthodb/" .
 
+<http://identifiers.org/oryzabase.gene/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/oryzabase.gene/" .
+
+<http://identifiers.org/oryzabase.mutant/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/oryzabase.mutant/" .
+
+<http://identifiers.org/oryzabase.stage/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/oryzabase.stage/" .
+
+<http://identifiers.org/oryzabase.strain/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/oryzabase.strain/" .
+
+<http://identifiers.org/otl/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/otl/" .
+
 <http://identifiers.org/paleodb/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/paleodb/" .
 
@@ -7378,6 +7881,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://identifiers.org/panther.pthcmp/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/panther.pthcmp/" .
+
+<http://identifiers.org/pass2/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/pass2/" .
 
 <http://identifiers.org/pathwaycommons/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/pathwaycommons/" .
@@ -7778,6 +8284,12 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/vectorbase/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/vectorbase/" .
 
+<http://identifiers.org/vfdb.gene/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/vfdb.gene/" .
+
+<http://identifiers.org/vfdb.genus/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/vfdb.genus/" .
+
 <http://identifiers.org/vipr/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/vipr/" .
 
@@ -7799,6 +8311,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/worfdb/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/worfdb/" .
 
+<http://identifiers.org/wormbase.rnai/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/wormbase.rnai/" .
+
 <http://identifiers.org/wormbase/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/wormbase/" .
 
@@ -7808,8 +8323,17 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://identifiers.org/xenbase/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/xenbase/" .
 
+<http://identifiers.org/ydpm/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/ydpm/" .
+
 <http://identifiers.org/yetfasco/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/yetfasco/" .
+
+<http://identifiers.org/yid/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/yid/" .
+
+<http://identifiers.org/yrcpdr/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/yrcpdr/" .
 
 <http://identifiers.org/zfin.expression/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/zfin.expression/" .
@@ -7846,6 +8370,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 	bridgeDB:hasPrefix "http://jaxmice.jax.org/strain/" ;
 	bridgeDB:hasPostfix ".html" .
 
+<http://jcggdb.jp/idb/jcggdb/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://jcggdb.jp/idb/jcggdb/" .
+
 <http://jjj.bio.vu.nl/cgi-bin/processModelSelection.py?keytype=modelname&keyword=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://jjj.bio.vu.nl/cgi-bin/processModelSelection.py?keytype=modelname&keyword=" .
 
@@ -7876,6 +8403,13 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 	bridgeDB:hasPrefix "http://ligand-depot.rutgers.edu/pyapps/ldHandler.py?formid=cc-index-search&target=" ;
 	bridgeDB:hasPostfix "&operation=ccid" .
 
+<http://ligand-expo.rcsb.org/pyapps/ldHandler.py?formid=cc-index-search&target=$id&operation=ccid> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://ligand-expo.rcsb.org/pyapps/ldHandler.py?formid=cc-index-search&target=" ;
+	bridgeDB:hasPostfix "&operation=ccid" .
+
+<http://ligandbox.protein.osaka-u.ac.jp/ligandbox/cgi-bin/liginf.cgi?id=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://ligandbox.protein.osaka-u.ac.jp/ligandbox/cgi-bin/liginf.cgi?id=" .
+
 <http://linkedchemistry.info/chembl/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://linkedchemistry.info/chembl/" .
 
@@ -7901,6 +8435,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://merops.sanger.ac.uk/cgi-bin/pepsum?mid=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://merops.sanger.ac.uk/cgi-bin/pepsum?mid=" .
 
+<http://metarray.ucsc.edu/cgi-bin/intron/yirIntrondb?orfName=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://metarray.ucsc.edu/cgi-bin/intron/yirIntrondb?orfName=" .
+
 <http://metazoa.ensembl.org/id/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://metazoa.ensembl.org/id/" .
 
@@ -7922,6 +8459,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://mint.bio.uniroma2.it/mint/search/inFrameInteraction.do?interactionAc=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://mint.bio.uniroma2.it/mint/search/inFrameInteraction.do?interactionAc=" .
 
+<http://mips.helmholtz-muenchen.de/cgi-bin/proj/funcatDB/search_advanced.pl?action=2&wert=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://mips.helmholtz-muenchen.de/cgi-bin/proj/funcatDB/search_advanced.pl?action=2&wert=" .
+
 <http://mips.helmholtz-muenchen.de/genre/proj/corum/complexdetails.html?id=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://mips.helmholtz-muenchen.de/genre/proj/corum/complexdetails.html?id=" .
 
@@ -7933,9 +8473,6 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://msbi.ipb-halle.de/MassBank/jsp/Dispatcher.jsp?type=disp&id=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://msbi.ipb-halle.de/MassBank/jsp/Dispatcher.jsp?type=disp&id=" .
-
-<http://museumu03.museumwww.naturkundemuseum-berlin.de/cgi-bin/bridge.pl?a=basicTaxonInfo&taxon_no=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://museumu03.museumwww.naturkundemuseum-berlin.de/cgi-bin/bridge.pl?a=basicTaxonInfo&taxon_no=" .
 
 <http://mycobrowser.epfl.ch/leprosysearch.php?gene+name=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://mycobrowser.epfl.ch/leprosysearch.php?gene+name=" .
@@ -7995,6 +8532,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://orion.rnet.missouri.edu/~nz953/DOMMINO/index.php/result/show_network/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://orion.rnet.missouri.edu/~nz953/DOMMINO/index.php/result/show_network/" .
+
+<http://oryzatagline.cirad.fr/cgi-bin/general_mutant.pl?line=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://oryzatagline.cirad.fr/cgi-bin/general_mutant.pl?line=" .
 
 <http://p570e70p1.ophid.utoronto.ca/genecards/cgi-bin/carddisp.pl?gene=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://p570e70p1.ophid.utoronto.ca/genecards/cgi-bin/carddisp.pl?gene=" .
@@ -8492,6 +9032,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://www-bionet.sscc.ru/sitex/index.php?siteid=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www-bionet.sscc.ru/sitex/index.php?siteid=" .
 
+<http://www-deletion.stanford.edu/cgi-bin/YDPM/YDPM_search.cgi?thelist=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www-deletion.stanford.edu/cgi-bin/YDPM/YDPM_search.cgi?thelist=" .
+
 <http://www-is.biotoul.fr/index.html?is_special_name=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www-is.biotoul.fr/index.html?is_special_name=" .
 
@@ -8839,23 +9382,14 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://www.genome.jp/dbget-bin/www_bget?$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?" .
 
-<http://www.genome.jp/dbget-bin/www_bget?cpd%3A$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?cpd%3A" .
-
 <http://www.genome.jp/dbget-bin/www_bget?cpd:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?cpd:" .
-
-<http://www.genome.jp/dbget-bin/www_bget?dr%3A$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?dr%3A" .
 
 <http://www.genome.jp/dbget-bin/www_bget?dr:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?dr:" .
 
 <http://www.genome.jp/dbget-bin/www_bget?ec%3A$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?ec%3A" .
-
-<http://www.genome.jp/dbget-bin/www_bget?gl%3A$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?gl%3A" .
 
 <http://www.genome.jp/dbget-bin/www_bget?gl:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?gl:" .
@@ -8866,17 +9400,14 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://www.genome.jp/dbget-bin/www_bget?pathway+$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?pathway+" .
 
-<http://www.genome.jp/dbget-bin/www_bget?rn%3A$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?rn%3A" .
-
 <http://www.genome.jp/dbget-bin/www_bget?rn:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.genome.jp/dbget-bin/www_bget?rn:" .
 
-<http://www.genome.jp/kegg-bin/show_organism?org=$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://www.genome.jp/kegg-bin/show_organism?org=" .
-
 <http://www.genomesonline.org/cgi-bin/GOLD/GOLDCards.cgi?goldstamp=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.genomesonline.org/cgi-bin/GOLD/GOLDCards.cgi?goldstamp=" .
+
+<http://www.glyco.is.ritsumei.ac.jp/epitope-bin/epitope.cgi?mode=general&epitope_id=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.glyco.is.ritsumei.ac.jp/epitope-bin/epitope.cgi?mode=general&epitope_id=" .
 
 <http://www.glycome-db.org/database/showStructure.action?glycomeId=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.glycome-db.org/database/showStructure.action?glycomeId=" .
@@ -8948,6 +9479,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://www.iuphar-db.org/DATABASE/FamilyMenuForward?familyId=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.iuphar-db.org/DATABASE/FamilyMenuForward?familyId=" .
 
+<http://www.iuphar-db.org/DATABASE/LigandDisplayForward?ligandId=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.iuphar-db.org/DATABASE/LigandDisplayForward?ligandId=" .
+
 <http://www.iuphar-db.org/DATABASE/ObjectDisplayForward?objectId=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.iuphar-db.org/DATABASE/ObjectDisplayForward?objectId=" .
 
@@ -8974,6 +9508,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 	bridgeDB:hasPrefix "http://www.kazusa.or.jp/rouge/gfpage/" ;
 	bridgeDB:hasPostfix "/" .
 
+<http://www.kegg.jp/entry/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.kegg.jp/entry/" .
+
 <http://www.koehn.embl.de/depod/showp.php?gene=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.koehn.embl.de/depod/showp.php?gene=" .
 
@@ -8996,6 +9533,12 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://www.metacyc.org/META/NEW-IMAGE?type=NIL&object=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.metacyc.org/META/NEW-IMAGE?type=NIL&object=" .
 
+<http://www.mgc.ac.cn/cgi-bin/VFs/gene.cgi?GeneID=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.mgc.ac.cn/cgi-bin/VFs/gene.cgi?GeneID=" .
+
+<http://www.mgc.ac.cn/cgi-bin/VFs/genus.cgi?Genus=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.mgc.ac.cn/cgi-bin/VFs/genus.cgi?Genus=" .
+
 <http://www.mirbase.org/cgi-bin/mature.pl?mature_acc=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.mirbase.org/cgi-bin/mature.pl?mature_acc=" .
 
@@ -9007,6 +9550,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://www.mmrrc.org/catalog/getSDS.php?mmrrc_id=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.mmrrc.org/catalog/getSDS.php?mmrrc_id=" .
+
+<http://www.molbase.com/en/index.php?app=search&search_keyword=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.molbase.com/en/index.php?app=search&search_keyword=" .
 
 <http://www.mycobank.org/Biolomics.aspx?Table=Mycobank&MycoBankNr_=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.mycobank.org/Biolomics.aspx?Table=Mycobank&MycoBankNr_=" .
@@ -9117,8 +9663,22 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 	bridgeDB:hasPrefix "http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?mode=&index=" ;
 	bridgeDB:hasPostfix "&view=expanded" .
 
+<http://www.nlm.nih.gov/cgi/mesh/2013/MB_cgi?mode=&index=$id&view=expanded> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.nlm.nih.gov/cgi/mesh/2013/MB_cgi?mode=&index=" ;
+	bridgeDB:hasPostfix "&view=expanded" .
+
+<http://www.nlm.nih.gov/medlineplus/ency/article/$id.htm> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.nlm.nih.gov/medlineplus/ency/article/" ;
+	bridgeDB:hasPostfix ".htm" .
+
 <http://www.noncode.org/NONCODERv3/ncrna.php?ncid=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.noncode.org/NONCODERv3/ncrna.php?ncid=" .
+
+<http://www.noncode.org/show_gene.php?id=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.noncode.org/show_gene.php?id=" .
+
+<http://www.noncode.org/show_rna.php?id=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.noncode.org/show_rna.php?id=" .
 
 <http://www.obofoundry.org/ro/#$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.obofoundry.org/ro/#" .
@@ -9223,6 +9783,18 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://www.shigen.nig.ac.jp/rice/oryzabase/gateway/gatewayAction.do?target=symbol&id=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.shigen.nig.ac.jp/rice/oryzabase/gateway/gatewayAction.do?target=symbol&id=" .
 
+<http://www.shigen.nig.ac.jp/rice/oryzabaseV4/devstageineachorgan/detail/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.shigen.nig.ac.jp/rice/oryzabaseV4/devstageineachorgan/detail/" .
+
+<http://www.shigen.nig.ac.jp/rice/oryzabaseV4/gene/detail/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.shigen.nig.ac.jp/rice/oryzabaseV4/gene/detail/" .
+
+<http://www.shigen.nig.ac.jp/rice/oryzabaseV4/strain/inducedMutationLine/detail/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.shigen.nig.ac.jp/rice/oryzabaseV4/strain/inducedMutationLine/detail/" .
+
+<http://www.shigen.nig.ac.jp/rice/oryzabaseV4/strain/wildCore/detail/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.shigen.nig.ac.jp/rice/oryzabaseV4/strain/wildCore/detail/" .
+
 <http://www.signaling-gateway.org/molecule/query?afcsid=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.signaling-gateway.org/molecule/query?afcsid=" .
 
@@ -9237,6 +9809,10 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://www.tcdb.org/search/result.php?tc=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.tcdb.org/search/result.php?tc=" .
+
+<http://www.transcriptionfactor.org/index.cgi?Search%2FDomain+domain%3A$id+cat%3ADBD> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.transcriptionfactor.org/index.cgi?Search%2FDomain+domain%3A" ;
+	bridgeDB:hasPostfix "+cat%3ADBD" .
 
 <http://www.treefam.org/family/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.treefam.org/family/" .
@@ -9309,6 +9885,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://www.wormbase.org/db/seq/protein?name=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.wormbase.org/db/seq/protein?name=" .
 
+<http://www.wormbase.org/species/c_elegans/rnai/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://www.wormbase.org/species/c_elegans/rnai/" .
+
 <http://www.xenbase.org/gene/showgene.do?method=displayGeneSummary&geneId=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www.xenbase.org/gene/showgene.do?method=displayGeneSummary&geneId=" .
 
@@ -9326,6 +9905,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://www6.unito.it/cards/cgi-bin/carddisp.pl?gene=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://www6.unito.it/cards/cgi-bin/carddisp.pl?gene=" .
+
+<http://yeastrc.org/pdr/viewProtein.do?id=$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://yeastrc.org/pdr/viewProtein.do?id=" .
 
 <http://yetfasco.ccbr.utoronto.ca/showPFM.php?mot=$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://yetfasco.ccbr.utoronto.ca/showPFM.php?mot=" .

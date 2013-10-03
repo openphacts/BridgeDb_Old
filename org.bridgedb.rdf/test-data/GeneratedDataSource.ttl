@@ -663,6 +663,7 @@ bridgeDB:DataSource_Gene_Wiki a bridgeDB:DataSource ;
 	bridgeDB:primary "false"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://plugins.biogps.org/cgi-bin/wp.cgi?id=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/genewiki/$id> ;
 	bridgeDB:hasRegexPattern "\\d+" ;
 	dcterms:alternative "Gene Wiki" .
 
@@ -2270,6 +2271,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://identifiers.org/flybase/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/flybase/" .
+
+<http://identifiers.org/genewiki/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/genewiki/" .
 
 <http://identifiers.org/go/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/go/" .

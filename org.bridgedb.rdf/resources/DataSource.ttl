@@ -346,7 +346,8 @@ bridgeDB:DataSource_Gene_Wiki a bridgeDB:DataSource ;
 	bridgeDB:idExample "1017" ;
 	bridgeDB:primary "false"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
-	bridgeDB:hasUrlPattern <http://plugins.biogps.org/cgi-bin/wp.cgi?id=$id> .
+	bridgeDB:hasUrlPattern <http://plugins.biogps.org/cgi-bin/wp.cgi?id=$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/genewiki/$id> .
 
 bridgeDB:DataSource_GeneOntology a bridgeDB:DataSource ;
 	bridgeDB:fullName "GeneOntology" ;
