@@ -141,13 +141,13 @@ public class RegexUriPattern {
         return results;
     }
 
-    public static RegexUriPattern byPattern(String pattern) throws BridgeDBException {
+/*    public static RegexUriPattern singletonByPattern(String pattern) throws BridgeDBException {
         //todo regex in pattern
         UriPattern uriPattern = UriPattern.existingByPattern(pattern);
-        return byPattern(uriPattern);
+        return singletonByPattern(uriPattern);
     }
     
-    public static RegexUriPattern byPattern(UriPattern uriPattern) throws BridgeDBException {
+    public static RegexUriPattern singletonByPattern(UriPattern uriPattern) throws BridgeDBException {
         Set<String> possibles = uriPattern.getSysCodes();
         if (possibles.size() != 1){
             throw new BridgeDBException("Multiple DataSource known for " + uriPattern);
@@ -155,5 +155,20 @@ public class RegexUriPattern {
         String sysCode = possibles.iterator().next();
         return factory(uriPattern, sysCode);
     }
-        
+ */       
+    public static Set<RegexUriPattern> byPattern(String pattern) throws BridgeDBException {
+        //todo regex in pattern
+        UriPattern uriPattern = UriPattern.existingByPattern(pattern);
+        return byPattern(uriPattern);
+    }
+
+    public static Set<RegexUriPattern> byPattern(UriPattern uriPattern) throws BridgeDBException {
+        Set<String> possibleSysCodes = uriPattern.getSysCodes();
+        HashSet<RegexUriPattern> results = new HashSet<RegexUriPattern>();
+        for (String possibleSysCode:possibleSysCodes){
+            results.add(factory(uriPattern, possibleSysCode));
+        }
+        return results;
+    }
+            
 }

@@ -789,11 +789,11 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         }
         HashSet<RegexUriPattern> targets = new HashSet<RegexUriPattern>();
         for (String targetUriPattern:targetUriPatterns){
-            RegexUriPattern pattern = RegexUriPattern.byPattern(targetUriPattern);
-            if (pattern != null){
-                targets.add(pattern);
+            Set<RegexUriPattern> pattern = RegexUriPattern.byPattern(targetUriPattern);
+            if (pattern.isEmpty()){
+                throw new BridgeDBException ("No pattern knwo for " +targetUriPattern);                
             } else {
-                throw new BridgeDBException ("No pattern knwo for " +targetUriPattern);
+                targets.addAll(pattern);
             }
         }
         if (targets.isEmpty()){
