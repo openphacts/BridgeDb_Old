@@ -379,7 +379,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         ResultSet rs = mapBySetOnly(sourceRef, sourceUri, lensUri, tgtSysCode);       
         resultSetAddToMappingsBySet(rs, sourceUri, mappingsBySet, tgtUriPattern);           
         if (sourceRef.getSysCode().equals(tgtSysCode)){
-            mappingsBySet.addMapping(sourceUri, sourceUri); 
+            mappingsBySet.addMapping(sourceUri, tgtUriPattern.getUri(sourceRef.getId())); 
         }
     }
 
