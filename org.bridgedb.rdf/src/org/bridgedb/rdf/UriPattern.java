@@ -273,6 +273,14 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         return results;
     }
 
+    public static Set<UriPattern> byCode(String code){
+        Set<UriPattern> possibles = byCode.get(code);
+        if (possibles == null){
+            possibles = new HashSet<UriPattern>();
+        }
+        return possibles;
+    }
+
     public UriPatternType getType(){
         return patternType;
     }

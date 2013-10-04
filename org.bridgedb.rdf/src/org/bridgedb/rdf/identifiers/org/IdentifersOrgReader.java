@@ -87,6 +87,7 @@ public class IdentifersOrgReader extends RdfBase {
         }
         try {
             URL url = new URL("http://www.ebi.ac.uk/miriam/main/export/registry.ttl");
+            Reporter.println("Readng " + url);
             InputStream stream = url.openStream();
             IdentifersOrgReader reader = new IdentifersOrgReader();
             reader.doParseRdfInputStream(stream);

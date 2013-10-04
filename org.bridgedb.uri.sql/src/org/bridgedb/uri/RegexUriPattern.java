@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 import org.bridgedb.DataSource;
 import org.bridgedb.DataSourcePatterns;
@@ -33,6 +34,7 @@ import org.bridgedb.rdf.UriPatternType;
 import org.bridgedb.rdf.identifiers.org.IdentifersOrgReader;
 import org.bridgedb.rdf.pairs.RdfBasedCodeMapper;
 import org.bridgedb.utils.BridgeDBException;
+import org.bridgedb.utils.Reporter;
 
 /**
  *
@@ -94,7 +96,7 @@ public class RegexUriPattern {
     }
 
     public String toString(){
-        String result = getUri("$id") + " -> " + sysCode;
+        String result = getUri("$id");// + " -> " + sysCode;
         if (regex != null){
             result = result + " (" + regex.pattern() + ")";
         }
@@ -106,6 +108,13 @@ public class RegexUriPattern {
         return getUri("$id");
     }
 
+    public Set<UriPattern> mapsTo() throws BridgeDBException{
+       TreeSet<UriPattern> possibles  = new TreeSet<UriPattern>(UriPattern.byCode(sysCode));
+       UriPattern asPattern = UriPattern.byPattern(getUriPattern());
+       possibles.remove(asPattern);
+       return possibles;
+    }
+    
     private static Pattern shortenRegex(Pattern regex, String sysCode) throws BridgeDBException{
         if (regex == null){
             return null;
@@ -177,6 +186,13 @@ public class RegexUriPattern {
         return results;
     }
  
+    /**
+     * @return the byShortNames
+     */
+    public static HashMap<String, Set<RegexUriPattern>> getByShortNames() throws BridgeDBException {
+        return byShortNames;
+    }
+
     private static String extractShortName (String full) throws BridgeDBException {
         String withoutStart;
         if (full.startsWith("ftp://")){
@@ -218,16 +234,17 @@ public class RegexUriPattern {
     }
 
     public static void init() throws BridgeDBException {
+        Reporter.println("RegesUriPattern init");
         Set<UriPattern> patterns = UriPattern.getUriPatterns();
         HashMap<String, Integer> results = new HashMap<String, Integer>();
         for (UriPattern pattern:UriPattern.getUriPatterns()){
             String mid = extractShortName(pattern.getUriPattern());
-            Set<RegexUriPattern> byShortName = byShortNames.get(mid);
+            Set<RegexUriPattern> byShortName = getByShortNames().get(mid);
             if (byShortName == null){
                 byShortName = new HashSet<RegexUriPattern>();
             }
             byShortName.addAll(byPattern(pattern));
-            byShortNames.put(mid, byShortName);
+            getByShortNames().put(mid, byShortName);
         }
     }
 
@@ -238,19 +255,35 @@ public class RegexUriPattern {
         IdentifersOrgReader.init();
         init();
 
-        HashMap<String, Integer> mappings = getUriGroups();
+/*        HashMap<String, Integer> mappings = getUriGroups();
         Set<String> groups = mappings.keySet();
         int count = 0;
         for (String group:groups){
             if (mappings.get(group) > 1){
                 System.out.println(group);
-                for (RegexUriPattern pattern:byShortNames.get(group)){
-                    System.out.println("\t" + pattern);
-                }
+//                for (RegexUriPattern pattern:byShortNames.get(group)){
+//                    System.out.println("\t" + pattern);
+//                }
                 count++;
             }
         }
         System.out.println(groups.size());
         System.out.println(count++);
+
+        System.out.println("by short name");
+        for (RegexUriPattern pattern:byShortNames.get("bio2rdf.org")){
+            System.out.println(pattern);
+            for (UriPattern mapped:pattern.mapsTo()){
+                System.out.println("\t" + mapped);
+            }
+        }        
+*/
+        TreeSet<String> values = new TreeSet<String>();
+        for (RegexUriPattern pattern:getUriPatterns()){
+            values.add("\t\t'" + pattern.getUriPattern() + "',");
+        }
+        for (String value:values){
+            System.out.println(value);
+        }
     }
 }
