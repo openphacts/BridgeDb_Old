@@ -39,6 +39,7 @@ BridgeDB.properties
 log4j.properties  
 DataSource.ttl  
 lens.properties  
+graph.properties
 
 ### local.properties
 (There is no local properties files included)
