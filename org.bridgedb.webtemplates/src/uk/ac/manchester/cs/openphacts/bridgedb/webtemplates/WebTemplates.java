@@ -2,14 +2,9 @@ package uk.ac.manchester.cs.openphacts.bridgedb.webtemplates;
 
 import java.io.StringWriter;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-import org.bridgedb.uri.Lens;
-import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.ws.WsUriConstants;
 
 /**
  * Hello world!
