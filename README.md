@@ -20,10 +20,6 @@ The web services are defined in `org.bridgedb.ws.server` and the web app in `org
 Configuration
 =============
 
-Default property files
-----------------------
-The default property files can be found in $BRIDGEDB_HOME/org.bridgedb.utils/resources
-
 Where are configuration files loaded from?
 ------------------------------------------
 BridgeDB looks for the configuration files from the following locations with priority given to those at the top of the list (ie location 1 is a
@@ -38,13 +34,14 @@ higher priority than 2 etc). Once it finds a configuration file the other locati
 
 Configuration files
 -------------------
+local.properties
 BridgeDB.properties  
 log4j.properties  
 DataSource.ttl  
 lens.properties  
-local.properties
 
 ### local.properties
+(There is no local properties files included)
 
 This is the recommended place to overwrite individual property values of any other *.properties file.
 
@@ -57,14 +54,14 @@ To install local properties you need to.
 2. Store it in a location as described above  
 3. Copy the keys from the original file  
 
-Additional Key values pairs added to the original properties file will also be loaded
-
 ### BridgeDB.properties
+(Default file is included in build and can be found in org.bridgedb.utils/resources)
 
 This file contains the local setup information which **MUST** be configured correctly for the service to run. It is essential that the
 database user, password and database name are correct.
 		
 You **MUST** either supply local values matching your local setup or setup your data stores to use the defaults. 
+The recommened way to overwrite properties is to add a property with the exact (case sensitive) key to local.properties
 
 Database Dependency
 -------------------
@@ -102,12 +99,14 @@ The BaseURI variable is no longer used but may be in the future so is worth sett
 Other Configuration files
 -------------------------
 ### log4j.properties
+(Default file is included in build and can be found in org.bridgedb.utils/resources)
 
 Edit this to change the logger setup.
 The default can be found in the Utils Resource directory
 Please refer to the log4j documentation for more information.
 
 ### DataSource.ttl 
+(Included in the build and found at org.bridgedb.rdf/resources)
 
 RDF format of all the BridgeDB DataSource(s) and Registered UriPatterns,
 Found in $BRIDGEDB_HOME/org.bridgedb.rdf/resources
@@ -115,20 +114,26 @@ Found in $BRIDGEDB_HOME/org.bridgedb.rdf/resources
 This file defines all the URI patterns that will match every BridgeDB DataSource.
 Warning: As additional UriPatterns are constantly being found and created this file is subject to continuous updates. 
 Having a local DataSource.ttl is therefore highly discouraged as it will block future updates being discovered.
-Instead please push any changes into the version inside the source code. This file is **NOT** effected by local.properties and you cannot change existing or
-add additional datasource URI patterns through it. If you require local additions that should not become general usage (such as commercial uriPatterns)
+Instead please push any changes into the version inside the source code. 
+This file is **NOT** effected by local.properties and 
+you cannot change existing or add additional datasource URI patterns through local.properties. 
+If you require local additions that should not become general usage (such as commercial uriPatterns)
 then the suggested approach is for you to change the code to use multiple dataSource files.
 
 ### DataSource.owl
+(Found at org.bridgedb.rdf/resources)
 
-Ontology of the datasource file. Included for reference only and may or may not be updated to reflect current state.
+Ontology of the datasource file. 
+Included for reference only and may or may not be updated to reflect current state.
 
 ### lens.properties
+(Included in the build and found at org.bridgedb.uri.sql\resources)
 
 This file defines the lenses to be used in the system.
-It can be found in the $BRIDGEDB_HOME/org.bridgedb.rdf/resources  
 See [Scientific Lenses over Linked Data](http://ceur-ws.org/Vol-951/paper5.pdf)
 for more information on what lenses are.
+
+Can and should be added to using local.properties
 
 **WARNING**: As the Lens work is still evolving it is subject to alterations and the format of this file could be changed at any time.
 Having a local lens.properties is highly discouraged as it will block future updates being discovered.
@@ -141,14 +146,13 @@ Note: the fourth part of the key
 only serves to keep the keys unique and can have any value.
 If extending a key we suggest using `local**` as the fourth part of the justification key to ensure not overwriting general additions.
 
-Other files found in resources folders
---------------------------------------
-Bio Project: These are out of date. Please see Original BridgeDB project for latest versions.
+### graph.properties
+(Included in the build and found at org.bridgedb.uri.sql\resources)
 
-These do not form part of the current code and could be removed without notice.
-They are from ideas that have been discarded or not implemented yet.
-These include:
-* mediaTypes.ttl
+This file maps RDF Graphs/Context with the UriPatterns found in that graph.
+This allows Map functions to supply a graph name rather than a list of targetUriPatterns
+
+Data in the included file is OpenPHACTS specific.
 
 Data Loading
 ============
