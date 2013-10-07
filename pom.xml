@@ -32,6 +32,7 @@
   	<module>org.bridgedb.uri.sql</module>
     <module>org.bridgedb.uri.loader</module>
    	<module>org.bridgedb.bio</module>
+    <module>org.bridgedb.webtemplates</module>
   	<module>org.bridgedb.uri.ws.core</module>
     <module>org.bridgedb.uri.ws.server</module>
    	<module>org.bridgedb.uri.ws.client</module>
@@ -48,8 +49,7 @@
   	<module>org.bridgedb.webservice.synergizer</module>
   	<module>examples</module>
     <module>org.bridgedb.server</module>
-    <module>org.bridgedb.webtemplates</module>
-  </modules>
+   </modules>
   
   	<build>
 		<pluginManagement>
