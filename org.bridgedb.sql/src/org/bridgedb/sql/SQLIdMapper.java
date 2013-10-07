@@ -70,12 +70,12 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
     //*** IDMapper Methods 
     
     @Override
-    public synchronized Map<Xref, Set<Xref>> mapID(Collection<Xref> srcXrefs, DataSource... tgtDataSources) throws IDMapperException {
+    public Map<Xref, Set<Xref>> mapID(Collection<Xref> srcXrefs, DataSource... tgtDataSources) throws IDMapperException {
         return InternalUtils.mapMultiFromSingle(this, srcXrefs, tgtDataSources);
     }
 
     @Override
-    public synchronized Set<Xref> mapID(Xref xref, DataSource... tgtDataSources) throws BridgeDBException {
+    public Set<Xref> mapID(Xref xref, DataSource... tgtDataSources) throws BridgeDBException {
         IdSysCodePair ref = IdSysCodePair.toIdSysCodePair(xref);
         if (ref == null) {
             logger.warn("mapId called with a badXref " + xref);
@@ -86,7 +86,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         return IdSysCodePair.toXrefs(pairs);
     }
 
-    private synchronized Set<IdSysCodePair> mapID(IdSysCodePair ref, String... tgtSysCodes) throws BridgeDBException {
+    private Set<IdSysCodePair> mapID(IdSysCodePair ref, String... tgtSysCodes) throws BridgeDBException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT ");
             query.append(TARGET_ID_COLUMN_NAME);
@@ -158,7 +158,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
 	 * Set when no cross references could be found. This method does not return null.
 	 * @throws IDMapperException if the mapping service is (temporarily) unavailable 
 	 */
-    public synchronized Set<Xref> mapID(Xref xref, DataSource tgtDataSource) throws BridgeDBException {
+    public Set<Xref> mapID(Xref xref, DataSource tgtDataSource) throws BridgeDBException {
         IdSysCodePair ref = IdSysCodePair.toIdSysCodePair(xref);
         if (ref == null) {
             logger.warn("mapId called with a badXref " + xref);
@@ -172,7 +172,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         return IdSysCodePair.toXrefs(pairs);
     }
 
-    private synchronized Set<IdSysCodePair> mapID(IdSysCodePair ref, String tgtSysCode) throws BridgeDBException {
+    private Set<IdSysCodePair> mapID(IdSysCodePair ref, String tgtSysCode) throws BridgeDBException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT ");
             query.append(TARGET_ID_COLUMN_NAME);
@@ -205,7 +205,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
     }
 
     @Override
-    public synchronized boolean xrefExists(Xref xref) throws BridgeDBException {
+    public boolean xrefExists(Xref xref) throws BridgeDBException {
         IdSysCodePair ref = IdSysCodePair.toIdSysCodePair(xref);
         if (ref == null) {
             return false;
@@ -213,7 +213,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         return IdSysCodePairExists(ref);
    }
 
-   protected synchronized boolean IdSysCodePairExists(IdSysCodePair ref) throws BridgeDBException {
+   protected boolean IdSysCodePairExists(IdSysCodePair ref) throws BridgeDBException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT ");
         appendTopConditions(query, 0, 1); 
@@ -243,7 +243,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
    }
 
     @Override
-    public synchronized Set<Xref> freeSearch(String text, int limit) throws BridgeDBException {
+    public Set<Xref> freeSearch(String text, int limit) throws BridgeDBException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT ");
         appendTopConditions(query, 0, limit); 
@@ -283,7 +283,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
     }
 
     @Override
-    public synchronized IDMapperCapabilities getCapabilities() {
+    public IDMapperCapabilities getCapabilities() {
         return this;
     }
 
@@ -292,14 +292,14 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
     
     @Override
     /** {@inheritDoc} */
-    public synchronized void close() {
+    public void close() {
         isConnected = false;
         closeConnection();
     }
 
     @Override
     /** {@inheritDoc} */
-    public synchronized boolean isConnected() { 
+    public boolean isConnected() { 
         if (isConnected){
             try {
                 sqlAccess.getConnection();
@@ -324,7 +324,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
     }
 
     @Override
-    public synchronized Set<DataSource> getSupportedSrcDataSources() throws BridgeDBException {
+    public Set<DataSource> getSupportedSrcDataSources() throws BridgeDBException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT ");
         query.append(SOURCE_DATASOURCE_COLUMN_NAME);
@@ -347,7 +347,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
     }
 
     @Override
-    public synchronized Set<DataSource> getSupportedTgtDataSources() throws BridgeDBException {
+    public Set<DataSource> getSupportedTgtDataSources() throws BridgeDBException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT ");
         query.append(TARGET_DATASOURCE_COLUMN_NAME);
@@ -370,7 +370,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
     }
 
     @Override
-    public synchronized boolean isMappingSupported(DataSource src, DataSource tgt) throws BridgeDBException {
+    public boolean isMappingSupported(DataSource src, DataSource tgt) throws BridgeDBException {
         StringBuilder query = new StringBuilder();
         query.append("SELECT ");
         query.append(ID_COLUMN_NAME);
@@ -402,7 +402,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
     }
 
     @Override
-    public synchronized String getProperty(String key) {
+    public String getProperty(String key) {
         String query = "SELECT DISTINCT " + PROPERTY_COLUMN_NAME 
                 + " FROM " + PROPERTIES_TABLE_NAME 
                 + " WHERE " + KEY_COLUMN_NAME + " = '" + key + "'";
@@ -428,7 +428,7 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
     }
 
     @Override
-    public synchronized Set<String> getKeys() {
+    public Set<String> getKeys() {
         HashSet<String> results = new HashSet<String>();
         String query = "SELECT " + KEY_COLUMN_NAME
                 + " FROM " + PROPERTIES_TABLE_NAME

@@ -58,7 +58,7 @@ public class SQLBase {
 		}
 	}
 
-    public synchronized void closeConnection() { 
+    public void closeConnection() { 
         if (this.possibleOpenConnection != null){
             try {
                 this.possibleOpenConnection.close();
@@ -75,7 +75,7 @@ public class SQLBase {
      * @return
      * @throws BridgeDBException 
      */
-    public synchronized final Statement createStatement() throws BridgeDBException{
+    public final Statement createStatement() throws BridgeDBException{
         try {
             checkConnection();  
             return possibleOpenConnection.createStatement();
@@ -84,7 +84,7 @@ public class SQLBase {
         }
     }
     
-    public synchronized final PreparedStatement createPreparedStatement(String sql) throws BridgeDBException {
+    public final PreparedStatement createPreparedStatement(String sql) throws BridgeDBException {
     	try {
     		checkConnection();
     		return possibleOpenConnection.prepareStatement(sql);
@@ -93,7 +93,7 @@ public class SQLBase {
     	}
     }
     
-    public synchronized final void startTransaction() throws BridgeDBException {
+    public final void startTransaction() throws BridgeDBException {
     	try {
 			checkConnection();
 			possibleOpenConnection.setAutoCommit(false);
@@ -102,7 +102,7 @@ public class SQLBase {
 		}
     }
     
-    public synchronized final void commitTransaction() throws BridgeDBException {
+    public final void commitTransaction() throws BridgeDBException {
     	try {
 			possibleOpenConnection.commit();
 		} catch (SQLException ex) {
@@ -110,7 +110,7 @@ public class SQLBase {
 		}
     }
     
-    public synchronized final void rollbackTransaction() throws BridgeDBException {
+    public final void rollbackTransaction() throws BridgeDBException {
     	try {
     		possibleOpenConnection.rollback();    		
     	} catch (SQLException ex) {
@@ -118,7 +118,7 @@ public class SQLBase {
     	}
     }
     
-    public synchronized final String insertEscpaeCharacters(String original) {
+    public final String insertEscpaeCharacters(String original) {
        String result = original.replaceAll("\\\\", "\\\\\\\\");
        result = result.replaceAll("'", "\\\\'");
        result = result.replaceAll("\"", "\\\\\"");
