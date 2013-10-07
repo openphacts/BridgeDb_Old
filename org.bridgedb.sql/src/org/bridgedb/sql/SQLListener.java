@@ -113,7 +113,7 @@ public class SQLListener extends SQLBase implements MappingListener{
     }
         
     @Override
-    public synchronized int registerMappingSet(DataSource source, String predicate, String justification, 
+    public int registerMappingSet(DataSource source, String predicate, String justification, 
             DataSource target, String mappingName, boolean symetric) throws BridgeDBException {
         //checkDataSourceInDatabase(source);
         //checkDataSourceInDatabase(target);
@@ -189,7 +189,7 @@ public class SQLListener extends SQLBase implements MappingListener{
     }
 
     @Override
-    public synchronized void closeInput() throws BridgeDBException {
+    public void closeInput() throws BridgeDBException {
         runInsert();
         Statement statement = createStatement();
         try {
@@ -217,7 +217,7 @@ public class SQLListener extends SQLBase implements MappingListener{
     }
     
     @Override
-    public synchronized void insertLink(String sourceId, String targetId, int mappingSet, boolean symetric) throws BridgeDBException {
+    public void insertLink(String sourceId, String targetId, int mappingSet, boolean symetric) throws BridgeDBException {
         insertLink(sourceId, targetId, mappingSet);
         if (symetric){
             insertLink(targetId, sourceId, mappingSet + 1);
@@ -711,7 +711,7 @@ public class SQLListener extends SQLBase implements MappingListener{
         putProperty(LAST_UDPATES, date);
     }
 
-    public synchronized void putProperty(String key, String value) throws BridgeDBException {
+    public void putProperty(String key, String value) throws BridgeDBException {
         String delete = "DELETE from " + PROPERTIES_TABLE_NAME + " where " + KEY_COLUMN_NAME + " = '" + key + "'";
         Statement statement = this.createStatement();
         try {

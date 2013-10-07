@@ -110,7 +110,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     
     static final Logger logger = Logger.getLogger(SQLListener.class);
 
-    public synchronized static SQLUriMapper getExisting() throws BridgeDBException{
+    public static SQLUriMapper getExisting() throws BridgeDBException{
         if (mapper == null){
             BioDataSource.init();
             BridgeDBRdfHandler.init();
@@ -121,7 +121,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return mapper;
     }
     
-    public synchronized static SQLUriMapper createNew() throws BridgeDBException{
+    public static SQLUriMapper createNew() throws BridgeDBException{
         BioDataSource.init();
         BridgeDBRdfHandler.init();
         CodeMapper codeMapper = new RdfBasedCodeMapper();
@@ -240,7 +240,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 		}
 	}
     
-    private synchronized Set<IdSysCodePair> mapID(IdSysCodePair sourcePair, String lensUri, String tgtSysCode) throws BridgeDBException {
+    private Set<IdSysCodePair> mapID(IdSysCodePair sourcePair, String lensUri, String tgtSysCode) throws BridgeDBException {
         if (sourcePair == null || tgtSysCode == null){
             return new HashSet<IdSysCodePair>();
         }
@@ -261,7 +261,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return results;
     }
 
-    private synchronized Set<IdSysCodePair> mapID(IdSysCodePair sourceRef, String lensUri) throws BridgeDBException {
+    private Set<IdSysCodePair> mapID(IdSysCodePair sourceRef, String lensUri) throws BridgeDBException {
         if (sourceRef == null) {
             logger.warn("mapId called with a badXref " + sourceRef);
             return new HashSet<IdSysCodePair>();
@@ -305,7 +305,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return results;
     }
     
-    private synchronized Set<String> mapUri (IdSysCodePair sourceRef, String lensUri) 
+    private Set<String> mapUri (IdSysCodePair sourceRef, String lensUri) 
             throws BridgeDBException {
         Set<IdSysCodePair> targetRefs = mapID(sourceRef, lensUri);
         HashSet<String> results = new HashSet<String>();
@@ -315,7 +315,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return results;
     }
 
-    private synchronized Set<String> mapUri (IdSysCodePair sourceRef, String lensUri, RegexUriPattern tgtUriPattern) 
+    private Set<String> mapUri (IdSysCodePair sourceRef, String lensUri, RegexUriPattern tgtUriPattern) 
             throws BridgeDBException {
         if (tgtUriPattern == null){
             logger.warn("mapUri called with a null tgtDatasource");
@@ -350,8 +350,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return mapUri(sourceRef, lensUri, graph, tgtUriPatterns);
     }
         
-    @Override
-    public synchronized Set<String> mapUri (String sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) 
+    public Set<String> mapUri (String sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) 
             throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         IdSysCodePair sourceRef = toIdSysCodePair(sourceUri);
@@ -369,7 +368,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             mapBySet(sourceUri, mappingsBySet, lensUri, tgtUriPattern);
         }
         return mappingsBySet;
-        
     }
 
     private void mapBySet(String sourceUri, MappingsBySet mappingsBySet, String lensUri, RegexUriPattern tgtUriPattern) throws BridgeDBException {
@@ -384,7 +382,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized MappingsBySet mapBySet(Set<String> sourceUris, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) 
+    public MappingsBySet mapBySet(Set<String> sourceUris, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) 
            throws BridgeDBException{
         Set<RegexUriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
         MappingsBySet mappingsBySet = new MappingsBySet(lensUri);
@@ -400,7 +398,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return mappingsBySet;           
     }
        
-    public synchronized MappingsBySet mapBySet(String sourceUri, MappingsBySet mappingsBySet, String lensUri) 
+    public MappingsBySet mapBySet(String sourceUri, MappingsBySet mappingsBySet, String lensUri) 
             throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         IdSysCodePair sourceRef = toIdSysCodePair(sourceUri);
@@ -422,7 +420,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         }         
     }
 
-    private synchronized Set<Mapping> mapFull (IdSysCodePair sourceRef, String lensUri) throws BridgeDBException{
+    private Set<Mapping> mapFull (IdSysCodePair sourceRef, String lensUri) throws BridgeDBException{
         if (sourceRef == null){
             return new HashSet<Mapping>();
         }
@@ -471,7 +469,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return results;
     }
 
-	private synchronized Set<Mapping> mapFull (IdSysCodePair sourceRef, String lensUri, DataSource tgtDataSource) throws BridgeDBException{
+	private Set<Mapping> mapFull (IdSysCodePair sourceRef, String lensUri, DataSource tgtDataSource) throws BridgeDBException{
         String tgtSysCode = toCode(tgtDataSource);
         Set<Mapping> results = mapFull(sourceRef, lensUri, tgtSysCode);
         //Add targetUris
@@ -535,7 +533,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized Set<Mapping> mapFull(String sourceUri, String lensUri, String graph, 
+    public Set<Mapping> mapFull(String sourceUri, String lensUri, String graph, 
             RegexUriPattern... tgtUriPatterns) throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         IdSysCodePair sourceRef = toIdSysCodePair(sourceUri);
@@ -547,7 +545,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized Set<Mapping> mapFull(String sourceUri, String lensUri, DataSource... tgtDataSources) throws BridgeDBException {
+    public Set<Mapping> mapFull(String sourceUri, String lensUri, DataSource... tgtDataSources) throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         IdSysCodePair sourceRef = toIdSysCodePair(sourceUri);
         Set<Mapping> results = mapFull(sourceRef,  lensUri, tgtDataSources);
@@ -666,7 +664,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 	}
 
     @Override
-    public synchronized boolean uriExists(String uri) throws BridgeDBException {
+    public boolean uriExists(String uri) throws BridgeDBException {
         uri = scrubUri(uri);
         Xref xref = toXref(uri);
         if (xref == null){
@@ -676,7 +674,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized Set<String> uriSearch(String text, int limit) throws BridgeDBException {
+    public Set<String> uriSearch(String text, int limit) throws BridgeDBException {
         Set<Xref> xrefs = freeSearch(text, limit);
         Set<String> results = new HashSet<String>();
         for (Xref xref:xrefs){
@@ -699,7 +697,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     @Override
-    public synchronized Xref toXref(String uri) throws BridgeDBException {
+    public Xref toXref(String uri) throws BridgeDBException {
         IdSysCodePair pair = toIdSysCodePair(uri);
         if (pair == null){
             return null;
@@ -708,7 +706,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized IdSysCodePair toIdSysCodePair(String uri) throws BridgeDBException {
+    public IdSysCodePair toIdSysCodePair(String uri) throws BridgeDBException {
         if (uri == null || uri.isEmpty()){
             return null;
         }
@@ -765,7 +763,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized RegexUriPattern toUriPattern(String uri) throws BridgeDBException {
+    public RegexUriPattern toUriPattern(String uri) throws BridgeDBException {
         if (uri == null || uri.isEmpty()){
             return null;
         }
@@ -810,7 +808,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     //@Override too slow
-    public synchronized List<Mapping> getSampleMapping() throws BridgeDBException {
+    public List<Mapping> getSampleMapping() throws BridgeDBException {
         StringBuilder query = new StringBuilder("SELECT ");
         this.appendTopConditions(query, 0, 5);
         query.append(TARGET_ID_COLUMN_NAME);
@@ -839,7 +837,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized OverallStatistics getOverallStatistics(String lensId) throws BridgeDBException {
+    public OverallStatistics getOverallStatistics(String lensId) throws BridgeDBException {
         int numberOfLenses;
         if (Lens.getAllLens().equals(lensId)){
             numberOfLenses = Lens.getNumberOfLenses();
@@ -903,7 +901,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }*/
 
     @Override
-    public synchronized MappingSetInfo getMappingSetInfo(int mappingSetId) throws BridgeDBException {
+    public MappingSetInfo getMappingSetInfo(int mappingSetId) throws BridgeDBException {
         StringBuilder query = new StringBuilder("SELECT *");
         query.append(" FROM ");
         query.append(MAPPING_SET_TABLE_NAME);
@@ -929,7 +927,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized List<MappingSetInfo> getMappingSetInfos(String sourceSysCode, String targetSysCode,String lensUri) throws BridgeDBException {
+    public List<MappingSetInfo> getMappingSetInfos(String sourceSysCode, String targetSysCode,String lensUri) throws BridgeDBException {
         StringBuilder query = new StringBuilder("select *");
         query.append(" FROM ");
         query.append(MAPPING_SET_TABLE_NAME);
@@ -946,7 +944,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized Set<String> getUriPatterns(String dataSource) throws BridgeDBException {
+    public Set<String> getUriPatterns(String dataSource) throws BridgeDBException {
         String query = ("SELECT " + PREFIX_COLUMN_NAME + ", " + POSTFIX_COLUMN_NAME + " FROM " + URI_TABLE_NAME
                 + " WHERE " + DATASOURCE_COLUMN_NAME + " = '" + dataSource + "'");
         Statement statement = this.createStatement();
@@ -961,7 +959,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
     
     @Override
-    public synchronized int getSqlCompatVersion() throws BridgeDBException {
+    public int getSqlCompatVersion() throws BridgeDBException {
         String query = ("select " + SCHEMA_VERSION_COLUMN_NAME + " from " + INFO_TABLE_NAME);
         Statement statement = this.createStatement();
         ResultSet rs;
@@ -1029,7 +1027,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized int registerMappingSet(RegexUriPattern sourceUriPattern, String predicate, String justification, 
+    public int registerMappingSet(RegexUriPattern sourceUriPattern, String predicate, String justification, 
             RegexUriPattern targetUriPattern, Resource mappingResource, Resource mappingSource, boolean symetric, Set<String> viaLabels, 
             Set<Integer> chainedLinkSets) throws BridgeDBException {
         checkUriPattern(sourceUriPattern);
@@ -1200,7 +1198,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 
     //TODO check regex
     @Override
-    public synchronized void insertUriMapping(String sourceUri, String targetUri, int mappingSetId, boolean symetric) throws BridgeDBException {
+    public void insertUriMapping(String sourceUri, String targetUri, int mappingSetId, boolean symetric) throws BridgeDBException {
         RegexUriPattern uriPattern = subjectUriPatterns.get(mappingSetId);
         if (uriPattern == null){
             throw new BridgeDBException("No SourceURIPattern regstered for mappingSetId " + mappingSetId);
@@ -1229,7 +1227,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
 
     @Override
-    public synchronized void closeInput() throws BridgeDBException {
+    public void closeInput() throws BridgeDBException {
         super.closeInput();
         countLinks();
         subjectUriPatterns.clear();
@@ -1418,7 +1416,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
      * @return
      * @throws BridgeDBException
      */
-    public synchronized List<MappingSetInfo> resultSetToMappingSetInfos(ResultSet rs ) throws BridgeDBException{
+    public List<MappingSetInfo> resultSetToMappingSetInfos(ResultSet rs ) throws BridgeDBException{
         ArrayList<MappingSetInfo> results = new ArrayList<MappingSetInfo>();
         try {
             while (rs.next()){
@@ -1663,7 +1661,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
        return result;
    }
 
-    public synchronized Set<String> getJustifications() throws BridgeDBException {
+    public Set<String> getJustifications() throws BridgeDBException {
         HashSet<String> justifications = new HashSet<String>();
         String lensQuery = "SELECT DISTINCT " + JUSTIFICATION_COLUMN_NAME
             + " FROM " + MAPPING_SET_TABLE_NAME;
