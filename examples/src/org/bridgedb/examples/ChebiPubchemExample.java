@@ -8,8 +8,8 @@ import org.bridgedb.bio.BioDataSource;
 
 public class ChebiPubchemExample
 {
-	
-	public static void main (String[] args) throws ClassNotFoundException, IDMapperException
+	//Broken
+/*	public static void main (String[] args) throws ClassNotFoundException, IDMapperException
 	{
 		// We'll use the BridgeRest webservice in this case, as it does compound mapping fairly well.
 		// We'll use the human database, but it doesn't really matter which species we pick.
@@ -26,6 +26,6 @@ public class ChebiPubchemExample
 			// this should print 6137, the pubchem identifier for Methionine.
 			System.out.println ("" + dest.getId());
 		}
-	}
+	}*/
 
 }
