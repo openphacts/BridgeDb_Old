@@ -90,8 +90,12 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         if (logger.isDebugEnabled()){
             logger.debug("bridgeDbHome called");
         }
-        StringBuilder sb = topAndSide ("Identity Mapping Service", httpServletRequest);
+
         VelocityContext velocityContext = new VelocityContext();
+        String mapUriScripts = WebTemplates.getForm(velocityContext, WebTemplates.SELECTORS_SCRIPTS);
+        StringBuilder sb = topAndSide ("Identity Mapping Service", mapUriScripts, httpServletRequest);
+        
+        velocityContext = new VelocityContext();
         velocityContext.put("contextPath", httpServletRequest.getContextPath());
         velocityContext.put("mapURI", WsUriConstants.MAP_URI);
         velocityContext.put("URI", WsUriConstants.URI);

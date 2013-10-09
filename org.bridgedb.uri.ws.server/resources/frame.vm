@@ -67,9 +67,10 @@
         return true;
     }
 
+    $SCRIPT_OTHER
     </script>
 </head>
-<body>
+<body onload="loadAll();" >
     <div id="container">
         <div id="top">
             <a href="http://www.cs.manchester.ac.uk/">

@@ -14,11 +14,19 @@
                 #end
 			</select>
         <p>
+        <p>targetUriPattern
+        	<select multiple name="targetUriPattern" id="pattern" width="600" style="width: 600px" onchange="count(this)"></select>
+        	Number of patterns selected: <label id="countSelected">0</label> out of <label id="countAll">0</label>
+        <p>
             <input type="submit" value="Submit"/>
         </p>
         <p>Note: If the new page does not open click on the address bar and press enter</p>
 	</fieldset>
 </form>
+<p>
+    Pattern Filter <input type="text" id="filter" name="Pattern Filter" value="" onkeyup="populate(this)">
+    <button onclick="pickAll()">Select all showing</button>
+<p>
 <h2>Usage Information</h2>
 <p>The Main OPS method are: 
     <ul>
@@ -37,3 +45,4 @@
 <p>
     <a href="$contextPath/api">API Page</a>
 </p>
+

@@ -61,8 +61,13 @@ public class WSFrame extends WSUriInterfaceService {
     }
     
     public StringBuilder topAndSide(String header, HttpServletRequest httpServletRequest) {
+        return topAndSide(header, "function loadAll(){}\n", httpServletRequest);
+    }
+    
+    public StringBuilder topAndSide(String header, String scriptOther, HttpServletRequest httpServletRequest) {
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("TITLE", serviceName() + header);
+        velocityContext.put("SCRIPT_OTHER", scriptOther);            
         StringBuilder sb = new StringBuilder(WebTemplates.getForm(velocityContext, WebTemplates.FRAME));
         sideBar(sb, httpServletRequest);
         sb.append("<div id=\"content\">");

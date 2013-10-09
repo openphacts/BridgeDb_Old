@@ -11,7 +11,9 @@ public class WebTemplates
 
     public static final String BRIDGEDB_HOME = "bridgeDBHome.vm";
     public static final String FRAME = "frame.vm";
+    public static final String SELECTORS_SCRIPTS = "selectorsScripts.vm";
     public static final String URI_MAPPING_FORM = "uriMappingForm.vm";
+    
     private static VelocityEngine velocityEngine = initialize();
     
     private static VelocityEngine initialize(){
