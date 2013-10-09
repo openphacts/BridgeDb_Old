@@ -1,4 +1,4 @@
-package uk.ac.manchester.cs.openphacts.bridgedb.webtemplates;
+package org.bridgedb.ws.templates;
 
 import java.io.StringWriter;
 import java.util.Properties;

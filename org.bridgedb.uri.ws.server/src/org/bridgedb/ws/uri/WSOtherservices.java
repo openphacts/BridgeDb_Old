@@ -43,8 +43,8 @@ import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.SetMappings;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WsUriConstants;
+import org.bridgedb.ws.templates.WebTemplates;
 
-import uk.ac.manchester.cs.openphacts.bridgedb.webtemplates.WebTemplates;
 
 /**
  * This class adds the extra services not part of WSUriInterface

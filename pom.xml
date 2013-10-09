@@ -29,7 +29,6 @@
     <module>org.bridgedb.uri.loader</module>
    	<module>org.bridgedb.bio</module>
   	<module>org.bridgedb.ws.core</module>
-    <module>org.bridgedb.webtemplates</module>
  	<module>org.bridgedb.ws.server</module>
   	<module>org.bridgedb.uri.ws.core</module>
     <module>org.bridgedb.uri.ws.server</module>
