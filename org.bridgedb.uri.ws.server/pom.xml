@@ -177,10 +177,5 @@
             <artifactId>velocity</artifactId>
             <version>1.7</version>
         </dependency>  
-        <dependency>
-            <groupId>org.bridgedb</groupId>
-            <artifactId>org.bridgedb.webtemplates</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+     </dependencies>
 </project>

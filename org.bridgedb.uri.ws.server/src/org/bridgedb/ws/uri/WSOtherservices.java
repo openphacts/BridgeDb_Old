@@ -43,8 +43,8 @@ import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.SetMappings;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WsUriConstants;
+import org.bridgedb.ws.templates.WebTemplates;
 
-import uk.ac.manchester.cs.openphacts.bridgedb.webtemplates.WebTemplates;
 
 /**
  * This class adds the extra services not part of WSUriInterface
@@ -70,8 +70,7 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         velocityContext.put("lensURI", WsUriConstants.LENS_URI);
         velocityContext.put("lenses", Lens.getLens());
 
-        WebTemplates webTemplates = new WebTemplates();
-        sb.append(webTemplates.getUriMappingForm(velocityContext));
+        sb.append( WebTemplates.getForm(velocityContext, WebTemplates.URI_MAPPING_FORM));
     }
 
     /**
@@ -100,8 +99,7 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         velocityContext.put("lenses", Lens.getLens());
         velocityContext.put("map",WsUriConstants.MAP);
 
-        WebTemplates webTemplates = new WebTemplates();
-        sb.append(webTemplates.getBridgeDBHome(velocityContext));
+        sb.append( WebTemplates.getForm(velocityContext, WebTemplates.BRIDGEDB_HOME));
 
         footerAndEnd(sb);
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();

@@ -114,6 +114,10 @@ public class JustificationMaker {
                 return ChemInf.PROTEIN_CODING_GENE;
             } else if (right.equals(ChemInf.GENE)) {
                 return ChemInf.PROTEIN_CODING_GENE;
+            } else if (right.equals(CW_GENE_HACK)) {
+                return CW_GENE_HACK;
+            } else if (right.equals(CW_PROTEIN_HACK)) {
+                return CW_PROTEIN_HACK;
             } else {
                 return null;
             }
@@ -128,11 +132,15 @@ public class JustificationMaker {
         } else if (left.equals(CW_GENE_HACK)){
             if (right.equals(ChemInf.PROTEIN)) {
                 return CW_GENE_HACK;
+            } else if (right.equals(ChemInf.PROTEIN_CODING_GENE)) {
+                return CW_GENE_HACK;
             } else {
                 return null;
             }
         } else if (left.equals(CW_PROTEIN_HACK)){
             if (right.equals(ChemInf.PROTEIN)) {
+                return CW_PROTEIN_HACK;
+            } else if (right.equals(ChemInf.PROTEIN_CODING_GENE)) {
                 return CW_PROTEIN_HACK;
             } else {
                 return null;
