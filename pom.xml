@@ -22,24 +22,25 @@
 
   <modules>
   	<module>org.bridgedb</module>
+   	<module>org.bridgedb.bio</module>
   	<module>org.bridgedb.utils</module>
-  	<module>org.bridgedb.rdf</module>
   	<module>org.bridgedb.sql</module>
+  	<module>org.bridgedb.ws.core</module>
+  	<module>org.bridgedb.ws.server</module>
+    <!-- The client modules are currently only used as examples and testing -->
+ 	<module>org.bridgedb.ws.client</module>
+  	<module>org.bridgedb.rdf</module>
   	<module>org.bridgedb.uri.sql</module>
     <module>org.bridgedb.uri.loader</module>
-   	<module>org.bridgedb.bio</module>
-  	<module>org.bridgedb.ws.core</module>
     <module>org.bridgedb.webtemplates</module>
- 	<module>org.bridgedb.ws.server</module>
   	<module>org.bridgedb.uri.ws.core</module>
     <module>org.bridgedb.uri.ws.server</module>
     <!-- The client modules are currently only used as examples and testing -->
- 	<module>org.bridgedb.ws.client</module>
    	<module>org.bridgedb.uri.ws.client</module>
 
     <module>org.bridgedb.rdb</module>
     <module>org.bridgedb.tools.importer</module>
-    
+       
     <!-- The modules below this comment are not actively used by OPS but are part of BridgeDB-->
     <module>org.bridgedb.rdb.construct</module>
   	<module>org.bridgedb.webservice.bridgerest</module>
