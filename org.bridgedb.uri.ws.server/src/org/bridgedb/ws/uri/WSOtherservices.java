@@ -70,8 +70,7 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         velocityContext.put("lensURI", WsUriConstants.LENS_URI);
         velocityContext.put("lenses", Lens.getLens());
 
-        WebTemplates webTemplates = new WebTemplates();
-        sb.append(webTemplates.getUriMappingForm(velocityContext));
+        sb.append( WebTemplates.getForm(velocityContext, WebTemplates.URI_MAPPING_FORM));
     }
 
     /**
@@ -100,8 +99,7 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         velocityContext.put("lenses", Lens.getLens());
         velocityContext.put("map",WsUriConstants.MAP);
 
-        WebTemplates webTemplates = new WebTemplates();
-        sb.append(webTemplates.getBridgeDBHome(velocityContext));
+        sb.append( WebTemplates.getForm(velocityContext, WebTemplates.BRIDGEDB_HOME));
 
         footerAndEnd(sb);
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
