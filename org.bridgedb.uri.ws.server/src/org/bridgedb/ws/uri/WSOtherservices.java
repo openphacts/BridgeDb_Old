@@ -36,6 +36,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.uri.Lens;
@@ -92,6 +93,7 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         }
 
         VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("mapURI", UriPattern.getUriPatterns());
         String mapUriScripts = WebTemplates.getForm(velocityContext, WebTemplates.SELECTORS_SCRIPTS);
         StringBuilder sb = topAndSide ("Identity Mapping Service", mapUriScripts, httpServletRequest);
         
