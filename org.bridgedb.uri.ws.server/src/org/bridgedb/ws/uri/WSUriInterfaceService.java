@@ -25,7 +25,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -265,6 +267,18 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             return noContentWrapper(httpServletRequest);
         } 
         return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+    }
+
+    @POST
+    @Produces({MediaType.TEXT_HTML})
+    @Path("/" + WsUriConstants.MAP_URI)
+    public Response mapUriHtmlPost(
+    		@FormParam(WsUriConstants.URI) List<String> uris,
+     		@FormParam(WsUriConstants.LENS_URI) String lensUri,
+            @FormParam(WsUriConstants.GRAPH) String graph,
+            @FormParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
+            @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
+        return mapUriHtml(uris, lensUri, graph, targetUriPatterns, httpServletRequest);
     }
 
     protected final MappingsBySet mapBySetInner(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns) throws BridgeDBException {

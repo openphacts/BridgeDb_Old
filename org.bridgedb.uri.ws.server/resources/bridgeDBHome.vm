@@ -1,6 +1,6 @@
 <p>Welcome to the Identity Mapping Service. </p>
 <p>A List of which mappings we current have can be found at <a href="$contextPath/$getMappingInfo">Mapping Info Page</a></p>
-<form method="get" action="$contextPath/$mapURI">
+<form method="post" action="$contextPath/$mapURI">
     <fieldset>
         <legend>Mapper</legend>
         <p>
@@ -35,7 +35,8 @@
 			</select>
        <p>
        <p>
-            <input type="submit" value="Submit"/>
+            <input id="getButton" type="submit" value="Submit using get" onclick="form.method='get'"/>
+            <input type="Submit" value="Submit using post" onclick="form.method='post'"/>
         </p>
         <p>Note: If the new page does not open click on the address bar and press enter</p>
 	</fieldset>
