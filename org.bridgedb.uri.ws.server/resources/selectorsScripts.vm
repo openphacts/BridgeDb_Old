@@ -1,7 +1,7 @@
 		var mitems=new Array(
 #foreach( $targetUriPattern in $targetUriPatterns)
 "$targetUriPattern"#if( $foreach.hasNext ),#end
-#end');
+#end);
 
 		function loadAll(){
 			list=document.getElementById('pattern');
@@ -58,6 +58,14 @@
 			list = document.getElementById('pattern');
 			for (var i = 0; i < list.options.length; i++) {
 			    list.options[i].selected = true;
+			}
+			count(list);
+		}
+
+		function pickNone(){
+			list = document.getElementById('pattern');
+			for (var i = 0; i < list.options.length; i++) {
+			    list.options[i].selected = false;
 			}
 			count(list);
 		}
