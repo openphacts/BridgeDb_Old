@@ -39,6 +39,7 @@ import org.apache.velocity.VelocityContext;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
+import org.bridgedb.uri.GraphResolver;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.SetMappings;
@@ -92,6 +93,8 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         velocityContext.put("contextPath", httpServletRequest.getContextPath());
         velocityContext.put("defaultLens", Lens.byId(Lens.getDefaultLens()));
         velocityContext.put("getMappingInfo", SetMappings.METHOD_NAME);
+        velocityContext.put("graph", WsUriConstants.GRAPH); 
+        velocityContext.put("graphNames", GraphResolver.knownGraphs());
         velocityContext.put("lenses", Lens.getLens());
         velocityContext.put("lensURI", WsUriConstants.LENS_URI);
         velocityContext.put("map",WsUriConstants.MAP);

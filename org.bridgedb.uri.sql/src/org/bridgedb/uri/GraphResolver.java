@@ -77,6 +77,10 @@ public class GraphResolver {
         return allowedUriPattern;
     }
 
+    public static Set<String> knownGraphs() throws BridgeDBException{
+        return getInstance().allowedUriPattern.keySet();
+    }
+    
     public static Set<UriPattern> getUriPatternsForGraph(String graph) throws BridgeDBException {
         if (graph == null || graph.isEmpty()){
             return new HashSet<UriPattern>();

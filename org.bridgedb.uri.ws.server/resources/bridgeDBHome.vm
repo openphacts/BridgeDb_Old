@@ -7,7 +7,7 @@
             <label for="$URI">Input URI</label>
             <input type="text\" id="$URI" name="$URI" style="width:80%"/>
         </p>
-        <p>$lensURI
+         <p>$lensURI
 			<select name="$lensURI" onchange="addLensDescriptions(this)" value="$defaultLens.toUri($context)">
                 #foreach( $lens in $lenses)
                     <option value="$lens.toUri($context)">$lens.getName()</option>
@@ -18,10 +18,23 @@
             <textarea rows="2" cols="50" id="lensDescriptionArea">$defaultLens.getDescription()</textarea>
         </p>
         <p>
-            $targetUriPattern (If none is selected results will not be filtered by TargetUri)
+            $targetUriPattern (If none is selected results will not be filtered by $targetUriPattern)
         	<select multiple name="$targetUriPattern" id="pattern" width="600" style="width: 600px" onchange="count(this)"></select>
-        	Number of patterns selected: <label id="countSelected">0</label> out of <label id="countAll">0</label>
+        </p>
         <p>
+        	Number of patterns selected: <label id="countSelected">0</label> out of <label id="countAll">0</label>
+        </p>
+        <p>$graph (Note: These are OpenPHACTS specific semantic sugar for $targetUriPattern)
+        </p>
+        <p>
+			<select name="$graph">
+                <option value="">Do not filter by $graph</option>
+                #foreach( $graphName in $graphNames)
+                    <option value="$graphName">$graphName</option>
+                #end
+			</select>
+       <p>
+       <p>
             <input type="submit" value="Submit"/>
         </p>
         <p>Note: If the new page does not open click on the address bar and press enter</p>
