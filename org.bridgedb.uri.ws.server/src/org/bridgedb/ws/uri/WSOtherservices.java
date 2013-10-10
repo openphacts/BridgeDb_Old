@@ -63,17 +63,6 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         super();
     }
         
-    private void uriMappingForm(StringBuilder sb, HttpServletRequest httpServletRequest) throws BridgeDBException {
-        VelocityContext velocityContext = new VelocityContext();
-        velocityContext.put("contextPath", httpServletRequest.getContextPath());
-        velocityContext.put("mapURI", WsUriConstants.MAP_URI);
-        velocityContext.put("URI", WsUriConstants.URI);
-        velocityContext.put("lensURI", WsUriConstants.LENS_URI);
-        velocityContext.put("lenses", Lens.getLens());
-
-        sb.append( WebTemplates.getForm(velocityContext, WebTemplates.URI_MAPPING_FORM));
-    }
-
     /**
      * Welcome page for the Service.
      * 
