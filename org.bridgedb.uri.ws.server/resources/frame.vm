@@ -14,7 +14,8 @@
         #footer { clear:both; }
         fieldset {border: 1px solid #781351;width: 20em}
         legend { color: #fff; background: #ffa20c; border: 1px solid #781351; padding: 2px 6px }
-    </style>
+        textarea { width: 100%; margin: 0; padding: 0; border: 1px; }
+   </style>
     <style type="text/css">	
         .texthotlink, 
         .texthotlink_hilight { width: 150px; font-size: 85%; padding: .25em; cursor: pointer; color: black; font-family: Arial, sans-serif;	}

@@ -69,3 +69,14 @@
 			}
 			count(list);
 		}
+
+		var lensDescriptions=new Array();
+        #foreach($lens in $lenses)
+            lensDescriptions["$lens.toUri($context)"]=["$lens.getDescription()"];
+        #end 
+ 
+		function addLensDescriptions(o)
+		{
+			area =document.getElementById('lensDescriptionArea');
+			area.value = lensDescriptions[o.options[o.selectedIndex].value];
+		}

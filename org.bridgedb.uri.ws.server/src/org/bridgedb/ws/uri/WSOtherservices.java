@@ -83,19 +83,21 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
 
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("targetUriPatterns", UriPattern.getUriPatterns());
-        velocityContext.put("targetUriPattern", WsUriConstants.TARGET_URI_PATTERN);
+        velocityContext.put("lenses", Lens.getLens());
         String mapUriScripts = WebTemplates.getForm(velocityContext, WebTemplates.SELECTORS_SCRIPTS);
         StringBuilder sb = topAndSide ("Identity Mapping Service", mapUriScripts, httpServletRequest);
         
         velocityContext = new VelocityContext();
-        velocityContext.put("contextPath", httpServletRequest.getContextPath());
-        velocityContext.put("getMappingInfo", SetMappings.METHOD_NAME);
-        velocityContext.put("mapURI", WsUriConstants.MAP_URI);
-        velocityContext.put("URI", WsUriConstants.URI);
-        velocityContext.put("lensURI", WsUriConstants.LENS_URI);
-        velocityContext.put("lenses", Lens.getLens());
-        velocityContext.put("map",WsUriConstants.MAP);
         velocityContext.put("api",WsUriConstants.BRIDGEDB_API);
+        velocityContext.put("contextPath", httpServletRequest.getContextPath());
+        velocityContext.put("defaultLens", Lens.byId(Lens.getDefaultLens()));
+        velocityContext.put("getMappingInfo", SetMappings.METHOD_NAME);
+        velocityContext.put("lenses", Lens.getLens());
+        velocityContext.put("lensURI", WsUriConstants.LENS_URI);
+        velocityContext.put("map",WsUriConstants.MAP);
+        velocityContext.put("mapURI", WsUriConstants.MAP_URI);
+        velocityContext.put("targetUriPattern", WsUriConstants.TARGET_URI_PATTERN);
+        velocityContext.put("URI", WsUriConstants.URI);
 
         sb.append( WebTemplates.getForm(velocityContext, WebTemplates.BRIDGEDB_HOME));
 

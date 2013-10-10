@@ -8,12 +8,15 @@
             <input type="text\" id="$URI" name="$URI" style="width:80%"/>
         </p>
         <p>$lensURI
-			<select name="$lensURI">
+			<select name="$lensURI" onchange="addLensDescriptions(this)" value="$defaultLens.toUri($context)">
                 #foreach( $lens in $lenses)
                     <option value="$lens.toUri($context)">$lens.getName()</option>
                 #end
 			</select>
         <p>
+        </p>
+            <textarea rows="2" cols="50" id="lensDescriptionArea">$defaultLens.getDescription()</textarea>
+        </p>
         <p>
             $targetUriPattern (If none is selected results will not be filtered by TargetUri)
         	<select multiple name="$targetUriPattern" id="pattern" width="600" style="width: 600px" onchange="count(this)"></select>
