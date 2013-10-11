@@ -1,6 +1,6 @@
 		var mitems=new Array(
 #foreach( $targetUriPattern in $targetUriPatterns)
-"$targetUriPattern"#if( $foreach.hasNext ),#end
+    "$targetUriPattern"#if( $foreach.hasNext ),#end
 #end);
 
 		function loadAll(){

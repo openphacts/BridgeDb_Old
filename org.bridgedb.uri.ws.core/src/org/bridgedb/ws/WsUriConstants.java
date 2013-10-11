@@ -31,6 +31,7 @@ public class WsUriConstants extends WsConstants{
     public static final String BRIDGEDB_API = "BridgeDbApi";
     public static final String BRIDGEDB_HOME = "BridgeDb";
     public static final String DATA_SOURCE = "dataSource";
+    public static final String FORMAT = "format";
     public static final String GET_OVERALL_STATISTICS = "getOverallStatistics";
     public static final String GRAPH = "graph";
     public static final String GRAPHVIZ = "graphviz";
