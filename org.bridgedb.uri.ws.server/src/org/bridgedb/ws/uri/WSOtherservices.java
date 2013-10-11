@@ -36,8 +36,10 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
+import org.bridgedb.uri.GraphResolver;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.SetMappings;
@@ -62,17 +64,6 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         super();
     }
         
-    private void uriMappingForm(StringBuilder sb, HttpServletRequest httpServletRequest) throws BridgeDBException {
-        VelocityContext velocityContext = new VelocityContext();
-        velocityContext.put("contextPath", httpServletRequest.getContextPath());
-        velocityContext.put("mapURI", WsUriConstants.MAP_URI);
-        velocityContext.put("URI", WsUriConstants.URI);
-        velocityContext.put("lensURI", WsUriConstants.LENS_URI);
-        velocityContext.put("lenses", Lens.getLens());
-
-        sb.append( WebTemplates.getForm(velocityContext, WebTemplates.URI_MAPPING_FORM));
-    }
-
     /**
      * Welcome page for the Service.
      * 
@@ -90,14 +81,27 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         if (logger.isDebugEnabled()){
             logger.debug("bridgeDbHome called");
         }
-        StringBuilder sb = topAndSide ("Identity Mapping Service", httpServletRequest);
+
         VelocityContext velocityContext = new VelocityContext();
-        velocityContext.put("contextPath", httpServletRequest.getContextPath());
-        velocityContext.put("mapURI", WsUriConstants.MAP_URI);
-        velocityContext.put("URI", WsUriConstants.URI);
-        velocityContext.put("lensURI", WsUriConstants.LENS_URI);
+        velocityContext.put("targetUriPatterns", UriPattern.getUriPatterns());
         velocityContext.put("lenses", Lens.getLens());
+        String mapUriScripts = WebTemplates.getForm(velocityContext, WebTemplates.SELECTORS_SCRIPTS);
+        StringBuilder sb = topAndSide ("Identity Mapping Service", mapUriScripts, httpServletRequest);
+        
+        velocityContext = new VelocityContext();
+        velocityContext.put("api", WsUriConstants.BRIDGEDB_API);
+        velocityContext.put("contextPath", httpServletRequest.getContextPath());
+        velocityContext.put("defaultLens", Lens.byId(Lens.getDefaultLens()));
+        velocityContext.put("formatName", WsUriConstants.FORMAT);
+        velocityContext.put("getMappingInfo", SetMappings.METHOD_NAME);
+        velocityContext.put("graphName", WsUriConstants.GRAPH); 
+        velocityContext.put("graphs", GraphResolver.knownGraphs());
+        velocityContext.put("lenses", Lens.getLens());
+        velocityContext.put("lensURIName", WsUriConstants.LENS_URI);
         velocityContext.put("map",WsUriConstants.MAP);
+        velocityContext.put("mapURI", WsUriConstants.MAP_URI);
+        velocityContext.put("targetUriPatternName", WsUriConstants.TARGET_URI_PATTERN);
+        velocityContext.put("URI", WsUriConstants.URI);
 
         sb.append( WebTemplates.getForm(velocityContext, WebTemplates.BRIDGEDB_HOME));
 

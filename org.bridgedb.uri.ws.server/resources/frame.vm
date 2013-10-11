@@ -9,12 +9,13 @@
         #top { padding: .5em; background-color: #808080; border-bottom: 1px solid gray; }
         #top h1 { padding: .25em .5em .25em .5em; margin-left: 200px; margin-bottom: 0; margin-right: 0; margin-top: 0 }
         #top a { text-decoration: none; color: #ffffff; }
-        #navBar { float: left; width: 200px; margin: 0em; padding: 5px; min-width: 200px; border-right: 1px solid gray; min-height: 100%} 
-        #content { margin-left: 210px; border-left: 1px solid gray; padding: 1em; min-width: 20em; min-height: 500px; }
+        #navBar { float: left; width: 200px; margin: 0em; padding: 5px; min-width: 200px; min-height: 100%} 
+        #content { margin-left: 210px; padding: 1em; min-height: 500px; min-width:40em;}
         #footer { clear:both; }
         fieldset {border: 1px solid #781351;width: 20em}
         legend { color: #fff; background: #ffa20c; border: 1px solid #781351; padding: 2px 6px }
-    </style>
+        textarea { width: 100%; margin: 0; padding: 0; border: 1px; }
+   </style>
     <style type="text/css">	
         .texthotlink, 
         .texthotlink_hilight { width: 150px; font-size: 85%; padding: .25em; cursor: pointer; color: black; font-family: Arial, sans-serif;	}
@@ -67,9 +68,10 @@
         return true;
     }
 
+    $SCRIPT_OTHER
     </script>
 </head>
-<body>
+<body onload="loadAll();" >
     <div id="container">
         <div id="top">
             <a href="http://www.cs.manchester.ac.uk/">

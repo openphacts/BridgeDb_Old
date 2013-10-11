@@ -829,6 +829,7 @@ bridgeDB:DataSource_PubMed a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "publication" ;
 	bridgeDB:hasUrlPattern <http://www.ncbi.nlm.nih.gov/pubmed/$id> ;
+    bridgeDB:hasUriPattern <http://bio2rdf.org/pubmed/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/pubmed/$id> .
 
 bridgeDB:DataSource_Reactome a bridgeDB:DataSource ;

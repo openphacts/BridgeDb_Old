@@ -90,6 +90,10 @@ public class GraphResolver {
         allowedUriPattern.put(graph, patterns);
     }
 
+    public static Set<String> knownGraphs() throws BridgeDBException{
+        return getInstance().allowedUriPattern.keySet();
+    }
+    
     public static Set<RegexUriPattern> getUriPatternsForGraph(String graph) throws BridgeDBException {
         if (graph == null || graph.isEmpty()){
             return new HashSet<RegexUriPattern>();

@@ -48,7 +48,7 @@ import org.bridgedb.ws.WsUriConstants;
  * This class provides the API documentation
  * @author Christian
  */
-public class WSAPI extends WSFrame {
+public class WSAPI extends WSUriInterfaceService {
             
     private static final String ID_CODE = "id_code";
     private static final String FIRST_ID_PARAMETER = "?" + WsConstants.ID + "=";

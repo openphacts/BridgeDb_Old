@@ -20,12 +20,18 @@
 package org.bridgedb.ws.uri;
 
 import java.io.InputStream;
+import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -34,6 +40,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
 import org.bridgedb.sql.SQLUriMapper;
@@ -63,6 +70,7 @@ import org.bridgedb.ws.bean.UriExistsBean;
 import org.bridgedb.ws.bean.UriMappings;
 import org.bridgedb.ws.bean.UriSearchBean;
 import org.bridgedb.ws.bean.XrefBean;
+import org.bridgedb.ws.templates.WebTemplates;
 
 @Path("/")
 public class WSUriInterfaceService extends WSCoreService implements WSUriInterface {
@@ -78,6 +86,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
     public final String FILE = "file";     
     public final String NO_RESULT = null;
     
+    protected final NumberFormat formatter;
     static final Logger logger = Logger.getLogger(WSUriInterfaceService.class);
 
     /**
@@ -91,14 +100,26 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         uriMapper = SQLUriMapper.getExisting();
         uriListener = SQLUriMapper.getExisting();
         idMapper = uriMapper;
+        formatter = configFormatter();
     }
 
     public WSUriInterfaceService(UriMapper uriMapper) throws BridgeDBException {
         super(uriMapper);
         this.uriMapper = uriMapper;
-///        this.linksetInterface = new LinksetLoader();
+        formatter = configFormatter();
         logger.info("WS Service running using supplied uriMapper");
     }
+
+    private NumberFormat configFormatter() throws BridgeDBException   {
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        if (numberFormat instanceof DecimalFormat) {
+            DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+            dfs.setGroupingSeparator(',');
+            ((DecimalFormat) numberFormat).setDecimalFormatSymbols(dfs);
+        }
+        return numberFormat;
+    }
+        
 
     private MappingsBean mapInner(String id, String scrCode, String uri, String lensUri, List<String> targetCodes,
             String graph, List<String> targetUriPatterns) throws BridgeDBException {
@@ -259,12 +280,53 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
      		@QueryParam(WsUriConstants.LENS_URI) String lensUri,
             @QueryParam(WsUriConstants.GRAPH) String graph,
             @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
+            @QueryParam(WsUriConstants.FORMAT) String format,
             @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
         UriMappings result = mapUriInner(uris, lensUri, graph, targetUriPatterns);
-        if (noConentOnEmpty & result.isEmpty()){
-            return noContentWrapper(httpServletRequest);
-        } 
-        return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        uris.remove("");
+        targetUriPatterns.remove("");
+        if (format == null || format.isEmpty()){
+            format = MediaType.TEXT_HTML;
+        }
+        if (format.equals("application/xml")){
+            if (noConentOnEmpty & result.isEmpty()){
+                return noContentWrapper(httpServletRequest);
+            } 
+            return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+        }
+        else if (format.equals("application/json")){
+            if (noConentOnEmpty & result.isEmpty()){
+                return noContentWrapper(httpServletRequest);
+            } 
+            return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
+        }
+        StringBuilder sb = topAndSide ("Identity Mapping Service", httpServletRequest);        
+        VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("sourceUris", uris);
+        velocityContext.put("URI", WsUriConstants.URI);
+        velocityContext.put("lensURI", lensUri);
+        velocityContext.put("lensURIName", WsUriConstants.LENS_URI);
+        velocityContext.put("defaultLensName", Lens.getDefaultLens());
+        velocityContext.put("targetUriPatterns", targetUriPatterns);
+        velocityContext.put("targetUriPatternName", WsUriConstants.TARGET_URI_PATTERN);
+        velocityContext.put("graph", graph);
+        velocityContext.put("graphName", WsUriConstants.GRAPH);
+        velocityContext.put("targetUris",result.getTargetUri() );
+        sb.append( WebTemplates.getForm(velocityContext, WebTemplates.MAP_URI_RESULTS)); 
+        return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
+    }
+
+    @POST
+    @Produces({MediaType.TEXT_HTML})
+    @Path("/" + WsUriConstants.MAP_URI)
+    public Response mapUriHtmlPost(
+    		@FormParam(WsUriConstants.URI) List<String> uris,
+     		@FormParam(WsUriConstants.LENS_URI) String lensUri,
+            @FormParam(WsUriConstants.GRAPH) String graph,
+            @FormParam(WsUriConstants.FORMAT) String format,
+            @FormParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
+            @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
+        return mapUriHtml(uris, lensUri, graph, targetUriPatterns, format, httpServletRequest);
     }
 
     protected final MappingsBySet mapBySetInner(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns) throws BridgeDBException {
@@ -859,5 +921,138 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             throw new BridgeDBException (FILE + " parameter may not be null");
         }
     }
+
+     protected String serviceName(){
+        return "BridgeDb ";
+    }
+    
+    public StringBuilder topAndSide(String header, HttpServletRequest httpServletRequest) {
+        return topAndSide(header, "function loadAll(){}\n", httpServletRequest);
+    }
+    
+    public StringBuilder topAndSide(String header, String scriptOther, HttpServletRequest httpServletRequest) {
+        VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("TITLE", serviceName() + header);
+        velocityContext.put("SCRIPT_OTHER", scriptOther);            
+        StringBuilder sb = new StringBuilder(WebTemplates.getForm(velocityContext, WebTemplates.FRAME));
+        sideBar(sb, httpServletRequest);
+        sb.append("<div id=\"content\">");
+        return sb;
+    }
+    
+    protected void sideBar(StringBuilder sb, HttpServletRequest httpServletRequest) {
+        sb.append("<div id=\"navBar\">");
+        addSideBarMiddle(sb, httpServletRequest);
+        addSideBarStatisitics(sb, httpServletRequest);
+        sb.append("</div>\n");        
+    }
+    
+    /**
+     * Allows Super classes to add to the side bar
+     */
+    public void addSideBarMiddle(StringBuilder sb, HttpServletRequest httpServletRequest){
+        addSideBarBridgeDb(sb, httpServletRequest);
+    }
+    
+    /**
+     * Allows Super classes to add to the side bar
+     */
+    protected void addSideBarBridgeDb(StringBuilder sb, HttpServletRequest httpServletRequest) {
+        sb.append("<div class=\"menugroup\">BridgeDb Service</div>");
+        addSideBarItem(sb, WsUriConstants.BRIDGEDB_HOME, "Home", httpServletRequest);
+        try {
+            String allMappingInfo = SetMappings.METHOD_NAME + "?" + WsUriConstants.LENS_URI + "=" + Lens.getAllLens();
+            addSideBarItem(sb, allMappingInfo,"All Mappings Summary", httpServletRequest);
+        } catch (BridgeDBException ex) {
+            logger.error("Error getting getAllLens", ex);
+        }
+        addSideBarItem(sb,  SetMappings.METHOD_NAME, "Default Mappings Summary", httpServletRequest);
+        try {
+            String allGraphwiz = WsUriConstants.GRAPHVIZ + "?" + WsUriConstants.LENS_URI + "=" + Lens.getAllLens();
+            addSideBarItem(sb, allGraphwiz, "All Mappings Graphviz",  httpServletRequest);
+        } catch (BridgeDBException ex) {
+            logger.error("Error getting getAllLens", ex);
+        }
+        addSideBarItem(sb, WsUriConstants.GRAPHVIZ, "Default Mappings Graphviz",  httpServletRequest);
+        addSideBarItem(sb, Lens.METHOD_NAME, Lens.METHOD_NAME,  httpServletRequest);
+        addSideBarItem(sb, WsUriConstants.BRIDGEDB_API, "Api", httpServletRequest);
+    }
+
+    /**
+     * Allows Super classes to add to the side bar
+     */
+    protected void addSideBarStatisitics(StringBuilder sb, HttpServletRequest httpServletRequest) {
+        try {
+            OverallStatistics statistics = uriMapper.getOverallStatistics(Lens.getDefaultLens());
+            //sb.append("\n<div class=\"menugroup\">Default Statisitics</div>");
+            //addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfMappings()) + " Mappings", httpServletRequest);
+            //addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfMappingSets()) + " Mapping Sets", httpServletRequest);
+            //addSideBarItem(sb, "getSupportedSrcDataSources", formatter.format(statistics.getNumberOfSourceDataSources()) 
+            //        + " Source Data Sources", httpServletRequest);
+            //addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfPredicates()) + " Predicates", httpServletRequest);
+            //addSideBarItem(sb, "getSupportedTgtDataSources", formatter.format(statistics.getNumberOfTargetDataSources()) 
+             //       + " Target Data Sources ", httpServletRequest);
+            statistics = uriMapper.getOverallStatistics(Lens.getAllLens());
+            //sb.append("\n<div class=\"menugroup\">All Statisitics</div>");
+            sb.append("\n<div class=\"menugroup\">Statisitics</div>");
+            addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfMappings()) + " Mappings", httpServletRequest);
+            addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfMappingSets()) + " Mapping Sets", httpServletRequest);
+            addSideBarItem(sb, "getSupportedSrcDataSources", formatter.format(statistics.getNumberOfSourceDataSources()) 
+                    + " Source Data Sources", httpServletRequest);
+            addSideBarItem(sb, "getMappingInfo", formatter.format(statistics.getNumberOfPredicates()) + " Predicates", httpServletRequest);
+            addSideBarItem(sb, "getSupportedTgtDataSources", formatter.format(statistics.getNumberOfTargetDataSources()) 
+                    + " Target Data Sources ", httpServletRequest);
+            addSideBarItem(sb, Lens.METHOD_NAME, formatter.format(statistics.getNumberOfLenses())
+                    + " Lenses ", httpServletRequest);
+        } catch (BridgeDBException ex) {
+            sb.append("\nStatisitics currenlty unavailable.");
+            logger.error("Error getting statistics.", ex);
+        }
+    }
+    
+    /**
+     * Adds an item to the SideBar for this service
+     */
+    public void addSideBarItem(StringBuilder sb, String page, String name, HttpServletRequest httpServletRequest) {
+        sb.append("\n<div id=\"menu");
+        sb.append(page);
+        sb.append("_text\" class=\"texthotlink\" ");
+        sb.append("onmouseout=\"DHTML_TextRestore('menu");
+        sb.append(page);
+        sb.append("_text'); return true; \" ");
+        sb.append("onmouseover=\"DHTML_TextHilight('menu");
+        sb.append(page);
+        sb.append("_text'); return true; \" ");
+        sb.append("onclick=\"document.location = &quot;");
+        sb.append(httpServletRequest.getContextPath());
+        sb.append("/");
+        sb.append(page);
+        sb.append("&quot;;\">");
+        sb.append(name);
+        sb.append("</div>");
+     }
+
+    protected void footerAndEnd(StringBuilder sb) throws BridgeDBException{
+        sb.append("</div>\n<div id=\"footer\">");
+        sb.append("\n<div></body></html>");
+    }
+
+	public void generateLensSelector(StringBuilder sb, HttpServletRequest httpServletRequest) throws BridgeDBException {
+		List<Lens> lenses = Lens.getLens();
+        sb.append("<p>");
+    	sb.append(WsUriConstants.LENS_URI);
+        sb.append("<select name=\"");
+    	sb.append(WsUriConstants.LENS_URI);
+    	sb.append("\">");
+		for (Lens lens : lenses) {
+			sb.append("<option value=\"");
+ 			sb.append(lens.toUri(httpServletRequest.getContextPath()));
+			sb.append("\">");
+			sb.append(lens.getName());
+			sb.append("</option>");
+		}
+    	sb.append("</select>\n");
+	}
+
 
 }

@@ -1384,7 +1384,8 @@ bridgeDB:DataSource_PubMed a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "publication" ;
 	bridgeDB:hasUrlPattern <http://www.ncbi.nlm.nih.gov/pubmed/$id> ;
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/pubmed/$id> .
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/pubmed/$id> ;
+	bridgeDB:hasUriPattern <http://bio2rdf.org/pubmed/$id> .
 
 bridgeDB:DataSource_Reactome a bridgeDB:DataSource ;
 	bridgeDB:fullName "Reactome" ;
@@ -2134,6 +2135,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://bio2rdf.org/path:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://bio2rdf.org/path:" .
+
+<http://bio2rdf.org/pubmed/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://bio2rdf.org/pubmed/" .
 
 <http://bio2rdf.org/rn:$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://bio2rdf.org/rn:" .
