@@ -57,7 +57,10 @@ import org.bridgedb.ws.templates.WebTemplates;
  */
 public class WSOtherservices extends WSAPI implements ServletContextListener {
             
-    static final Logger logger = Logger.getLogger(WSOtherservices.class);
+    private static boolean EXCLUDE_GRAPH = false;
+    private static boolean INCLUDE_GRAPH = true;
+    
+    private static final Logger logger = Logger.getLogger(WSOtherservices.class);
 	private ServletContext context;
 
     public WSOtherservices()  throws BridgeDBException   {
@@ -86,29 +89,60 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
         velocityContext.put("targetUriPatterns", UriPattern.getUriPatterns());
         velocityContext.put("lenses", Lens.getLens());
         String mapUriScripts = WebTemplates.getForm(velocityContext, WebTemplates.SELECTORS_SCRIPTS);
-        StringBuilder sb = topAndSide ("Identity Mapping Service", mapUriScripts, httpServletRequest);
+        StringBuilder sb = topAndSide ("Home page for BridgeDB WebServer", mapUriScripts, httpServletRequest);
         
-        velocityContext = new VelocityContext();
+        String mapUriForm = mapUriForm(EXCLUDE_GRAPH, httpServletRequest);
+        
         velocityContext.put("api", WsUriConstants.BRIDGEDB_API);
         velocityContext.put("contextPath", httpServletRequest.getContextPath());
-        velocityContext.put("defaultLens", Lens.byId(Lens.getDefaultLens()));
-        velocityContext.put("formatName", WsUriConstants.FORMAT);
         velocityContext.put("getMappingInfo", SetMappings.METHOD_NAME);
-        velocityContext.put("graphName", WsUriConstants.GRAPH); 
-        velocityContext.put("graphs", GraphResolver.knownGraphs());
-        velocityContext.put("lenses", Lens.getLens());
-        velocityContext.put("lensURIName", WsUriConstants.LENS_URI);
         velocityContext.put("map",WsUriConstants.MAP);
         velocityContext.put("mapURI", WsUriConstants.MAP_URI);
-        velocityContext.put("targetUriPatternName", WsUriConstants.TARGET_URI_PATTERN);
-        velocityContext.put("URI", WsUriConstants.URI);
-
+        velocityContext.put("mapUriForm", mapUriForm);
         sb.append( WebTemplates.getForm(velocityContext, WebTemplates.BRIDGEDB_HOME));
 
         footerAndEnd(sb);
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
     }
 
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    @Path("/mapURI") 
+    public Response mapURI(@Context HttpServletRequest httpServletRequest) throws BridgeDBException {
+        if (logger.isDebugEnabled()){
+            logger.debug("mapURI called");
+        }
+
+        VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("targetUriPatterns", UriPattern.getUriPatterns());
+        velocityContext.put("lenses", Lens.getLens());
+        String mapUriScripts = WebTemplates.getForm(velocityContext, WebTemplates.SELECTORS_SCRIPTS);
+        StringBuilder sb = topAndSide ("mapURI Service", mapUriScripts, httpServletRequest);
+        sb.append(mapUriForm(INCLUDE_GRAPH, httpServletRequest));
+        footerAndEnd(sb);
+        return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
+    }
+    
+
+    private String mapUriForm(boolean includeGraph, HttpServletRequest httpServletRequest) throws BridgeDBException{
+        VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("targetUriPatterns", UriPattern.getUriPatterns());
+        velocityContext.put("lenses", Lens.getLens());        
+        velocityContext.put("contextPath", httpServletRequest.getContextPath());
+        velocityContext.put("defaultLens", Lens.byId(Lens.getDefaultLens()));
+        velocityContext.put("formatName", WsUriConstants.FORMAT);
+        if (includeGraph){
+            velocityContext.put("graphName", WsUriConstants.GRAPH); 
+            velocityContext.put("graphs", GraphResolver.knownGraphs());
+        }
+        velocityContext.put("lenses", Lens.getLens());
+        velocityContext.put("lensURIName", WsUriConstants.LENS_URI);
+        velocityContext.put("mapURI", WsUriConstants.MAP_URI);
+        velocityContext.put("targetUriPatternName", WsUriConstants.TARGET_URI_PATTERN);
+        velocityContext.put("URI", WsUriConstants.URI);
+        return WebTemplates.getForm(velocityContext, WebTemplates.MAP_URI_FORM);
+    }
+    
      /**
      * Forwarding page for "/api".
      * 

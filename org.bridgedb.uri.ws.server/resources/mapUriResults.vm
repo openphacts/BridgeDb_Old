@@ -24,19 +24,25 @@
     <h4>${lensURIName}: $lensURI</h4>
 #end
 #if ( $targetUriPatterns.isEmpty())
-    #if ( $graph.isEmpty())
-        <h4>NO ${targetUriPatternName}(s) or ${graphName} parameter so returning all mapped URIs.</h4>
+    #if ( $graph)
+        #if ( $graph.isEmpty())
+            <h4>NO ${targetUriPatternName}(s) or ${graphName} parameter so returning all mapped URIs.</h4>
+        #else    
+            <h4>${graphName}: $graph</h4>
+        #end
     #else    
-        <h4>${graphName}: $graph</h4>
+        <h4>NO ${targetUriPatternName}(s) so returning all mapped URIs.</h4>
     #end
 #else
     <h4>${targetUriPatternName}(s)</h4>
     #foreach( $targetUriPattern in $targetUriPatterns)
         <br>$targetUriPattern
     #end
-    #if ( $graph.isEmpty())
-    #else
-        <h4>Unioned with ${graphName}: $graph</h4>
+    #if ( $graph)
+        #if ( $graph.isEmpty())
+        #else
+            <h4>Unioned with ${graphName}: $graph</h4>
+        #end
     #end
 #end
 
