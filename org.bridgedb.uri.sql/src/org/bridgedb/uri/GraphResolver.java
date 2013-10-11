@@ -102,7 +102,7 @@ public class GraphResolver {
     
     public static void addTestMappings() throws BridgeDBException{
         GraphResolver gr = getInstance();
-        gr.addPattern("http://larkc.eu#Fixedcontext", "http://www.conceptwiki.org/concept/$id");
+        gr.addPattern("http://www.conceptwiki.org", "http://www.conceptwiki.org/concept/$id");
         gr.addPattern("http://www.chemspider.com", "http://rdf.chemspider.com/$id");
         gr.addPattern("http://data.kasabi.com/dataset/chembl-rdf","http://data.kasabi.com/dataset/chembl-rdf/molecule/m$id");
         gr.addPattern("http://data.kasabi.com/dataset/chembl-rdf","http://data.kasabi.com/dataset/chembl-rdf/target/t$id");
