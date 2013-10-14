@@ -164,7 +164,7 @@ public class Lens {
      * @return the DefaultUri as a String
      * @throws BridgeDBException 
      */
-    public static String getDefaultLens() throws BridgeDBException{
+    public static String getDefaultLens() {
         return DEFAULT_LENS_NAME;
     }
     

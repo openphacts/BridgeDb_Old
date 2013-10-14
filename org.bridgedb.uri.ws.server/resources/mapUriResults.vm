@@ -1,12 +1,18 @@
 <h2>Uri Mapping results</h2>
-#if( $targetUris.isEmpty())
-    <h4>No Target Uris found</h4>
-    <p>
-    Warning if accepts header is set to "application/xml" or "application/json" this methods returns status 204 if no results are found.
-    </p>
-#else
-    #foreach( $targetUri in $targetUris)
-        <a href=$targetUri>$targetUri</a><br>
+#if ($exception)
+    <h4>Unable to process your request</h4>
+    <h3>$exception</h3>
+    <p>Warning: XML and JSON versions will throw an Exception with these parameters</p>
+#else 
+    #if( $targetUris.isEmpty())
+        <h4>No Target Uris found</h4>
+        <p>
+        Warning if accepts header is set to "application/xml" or "application/json" this methods returns status 204 if no results are found.
+        </p>
+    #else
+        #foreach( $targetUri in $targetUris)
+            <a href=$targetUri>$targetUri</a><br>
+        #end
     #end
 #end
 <h2>Parameters</h2>

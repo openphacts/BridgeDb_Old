@@ -342,7 +342,7 @@ public class WSOtherservices extends WSAPI implements ServletContextListener {
     }
 
     @Override
-    protected Response noContentWrapper(HttpServletRequest httpServletRequest) throws BridgeDBException {
+    protected Response noContentWrapper(HttpServletRequest httpServletRequest) {
         StringBuilder sb = topAndSide ("Empty Reply", httpServletRequest);
         sb.append("<h1>Reply is an Empty Set or Empty Object</h1>\n");
         sb.append("<h2>Note: The XML and Json versions of this request simply return status 204 (No Context)</h2>");

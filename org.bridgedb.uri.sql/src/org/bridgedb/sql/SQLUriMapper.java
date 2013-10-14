@@ -755,6 +755,9 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             }
             if (prefix == null){
                 throw new BridgeDBException("Unknown uri " + uri);
+            } else if (postfix == null || postfix.isEmpty()){
+                throw new BridgeDBException("Unknown uri " + uri + ". " + id + " does not match the regex pattern " + regex 
+                        + " with prefix: " + prefix);                
             } else {
                 throw new BridgeDBException("Unknown uri " + uri + ". " + id + " does not match the regex pattern " + regex 
                         + " with prefix: " + prefix + " and postfix " + postfix);                

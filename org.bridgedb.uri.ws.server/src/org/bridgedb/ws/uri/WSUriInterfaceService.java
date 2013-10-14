@@ -281,8 +281,13 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             @QueryParam(WsUriConstants.GRAPH) String graph,
             @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
             @QueryParam(WsUriConstants.FORMAT) String format,
-            @Context HttpServletRequest httpServletRequest) throws BridgeDBException {
-        UriMappings result = mapUriInner(uris, lensUri, graph, targetUriPatterns);
+            @Context HttpServletRequest httpServletRequest) {
+        UriMappings result = null;
+        try {
+            result = mapUriInner(uris, lensUri, graph, targetUriPatterns);
+        } catch (BridgeDBException exception) {
+            return  mapUriHtmlResult(uris, lensUri, graph, targetUriPatterns, format, httpServletRequest, null, exception);
+        }
         uris.remove("");
         targetUriPatterns.remove("");
         if (format == null || format.isEmpty()){
@@ -300,18 +305,29 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             } 
             return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
         }
+        return  mapUriHtmlResult(uris, lensUri, graph, targetUriPatterns, format, httpServletRequest, result, null);
+    }
+
+    private Response mapUriHtmlResult(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns,
+            String format, HttpServletRequest httpServletRequest, UriMappings result, BridgeDBException exception) {
+        uris.remove("");
+        targetUriPatterns.remove("");
         StringBuilder sb = topAndSide ("Identity Mapping Service", httpServletRequest);        
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("sourceUris", uris);
         velocityContext.put("URI", WsUriConstants.URI);
         velocityContext.put("lensURI", lensUri);
         velocityContext.put("lensURIName", WsUriConstants.LENS_URI);
-        velocityContext.put("defaultLensName", Lens.getDefaultLens());
+        velocityContext.put("defaultLensName", Lens.getDefaultLens()); 
         velocityContext.put("targetUriPatterns", targetUriPatterns);
         velocityContext.put("targetUriPatternName", WsUriConstants.TARGET_URI_PATTERN);
         velocityContext.put("graph", graph);
         velocityContext.put("graphName", WsUriConstants.GRAPH);
-        velocityContext.put("targetUris",result.getTargetUri() );
+        if (result != null){
+            velocityContext.put("targetUris",result.getTargetUri() );
+        } else {
+            velocityContext.put("exception", exception.getMessage());
+        }
         sb.append( WebTemplates.getForm(velocityContext, WebTemplates.MAP_URI_RESULTS)); 
         return Response.ok(sb.toString(), MediaType.TEXT_HTML).build();
     }
@@ -1032,7 +1048,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         sb.append("</div>");
      }
 
-    protected void footerAndEnd(StringBuilder sb) throws BridgeDBException{
+    protected void footerAndEnd(StringBuilder sb) {
         sb.append("</div>\n<div id=\"footer\">");
         sb.append("\n<div></body></html>");
     }

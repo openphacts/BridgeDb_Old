@@ -524,7 +524,7 @@ public class WSCoreService implements WSCoreInterface {
      * @return
      * @throws BridgeDBException thrown by super classes
      */
-    protected Response noContentWrapper(HttpServletRequest httpServletRequest) throws BridgeDBException {
+    protected Response noContentWrapper(HttpServletRequest httpServletRequest) {
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\"?>");
         sb.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" ");
