@@ -711,13 +711,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             return null;
         }
         StringBuilder query = new StringBuilder();
-        query.append("SELECT ");
-        query.append(DATASOURCE_COLUMN_NAME);
-        query.append(", ");
-        query.append(PREFIX_COLUMN_NAME);
-        query.append(", ");
-        query.append(POSTFIX_COLUMN_NAME);
-        query.append(" FROM ");
+        query.append("SELECT * FROM ");
         query.append(URI_TABLE_NAME);
         query.append(" WHERE '");
         query.append(insertEscpaeCharacters(uri));
@@ -735,26 +729,20 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }    
         try {
-            if (rs.next()){
+            while(rs.next()){
                 String sysCode = rs.getString(DATASOURCE_COLUMN_NAME);
                 String prefix = rs.getString(PREFIX_COLUMN_NAME);
                 String postfix = rs.getString(POSTFIX_COLUMN_NAME);
-                while(rs.next()){
-                    String newPrefix = rs.getString(PREFIX_COLUMN_NAME);
-                    String newPostfix = rs.getString(POSTFIX_COLUMN_NAME);
-                    //If there is more than one result take the most specific.
-                    if (newPrefix.length() > prefix.length() || newPostfix.length() > postfix.length()){
-                        prefix = newPrefix;
-                        sysCode = rs.getString(DATASOURCE_COLUMN_NAME);
-                        postfix = newPostfix;
-                    }
-                }
+                String regex = rs.getString (REGEX_COLUMN_NAME);
                 String id = uri.substring(prefix.length(), uri.length()-postfix.length());
-                IdSysCodePair result =  new IdSysCodePair(id, sysCode);
-                if (logger.isDebugEnabled()){
-                    logger.debug(uri + " toXref " + result);
+                if (regex == null){
+                    return new IdSysCodePair(id, sysCode);                    
                 }
-                return result;
+                Pattern pattern = Pattern.compile(regex);
+                Matcher matcher = pattern.matcher(id);
+                if (matcher.matches()){
+                    return new IdSysCodePair(id, sysCode);
+                } 
             }
             return null;
         } catch (SQLException ex) {
