@@ -77,9 +77,6 @@ public class DataSourceBean {
         if (bean == null){
             return null;
         }
-        if (bean.fullName == null){
-            throw new IllegalArgumentException("No know DataSource known for " + bean.sysCode);
-        }
         DataSource.Builder builder = DataSource.register(bean.sysCode, bean.fullName);
         if (bean.urlPattern != null){
             builder = builder.urlPattern(bean.urlPattern);
