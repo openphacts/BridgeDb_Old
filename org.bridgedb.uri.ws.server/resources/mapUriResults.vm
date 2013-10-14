@@ -6,7 +6,7 @@
     </p>
 #else
     #foreach( $targetUri in $targetUris)
-        <a href=$targetUri">$targetUri</a><br>
+        <a href=$targetUri>$targetUri</a><br>
     #end
 #end
 <h2>Parameters</h2>
