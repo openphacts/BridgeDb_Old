@@ -207,7 +207,7 @@ public class WSCoreService implements WSCoreInterface {
         ArrayList<Xref> srcXrefs = new ArrayList<Xref>();
         for (int i = 0; i < id.size() ;i++){
             try {
-                DataSource dataSource = DataSource.getBySystemCode(scrCode.get(i));
+                DataSource dataSource = DataSource.getExistingBySystemCode(scrCode.get(i));
                 Xref source = new Xref(id.get(i), dataSource);
                 srcXrefs.add(source);
             } catch (IllegalArgumentException ex){
@@ -216,7 +216,7 @@ public class WSCoreService implements WSCoreInterface {
         }
         DataSource[] targetDataSources = new DataSource[targetCodes.size()];
         for (int i=0; i< targetCodes.size(); i++){
-             targetDataSources[i] = DataSource.getBySystemCode(targetCodes.get(i));
+             targetDataSources[i] = DataSource.getExistingBySystemCode(targetCodes.get(i));
         }
         
         try {
@@ -280,7 +280,7 @@ public class WSCoreService implements WSCoreInterface {
         }  
         DataSource dataSource;
         try {
-            dataSource = DataSource.getBySystemCode(scrCode);
+            dataSource = DataSource.getExistingBySystemCode(scrCode);
         } catch (IllegalArgumentException ex){
              logger.error(ex.getMessage());
              return new XrefExistsBean(id, scrCode, false);           
@@ -383,8 +383,8 @@ public class WSCoreService implements WSCoreInterface {
         if (targetCode == null) {
             throw new BridgeDBException (WsConstants.TARGET_DATASOURCE_SYSTEM_CODE + " parameter can not be null");
         }
-        DataSource src = DataSource.getBySystemCode(sourceCode);
-        DataSource tgt = DataSource.getBySystemCode(targetCode);
+        DataSource src = DataSource.getExistingBySystemCode(sourceCode);
+        DataSource tgt = DataSource.getExistingBySystemCode(targetCode);
         try {
             return new MappingSupportedBean(src, tgt, idMapper.getCapabilities().isMappingSupported(src, tgt));
         } catch (IDMapperException e){
