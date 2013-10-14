@@ -22,7 +22,12 @@
         <p>
         	Number of patterns selected: <label id="countSelected">0</label> out of <label id="countAll">0</label>
         </p>
-       #if ( $graphName)
+        <p>
+            $targetUriPatternName Filter <input type="text" id="filter" name="Pattern Filter" value="" onkeyup="populate(this)">
+            <button type='button' onclick="pickAll()">Select all showing</button>
+            <button type='button' onclick="pickNone()">Select none</button>
+        </p>       
+        #if ( $graphName)
             <p>$graphName (Note: These are OpenPHACTS specific semantic sugar for $targetUriPatternName)
             </p>
             <p>
@@ -46,9 +51,4 @@
         <p>Note: If the new page does not open click on the address bar and press enter</p>
 	</fieldset>
 </form>
-<h2>Form Filters</h2>
-Use this section to filter the values offered in the Mapper
-<p>
-    $targetUriPatternName Filter <input type="text" id="filter" name="Pattern Filter" value="" onkeyup="populate(this)">
-    <button onclick="pickAll()">Select all showing</button><button onclick="pickNone()">Select none</button>
-</p>
+
