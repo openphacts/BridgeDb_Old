@@ -875,7 +875,7 @@ bridgeDB:DataSource_ConceptWiki a bridgeDB:DataSource ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "unknown" ;
 	bridgeDB:hasUrlPattern <http://www.conceptwiki.org/concept/$id> ;
-	bridgeDB:hasWikiPathwaysPattern <http://www.conceptwiki.org/concept/$id> .
+    bridgeDB:hasUriPattern <http://ops.conceptwiki.org/concept/index/$id> .
 
 bridgeDB:DataSource_Conoserver a bridgeDB:DataSource ;
 	bridgeDB:fullName "Conoserver" ;
