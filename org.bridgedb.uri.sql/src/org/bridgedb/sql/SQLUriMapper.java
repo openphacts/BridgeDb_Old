@@ -666,11 +666,16 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     @Override
     public boolean uriExists(String uri) throws BridgeDBException {
         uri = scrubUri(uri);
-        Xref xref = toXref(uri);
-        if (xref == null){
+        Xref xref;
+        try {
+            xref = toXref(uri);
+            if (xref == null){
+                return false;
+            }
+       } catch (BridgeDBException ex){
             return false;
-        }
-        return this.xrefExists(xref);
+       }
+       return this.xrefExists(xref);
     }
 
     @Override
@@ -729,12 +734,16 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }    
         try {
+            String prefix = null;
+            String postfix = null;
+            String regex = null;
+            String id = null;
             while(rs.next()){
                 String sysCode = rs.getString(DATASOURCE_COLUMN_NAME);
-                String prefix = rs.getString(PREFIX_COLUMN_NAME);
-                String postfix = rs.getString(POSTFIX_COLUMN_NAME);
-                String regex = rs.getString (REGEX_COLUMN_NAME);
-                String id = uri.substring(prefix.length(), uri.length()-postfix.length());
+                prefix = rs.getString(PREFIX_COLUMN_NAME);
+                postfix = rs.getString(POSTFIX_COLUMN_NAME);
+                regex = rs.getString (REGEX_COLUMN_NAME);
+                id = uri.substring(prefix.length(), uri.length()-postfix.length());
                 if (regex == null){
                     return new IdSysCodePair(id, sysCode);                    
                 }
@@ -744,7 +753,12 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                     return new IdSysCodePair(id, sysCode);
                 } 
             }
-            return null;
+            if (prefix == null){
+                throw new BridgeDBException("Unknown uri " + uri);
+            } else {
+                throw new BridgeDBException("Unknown uri " + uri + ". " + id + " does not match the regex pattern " + regex 
+                        + " with prefix: " + prefix + " and postfix " + postfix);                
+            }
         } catch (SQLException ex) {
             throw new BridgeDBException("Unable to get IdSysCodePair. " + query, ex);
         }    

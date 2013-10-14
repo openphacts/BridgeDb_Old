@@ -44,31 +44,28 @@ public abstract class UriMapperSpecialTest extends UriListenerTest{
            
     private static  final String NULL_GRAPH = null;
 
-    @Test 
+    @Test (expected = BridgeDBException.class)
     public void testMapIDOneBad() throws BridgeDBException{
         report("MapIDOneBad");
         Set<String> results = uriMapper.mapUri(mapBadUri1, Lens.getDefaultLens(), NULL_GRAPH);
-        //According to Martijn and the OPS needs mappers should return the incoming URI where appropiate.
-        //Still optional as I am not sure text does.
-        //Not all mappers will have the pattern matching to notice this is an invalid URI
         assertTrue(results.size() <= 1);
     }
 
-    @Test 
+    @Test (expected = BridgeDBException.class)
     public void testMapFullOneBad() throws BridgeDBException{
         report("MapFullOneBad");
         Set<Mapping> results = uriMapper.mapFull(mapBadUri1, Lens.getDefaultLens());
         assertTrue(results.size() <= 1);
     }
 
-    @Test 
+    @Test (expected = BridgeDBException.class)
     public void testMapFullOneBadOneNameSpace() throws BridgeDBException{
         report("MapFullOneBadOneNameSpace");
         Set<Mapping> results = uriMapper.mapFull(mapBadUri1, Lens.getDefaultLens(), NULL_GRAPH, regexUriPattern2);
         assertTrue(results.size() <= 1);
     }
 
-     @Test
+    @Test
     public void testUriSupported() throws Exception {
         report("UriSupported");
         assertTrue(uriMapper.uriExists(map1Uri1));

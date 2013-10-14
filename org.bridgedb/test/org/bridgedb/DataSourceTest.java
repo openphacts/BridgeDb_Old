@@ -83,7 +83,7 @@ public class DataSourceTest {
 		Assert.assertFalse(source.isMetabolite());
 	}
 
- //   @Test (expected =  IllegalArgumentException.class)
+ //  
  //TODO check if changing primary is a needed functionality   
 	public void testBuildingPrimary() {
 		DataSource source = DataSource.register("X", "Affymetrix")
