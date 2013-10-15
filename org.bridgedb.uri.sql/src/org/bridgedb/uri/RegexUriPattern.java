@@ -286,4 +286,52 @@ public class RegexUriPattern {
             System.out.println(value);
         }
     }
+    
+    @Override
+    public boolean equals(Object otherObject){
+        if (!(otherObject instanceof RegexUriPattern)){
+            return false;
+        }
+        RegexUriPattern other = (RegexUriPattern)otherObject;
+        if (!this.prefix.equals(other.prefix)){
+            return false;
+        }
+        if (!this.sysCode.equals(other.sysCode)){
+            return false;
+        }
+        if (this.postfix == null){
+            if (other.postfix != null){
+                return false;
+            }
+        } else {
+            if (!other.postfix.equals(other.postfix)){
+                return false;
+            }
+        }
+        if (this.regex == null){
+            if (other.regex != null){
+                return false;
+            }
+        } else {
+            if (other.regex == null){
+                return false;
+            }
+            if (!this.regex.pattern().equals(other.regex.pattern())){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    @Override
+    public int hashCode() {
+        String full = sysCode + "£" + prefix;
+        if (regex != null){
+            full = full + regex;
+        }
+        if (prefix != null){
+            full = full + prefix;
+        }
+        return full.hashCode();
+    }
 }
