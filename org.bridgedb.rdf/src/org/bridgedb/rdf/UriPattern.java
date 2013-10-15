@@ -50,6 +50,8 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
     private final String postfix;
     private UriPatternType patternType;
     private final Set<String>sysCodes;
+    //unable to set default some example CHEBI have different URIs in different contexts
+    //private boolean isGraphDefault;
     
     private static HashMap<String,UriPattern> byPattern = new HashMap<String,UriPattern>();
     private static HashMap<String,Set<UriPattern>> byCode = new HashMap<String,Set<UriPattern>>();
@@ -72,6 +74,7 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
         byPattern.put(pattern, this);
         this.patternType = patternType;
         sysCodes = new HashSet<String>();
+        //isGraphDefault = false;
      }
     
      public String getPrefix(){
@@ -311,4 +314,21 @@ public class UriPattern extends RdfBase implements Comparable<UriPattern>{
             }
         }
     }
+    
+    //unable to set default some example CHEBI have different URIs in different contexts
+    /*public void setGraphDefault() throws BridgeDBException{
+        for (String code:this.sysCodes){
+            Set<UriPattern> alternatives = byCode.get(code);
+            for (UriPattern alternative:alternatives){
+                if (alternative.isGraphDefault){
+                    if (alternative != this){
+                        throw new BridgeDBException ("Unable to set " + this + " to graphDefault as sysCode " + code 
+                                + " already has graphDefault " + alternative);
+                    }
+                }
+            }
+        }
+        this.isGraphDefault = true;
+   }*/
+    
 }

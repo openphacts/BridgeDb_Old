@@ -75,6 +75,9 @@ public class GraphResolver {
     
     private void addPatterns(String graph, String pattern) throws BridgeDBException{
         Set<RegexUriPattern> uriPatterns = RegexUriPattern.byPattern(pattern);
+        //unable to set default some example CHEBI have different URIs in different contexts
+        //UriPattern test = UriPattern.existingByPattern(pattern);
+        //test.setGraphDefault();
         if (uriPatterns.isEmpty() ){
             throw new BridgeDBException("no UriPattern known for " + pattern);
         }
