@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.bridgedb.rdf;
+package org.bridgedb.rdf.create;
 
 import info.aduna.lang.FileFormat;
 import java.io.File;
