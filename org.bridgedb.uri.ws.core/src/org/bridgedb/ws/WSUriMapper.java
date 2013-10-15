@@ -33,6 +33,7 @@ import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
 import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.MappingsBySet;
+import org.bridgedb.uri.MappingsBySysCodeId;
 import org.bridgedb.uri.RegexUriPattern;
 import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
@@ -95,6 +96,20 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
         return results;          
     }
     
+    @Override
+    public MappingsBySysCodeId mapUriBySysCodeId(String sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) throws BridgeDBException {
+        Collection<Mapping> beans = mapFull(sourceUri, lensUri, graph, tgtUriPatterns);
+        return extractMappingsBySysCodeId(beans);
+    }
+
+    private MappingsBySysCodeId extractMappingsBySysCodeId(Collection<Mapping> beans) {
+        MappingsBySysCodeId results = new MappingsBySysCodeId();
+        for (Mapping bean:beans){
+            results.addMappings(bean.getTarget(), bean.getTargetUri());
+        }  
+        return results;
+    }
+
     @Override
     public Set<String> mapUri(Xref sourceXref, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) throws BridgeDBException {
         Collection<Mapping> beans = mapFull(sourceXref, lensUri, graph, tgtUriPatterns);
@@ -349,4 +364,4 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-  }
+   }

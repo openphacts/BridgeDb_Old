@@ -50,6 +50,7 @@ import org.bridgedb.uri.GraphResolver;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.MappingsBySet;
+import org.bridgedb.uri.MappingsBySysCodeId;
 import org.bridgedb.uri.RegexUriPattern;
 import org.bridgedb.uri.UriListener;
 import org.bridgedb.uri.UriMapper;
@@ -350,6 +351,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return mapUri(sourceRef, lensUri, graph, tgtUriPatterns);
     }
         
+    @Override
     public Set<String> mapUri (String sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) 
             throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
@@ -357,6 +359,50 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         return mapUri(sourceRef, lensUri, graph, tgtUriPatterns);
     }
  
+    @Override
+    public MappingsBySysCodeId mapUriBySysCodeId (String sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) 
+            throws BridgeDBException {
+        sourceUri = scrubUri(sourceUri);
+        IdSysCodePair sourceRef = toIdSysCodePair(sourceUri);
+        return mapUriBySysCodeId(sourceRef, lensUri, graph, tgtUriPatterns);
+    }
+    
+    private MappingsBySysCodeId mapUriBySysCodeId (IdSysCodePair sourceRef, String lensUri, String graph, RegexUriPattern[] tgtUriPatterns) 
+            throws BridgeDBException {
+        Set<RegexUriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);
+        if (targetUriPatterns == null || targetUriPatterns.isEmpty()){
+            return mapUriBySysCodeId (sourceRef, lensUri);
+        }
+        MappingsBySysCodeId results = new MappingsBySysCodeId();
+        for (RegexUriPattern tgtUriPattern:targetUriPatterns){
+            mapUriBySysCodeId(results, sourceRef, lensUri, tgtUriPattern);
+        }
+        return results;
+    }
+
+    private MappingsBySysCodeId mapUriBySysCodeId(IdSysCodePair sourceRef, String lensUri) 
+            throws BridgeDBException {
+        MappingsBySysCodeId results = new MappingsBySysCodeId();
+        Set<IdSysCodePair> targetRefs = mapID(sourceRef, lensUri);
+        for (IdSysCodePair target:targetRefs){
+            results.addMappings(target, toUris(target)); 
+        }
+        return results;
+    }
+    
+    private void mapUriBySysCodeId (MappingsBySysCodeId results, IdSysCodePair sourceRef, String lensUri, RegexUriPattern tgtUriPattern) 
+            throws BridgeDBException {
+        if (tgtUriPattern == null){
+            logger.warn("mapUri called with a null tgtDatasource");
+            return;
+        }
+        String tgtSysCode = tgtUriPattern.getSysCode();
+        Set<IdSysCodePair> targetRefs = mapID(sourceRef, lensUri, tgtSysCode);
+        for (IdSysCodePair target:targetRefs){
+            results.addMapping(target, tgtUriPattern.getUri(target.getId()));
+        }
+    }
+
     @Override
     public MappingsBySet mapBySet(String sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) throws BridgeDBException {
         Set<RegexUriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);

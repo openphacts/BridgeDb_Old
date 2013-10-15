@@ -136,6 +136,9 @@ public interface UriMapper extends IDMapper{
     public Set<String> mapUri(Xref sourceXref, String LensUri, String graph, RegexUriPattern... tgtUriPatterns) 
             throws BridgeDBException;
 
+    public MappingsBySysCodeId mapUriBySysCodeId (String sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) 
+            throws BridgeDBException;
+
     public MappingsBySet mapBySet(String sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) throws BridgeDBException;
    
     public MappingsBySet mapBySet(Set<String> sourceUris, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) 
