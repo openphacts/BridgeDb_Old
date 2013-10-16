@@ -37,7 +37,7 @@ Bgee stage	bgee.stage		http://bgee.unil.ch/bgee/bgee?page=anatomy&action=organs&
 BIND	Bi	http://www.bind.ca/	http://www.bind.ca/Action?identifier=bindid&idsearch=$id		interaction		1	urn:miriam:bind	^\d+$	BIND
 BindingDB	bindingDB		http://www.bindingdb.org/bind/chemsearch/marvin/MolStructure.jsp?monomerid=$id	22360	unknown		1	urn:miriam:bindingDB	^\d+$	
 BioCarta Pathway	biocarta.pathway		http://www.biocarta.com/pathfiles/$id.asp	h_aktPathway	unknown		1	urn:miriam:biocarta.pathway	^([hm]\_)?\w+Pathway$	
-BioCatalogue	biocatalogue.service		http://www.biocatalogue.org/services/$id	614	unknown		1	urn:miriam:biocatalogue.service	^\d+$	
+BioCatalogue	biocatalogue.service		https://www.biocatalogue.org/services/$id	614	unknown		1	urn:miriam:biocatalogue.service	^\d+$	
 BioCyc	Bc	http://biocyc.org	http://biocyc.org/getid?id=$id	ECOLI:CYT-D-UBIOX-CPLX	gene		1	urn:miriam:biocyc	^[A-Z-0-9]+(?<!CHEBI)(\:)?[A-Za-z0-9+_.%-]+$	BioCyc
 BioGrid	Bg	http://thebiogrid.org/	http://thebiogrid.org/$id	31623	interaction		1	urn:miriam:biogrid	^\d+$	BioGRID
 BioModels Database	Bm	http://www.ebi.ac.uk/biomodels/	http://www.ebi.ac.uk/biomodels-main/$id	BIOMD0000000048	pathway		1	urn:miriam:biomodels.db	^((BIOMD|MODEL)\d{10})|(BMID\d{12})$	BioModels Database
@@ -119,7 +119,7 @@ DATF	datf		http://datf.cbi.pku.edu.cn/entry-display.php?id=$id	AT1G01030.1	unkno
 DBD	dbd		http://www.transcriptionfactor.org/index.cgi?Search%2FDomain+domain%3A$id+cat%3ADBD	0045310	unknown		1	urn:miriam:dbd	^\d+$	
 dbEST	dbest		http://www.ebi.ac.uk/ena/data/view/$id	BP100000	unknown		1	urn:miriam:dbest	^BP\d+(\.\d+)?$	
 DBG2 Introns	dbg2introns		http://webapps2.ucalgary.ca/~groupii/cgi-bin/intron.cgi?name=$id	Cu.me.I1	unknown		1	urn:miriam:dbg2introns	^\w{1,2}\.(\w{1,2}\.)?[A-Za-z0-9]+$	
-dbProbe	dbprobe		http://www.ncbi.nlm.nih.gov/projects/genome/probe/reports/probereport.cgi?uid=$id	1000000	unknown		1	urn:miriam:dbprobe	^\d+$	
+dbProbe	dbprobe		http://www.ncbi.nlm.nih.gov/probe/?term=$id	1000000	unknown		1	urn:miriam:dbprobe	^\d+$	
 dbSNP	Sn	http://www.ncbi.nlm.nih.gov/sites/entrez?db=snp	http://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=$id	121909098	gene		1	urn:miriam:dbsnp	^\d+$	dbSNP
 Degradome Database	degradome		http://degradome.uniovi.es/cgi-bin/protease/$id	Ax1	unknown		1	urn:miriam:degradome	^[AMCST][0-9x][0-9]$	
 DEPOD	depod		http://www.koehn.embl.de/depod/showp.php?gene=$id	PTPN1	unknown		1	urn:miriam:depod	^[A-Z0-9]+$	
@@ -171,7 +171,7 @@ Ensembl Yeast	EnSc	http://www.ensembl.org	http://www.ensembl.org/Saccharomyces_c
 Ensembl Zebrafish	EnDr	http://www.ensembl.org	http://www.ensembl.org/Danio_rerio/Gene/Summary?g=$id	ENSDARG00000024771	gene	Danio rerio	1		ENSDARG\d{11}	Ensembl
 Entrez Gene	L	http://www.ncbi.nlm.nih.gov/gene	http://www.ncbi.nlm.nih.gov/gene/$id	100010	gene		1	urn:miriam:ncbigene	^\d+$	Entrez Gene
 Enzyme Nomenclature	E	http://www.ebi.ac.uk/intenz/	http://www.ebi.ac.uk/intenz/query?cmd=SearchEC&ec=$id	1.1.1.1	gene		1	urn:miriam:ec-code	^\d+\.-\.-\.-|\d+\.\d+\.-\.-|\d+\.\d+\.\d+\.-|\d+\.\d+\.\d+\.(n)?\d+$	Enzyme Nomenclature
-EPD	epd		http://epd.vital-it.ch/cgi-bin/query_result.pl?out_format=NICE&Entry_0=$id	TA_H3	unknown		1	urn:miriam:epd	^[A-Z-0-9]+$	
+EPD	epd		http://epd.vital-it.ch/cgi-bin/query_result.pl?out_format=NICE&Entry_0=$id	TA_H3	unknown		1	urn:miriam:epd	^[A-Z-_0-9]+$	
 Evidence Code Ontology	eco		http://www.ebi.ac.uk/ontology-lookup/?termId=$id	ECO:0000006	unknown		1	urn:miriam:eco	ECO:\d{7}$	
 Experimental Factor Ontology	efo		http://www.ebi.ac.uk/ontology-lookup/?termId=EFO%3A$id	0004859	unknown		1	urn:miriam:efo	^\d{7}$	
 FlyBase	F	http://flybase.org/	http://flybase.org/reports/$id.html	FBgn0011293	gene	Drosophila melanogaster	1	urn:miriam:flybase	^FB\w{2}\d{7}$	FlyBase
@@ -382,6 +382,8 @@ PASS2	pass2		http://caps.ncbs.res.in/pass2/superfamily/superfamilydetail.php?sup
 Pathway Commons	Pc	http://www.pathwaycommons.org/pc/	http://www.pathwaycommons.org/pc/record2.do?id=$id	485991	pathway		1	urn:miriam:pathwaycommons	^\d+$	Pathway Commons
 Pathway Ontology	pw	http://rgd.mcw.edu/rgdweb/ontology/search.html	http://purl.bioontology.org/ontology/PW/$id	PW:0000208	unknown		1	urn:miriam:pw	^PW:\d{7}$	
 PATO	pato		http://www.ebi.ac.uk/ontology-lookup/?termId=$id	PATO:0001998	unknown		1	urn:miriam:pato	^PATO:\d{7}$	
+PaxDb Organism	paxdb.organism		http://pax-db.org/#!species/$id	9606	unknown		1	urn:miriam:paxdb.organism	^\d+$	
+PaxDb Protein	paxdb.protein		http://pax-db.org/#!protein/$id	977869	unknown		1	urn:miriam:paxdb.protein	^\d+$	
 Pazar Transcription Factor	pazar		http://www.pazar.info/cgi-bin/tf_search.cgi?geneID=$id	TF0001053	unknown		1	urn:miriam:pazar	^TF\w+$	
 PDB	Pd	http://www.pdb.org/	http://www.rcsb.org/pdb/explore/explore.do?structureId=$id	2gc4	protein		1	urn:miriam:pdb	^[0-9][A-Za-z0-9]{3}$	Protein Data Bank
 PeptideAtlas	peptideatlas		https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/Summarize_Peptide?query=QUERY&searchForThis=$id	PAp00000009	unknown		1	urn:miriam:peptideatlas	^PAp[0-9]{8}$	
