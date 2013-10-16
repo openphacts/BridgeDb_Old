@@ -42,27 +42,42 @@ import org.junit.Test;
  */
 public abstract class UriMapperSpecialTest extends UriListenerTest{
            
-    private static  final String NULL_GRAPH = null;
+    public static  final String NULL_GRAPH = null;
 
-    @Test (expected = BridgeDBException.class)
-    public void testMapIDOneBad() throws BridgeDBException{
+    @Test 
+    public void testMapIDOneBad() {
         report("MapIDOneBad");
-        Set<String> results = uriMapper.mapUri(mapBadUri1, Lens.getDefaultLens(), NULL_GRAPH);
-        assertTrue(results.size() <= 1);
+        try {
+            Set<String> results = uriMapper.mapUri(mapBadUri1, Lens.getDefaultLens(), NULL_GRAPH);
+            //if no exception there should be an empty result
+            assertTrue(results.isEmpty());
+        } catch (BridgeDBException ex){
+            //ok
+        }
     }
 
-    @Test (expected = BridgeDBException.class)
-    public void testMapFullOneBad() throws BridgeDBException{
+    @Test 
+    public void testMapFullOneBad() {
         report("MapFullOneBad");
-        Set<Mapping> results = uriMapper.mapFull(mapBadUri1, Lens.getDefaultLens());
-        assertTrue(results.size() <= 1);
+        try {
+            Set<Mapping> results = uriMapper.mapFull(mapBadUri1, Lens.getDefaultLens());
+            //if no exception there should be an empty result
+            assertTrue(results.isEmpty());
+        } catch (BridgeDBException ex){
+            //ok
+        }
     }
 
-    @Test (expected = BridgeDBException.class)
-    public void testMapFullOneBadOneNameSpace() throws BridgeDBException{
+    @Test
+    public void testMapFullOneBadOneNameSpace(){
         report("MapFullOneBadOneNameSpace");
-        Set<Mapping> results = uriMapper.mapFull(mapBadUri1, Lens.getDefaultLens(), NULL_GRAPH, regexUriPattern2);
-        assertTrue(results.size() <= 1);
+        try {
+            Set<Mapping> results = uriMapper.mapFull(mapBadUri1, Lens.getDefaultLens(), NULL_GRAPH, regexUriPattern2);
+            //if no exception there should be an empty result
+            assertTrue(results.isEmpty());
+        } catch (BridgeDBException ex){
+            //ok
+        }
     }
 
     @Test
