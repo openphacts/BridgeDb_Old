@@ -42,6 +42,7 @@ import org.bridgedb.pairs.CodeMapper;
 import org.bridgedb.pairs.IdSysCodePair;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.rdf.UriPattern;
+import org.bridgedb.rdf.identifiers.org.IdentifersOrgReader;
 import org.bridgedb.rdf.pairs.RdfBasedCodeMapper;
 import org.bridgedb.statistics.DataSetInfo;
 import org.bridgedb.statistics.MappingSetInfo;
@@ -55,6 +56,7 @@ import org.bridgedb.uri.RegexUriPattern;
 import org.bridgedb.uri.UriListener;
 import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
+import org.bridgedb.utils.ConfigReader;
 import org.openrdf.model.Resource;
 
 /**
@@ -113,18 +115,13 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 
     public static SQLUriMapper getExisting() throws BridgeDBException{
         if (mapper == null){
-            BioDataSource.init();
-            BridgeDBRdfHandler.init();
             CodeMapper codeMapper = new RdfBasedCodeMapper();
             mapper =  new SQLUriMapper(false, codeMapper);
-            Lens.init(mapper);
         }
         return mapper;
     }
     
     public static SQLUriMapper createNew() throws BridgeDBException{
-        BioDataSource.init();
-        BridgeDBRdfHandler.init();
         CodeMapper codeMapper = new RdfBasedCodeMapper();
         mapper =  new SQLUriMapper(true, codeMapper);
         return mapper;
@@ -141,7 +138,17 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
      */
      private SQLUriMapper(boolean dropTables, CodeMapper codeMapper) throws BridgeDBException{
         super(dropTables, codeMapper);
+        BioDataSource.init();
         BridgeDBRdfHandler.init();
+        try{
+            IdentifersOrgReader.init();
+        } catch (BridgeDBException ex){
+            if (ConfigReader.inTestMode()){
+                System.err.println("Ignoring error " + ex);
+            } else {
+                throw ex;
+            }
+        }
         clearUriPatterns();
         Collection<RegexUriPattern> patterns = RegexUriPattern.getUriPatterns();
         for (RegexUriPattern pattern:patterns){
