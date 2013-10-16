@@ -360,13 +360,30 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     }
  
     @Override
+    public MappingsBySysCodeId mapUriBySysCodeId (Collection<String> sourceUris, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) 
+            throws BridgeDBException {
+        if (sourceUris.size() == 1){
+            return mapUriBySysCodeId(sourceUris.iterator().next(), lensUri, graph, tgtUriPatterns);
+        } 
+        if (sourceUris.isEmpty()){
+            return new MappingsBySysCodeId();
+        }
+        Iterator<String> iterator = sourceUris.iterator();
+        MappingsBySysCodeId result = mapUriBySysCodeId(iterator.next(), lensUri, graph, tgtUriPatterns);
+        while (iterator.hasNext()){
+            result.merge(mapUriBySysCodeId(iterator.next(), lensUri, graph, tgtUriPatterns));
+        }
+        return result;
+    }
+    
+    @Override
     public MappingsBySysCodeId mapUriBySysCodeId (String sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) 
             throws BridgeDBException {
         sourceUri = scrubUri(sourceUri);
         IdSysCodePair sourceRef = toIdSysCodePair(sourceUri);
         return mapUriBySysCodeId(sourceRef, lensUri, graph, tgtUriPatterns);
     }
-    
+
     private MappingsBySysCodeId mapUriBySysCodeId (IdSysCodePair sourceRef, String lensUri, String graph, RegexUriPattern[] tgtUriPatterns) 
             throws BridgeDBException {
         Set<RegexUriPattern> targetUriPatterns = mergeGraphAndTargets(graph, tgtUriPatterns);

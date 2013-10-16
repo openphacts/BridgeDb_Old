@@ -49,6 +49,7 @@ import org.bridgedb.statistics.OverallStatistics;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.MappingsBySet;
+import org.bridgedb.uri.MappingsBySysCodeId;
 import org.bridgedb.uri.RegexUriPattern;
 import org.bridgedb.uri.SetMappings;
 import org.bridgedb.uri.UriListener;
@@ -241,6 +242,21 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
        return UriMappings.asBean(results);
     }
 
+    private MappingsBySysCodeId mapUriBySysCodeId(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns) 
+            throws BridgeDBException {
+       if (logger.isDebugEnabled()){
+            logger.debug("mapUriBySysCodeId called! ");
+            logger.debug("   uri = " + uris);             
+            logger.debug("   lensUri = " + lensUri);
+            logger.debug("   graph = " + graph);
+            if (targetUriPatterns!= null && !targetUriPatterns.isEmpty()){
+                logger.debug("   targetUriPatterns = " + targetUriPatterns);
+            }
+       }
+       RegexUriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
+       return uriMapper.mapUriBySysCodeId(lensUri, lensUri, graph, targetPatterns);
+    }
+
     @GET
     @Produces({MediaType.APPLICATION_XML})
     @Path("/" + WsUriConstants.MAP_URI)
@@ -282,9 +298,10 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             @QueryParam(WsUriConstants.TARGET_URI_PATTERN) List<String> targetUriPatterns,
             @QueryParam(WsUriConstants.FORMAT) String format,
             @Context HttpServletRequest httpServletRequest) {
-        UriMappings result = null;
+        MappingsBySysCodeId result = null;
         try {
-            result = mapUriInner(uris, lensUri, graph, targetUriPatterns);
+            RegexUriPattern[] targetPatterns = getUriPatterns(targetUriPatterns);
+            result = uriMapper.mapUriBySysCodeId(uris, lensUri, graph, targetPatterns);
         } catch (BridgeDBException exception) {
             return  mapUriHtmlResult(uris, lensUri, graph, targetUriPatterns, format, httpServletRequest, null, exception);
         }
@@ -297,19 +314,19 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
             if (noConentOnEmpty & result.isEmpty()){
                 return noContentWrapper(httpServletRequest);
             } 
-            return Response.ok(result, MediaType.APPLICATION_XML_TYPE).build();
+            return Response.ok(new UriMappings(result.getUris()), MediaType.APPLICATION_XML_TYPE).build();
         }
         else if (format.equals("application/json")){
             if (noConentOnEmpty & result.isEmpty()){
                 return noContentWrapper(httpServletRequest);
             } 
-            return Response.ok(result, MediaType.APPLICATION_JSON_TYPE).build();
+            return Response.ok(new UriMappings(result.getUris()), MediaType.APPLICATION_JSON_TYPE).build();
         }
         return  mapUriHtmlResult(uris, lensUri, graph, targetUriPatterns, format, httpServletRequest, result, null);
     }
 
     private Response mapUriHtmlResult(List<String> uris, String lensUri, String graph, List<String> targetUriPatterns,
-            String format, HttpServletRequest httpServletRequest, UriMappings result, BridgeDBException exception) {
+            String format, HttpServletRequest httpServletRequest, MappingsBySysCodeId result, BridgeDBException exception) {
         uris.remove("");
         targetUriPatterns.remove("");
         StringBuilder sb = topAndSide ("Identity Mapping Service", httpServletRequest);        
@@ -324,7 +341,7 @@ public class WSUriInterfaceService extends WSCoreService implements WSUriInterfa
         velocityContext.put("graph", graph);
         velocityContext.put("graphName", WsUriConstants.GRAPH);
         if (result != null){
-            velocityContext.put("targetUris",result.getTargetUri() );
+            velocityContext.put("MappingsBySysCodeId",result);
         } else {
             velocityContext.put("exception", exception.getMessage());
         }

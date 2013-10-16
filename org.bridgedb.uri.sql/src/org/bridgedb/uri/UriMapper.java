@@ -19,6 +19,7 @@
 //
 package org.bridgedb.uri;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import org.bridgedb.DataSource;
@@ -137,6 +138,9 @@ public interface UriMapper extends IDMapper{
             throws BridgeDBException;
 
     public MappingsBySysCodeId mapUriBySysCodeId (String sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) 
+            throws BridgeDBException;
+
+    public MappingsBySysCodeId mapUriBySysCodeId (Collection<String> sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) 
             throws BridgeDBException;
 
     public MappingsBySet mapBySet(String sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) throws BridgeDBException;

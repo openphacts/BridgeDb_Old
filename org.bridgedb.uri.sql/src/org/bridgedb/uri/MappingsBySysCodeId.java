@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.apache.log4j.Logger;
+import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
 import org.bridgedb.pairs.IdSysCodePair;
 import org.bridgedb.utils.BridgeDBException;
@@ -34,6 +36,7 @@ import org.bridgedb.utils.BridgeDBException;
 public class MappingsBySysCodeId {
     
     private Map<String,Map<String, Set<String>>> mappings = new HashMap<String,Map<String, Set<String>>>();
+    private static final Logger logger = Logger.getLogger(MappingsBySysCodeId.class);
 
     public final void addMapping(IdSysCodePair pair, String uri) {
         Map<String, Set<String>> byCode = mappings.get(pair.getSysCode());
@@ -75,15 +78,26 @@ public class MappingsBySysCodeId {
         return mappings.keySet();
     }
 
-    Set<String> getIds(String sysCode) throws BridgeDBException {
+    //Semantic sugar method for webtemplate
+    public final String getDataSourceName (String sysCode){
+        return DataSource.getExistingBySystemCode(sysCode).getFullName();
+    }
+    
+    public Set<String> getIds(String sysCode) throws BridgeDBException {
         Map<String, Set<String>> byCode = mappings.get(sysCode);
         if (byCode == null){
             throw new BridgeDBException ("No mappings known for sysCode " + sysCode);
         }
+        if (byCode.keySet().isEmpty()){
+            throw new BridgeDBException ("Empty mappings known for sysCode " + sysCode);            
+        }
+        if (logger.isDebugEnabled()){
+            logger.debug("getIDs " + sysCode + " -> " + byCode.keySet());
+        }
         return byCode.keySet();
     }
 
-    Set<String> getUri(String sysCode, String id) throws BridgeDBException {
+    public Set<String> getUris(String sysCode, String id) throws BridgeDBException {
         Map<String, Set<String>> byCode = mappings.get(sysCode);
         if (byCode == null){
             throw new BridgeDBException ("No mappings known for sysCode " + sysCode);
@@ -94,4 +108,41 @@ public class MappingsBySysCodeId {
         }
         return byId;
     }
+
+    public void merge(MappingsBySysCodeId other) {
+        for (String sysCode: other.mappings.keySet()){
+            if (mappings.containsKey(sysCode)){
+                 Map<String, Set<String>> byCode = mappings.get(sysCode);
+                 Map<String, Set<String>> otherByCode = other.mappings.get(sysCode);
+                 for (String id: otherByCode.keySet()){
+                     if (byCode.containsKey(id)){
+                         byCode.get(id).addAll(otherByCode.get(id));
+                     } else {
+                         byCode.put(id, otherByCode.get(id));
+                     }
+                 }
+            } else {
+                mappings.put(sysCode, other.mappings.get(sysCode));
+            }
+        }
+    }
+
+    public boolean isEmpty() {
+        return mappings.isEmpty();
+    }
+
+    public Set<String> getUris() {
+        Set<String> result = new HashSet<String>();
+        for (String sysCode: mappings.keySet()){
+            Map<String, Set<String>> byCode = mappings.get(sysCode);
+            for (String id: byCode.keySet()){
+                result.addAll(byCode.get(id));
+            }
+        }
+        return result;
+    }
+    
+    //public String asHtmlList(){
+    //    
+   // }
 }

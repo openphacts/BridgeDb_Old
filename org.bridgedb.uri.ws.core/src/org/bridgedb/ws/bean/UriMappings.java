@@ -47,6 +47,10 @@ public class UriMappings {
         targetUri = new HashSet<String>();
     }
     
+    public UriMappings(Set<String> targetUri){
+        this.targetUri = targetUri;
+    }
+    
     public static UriMappings asBean(Set<String> targets){
         UriMappings bean = new UriMappings();
         bean.setTargetUri(targets);

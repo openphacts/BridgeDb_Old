@@ -22,13 +22,13 @@ package org.bridgedb.ws;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import javax.ws.rs.core.Response;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
 import org.bridgedb.pairs.IdSysCodePair;
-import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.statistics.MappingSetInfo;
 import org.bridgedb.statistics.OverallStatistics;
 import org.bridgedb.uri.Mapping;
@@ -100,6 +100,22 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
     public MappingsBySysCodeId mapUriBySysCodeId(String sourceUri, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) throws BridgeDBException {
         Collection<Mapping> beans = mapFull(sourceUri, lensUri, graph, tgtUriPatterns);
         return extractMappingsBySysCodeId(beans);
+    }
+
+    @Override
+    public MappingsBySysCodeId mapUriBySysCodeId(Collection<String> sourceUris, String lensUri, String graph, RegexUriPattern... tgtUriPatterns) throws BridgeDBException {
+        if (sourceUris.size() == 1){
+            return mapUriBySysCodeId(sourceUris.iterator().next(), lensUri, graph, tgtUriPatterns);
+        } 
+        if (sourceUris.isEmpty()){
+            return new MappingsBySysCodeId();
+        }
+        Iterator<String> iterator = sourceUris.iterator();
+        MappingsBySysCodeId result = mapUriBySysCodeId(iterator.next(), lensUri, graph, tgtUriPatterns);
+        while (iterator.hasNext()){
+            result.merge(mapUriBySysCodeId(iterator.next(), lensUri, graph, tgtUriPatterns));
+        }
+        return result;
     }
 
     private MappingsBySysCodeId extractMappingsBySysCodeId(Collection<Mapping> beans) {
@@ -364,4 +380,4 @@ public class WSUriMapper extends WSCoreMapper implements UriMapper{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-   }
+}
