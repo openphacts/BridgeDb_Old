@@ -129,6 +129,8 @@ public class IdentifersOrgReader extends RdfBase {
             //ystem.out.println(statement.getObject().stringValue() + " -> " + dataSource);
             if (dataSource == null){
                 dataSource = readDataSource(repositoryConnection, catalogRecord, statement.getObject().stringValue());
+            } else {
+                compareDataSource(repositoryConnection, catalogRecord, dataSource);
             }
             //ystem.out.println(statement.getObject().stringValue() + " -> " + dataSource);
             loadExtraDataSourceInfo(repositoryConnection, catalogRecord, dataSource);
@@ -154,6 +156,20 @@ public class IdentifersOrgReader extends RdfBase {
         return ds;
     }
 
+    private void compareDataSource(RepositoryConnection repositoryConnection, Resource catalogRecord, 
+            DataSource dataSource) throws Exception{
+        String sysCode = getSingletonString(repositoryConnection, catalogRecord, IdenitifiersOrgConstants.NAMESPACE_URI);
+        String fullName = getSingletonString(repositoryConnection, catalogRecord, DCatConstants.TITLE_URI);
+        if (!dataSource.getFullName().equals(fullName)){
+            System.err.println("FullName mistamtch for " + dataSource.getSystemCode() + " BridgeDb has " + dataSource.getFullName() 
+                    + " while miriam uses " + fullName);
+        }
+        if (dataSource.getAlternative() != null && !dataSource.getAlternative().equals(fullName)){
+            System.err.println("Alternative mistamtch for " + dataSource.getSystemCode() + " BridgeDb has " + dataSource.getAlternative()
+                    + " while miriam uses " + fullName);
+        }
+    }
+    
     private void loadExtraDataSourceInfo(RepositoryConnection repositoryConnection, Resource catalogRecord, 
             DataSource dataSource) throws RepositoryException, BridgeDBException {
         if (dataSource.getExample().getId() == null){
