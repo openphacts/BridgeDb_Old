@@ -1066,12 +1066,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 
         prefix = insertEscpaeCharacters(prefix);
         postfix = insertEscpaeCharacters(postfix);
-        String dataSourceKey = getDataSourceKey(prefix, postfix);
-        if (dataSourceKey != null){
-            if (code.equals(dataSourceKey)) return; //Already known so fine.
-            throw new BridgeDBException ("UriPattern " + prefix + "$id" + postfix + " already mapped to " + dataSourceKey 
-                    + " Which does not match " + code);
-        }
+        checkExistingUriPatterns(uriPattern);
         registerUriPattern(prefix, postfix, code, regex);
     }
 
@@ -1577,7 +1572,10 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
      * @return sysCode of an existig DataSource or null
      * @throws BridgeDBException
      */
-    private String getDataSourceKey(String prefix, String postfix) throws BridgeDBException {
+    private void checkExistingUriPatterns(RegexUriPattern uriPattern) throws BridgeDBException {
+        String code = uriPattern.getSysCode();
+        String prefix = uriPattern.getPrefix();
+        String postfix = uriPattern.getPostfix();
         if (postfix == null){
             postfix = "";
         }
@@ -1588,28 +1586,36 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         query.append(URI_TABLE_NAME);
         query.append(" WHERE ");
         query.append(PREFIX_COLUMN_NAME);
-        query.append(" = '");
-        query.append(prefix);
-        query.append("' ");
-        query.append(" AND ");
+        query.append(" = ? AND ");
         query.append(POSTFIX_COLUMN_NAME);
-        query.append(" = '");
-        query.append(postfix);
-        query.append("' ");
-        Statement statement = this.createStatement();
+        query.append(" = ? ");
+        if (uriPattern.getRegex() != null){
+            query.append(" AND ");
+            query.append(REGEX_COLUMN_NAME);
+            query.append(" = ? ");
+        }
+        PreparedStatement statement = this.createPreparedStatement(query.toString());
         ResultSet rs;
         try {
-            rs = statement.executeQuery(query.toString());
+            statement.setString(1, prefix);
+            statement.setString(2, postfix);
+            if (uriPattern.getRegex() != null){
+                statement.setString(3, uriPattern.getRegex().pattern());
+            }
+            rs = statement.executeQuery();
         } catch (SQLException ex) {
             throw new BridgeDBException("Unable to run query. " + query, ex);
         }    
         try {
             if (rs.next()){
-                return rs.getString(DATASOURCE_COLUMN_NAME);
+                String dataSourceKey = rs.getString(DATASOURCE_COLUMN_NAME);
+                if (!code.equals(dataSourceKey)){
+                    throw new BridgeDBException ("UriPattern " + prefix + "$id" + postfix + " already mapped to " + dataSourceKey 
+                        + " Which does not match " + code);
+                }
             }
-            return null;
         } catch (SQLException ex) {
-            throw new BridgeDBException("Unable to get SysCode. " + query, ex);
+            throw new BridgeDBException("Unable to get SysCode. " + statement, ex);
         }    
     }
 
