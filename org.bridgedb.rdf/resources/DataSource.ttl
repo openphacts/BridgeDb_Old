@@ -1030,7 +1030,8 @@ bridgeDB:DataSource_WikiPathways a bridgeDB:DataSource ;
 	bridgeDB:hasUrlPattern <http://www.wikipathways.org/index.php/Pathway:$id> ;
 	bridgeDB:hasUriPattern <http://www.wikipathways.org/instance/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/wikipathways/$id> ;
-	bridgeDB:hasUriPattern <http://rdf.wikipathways.org/$id> .
+	bridgeDB:hasUriPattern <http://rdf.wikipathways.org/$id> ;
+	bridgeDB:hasUriPattern <http://rdf.wikipathways.org/Pathway/$id> .
 
 bridgeDB:DataSource_Wikipedia a bridgeDB:DataSource ;
 	bridgeDB:fullName "Wikipedia" ;
