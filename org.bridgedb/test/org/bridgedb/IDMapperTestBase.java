@@ -92,7 +92,7 @@ public abstract class IDMapperTestBase {
                 .idExample("1").asDataSource();
         //This DataSource MUST not be supported
         DataSourceBad = DataSource.register("TestDSBad", "TestDSBad")
-                .urlPattern("www.NotInTheURlMapper.com#$id").asDataSource();
+                .urlPattern("http://www.NotInTheURlMapper.com#$id").asDataSource();
 
         //Set of Xrefs that are expected to map together.
         //Note: Ids intentionally equals for testing of DataCollection

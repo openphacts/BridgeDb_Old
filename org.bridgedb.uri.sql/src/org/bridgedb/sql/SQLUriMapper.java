@@ -140,6 +140,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         super(dropTables, codeMapper);
         BioDataSource.init();
         BridgeDBRdfHandler.init();
+        UriPattern.registerUriPatterns();
         try{
             IdentifersOrgReader.init();
         } catch (BridgeDBException ex){

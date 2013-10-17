@@ -1797,7 +1797,7 @@ bridgeDB:DataSource_WikiPathways a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/wikipathways/$id> ;
 	bridgeDB:hasRegexPattern "WP\\d{1,5}" ;
 	dcterms:alternative "WikiPathways" ;
-	bridgeDB:hasUriPattern <http://rdf.wikipathways.org/$id> , <http://www.wikipathways.org/instance/$id> .
+	bridgeDB:hasUriPattern <http://rdf.wikipathways.org/$id> , <http://rdf.wikipathways.org/Pathway/$id> , <http://www.wikipathways.org/instance/$id> .
 
 bridgeDB:DataSource_Wikipedia a bridgeDB:DataSource ;
 	bridgeDB:fullName "Wikipedia" ;
@@ -2660,6 +2660,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://rdf.wikipathways.org/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://rdf.wikipathways.org/" .
+
+<http://rdf.wikipathways.org/Pathway/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://rdf.wikipathways.org/Pathway/" .
 
 <http://rdf.wwpdb.org/pdb/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://rdf.wwpdb.org/pdb/" .

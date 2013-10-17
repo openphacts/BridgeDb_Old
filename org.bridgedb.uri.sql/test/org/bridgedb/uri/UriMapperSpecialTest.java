@@ -24,6 +24,7 @@ import java.util.Set;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
 import org.bridgedb.rdf.UriPattern;
+import org.bridgedb.rdf.identifiers.org.IdentifersOrgReader;
 import org.bridgedb.sql.SQLListener;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.statistics.MappingSetInfo;
@@ -240,6 +241,18 @@ public abstract class UriMapperSpecialTest extends UriListenerTest{
         //ystem.out.println(end.getTime()-start.getTime());
         
     }
+    
+    @Test
+    public void testInsdcUri() throws Exception {
+        //Date start = new Date();
+        report("InsdcUri");
+        IdentifersOrgReader.init();
+        UriPattern.existingByPattern("http://identifiers.org/insdc/$id");
+
+        RegexUriPattern result = listener.toUriPattern("http://identifiers.org/insdc/AAG52984");
+        assertTrue(result != null);
+    }
+    
     
  /*       @Test
     public void testFrequency() throws IDMapperException{
