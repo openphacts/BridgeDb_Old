@@ -14,7 +14,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
@@ -104,7 +103,6 @@ public class IdentifersOrgReader extends RdfBase {
         DataSourceTxt.init();
         UriPattern.registerUriPatterns();
         BridgeDBRdfHandler.init();
-        URL url = new URL("http://www.ebi.ac.uk/miriam/main/export/registry.ttl");
         init();
         
         File mergedFile = new File("resources/IdentifiersOrgDataSource.ttl");
@@ -126,13 +124,11 @@ public class IdentifersOrgReader extends RdfBase {
             Statement statement = statements.next();
             DataSource dataSource = DataSource.getByIdentiferOrgBase(statement.getObject().stringValue());
             Resource catalogRecord = statement.getSubject();  
-            //ystem.out.println(statement.getObject().stringValue() + " -> " + dataSource);
             if (dataSource == null){
                 dataSource = readDataSource(repositoryConnection, catalogRecord, statement.getObject().stringValue());
             } else {
                 compareDataSource(repositoryConnection, catalogRecord, dataSource);
             }
-            //ystem.out.println(statement.getObject().stringValue() + " -> " + dataSource);
             loadExtraDataSourceInfo(repositoryConnection, catalogRecord, dataSource);
             Pattern regex = loadRegex(repositoryConnection, catalogRecord, dataSource);
             loadUriPatterns(repositoryConnection, catalogRecord, dataSource, regex);
