@@ -124,15 +124,15 @@ public abstract class UriListenerTest extends IDMapperTestBase{
    
     @BeforeClass
     public static void setupUris() throws BridgeDBException{
-        map1Axref1 = new Xref(ds1Id1+"_A", DataSource1);
-        map1Axref2 = new Xref(ds2Id1+"_A", DataSource2);
-        map1Axref3 = new Xref(ds3Id1+"_A", DataSource3);
-        map2Axref1 = new Xref("bd42675d-9966-48f5-b42e-f6a0c5ec6794_A", DataSource1);
-        map2Axref2 = new Xref(ds2Id2+"_A", DataSource2);
-        map2Axref3 = new Xref("370186_A", DataSource3);
-        map3Axref1 = new Xref("9d4a6a08-6757-4ff2-98c1-e3c8b3e095cc_A", DataSource1);
-        map3Axref2 = new Xref(ds2Id3+"_A" , DataSource2);
-        map3Axref3 = new Xref("520018_A", DataSource3);
+        map1Axref1 = new Xref(ds1Id1+"000001", DataSource1);
+        map1Axref2 = new Xref(ds2Id1+"000001", DataSource2);
+        map1Axref3 = new Xref(ds3Id1+"000001", DataSource3);
+        map2Axref1 = new Xref("bd42675d-9966-48f5-b42e-f6a0c5ec6794000001", DataSource1);
+        map2Axref2 = new Xref(ds2Id2+"000001", DataSource2);
+        map2Axref3 = new Xref("370186000001", DataSource3);
+        map3Axref1 = new Xref("9d4a6a08-6757-4ff2-98c1-e3c8b3e095cc000001", DataSource1);
+        map3Axref2 = new Xref(ds2Id3+"000001" , DataSource2);
+        map3Axref3 = new Xref("520018000001", DataSource3);
 
         uriSpace1 = "http://www.conceptwiki.org/concept/";
         uriSpace2 = "http://www.chemspider.com/";
@@ -151,14 +151,14 @@ public abstract class UriListenerTest extends IDMapperTestBase{
         map1Uri2 = uriSpace2 + ds2Id1;
         map1Uri3 = map1xref3.getUrl();
         map1AUri1 = map1Axref1.getUrl();
-        map1AUri2 = uriSpace2 + ds2Id1+"_A";
+        map1AUri2 = uriSpace2 + ds2Id1+"000001";
         map1AUri3 = map1Axref3.getUrl();
         //Second set of URLs that are expected to map together.
         map2Uri1 = map2xref1.getUrl();
         map2Uri2 = uriSpace2 + ds2Id2;
         map2Uri3 = map2xref3.getUrl();
         map2AUri1 = map2Axref1.getUrl();
-        map2AUri2 = uriSpace2 + ds2Id2+"_A";
+        map2AUri2 = uriSpace2 + ds2Id2+"000001";
         map2AUri3 = map2Axref3.getUrl();
         //Third Set of URLs which again should map to each other but not the above
         map3Uri1 = map3xref1.getUrl();
@@ -166,8 +166,8 @@ public abstract class UriListenerTest extends IDMapperTestBase{
         map3Uri2a = uriSpace2a + ds2Id3;
         map3Uri3 = map3xref3.getUrl();
         map3AUri1 = map3Axref1.getUrl();
-        map3AUri2 = uriSpace2 + ds2Id3+"_A";
-        map3AUri2a = uriSpace2a + ds2Id3+"_A";
+        map3AUri2 = uriSpace2 + ds2Id3+"000001";
+        map3AUri2a = uriSpace2a + ds2Id3+"000001";
         map3AUri3 = map3Axref3.getUrl();
          //And a few Uris also not used
         mapBadUri1 = "www.notInUriMapper.com#" + ds1Id1;

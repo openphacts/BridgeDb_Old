@@ -104,7 +104,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     private static final String MIMETYPE_COLUMN_NAME = "mimetype";
     private static final String NAME_COLUMN_NAME = "name";
     private static final String REGEX_COLUMN_NAME = "regex";
-    
+        
     static final String VIA_DATASOURCE_COLUMN_NAME = "viaDataSource";
     
     private static SQLUriMapper mapper = null;
@@ -1270,31 +1270,57 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     //TODO check regex
     @Override
     public void insertUriMapping(String sourceUri, String targetUri, int mappingSetId, boolean symetric) throws BridgeDBException {
-        RegexUriPattern uriPattern = subjectUriPatterns.get(mappingSetId);
-        if (uriPattern == null){
+        boolean ok = true;
+        RegexUriPattern sourceUriPattern = subjectUriPatterns.get(mappingSetId);
+        if (sourceUriPattern == null){
             throw new BridgeDBException("No SourceURIPattern regstered for mappingSetId " + mappingSetId);
         }
-        int end = sourceUri.length() - uriPattern.getPostfix().length();
-        if (!sourceUri.startsWith(uriPattern.getPrefix())){
-            throw new BridgeDBException("SourceUri: " + sourceUri + " does not mathc the registered pattern "+uriPattern);
+        int end = sourceUri.length() - sourceUriPattern.getPostfix().length();
+        if (!sourceUri.startsWith(sourceUriPattern.getPrefix())){
+            throw new BridgeDBException("SourceUri: " + sourceUri + " does not match the registered pattern "+sourceUriPattern);
         }
-        if (!sourceUri.endsWith(uriPattern.getPostfix())){
-            throw new BridgeDBException("SourceUri: " + sourceUri + " does not mathc the registered pattern "+uriPattern);
+        if (!sourceUri.endsWith(sourceUriPattern.getPostfix())){
+            throw new BridgeDBException("SourceUri: " + sourceUri + " does not match the registered pattern "+sourceUriPattern);
         }
-        String sourceId = sourceUri.substring(uriPattern.getPrefix().length(), end);
-        uriPattern = targetUriPatterns.get(mappingSetId);
-        if (uriPattern == null){
+        String sourceId = sourceUri.substring(sourceUriPattern.getPrefix().length(), end);
+        if (sourceUriPattern.getRegex() != null){
+            Matcher matcher = sourceUriPattern.getRegex().matcher(sourceId);
+            if (!matcher.matches()){
+                if (!sourceUri.endsWith("-201")){
+                    System.err.println(sourceUri + '"' + sourceId + '"');
+                    System.err.println(sourceUriPattern.getRegex().pattern());
+                }
+                ok = false;
+            } 
+        }
+  
+        RegexUriPattern targetUriPattern = targetUriPatterns.get(mappingSetId);
+        if (targetUriPattern == null){
             throw new BridgeDBException("No TargetURIPattern regstered for mappingSetId " + mappingSetId);
         }
-        if (!targetUri.startsWith(uriPattern.getPrefix())){
-            throw new BridgeDBException("TargetUri: " + targetUri + " does not mathc the registered pattern "+uriPattern);
+        if (!targetUri.startsWith(targetUriPattern.getPrefix())){
+            throw new BridgeDBException("TargetUri: " + targetUri + " does not match the registered pattern "+targetUriPattern);
         }
-        if (!targetUri.endsWith(uriPattern.getPostfix())){
-            throw new BridgeDBException("TargetUri: " + targetUri + " does not mathc the registered pattern "+uriPattern);
+        if (!targetUri.endsWith(targetUriPattern.getPostfix())){
+            throw new BridgeDBException("TargetUri: " + targetUri + " does not match the registered pattern "+sourceUriPattern);
         }
-        end = targetUri.length()-uriPattern.getPostfix().length();
-        String targetId = targetUri.substring(uriPattern.getPrefix().length(), end);
-        this.insertLink(sourceId, targetId, mappingSetId, symetric);
+        end = targetUri.length() - targetUriPattern.getPostfix().length();
+        String targetId = targetUri.substring(targetUriPattern.getPrefix().length(), end);
+        if (targetUriPattern.getRegex() != null){
+            Matcher matcher = targetUriPattern.getRegex().matcher(targetId);
+            if (!matcher.matches()){
+                if (!targetUri.endsWith("-201")){
+                    System.err.println(targetUri + '"' + targetId + '"');
+                    System.err.println(targetUriPattern.getRegex().pattern());
+                    System.err.println(targetUriPattern.getSysCode());
+                }
+                ok = false;
+            } 
+        }
+
+        if (ok){
+            this.insertLink(sourceId, targetId, mappingSetId, symetric);
+        }
     }
 
     @Override
