@@ -110,7 +110,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
     private static SQLUriMapper mapper = null;
     private HashMap<Integer,RegexUriPattern> subjectUriPatterns;
     private HashMap<Integer,RegexUriPattern> targetUriPatterns;
-    
+    private boolean processingRawLinkset = true;
+            
     static final Logger logger = Logger.getLogger(SQLListener.class);
 
     public static SQLUriMapper getExisting() throws BridgeDBException{
@@ -1237,7 +1238,10 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
 
     private void registerVia(int mappingSetId, Set<String> viaLabels) throws BridgeDBException {
         if (viaLabels == null || viaLabels.isEmpty() ){
+            processingRawLinkset = true;
             return;
+        } else {
+            processingRawLinkset = false;
         }
         Iterator<String> labels = viaLabels.iterator(); 
         StringBuilder insert = new StringBuilder("INSERT INTO ");
@@ -1283,16 +1287,6 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             throw new BridgeDBException("SourceUri: " + sourceUri + " does not match the registered pattern "+sourceUriPattern);
         }
         String sourceId = sourceUri.substring(sourceUriPattern.getPrefix().length(), end);
-        if (sourceUriPattern.getRegex() != null){
-            Matcher matcher = sourceUriPattern.getRegex().matcher(sourceId);
-            if (!matcher.matches()){
-                if (!sourceUri.endsWith("-201")){
-                    System.err.println(sourceUri + '"' + sourceId + '"');
-                    System.err.println(sourceUriPattern.getRegex().pattern());
-                }
-                ok = false;
-            } 
-        }
   
         RegexUriPattern targetUriPattern = targetUriPatterns.get(mappingSetId);
         if (targetUriPattern == null){
@@ -1306,16 +1300,29 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
         }
         end = targetUri.length() - targetUriPattern.getPostfix().length();
         String targetId = targetUri.substring(targetUriPattern.getPrefix().length(), end);
-        if (targetUriPattern.getRegex() != null){
-            Matcher matcher = targetUriPattern.getRegex().matcher(targetId);
-            if (!matcher.matches()){
-                if (!targetUri.endsWith("-201")){
-                    System.err.println(targetUri + '"' + targetId + '"');
-                    System.err.println(targetUriPattern.getRegex().pattern());
-                    System.err.println(targetUriPattern.getSysCode());
-                }
-                ok = false;
-            } 
+        
+        if (processingRawLinkset){
+            if (sourceUriPattern.getRegex() != null){
+                Matcher matcher = sourceUriPattern.getRegex().matcher(sourceId);
+                if (!matcher.matches()){
+                    if (!sourceUri.endsWith("-201")){
+                        System.err.println(sourceUri + '"' + sourceId + '"');
+                        System.err.println(sourceUriPattern.getRegex().pattern());
+                    }
+                    ok = false;
+                } 
+            }
+            if (targetUriPattern.getRegex() != null){
+                Matcher matcher = targetUriPattern.getRegex().matcher(targetId);
+                if (!matcher.matches()){
+                    if (!targetUri.endsWith("-201")){
+                        System.err.println(targetUri + '"' + targetId + '"');
+                        System.err.println(targetUriPattern.getRegex().pattern());
+                        System.err.println(targetUriPattern.getSysCode());
+                    }
+                    ok = false;
+                } 
+            }
         }
 
         if (ok){
