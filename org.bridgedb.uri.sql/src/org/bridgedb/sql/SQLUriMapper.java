@@ -57,6 +57,7 @@ import org.bridgedb.uri.UriListener;
 import org.bridgedb.uri.UriMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
+import org.bridgedb.utils.Reporter;
 import org.openrdf.model.Resource;
 
 /**
@@ -810,20 +811,30 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             String postfix = null;
             String regex = null;
             String id = null;
+            IdSysCodePair result = null;
             while(rs.next()){
                 String sysCode = rs.getString(DATASOURCE_COLUMN_NAME);
-                prefix = rs.getString(PREFIX_COLUMN_NAME);
-                postfix = rs.getString(POSTFIX_COLUMN_NAME);
-                regex = rs.getString (REGEX_COLUMN_NAME);
-                id = uri.substring(prefix.length(), uri.length()-postfix.length());
-                if (regex == null){
-                    return new IdSysCodePair(id, sysCode);                    
+                if (result == null || DataSourceMetaDataProvidor.compare(result.getSysCode(), sysCode) > 0){
+                    prefix = rs.getString(PREFIX_COLUMN_NAME);
+                    postfix = rs.getString(POSTFIX_COLUMN_NAME);
+                    regex = rs.getString (REGEX_COLUMN_NAME);
+                    id = uri.substring(prefix.length(), uri.length()-postfix.length());
+                    if (regex == null){
+                        result = new IdSysCodePair(id, sysCode);                    
+                    } else {
+                        Pattern pattern = Pattern.compile(regex);
+                        Matcher matcher = pattern.matcher(id);
+                        if (matcher.matches()){
+                            result = new IdSysCodePair(id, sysCode);
+                        //} else {
+                            //ystem.out.println("no match " + uri + " -> " + prefix);
+                        }
+                    }
                 }
-                Pattern pattern = Pattern.compile(regex);
-                Matcher matcher = pattern.matcher(id);
-                if (matcher.matches()){
-                    return new IdSysCodePair(id, sysCode);
-                } 
+            }
+                //Should do some checking here but until there is a reason
+            if (result != null){
+                return result;
             }
             if (prefix == null){
                 throw new BridgeDBException("Unknown uri " + uri);
