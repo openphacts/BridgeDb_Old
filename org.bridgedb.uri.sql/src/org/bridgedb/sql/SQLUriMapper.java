@@ -39,6 +39,7 @@ import org.bridgedb.Xref;
 import org.bridgedb.pairs.CodeMapper;
 import org.bridgedb.pairs.IdSysCodePair;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
+import org.bridgedb.rdf.DataSourceMetaDataProvidor;
 import org.bridgedb.rdf.DataSourceTxtReader;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.rdf.identifiers.org.IdentifersOrgReader;
@@ -876,9 +877,16 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 Matcher matcher = regexPattern.matcher(id);
                 if (matcher.matches()){
                     if (result != null){
-                         RegexUriPattern second = RegexUriPattern.factory(prefix, postfix, sysCode, regexPattern);
-                         throw new BridgeDBException ("Uri " + uri + " maps to two different regex patterns " 
-                                 + result + " and " + second);
+                         if (DataSourceMetaDataProvidor.compare(result.getSysCode(), sysCode) > 0){
+                             //ystem.out.println("ignoring possible " + result.getSysCode());
+                             result = RegexUriPattern.factory(prefix, postfix, sysCode, regexPattern);
+                         } else if (DataSourceMetaDataProvidor.compare(result.getSysCode(), sysCode) == 0){
+                            RegexUriPattern second = RegexUriPattern.factory(prefix, postfix, sysCode, regexPattern);
+                            throw new BridgeDBException ("Uri " + uri + " maps to two different regex patterns " 
+                                     + result + " and " + second);
+                         //} else {
+                            //ystem.out.println("ignoring possible " + sysCode);
+                         } //if > 0 do nothing as first answer is better
                     } else {
                         result = RegexUriPattern.factory(prefix, postfix, sysCode, regexPattern);
                     }
