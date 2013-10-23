@@ -36,7 +36,7 @@ public class DataSourceTxtTest {
         BufferedWriter writer = new BufferedWriter(new FileWriter(generated));
         DataSourceTxt.writeToBuffer(writer);
         InputStream is = new FileInputStream(generated);
-        DataSourceTxt.loadInputStrem(is);
+        DataSourceTxt.loadInputStream(is);
     }
 
 }

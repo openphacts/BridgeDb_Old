@@ -27,8 +27,8 @@ import java.util.TreeSet;
 import java.util.regex.Pattern;
 import org.bridgedb.DataSource;
 import org.bridgedb.DataSourcePatterns;
-import org.bridgedb.bio.DataSourceTxt;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
+import org.bridgedb.rdf.DataSourceTxtReader;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.rdf.UriPatternType;
 import org.bridgedb.rdf.identifiers.org.IdentifersOrgReader;
@@ -250,7 +250,7 @@ public class RegexUriPattern {
     }
 
     public static void main(String[] args) throws Exception {
-        DataSourceTxt.init();
+        DataSourceTxtReader.init();
         UriPattern.registerUriPatterns();
         BridgeDBRdfHandler.init();
         IdentifersOrgReader.init();

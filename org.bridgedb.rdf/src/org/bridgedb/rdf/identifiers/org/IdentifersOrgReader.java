@@ -33,8 +33,8 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.DataSourcePatterns;
-import org.bridgedb.bio.DataSourceTxt;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
+import org.bridgedb.rdf.DataSourceTxtReader;
 import org.bridgedb.rdf.RdfBase;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.rdf.UriPatternType;
@@ -115,7 +115,7 @@ public class IdentifersOrgReader extends RdfBase {
     }
     
     public static void main(String[] args) throws Exception {
-        DataSourceTxt.init();
+        DataSourceTxtReader.init();
         UriPattern.registerUriPatterns();
         BridgeDBRdfHandler.init();
         init();
@@ -126,9 +126,9 @@ public class IdentifersOrgReader extends RdfBase {
         
         File textFile = new File("resources/IdentifiersOrgDataSource.txt");
         BufferedWriter writer = new BufferedWriter(new FileWriter(textFile));
-        DataSourceTxt.writeToBuffer(writer);
+        DataSourceTxtReader.writeToBuffer(writer);
         InputStream is = new FileInputStream(textFile);
-        DataSourceTxt.loadInputStrem(is);
+        DataSourceTxtReader.loadInputStream(is);
     }
 
     private void loadData(RepositoryConnection repositoryConnection) throws Exception{

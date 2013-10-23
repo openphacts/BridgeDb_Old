@@ -25,7 +25,7 @@ public class BridgeDBRdfHandlerTest {
     @Test
     public void testInit() throws Exception {
         Reporter.println("init");
-        BioDataSource.init();
+        DataSourceTxtReader.init();
         UriPattern.registerUriPatterns();
         UriPattern.refreshUriPatterns(); 
         BridgeDBRdfHandler.init();

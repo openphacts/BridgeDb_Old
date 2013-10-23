@@ -38,59 +38,68 @@ public class DataSourceTxt
 	{
         try{
     		InputStream is = DataSourceTxt.class.getClassLoader().getResourceAsStream("org/bridgedb/bio/datasources.txt");	
-            loadInputStrem(is);
+            new DataSourceTxt().loadAnInputStream(is);
 		}
 		catch (IOException ex)
 		{
 			throw new Error(ex);
 		}
 	}
-    
-	public static void loadInputStrem(InputStream is) throws IOException 
+      
+    public static void loadInputStream(InputStream is) throws IOException{
+        new DataSourceTxt().loadAnInputStream(is);
+    }
+
+    protected void loadAnInputStream(InputStream is) throws IOException 
 	{
 		BufferedReader reader = new BufferedReader (
 				new InputStreamReader (is));
 		String line;
         while ((line = reader.readLine()) != null) {
             String[] fields = line.split ("\\t");
-            DataSource.Builder builder = DataSource.register
-                (fields[1], // system code 
-                fields[0]); // gpml name
-            if (fields.length > 2 && fields[2].length() > 0) {
-                builder.mainUrl(fields[2]);
-            }
-            if (fields.length > 3 && fields[3].length() > 0) {
-                builder.urlPattern(fields[3]);
-            }
-            if (fields.length > 4 && fields[4].length() > 0) {
-                builder.idExample(fields[4]);
-            }
-            if (fields.length > 5 && fields[5].length() > 0) {
-                builder.type(fields[5]);
-            }
-            if (fields.length > 6 && fields[6].length() > 0) {
-                builder.organism(Organism.fromLatinName(fields[6]));
-            }					      
-            if (fields.length > 7 && fields[7].length() > 0) {
-                builder.primary (fields[7].equals ("1"));
-            }					      
-            if (fields.length > 8) {
-                builder.urnBase(fields[8]);
-            }
-            if (fields.length > 9) {
-                String patternString = fields[9];
-                try {
-                    Pattern pattern = Pattern.compile(patternString);
-                    DataSourcePatterns.registerPattern(builder.asDataSource(), pattern);
-                } catch (Exception ex){
-                    throw new IllegalArgumentException("Unable to parse pattern " + patternString + " for " + builder.asDataSource(), ex);
-                }    
-            }
-            if (fields.length > 10) builder.alternative(fields[10]);
+            loadLine(fields);
         }		
 	}
 
-	public static void writeToBuffer(BufferedWriter writer) throws IOException {
+	protected void loadLine(String[] fields) throws IOException 
+	{
+        DataSource.Builder builder = DataSource.register
+            (fields[1], // system code 
+            fields[0]); // gpml name
+        if (fields.length > 2 && fields[2].length() > 0) {
+            builder.mainUrl(fields[2]);
+        }
+        if (fields.length > 3 && fields[3].length() > 0) {
+            builder.urlPattern(fields[3]);
+        }
+        if (fields.length > 4 && fields[4].length() > 0) {
+            builder.idExample(fields[4]);
+        }
+        if (fields.length > 5 && fields[5].length() > 0) {
+            builder.type(fields[5]);
+        }
+        if (fields.length > 6 && fields[6].length() > 0) {
+            builder.organism(Organism.fromLatinName(fields[6]));
+        }					      
+        if (fields.length > 7 && fields[7].length() > 0) {
+            builder.primary (fields[7].equals ("1"));
+        }					      
+        if (fields.length > 8) {
+            builder.urnBase(fields[8]);
+        }
+        if (fields.length > 9) {
+            String patternString = fields[9];
+            try {
+                Pattern pattern = Pattern.compile(patternString);
+                DataSourcePatterns.registerPattern(builder.asDataSource(), pattern);
+            } catch (Exception ex){
+                throw new IllegalArgumentException("Unable to parse pattern " + patternString + " for " + builder.asDataSource(), ex);
+            }    
+        }
+        if (fields.length > 10) builder.alternative(fields[10]);
+    }		
+
+    public static void writeToBuffer(BufferedWriter writer) throws IOException {
         TreeSet sorted = new TreeSet<DataSource>(new DataSourceComparator());
         sorted.addAll(DataSource.getDataSources());
         writeToBuffer(writer, sorted);

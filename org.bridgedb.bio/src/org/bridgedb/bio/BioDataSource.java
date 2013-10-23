@@ -590,7 +590,7 @@ public class BioDataSource
 		InputStream is = BioDataSource.class.getClassLoader().getResourceAsStream("org/bridgedb/bio/datasources.txt");
 		try
 		{
-            DataSourceTxt.loadInputStrem(is);
+            DataSourceTxt.loadInputStream(is);
 			InternalUtils.readXmlConfig(
 					new InputSource(
 							BioDataSource.class.getClassLoader().getResourceAsStream(
