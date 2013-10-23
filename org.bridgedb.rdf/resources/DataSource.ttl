@@ -267,6 +267,15 @@ bridgeDB:DataSource_drugbankDrugs a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/drugbank/$id> ;
 	bridgeDB:hasUriPattern <http://bio2rdf.org/drugbank:$id> .
 
+bridgeDB:DataSource_drugbankEnzyme a bridgeDB:DataSource ;
+	bridgeDB:fullName "Dugbank Enzymes" ;
+	bridgeDB:systemCode "drugbankEnzymes" ;
+	bridgeDB:idExample "1" ;
+	bridgeDB:mainUrl "http://www.drugbank.ca/" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" ;
+	bridgeDB:hasUrlPattern <http://www4.wiwiss.fu-berlin.de/drugbank/resource/enzymes/$id> .
+
 bridgeDB:DataSource_EcoGene a bridgeDB:DataSource ;
 	bridgeDB:fullName "EcoGene" ;
 	bridgeDB:systemCode "Ec" ;
