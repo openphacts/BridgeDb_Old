@@ -861,7 +861,8 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
             rs = statement.executeQuery(query.toString());
         } catch (SQLException ex) {
             throw new BridgeDBException("Unable to run query. " + query, ex);
-        }    
+        }  
+        RegexUriPattern result = null;
         try {
             while(rs.next()){
                 String prefix = rs.getString(PREFIX_COLUMN_NAME);
@@ -875,10 +876,16 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
                 String id = uri.substring(prefix.length(), uri.lastIndexOf(postfix));
                 Matcher matcher = regexPattern.matcher(id);
                 if (matcher.matches()){
-                    return RegexUriPattern.factory(prefix, postfix, sysCode, regexPattern);
+                    if (result != null){
+                         RegexUriPattern second = RegexUriPattern.factory(prefix, postfix, sysCode, regexPattern);
+                         throw new BridgeDBException ("Uri " + uri + " maps to two different regex patterns " 
+                                 + result + " and " + second);
+                    } else {
+                        result = RegexUriPattern.factory(prefix, postfix, sysCode, regexPattern);
+                    }
                 }
             }
-            return null;
+            return result;
         } catch (SQLException ex) {
             throw new BridgeDBException("Unable to get uriSpace. " + query, ex);
         }    

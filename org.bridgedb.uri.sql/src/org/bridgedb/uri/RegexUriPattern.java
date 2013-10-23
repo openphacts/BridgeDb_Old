@@ -100,6 +100,7 @@ public class RegexUriPattern {
         if (regex != null){
             result = result + " (" + regex.pattern() + ")";
         }
+        result+= " for DataSource " + sysCode;
         return result;
     }
     
