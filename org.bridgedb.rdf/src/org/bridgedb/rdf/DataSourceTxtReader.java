@@ -33,7 +33,7 @@ public class DataSourceTxtReader extends DataSourceTxt {
     @Override
     protected void loadLine(String[] fields) throws IOException {
         super.loadLine(fields);
-        System.out.println(fields[1]);
+        DataSourceMetaDataProvidor.setProvidor(fields[1], DataSourceMetaDataProvidor.BIO);
     }
 
 }

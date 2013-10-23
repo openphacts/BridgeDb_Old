@@ -198,6 +198,8 @@ public class BridgeDBRdfHandler extends RdfBase{
  
         readCodeMapper (repositoryConnection, systemCode, regex);
         
+        DataSourceMetaDataProvidor.setProvidor(systemCode, DataSourceMetaDataProvidor.RDF);
+
         return builder.asDataSource();
     }
     

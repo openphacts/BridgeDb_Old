@@ -34,6 +34,8 @@ import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.DataSourcePatterns;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
+import org.bridgedb.rdf.DataSourceMetaDataProvidor;
+import org.bridgedb.rdf.DataSourceMetaDataProvidor;
 import org.bridgedb.rdf.DataSourceTxtReader;
 import org.bridgedb.rdf.RdfBase;
 import org.bridgedb.rdf.UriPattern;
@@ -164,6 +166,7 @@ public class IdentifersOrgReader extends RdfBase {
         DataSource ds = DataSource.register(sysCode, fullName)
                 .identifiersOrgBase(identiferOrgBase)
                 .asDataSource();
+        DataSourceMetaDataProvidor.setProvidor(sysCode, DataSourceMetaDataProvidor.MIRIAM_ONLY);
         return ds;
     }
 
