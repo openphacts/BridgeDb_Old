@@ -32,6 +32,7 @@ import org.bridgedb.IDMapper;
 import org.bridgedb.IDMapperCapabilities;
 import org.bridgedb.IDMapperException;
 import org.bridgedb.Xref;
+import org.bridgedb.XrefIterator;
 import org.bridgedb.impl.InternalUtils;
 import org.bridgedb.utils.BridgeDBException;
 
@@ -42,7 +43,7 @@ import org.bridgedb.utils.BridgeDBException;
  *
  * @author Christian
  */
-public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabilities {
+public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabilities, XrefIterator {
 
     /** 
      * FreeSearch has proven to be very slow over large database so for large database we say it is unsupported.
@@ -588,6 +589,19 @@ public class SQLIdMapper extends SQLListener implements IDMapper, IDMapperCapabi
         query.append(" = ");
         query.append(MAPPING_SET_DOT_ID_COLUMN_NAME);
      }
+
+    @Override
+    public Iterable<Xref> getIterator(DataSource ds) throws IDMapperException {
+        StringBuilder query = new StringBuilder ("SELECT ");
+        query.append(SOURCE_ID_COLUMN_NAME);
+        query.append(", ");
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Iterable<Xref> getIterator() throws IDMapperException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 
 }

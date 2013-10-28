@@ -72,8 +72,8 @@ public class SQLListener extends SQLBase implements MappingListener{
 
     static final String PROPERTY_COLUMN_NAME = "property";
     static final String SCHEMA_VERSION_COLUMN_NAME = "schemaversion"; //Do not change as used by RDG packages as well
-    static final String SOURCE_DATASOURCE_COLUMN_NAME = "sourceDataSource";
-    static final String SOURCE_ID_COLUMN_NAME = "sourceId";
+    public static final String SOURCE_DATASOURCE_COLUMN_NAME = "sourceDataSource";
+    public static final String SOURCE_ID_COLUMN_NAME = "sourceId";
     static final String SYMMETRIC_COLUMN_NAME = "symmetric";
     static final String SYSCODE_COLUMN_NAME = "sysCode";
     static final String TARGET_ID_COLUMN_NAME = "targetId";
