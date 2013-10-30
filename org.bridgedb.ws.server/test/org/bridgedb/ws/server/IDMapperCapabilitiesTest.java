@@ -37,7 +37,7 @@ public class IDMapperCapabilitiesTest extends org.bridgedb.utils.IDMapperCapabil
     
     @BeforeClass
     public static void setupIDMapper() throws IDMapperException, MalformedURLException{
-        File INTERFACE_TEST_FILE = new File ("../org.bridgedb/test-data/interfaceTest.txt");
+        File INTERFACE_TEST_FILE = new File ("test-data/interfaceTest.txt");
         IDMapper inner = new IDMapperText(INTERFACE_TEST_FILE.toURL());
         WSCoreInterface  webService = new WSCoreService(inner);
         capabilities = new WSCoreMapper(webService);
