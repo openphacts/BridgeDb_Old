@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.bridgedb</groupId>
     <artifactId>org.bridgedb.server</artifactId>
-    <name>BridgeDb Server</name>
+    <name>OPS BridgeDb Server</name>
     <description>Restful service</description>
     <parent>
         <artifactId>bridgedb-bundle</artifactId>
         <groupId>org.bridgedb</groupId>
-        <version>2.1.1-SNAPSHOT</version>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
     <build>
         <directory>target</directory>
