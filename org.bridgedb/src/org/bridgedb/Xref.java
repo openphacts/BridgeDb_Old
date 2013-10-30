@@ -105,7 +105,9 @@ public class Xref implements Comparable<Xref>
 	}
 	
 	/**
-	 * Uses DataSource.getUrl() to create a valid URL for an online webpage describing this entity.
+	 * Uses DataSource.getKnownUrl to create a valid URL for an online webpage describing this entity.
+     * 
+     * @since Version 2.0.0
 	 * @return url as a String, or null if no UriPattern is known.
 	 */
 	public String getKnownUrl()
@@ -115,8 +117,7 @@ public class Xref implements Comparable<Xref>
 	}
 
     /**
-	 * Uses DataSource.getURN() to create a global identifier, such as
-	 * urn:miriam:uniprot:P12345. 
+	 * Uses DataSource.getURN() to create a global identifier, such as urn:miriam:uniprot:P12345. 
      * 
      * Depricated as this method is inconsistant as to the type of urn returned
      * @deprecated 
@@ -128,9 +129,10 @@ public class Xref implements Comparable<Xref>
 	}
 	
 	/**
-	 * Uses DataSource.getURN() to create a global identifier, such as
-	 * urn:miriam:uniprot:P12345. 
- 	 * @return the URN as string  or null if no valid miriam urn is known
+	 * Uses DataSource.getMiriamURN() to create a global identifier, such as urn:miriam:uniprot:P12345. 
+     * 
+ 	 * @since Version 2.0.0
+     * @return the URN as string  or null if no valid miriam urn is known
 	 */
 	public String getMiriamURN()
 	{
@@ -139,6 +141,8 @@ public class Xref implements Comparable<Xref>
     
     /**
      * This method will convert a known Miraim Urn to an Xref
+     * 
+     * @since Version 2.0.0
      * @param urn
      * @return A Xref or null if the urn is not in Miriam Format or 
      */
@@ -165,7 +169,10 @@ public class Xref implements Comparable<Xref>
 	}
     
     /**
+     * Returns an xref based on this urn, even if it has to create a new DataSource to do so
+     * 
      * This method could end up creating an previously none existing DataSource so is not recommended.
+     * 
      * @param urn
      * @deprecated 
      * @return 
