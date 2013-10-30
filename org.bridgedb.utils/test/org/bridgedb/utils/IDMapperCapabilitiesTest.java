@@ -33,7 +33,7 @@ public abstract class IDMapperCapabilitiesTest extends org.bridgedb.IDMapperCapa
 
     @BeforeClass
     public static void setup() throws BridgeDBException{
-        TestUtils.setup();
+        ConfigReader.configureLogger();
     }
     
     @Override
