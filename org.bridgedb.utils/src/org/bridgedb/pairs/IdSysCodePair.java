@@ -22,7 +22,19 @@ package org.bridgedb.pairs;
 import org.bridgedb.Xref;
 
 /**
- * A thin wrapper around two String which represent the Id and dataSourceCode parts of a protential Xref.
+ * A thin wrapper around two String which represent the Id and dataSourceCode parts of a potential Xref.
+ * 
+ * This is required as there may be case where the ID saved in the database is different to the typical one in the xref.
+ * This is required for xrefs like "ChEBI"
+ * These refs contain "CHEBI:" as part of the id. Such as CHEBI:36927
+ * Which is fine for URIs like:
+ * http://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:36927 or
+ * http://identifiers.org/obo.chebi/CHEBI:36927
+ * but does not work for others like:
+ * http://purl.org/obo/owl/CHEBI#CHEBI_36927 or
+ * http://purl.obolibrary.org/obo/CHEBI_36927
+ * 
+ * Only in cases like the one above where this is required will the id nd syscode not be the same as xref.id and dataSource.systemCode
  * 
  * @author Christian
  */
