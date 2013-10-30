@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
 public class Reporter {
     
     static final Logger logger = Logger.getLogger(Reporter.class);
+   
     /**
      * Messages that should always goto the System out stream.
      * This method just for the ease of searching for System,out lines added for debugging.
@@ -40,12 +41,31 @@ public class Reporter {
      */
     
     public static void println(String message){
-        logger.info(message);
+        if (ConfigReader.loggerSetup){
+            logger.info(message);
+        }
         System.out.println(message);
     }
 
+    public static void warn(String message){
+        if (ConfigReader.loggerSetup){
+            logger.warn(message);
+        }
+        System.out.println(message);
+    }
+    
     public static void error(String message){
-        logger.error(message);
+        if (ConfigReader.loggerSetup){
+            logger.error(message);
+        }
         System.err.println(message);
+    }
+
+    public static void error(String message, Exception ex){
+        if (ConfigReader.loggerSetup){
+            logger.error(message, ex);
+        }
+        System.err.println(message);
+        System.err.println(ex);
     }
 }

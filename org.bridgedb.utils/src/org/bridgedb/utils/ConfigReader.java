@@ -25,10 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.security.CodeSource;
 import java.util.Properties;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -56,7 +53,7 @@ public class ConfigReader {
     private Properties properties = null;
     
     protected static boolean useTest = false;
-    private static boolean loggerSetup = false;
+    protected static boolean loggerSetup = false;
     private static ConfigReader propertyReader = null;
     
     private static final Logger logger = Logger.getLogger(ConfigReader.class);
@@ -121,17 +118,22 @@ public class ConfigReader {
     private ConfigReader(String fileName) throws BridgeDBException{
         Reporter.println("Looking for " + fileName);
         try {
-            if (loadDirectly(fileName)) return;
-            if (loadByEnviromentVariable(fileName)) return;
-            if (loadByCatalinaHomeConfigs(fileName)) return;
-            if (loadFromDirectory(fileName, "../conf/OPS-IMS")) return;
-            if (getInputStreamWithClassLoader(fileName)) return;
-            //if (loadFromDirectory(fileName, "../org.bridgedb.utils/resources")) return;
-            //if (loadFromDirectory(fileName, "conf/OPS-IMS")) return;
-            //if (loadFromDirectory(fileName, "../../BridgeDb/org.bridgedb.utils/resources")) return;
-            //if (getInputStreamFromResource(fileName)) return;
-            //if (getInputStreamFromJar(fileName)) return;
-            throw new BridgeDBException("Unable to find " + fileName);
+            if (loadDirectly(fileName)) {
+                return;
+            }
+            if (loadByEnviromentVariable(fileName)) {
+                return;
+            }
+            if (loadByCatalinaHomeConfigs(fileName)) {
+                return;
+            }
+            if (loadFromDirectory(fileName, "../conf/BridgeDb")) {
+                return;
+            }
+            if (getInputStreamWithClassLoader(fileName)) {
+                return;
+            }
+             throw new BridgeDBException("Unable to find " + fileName);
         } catch (IOException ex) {
             error = "Unexpected IOEXception after doing checks.";
             throw new BridgeDBException(error, ex);
@@ -166,67 +168,76 @@ public class ConfigReader {
         return properties;
     }
     
+    /**
+     * Reads the file from the run directory
+     * 
+     * @param fileName
+     * @return true if the file was found
+     * @throws FileNotFoundException Only throw if file.exists() returns true but still the file can not be converted to an inputStream
+     */
     private boolean loadDirectly(String fileName) throws FileNotFoundException {
         File file = new File(fileName);
         if (!file.exists()) {
+            Reporter.println("Unable to find " + fileName + " in local Directory ");    
             return false;
         }
         inputStream = new FileInputStream(file);
         findMethod = "Loaded from run Directory.";
         foundAt = file.getAbsolutePath();
-        if (loggerSetup){
-            Reporter.println("Loaded file " + fileName + " directly from " + foundAt);    
-        }
+        Reporter.println("Loaded file " + fileName + " directly from " + foundAt);    
         return true;
     }
 
     /**
-     * Looks for the config file in the directory set up the environment variable "OPS_IMS_CONFIG"
-     * @return True if the config files was found. False if the environment variable "OPS_IMS_CONFIG" was unset.
-     * @throws IOException Thrown if the environment variable is not null, 
-     *    and the config file is not found as indicated, or could not be read.
+     * Looks for the config file in the directory set up the environment variable "BRIDGEDB_CONFIG"
+     * @return True if the config file was found. 
+     *     False if the environment variable "BRIDGEDB_CONFIG" was unset.
+     *     False if the environment variable "BRIDGEDB_CONFIG" is set to a directory but it does not contain the requested file.
+     * @throws IOException Thrown if the environment variable is not null and does not point to a directory that ran be read.
      */
     private boolean loadByEnviromentVariable(String fileName) throws BridgeDBException, FileNotFoundException{
-        String envPath = System.getenv().get("OPS_IMS_CONFIG");
+        String envPath = System.getenv().get("BRIDGEDB_CONFIG");
         if (envPath == null || envPath.isEmpty()) {
-            logger.warn("No environment variable OPS_IMS_CONFIG found");
+            Reporter.warn("No environment variable BRIDGEDB_CONFIG found");
             return false;
         }
         File envDir = new File(envPath);
         if (!envDir.exists()){
-            error = "Environment Variable OPS_IMS_CONFIG points to " + envPath + 
+            error = "Environment Variable BRIDGEDB_CONFIG points to " + envPath + 
                     " but no directory found there";
             throw new BridgeDBException (error);
         }
         if (envDir.isDirectory()){
             File file = new File(envDir, fileName);
             if (!file.exists()){
+                Reporter.warn("No file " + fileName + " found in BRIDGEDB_CONFIG directory " + envDir.getAbsolutePath());
                 return false;
             }
             inputStream = new FileInputStream(file);
             findMethod = "Loaded from Environment Variable.";
             foundAt = file.getAbsolutePath();
-            if (loggerSetup){
-                Reporter.println("Loaded file " + fileName + " using OPS_IMS_CONFIG from " + foundAt);    
-            }
+            Reporter.println("Loaded file " + fileName + " using BRIDGEDB_CONFIG from " + foundAt);    
             return true;
         } else {
-            error = "Environment Variable OPS_IMS_CONFIG points to " + envPath + 
+            error = "Environment Variable BRIDGEDB_CONFIG points to " + envPath + 
                     " but is not a directory";
             throw new BridgeDBException (error);
         }
     }
   
     /**
-     * Looks for the config file in the directory set up the environment variable "OPS_IMS_CONFIG"
-     * @return True if the config files was found. False if the environment variable "OPS_IMS_CONFIG" was unset.
-     * @throws IOException Thrown if the environment variable is not null, 
-     *    and the config file is not found as indicated, or could not be read.
+     * Looks for the config file in the directory "/conf/BridgeDb" under the directory set up by the environment variable "CATALINA_HOME"
+     * @return True if the config file was found. 
+     *       False if the environment variable "CATALINA_HOME" was unset.
+     *       False if the directory pointed to by "CATALINA_HOME" has no "/conf/BridgeDb" subdirectory
+     * @throws IOException Thrown if the environment variable is not null, but does not point to a directory.
+     *    If $CATALINA_HOME/conf/BridgeDb exists but is not a directory or can not be read
+     *    If the file exists but can not be read.
      */
     private boolean loadByCatalinaHomeConfigs(String fileName) throws BridgeDBException, FileNotFoundException {
         String catalinaHomePath = System.getenv().get("CATALINA_HOME");
         if (catalinaHomePath == null || catalinaHomePath.isEmpty()) {
-            logger.warn("No enviroment variable CATALINA_HOME found");
+            Reporter.warn("No enviroment variable CATALINA_HOME found");
             return false;
         }
         File catalineHomeDir = new File(catalinaHomePath);
@@ -240,57 +251,64 @@ public class ConfigReader {
                     " but is not a directory";
             throw new BridgeDBException(error);
         }
-        File envDir = new File (catalineHomeDir + "/conf/OPS-IMS");
-        if (!envDir.exists()) return false; //No hard requirements that catalineHome has a /conf/OPS-IMS
+        File envDir = new File (catalineHomeDir + "/conf/BridgeDb");
+        if (!envDir.exists()) {
+            Reporter.warn("No directory /conf/BridgeDb found in $CATALINA_HOME directory " + catalineHomeDir.getAbsolutePath());
+            return false; //No hard requirements that catalineHome has a /conf/BridgeDb directory
+        } 
         if (envDir.isDirectory()){
             File file = new File(envDir, fileName);
             if (!file.exists()){
+                Reporter.warn("No file " + fileName + " found in $CATALINA_HOME/conf/BridgeDb directory " + envDir.getAbsolutePath());
                 return false;
             }
             inputStream = new FileInputStream(file);
             findMethod = "Loaded from CATALINA_HOME configs.";
             foundAt = file.getAbsolutePath();
-            if (loggerSetup){
-                Reporter.println("Loaded file " + fileName + " using CATALINA_HOME from " + foundAt);    
-            }
+            Reporter.println("Loaded file " + fileName + " using CATALINA_HOME from " + foundAt);    
             return true;
         } else {
             error = "Environment Variable CATALINA_HOME points to " + catalinaHomePath  + 
-                    " but $CATALINA_HOME/conf/OPS-IMS is not a directory";
+                    " but $CATALINA_HOME/conf/BridgeDb is not a directory";
             throw new BridgeDBException (error);
        }
     }
     
     /**
-     * Looks for the config file in the conf/OPS-IMS sub directories of the run directory.
+     * Looks for the config file in a directory.
      * <p>
-     * For tomcat conf would then be a sister directory of webapps.
      * @return True if the file was found, False if it was not found.
      * @throws IOException If there is an error reading the file.
      */
     private boolean loadFromDirectory(String fileName, String directoryName) throws FileNotFoundException {
         File directory = new File (directoryName);
         if (!directory.exists()) {
-            logger.warn("No file directory found at: " + directoryName);
+            Reporter.warn("No directory found at: " + directoryName);
             return false;
         }
         if (!directory.isDirectory()){
+            Reporter.warn(directoryName + " is not a directory ");
             return false;
         }
         File file = new File(directory, fileName);
         if (!file.exists()) return false;
             if (!file.exists()){
+                Reporter.warn("No file " + fileName + " found in " + directory.getAbsolutePath());
                 return false;
             }
             inputStream = new FileInputStream(file);
             findMethod = "Loaded from directory: " + directoryName;
             foundAt = file.getAbsolutePath();
-            if (loggerSetup){
-                Reporter.println("Loaded file " + fileName + " from " + foundAt);    
-            }
+            Reporter.println("Loaded file " + fileName + " from " + foundAt);    
             return true;
     }
 
+    /**
+     * Reads the config file direct from the war or jar.
+     * @param fileName
+     * @return The true if the config file was found and could be opened otherwise null;
+     * @throws FileNotFoundException 
+     */
     private boolean getInputStreamWithClassLoader(String fileName) throws FileNotFoundException{
         ClassLoader classLoader = this.getClass().getClassLoader();
         URL url = classLoader.getResource(fileName);
@@ -298,62 +316,18 @@ public class ConfigReader {
             try {
                 inputStream =  url.openStream();
             } catch (IOException ex) {
-                if (loggerSetup){
-                    logger.info("Error opeing url " + url , ex);
-                    return false;
-                }
+                Reporter.error("Error opeing url " + url , ex);
+                return false;
             }
             findMethod = "Loaded with class loader";
             foundAt = url.getPath();
-            if (loggerSetup){
-                Reporter.println("Loaded " + fileName + " from "+ url + " with class loader. ");    
-            }
+            Reporter.println("Loaded " + fileName + " from "+ url + " with class loader. ");    
             return true;
         }
-        if (loggerSetup){
-            Reporter.println("Not found by class loader. ");    
-        }
+        Reporter.println("Not found by class loader. ");    
         return false;
     }
-
-    private boolean getInputStreamFromResource(String name) throws FileNotFoundException{
-        java.net.URL url = this.getClass().getResource(name);
-        if (url != null){
-            String fileName = url.getFile();
-            File file = new File(fileName);
-            if (!file.exists()){
-                return false;
-            }
-            inputStream = new FileInputStream(file);
-            findMethod = "Loaded from Resource URI";
-            foundAt = file.getAbsolutePath();
-            if (loggerSetup){
-                Reporter.println("Loaded file " + fileName + " from Jar ");    
-            }
-            return true;
-        }
-        return false;
-    }
-
-    private boolean getInputStreamFromJar(String name) throws IOException{
-        CodeSource src = this.getClass().getProtectionDomain().getCodeSource();
-        URL jar = src.getLocation();
-        ZipInputStream zip = new ZipInputStream( jar.openStream());
-        ZipEntry ze = null;
-        while( ( ze = zip.getNextEntry() ) != null ) {
-            if (name.equals(ze.getName())){
-                inputStream = zip;
-                findMethod = "Loaded by unzipping jar";
-                foundAt = "Inside jar file";
-                if (loggerSetup){
-                    Reporter.println("Loaded file " + name + " by unziiping the Jar ");    
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-    
+        
     public static String getProperty(String propertyName) throws BridgeDBException {
         Properties properties = getProperties();
         return properties.getProperty(propertyName);

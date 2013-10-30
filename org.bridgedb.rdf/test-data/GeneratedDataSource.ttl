@@ -660,6 +660,7 @@ bridgeDB:DataSource_GenBank a bridgeDB:DataSource ;
 	bridgeDB:primary "false"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.ncbi.nlm.nih.gov/nuccore/$id> ;
+	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/insdc/$id> ;
 	bridgeDB:hasRegexPattern "(\\w\\d{5})|(\\w{2}\\d{6})|(\\w{3}\\d{5})" ;
 	dcterms:alternative "GenBank" ;
 	bridgeDB:hasUriPattern <http://bio2rdf.org/genbank:$id> .
@@ -2324,6 +2325,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://identifiers.org/hprd/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/hprd/" .
+
+<http://identifiers.org/insdc/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://identifiers.org/insdc/" .
 
 <http://identifiers.org/intact/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/intact/" .
