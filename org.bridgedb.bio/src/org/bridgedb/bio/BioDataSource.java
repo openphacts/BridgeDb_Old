@@ -17,13 +17,13 @@
 package org.bridgedb.bio;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -62,6 +62,10 @@ public class BioDataSource
 		"Ch", "HMDB").asDataSource();
 	public static final DataSource KEGG_COMPOUND = DataSource.register (
 		"Ck", "KEGG Compound").asDataSource();
+    /** @deprecated use one of the organism-specific system codes instead */ 
+    //Oct 29 2013 Christian: Had to add this back in for Examples/ChebiPubchemExample.java to work!
+	public static final DataSource PUBCHEM = DataSource.register (
+		"Cp", "PubChem").asDataSource();
 	public static final DataSource PUBCHEM_SUBSTANCE = DataSource.register (
 		"Cps", "PubChem-substance").asDataSource();
 	public static final DataSource PUBCHEM_COMPOUND = DataSource.register (
@@ -211,6 +215,8 @@ public class BioDataSource
 		"Sn", "dbSNP").asDataSource();
 	public static final DataSource GENE_ONTOLOGY = DataSource.register (
 		"T", "GeneOntology").asDataSource();
+	public static final DataSource TAXONOMY_NCBI = DataSource.register (
+		"Tn", "NCBI Taxonomy Database").asDataSource(); 
 	public static final DataSource TIGR = DataSource.register (
 		"Ti", "TIGR").asDataSource(); 
 	public static final DataSource TUBERCULIST = DataSource.register (
@@ -254,6 +260,11 @@ public class BioDataSource
 	 *  @deprecated use datasources.txt instead
 	 */
 	static {
+		//sgd
+		DataSourcePatterns.registerPattern(
+			BioDataSource.TAXONOMY_NCBI, 
+			Pattern.compile("\\d+"));
+
 		//sgd
 		DataSourcePatterns.registerPattern(
 			BioDataSource.SGD, 
@@ -575,6 +586,7 @@ public class BioDataSource
 	/**
 	 * @return the species-specific Ensembl DataSource corresponding to a given organism, or null if there isn't one known.
 	 * @param org an organism
+	 * @deprecated
 	 */
 	public static DataSource getSpeciesSpecificEnsembl(Organism org)
 	{

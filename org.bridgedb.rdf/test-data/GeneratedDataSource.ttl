@@ -379,11 +379,11 @@ bridgeDB:DataSource_Ensembl a bridgeDB:DataSource ;
 	bridgeDB:idExample "ENSG00000139618" ;
 	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
-	bridgeDB:hasUrlPattern <http://www.ensembl.org/id/$id> ;
+	bridgeDB:hasUrlPattern <http://ensemblgenomes.org/id/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/ensembl/$id> ;
 	bridgeDB:hasRegexPattern "^ENS[A-Z]*[FPTG]\\d{11}$" ;
 	dcterms:alternative "Ensembl" ;
-	bridgeDB:hasUriPattern <http://bio2rdf.org/ensembl:$id> , <http://purl.uniprot.org/ensembl/$id> .
+	bridgeDB:hasUriPattern <http://bio2rdf.org/ensembl:$id> , <http://purl.uniprot.org/ensembl/$id> , <http://www.ensembl.org/id/$id> .
 
 bridgeDB:DataSource_Ensembl_B_subtilis a bridgeDB:DataSource ;
 	bridgeDB:fullName "Ensembl B. subtilis" ;
@@ -660,7 +660,6 @@ bridgeDB:DataSource_GenBank a bridgeDB:DataSource ;
 	bridgeDB:primary "false"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
 	bridgeDB:type "gene" ;
 	bridgeDB:hasUrlPattern <http://www.ncbi.nlm.nih.gov/nuccore/$id> ;
-	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/insdc/$id> ;
 	bridgeDB:hasRegexPattern "(\\w\\d{5})|(\\w{2}\\d{6})|(\\w{3}\\d{5})" ;
 	dcterms:alternative "GenBank" ;
 	bridgeDB:hasUriPattern <http://bio2rdf.org/genbank:$id> .
@@ -1156,6 +1155,12 @@ bridgeDB:DataSource_NCBI_Protein a bridgeDB:DataSource ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/ncbiprotein/$id> ;
 	bridgeDB:hasRegexPattern "^\\w+\\d+(\\.\\d+)?$" ;
 	dcterms:alternative "NCBI Protein" .
+
+bridgeDB:DataSource_NCBI_Taxonomy_Database a bridgeDB:DataSource ;
+	bridgeDB:fullName "NCBI Taxonomy Database" ;
+	bridgeDB:systemCode "Tn" ;
+	bridgeDB:primary "true"^^<http://www.w3.org/2001/XMLSchema#boolean> ;
+	bridgeDB:type "unknown" .
 
 bridgeDB:DataSource_NCI_Pathway_Interaction_Database a bridgeDB:DataSource ;
 	bridgeDB:fullName "NCI Pathway Interaction Database" ;
@@ -1748,7 +1753,7 @@ bridgeDB:DataSource_Uniprot_TrEMBL a bridgeDB:DataSource ;
 	bridgeDB:type "protein" ;
 	bridgeDB:hasUrlPattern <http://www.uniprot.org/uniprot/$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/uniprot/$id> ;
-	bridgeDB:hasRegexPattern "^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])$" ;
+	bridgeDB:hasRegexPattern "^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])(\\.\\d+)?$" ;
 	dcterms:alternative "UniProtKB/TrEMBL" ;
 	bridgeDB:hasUriPattern <http://bio2rdf.org/uniprot:$id> , <http://purl.uniprot.org/uniprot/$id> , <http://www.ebi.uniprot.org/entry/$id> .
 
@@ -1804,7 +1809,7 @@ bridgeDB:DataSource_WikiPathways a bridgeDB:DataSource ;
 	bridgeDB:type "pathway" ;
 	bridgeDB:hasUrlPattern <http://www.wikipathways.org/index.php/Pathway:$id> ;
 	bridgeDB:hasIdentifiersOrgPattern <http://identifiers.org/wikipathways/$id> ;
-	bridgeDB:hasRegexPattern "WP\\d{1,5}" ;
+	bridgeDB:hasRegexPattern "WP\\d{1,5}(_r\\d+)?" ;
 	dcterms:alternative "WikiPathways" ;
 	bridgeDB:hasUriPattern <http://rdf.wikipathways.org/$id> , <http://rdf.wikipathways.org/Pathway/$id> , <http://www.wikipathways.org/instance/$id> .
 
@@ -1981,6 +1986,11 @@ bridgeDB:Organism_Oj a bridgeDB:Organism ;
 	bridgeDB:code "Oj" ;
 	bridgeDB:shortName "Rice" ;
 	bridgeDB:latinName "Oryza japonica" .
+
+bridgeDB:Organism_Osj a bridgeDB:Organism ;
+	bridgeDB:code "Osj" ;
+	bridgeDB:shortName "Rice" ;
+	bridgeDB:latinName "Oryza sativa Japonica Group" .
 
 bridgeDB:Organism_Ol a bridgeDB:Organism ;
 	bridgeDB:code "Ol" ;
@@ -2203,6 +2213,9 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 <http://en.wikipedia.org/wiki/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://en.wikipedia.org/wiki/" .
 
+<http://ensemblgenomes.org/id/$id> a bridgeDB:uriPattern ;
+	bridgeDB:hasPrefix "http://ensemblgenomes.org/id/" .
+
 <http://flybase.org/reports/$id.html> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://flybase.org/reports/" ;
 	bridgeDB:hasPostfix ".html" .
@@ -2311,9 +2324,6 @@ bridgeDB:Organism_Zm a bridgeDB:Organism ;
 
 <http://identifiers.org/hprd/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/hprd/" .
-
-<http://identifiers.org/insdc/$id> a bridgeDB:uriPattern ;
-	bridgeDB:hasPrefix "http://identifiers.org/insdc/" .
 
 <http://identifiers.org/intact/$id> a bridgeDB:uriPattern ;
 	bridgeDB:hasPrefix "http://identifiers.org/intact/" .

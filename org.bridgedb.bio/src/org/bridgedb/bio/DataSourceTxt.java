@@ -99,6 +99,14 @@ public class DataSourceTxt
         if (fields.length > 10) builder.alternative(fields[10]);
     }		
 
+    /** 
+     * Writes all currently loaded DataSources to a writer
+     * 
+     * @see DataSourceTxtTest.testWriteRead() for a working example
+     * 
+     * @param writer
+     * @throws IOException 
+     */
     public static void writeToBuffer(BufferedWriter writer) throws IOException {
         TreeSet sorted = new TreeSet<DataSource>(new DataSourceComparator());
         sorted.addAll(DataSource.getDataSources());
@@ -158,5 +166,6 @@ public class DataSourceTxt
         writer.flush();
         writer.close();
 	}
+    
 }
 
