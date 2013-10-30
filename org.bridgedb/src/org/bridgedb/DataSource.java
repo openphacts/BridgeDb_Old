@@ -55,19 +55,21 @@ Definitions for common DataSources can be found in {@link org.bridgedb.bio.BioDa
 */
 public final class DataSource
 {
-	private static Map<String, DataSource> bySysCode = new HashMap<String, DataSource>();
+    private static final String URN_PREFIX = "urn:miriam:";
+    private static final String IDENTIFIERS_ORG_PREFIX = "http://identifiers.org/";
+    public static final String UNKOWN = "unknown";
+
+    private static Map<String, DataSource> bySysCode = new HashMap<String, DataSource>();
 	private static Map<String, DataSource> byFullName = new HashMap<String, DataSource>();
 	private static Set<DataSource> registry = new HashSet<DataSource>();
 	private static Map<String, DataSource> byAlias = new HashMap<String, DataSource>();
 	private static Map<String, DataSource> byMiriamBase = new HashMap<String, DataSource>();
-
-	private final String sysCode;
-	private final String fullName;
-    private String alternative = null;
-    private String description = null;
+	
+	private String sysCode = null;
+	private String fullName = null;
 	private String mainUrl = null;
 	private String prefix = null;
-	private String postfix = null;
+	private String postfix = "";
 	private Object organism = null;
 	private String idExample = null;
 	private boolean isPrimary = true;
@@ -75,10 +77,8 @@ public final class DataSource
 	private DataSource isDeprecatedBy = null;
 	private String type = UNKOWN;
 	private String miriamBase = null;
-    
-    public static final String UNKOWN = "unknown";
-    private static final String URN_PREFIX = "urn:miriam:";
-    private static final String IDENTIFIERS_ORG_PREFIX = "http://identifiers.org/";
+    private String alternative = null;
+    private String description = null;
 	
 	/**
 	 * Constructor is private, so that we don't
@@ -105,7 +105,7 @@ public final class DataSource
      * 
 	 * @param id identifier to use in url
 	 * @return Url
-     * @deprecated
+     * @deprecated as could return just the id which is not a valid uri
 	 */
 	public String getUrl(String id)
 	{
@@ -118,7 +118,7 @@ public final class DataSource
 	/** 
 	 * Turn id into url pointing to info page on the web, e.g. "http://www.ensembl.org/get?id=ENSG..."
      * 
-     * Since version 2 this will return null if not pattern has been set.
+     * Since version 2 this will return null if no pattern has been set.
 	 * @param id identifier to use in url
 	 * @return Url
 	 */
@@ -129,8 +129,17 @@ public final class DataSource
         }
 		return prefix + id + postfix;
 	}
-
-    /** 
+			
+    /**
+     * Check if a Url pattern is know for this DataSource.
+     * 
+     * @return True if and only if a Url pattern is known/ has been registered
+     */
+    public boolean urlPatternKnown(){
+        return prefix != null;
+    }
+    
+	/** 
 	 * returns full name of DataSource e.g. "Ensembl". 
 	 * May return null if only the system code is known. 
 	 * Also used as identifier in GPML
@@ -191,7 +200,7 @@ public final class DataSource
      * Since version 2 if no Miriam base is known this method will use the system code.
      * Use of this method is discouraged as a non standard urn was returned if no Miriam Base was known
 	 * @param id Id to generate URN from.
-     * @deprecated 
+     * @deprecated use getMiriamURN
 	 * @return the URN. 
 	 */
 	public String getURN(String id)
@@ -208,13 +217,15 @@ public final class DataSource
         }
 		return URN_PREFIX + miriamBase + ":" + idPart;
 	}
-
+	
 	/**
 	 * Creates a global identifier. 
 	 * It uses the MIRIAM data type list
 	 * to create a MIRIAM URI like "urn:miriam:uniprot:P12345", 
 	 * or if this DataSource is not included
 	 * in the MIRIAM data types list, a bridgedb URI.
+     * @since Version 2.0.0
+     * 
 	 * @param id Id to generate URN from.
 	 * @return the URN. 
 	 */
@@ -239,16 +250,28 @@ public final class DataSource
         }
 		return this.IDENTIFIERS_ORG_PREFIX + miriamBase + "/" + id;
     }
-
+    
+    /**
+     * Retrieves any saved alternative name.
+     * 
+     * @return Saved alternative name or null if none is known
+     * @since version 2.0.0
+     */
     public String getAlternative(){
         return alternative;
     }
-    
+     
+    /**
+     * Retrieves any saved description.
+     * 
+     * @return Saved description or null if none is known
+     * @since version 2.0.0
+     */
     public String getDescription(){
         return description;
     }
     
- 	/**
+	/**
 	 * Uses builder pattern to set optional attributes for a DataSource. For example, this allows you to use the 
 	 * following code:
 	 * <pre>
@@ -282,9 +305,10 @@ public final class DataSource
 		}
 		
 		/**
-		 * 
 		 * @param urlPattern is a template for generating valid URL's for identifiers. 
 		 * 	The pattern should contain the substring "$ID", which will be replaced by the actual identifier.
+         * 
+         * Since version 2.0.0 it is no longer allowed to change the urlPattern once set.
 		 * @return the same Builder object so you can chain setters
 		 */
 		public Builder urlPattern (String urlPattern)
@@ -335,7 +359,7 @@ public final class DataSource
 		/**
          * Note: Unlike most builder methods this one does allow the idExample to be change even if already set.
          *     There may be good reasons why a specific example works better in a specific case then the original one set.
-         *     However there is no known case that replies on flexibility to change..
+         *     However there is no known case that replies on this flexibility to change.
 		 * @param idExample an example id from this system
 		 * @return the same Builder object so you can chain setters
 		 */
@@ -348,7 +372,7 @@ public final class DataSource
 		/**
          * Note: Unlike most builder methods this one does allow the idPrimary to be change even if already set.
          *     There may be good reasons why a specific DataSource's primary status is different in different applications.
-         *     However there is no known case that replies on flexibility to change.
+         *     However there is no known case that replies this on flexibility to change.
 		 * @param isPrimary secondary id's such as EC numbers, Gene Ontology or vendor-specific systems occur in data or linkouts,
 		 * 	but their use in pathways is discouraged
 		 * @return the same Builder object so you can chain setters
@@ -361,15 +385,12 @@ public final class DataSource
 		}
 		
 		/**
-         * Since version 2 Once deprecated a DataSource can not be undeprecated .
 		 * @param isDeprecated a boolean indicating this DataSource should no longer be used
 		 * @return the same Builder object so you can chain setters
 		 */
 		public Builder deprecated(boolean isDeprecated)
 		{
-            if (!isDeprecated && current.isDeprecated){
-                throw new IllegalArgumentException("Ileegal attempt to set depricated to false on DataSource " + current);
-            }
+			if (!isDeprecated) current.isDeprecatedBy = null;
 			current.isDeprecated = isDeprecated;
 			return this;
 		}
@@ -378,17 +399,13 @@ public final class DataSource
 		 * Sets the DataSource which should be used instead of this deprecated one. It 
 		 * automatically sets <code>isDeprecated</code> to true.
 		 * 
-         * Since Version 2 this method no longer accepts a null DataSource
 		 * @param sourceToUseInstead the {@link DataSource} that should be used instead of this
 		 *                           deprecated one
 		 * @return the same Builder object so you can chain setters
 		 */
-		public Builder deprecatedBy(DataSource sourceToUseInstead)
-		{
-            if (sourceToUseInstead == null){
-                throw new IllegalArgumentException("Illegal call with null DataSource. "
-                        + "Use deprecated(true) to set deprecate without setting the deprecatedBy DataSource.");
-            }
+		public Builder deprecatedBy(DataSource sourceToUseInstead) {
+			if (sourceToUseInstead == null)
+				throw new IllegalArgumentException("DataSource cannot be null.");
 			current.isDeprecated = true;
 			current.isDeprecatedBy = sourceToUseInstead;
 			return this;
@@ -443,7 +460,8 @@ public final class DataSource
          * Note: Since version 2 
          *    The base must start with urn:miriam:.
          *    The urnBase and identifiersOrgBase methods share the same miriam base.
-         *    It is no longer allowed to change a none null miriam Base
+         *    If the SystemCode is used as the urnBase this is just ignored!
+         *       (As the default to use the sysCode as the urnbase)
          * 
 		 * @param base for urn generation, for example "urn:miriam:uniprot"
 		 * @return the same Builder object so you can chain setters
@@ -511,6 +529,13 @@ public final class DataSource
 			return this;            
         }
         
+        /**
+         * Allow the setting but not changing of an alternative name
+         * 
+         * @param alternative
+ 		 * @return the same Builder object so you can chain setters
+         * @since version 2.0.0
+        */
         public Builder alternative(String alternative){
             if (alternative == null || alternative.isEmpty()){
                 return this;
@@ -526,7 +551,14 @@ public final class DataSource
             return this;
         }
 
-        public Builder description(String description){
+         /**
+         * Allow the setting but not changing of a description
+         * 
+         * @param alternative
+ 		 * @return the same Builder object so you can chain setters
+         * @since version 2.0.0
+        */
+       public Builder description(String description){
             if (description == null || description.isEmpty()){
                 return this;
             }
@@ -541,7 +573,7 @@ public final class DataSource
             return this;
         }
 	}
-
+  
     /** 
 	 * Register a new DataSource with (optional) detailed information.
 	 * This can be used by other modules to define new DataSources.
@@ -608,7 +640,7 @@ public final class DataSource
 		
 		return new Builder(current);
 	}
-	
+    
 	public void registerAlias(String alias)
 	{
 		byAlias.put (alias, this);
@@ -630,12 +662,14 @@ public final class DataSource
 	 * @param systemCode short unique code to query for
 	 * @return pre-existing DataSource object by system code, 
 	 * 	if it exists, or creates a new one. 
-     * @deprecated 
+     * @deprecated As could return a non existing DataSource with a null fullName
 	 */
 	public static DataSource getBySystemCode(String systemCode)
 	{
 		if (!bySysCode.containsKey(systemCode) && isSuitableKey(systemCode))
 		{
+            System.err.println("Warning creating a new DataSource with systemCode " + systemCode 
+                    + " and null fullName!");
 			findOrRegister (systemCode, null);
 		}
 		return bySysCode.get(systemCode);
@@ -654,18 +688,31 @@ public final class DataSource
         throw new IllegalArgumentException("No DataSource known for " + systemCode);
 	}
 
+    /**
+     * Check if a DataSoucre with this systemCode has been registered
+     * 
+     * @param systemCode to check
+     * @return True if and only if a DataSource has been registered with this systemCode.
+     * @Since Version 2.0.0
+     */
+    public static boolean systemCodeExists(String systemCode){
+        return bySysCode.containsKey(systemCode);
+    }
+    
     /** 
 	 * returns pre-existing DataSource object by 
 	 * full name, if it exists, 
 	 * or creates a new one. 
 	 * @param fullName full name to query for
 	 * @return DataSource
-     * @deprecated 
+     * @deprecated As could return a non existing DataSource with a null sysCode
 	 */
 	public static DataSource getByFullName(String fullName)
 	{
 		if (!byFullName.containsKey(fullName) && isSuitableKey(fullName))
 		{
+            System.err.println("Warning creating a new DataSource with fullName " + fullName 
+                    + " and null systemCode!");
 			findOrRegister (null, fullName);
 		}
 		return byFullName.get(fullName);
@@ -685,7 +732,18 @@ public final class DataSource
         throw new IllegalArgumentException ("No DataSource known for " + fullName);
 	}
 
-    public static DataSource getByAlias(String alias)
+    /**
+     * Check if a DataSoucre with this sfullName has been registered
+     * 
+     * @param fullName to check
+     * @return True if and only if a DataSource has been registered with this systemCode.
+     * @Since Version 2.0.0
+     */
+    public static boolean fullNameExists(String fullName){
+        return byFullName.containsKey(fullName);
+    }
+    
+	public static DataSource getByAlias(String alias)
 	{
 		return byAlias.get(alias);
 	}
@@ -772,7 +830,6 @@ public final class DataSource
 	 * it does not imply it says what it is deprecated by.
 	 * 
 	 * @return true if this DataSource is deprecated
-	 * @see         
 	 */
 	public boolean isDeprecated()
 	{
@@ -863,5 +920,4 @@ public final class DataSource
         return byMiriamBase.get(key);
     }
 	
-
 }
