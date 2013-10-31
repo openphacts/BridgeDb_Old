@@ -19,7 +19,6 @@
 //
 package org.bridgedb.uri.loader;
 
-import org.bridgedb.uri.loader.LinksetHandler;
 import java.io.File;
 import java.util.Set;
 import org.apache.log4j.Logger;
