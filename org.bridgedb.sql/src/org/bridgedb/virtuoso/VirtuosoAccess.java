@@ -24,11 +24,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import org.bridgedb.sql.SQLAccess;
 import org.bridgedb.utils.BridgeDBException;
+import org.bridgedb.utils.Reporter;
 
 /**
- * Virtuosos specif wrapper.
+ * Virtuosos specific wrapper.
  * 
  * Still in test so user name and password hard coded in.
+ * 
+ * This code has not been used in many months and has a HIGH risk of being broken.
  * 
  * @author Christian
  */
@@ -46,6 +49,7 @@ public class VirtuosoAccess implements SQLAccess{
      * @throws IMSException If there is a problem connecting to the database.
      */
     public VirtuosoAccess() throws BridgeDBException {
+        Reporter.warn("VirtuosoAccess class used!. There is a high risk that this code will not work.");
         try {
             Class.forName("virtuoso.jdbc4.Driver");
             //if (dbUrl.equals("jdbc:mysql://localhost:3306/irs")){
