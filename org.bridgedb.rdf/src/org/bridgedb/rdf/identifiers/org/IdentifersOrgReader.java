@@ -27,16 +27,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.DataSourcePatterns;
+import org.bridgedb.bio.DataSourceTxt;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.rdf.DataSourceMetaDataProvidor;
-import org.bridgedb.rdf.DataSourceMetaDataProvidor;
-import org.bridgedb.rdf.DataSourceTxtReader;
 import org.bridgedb.rdf.RdfBase;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.rdf.UriPatternType;
@@ -61,6 +61,8 @@ import org.openrdf.sail.memory.MemoryStore;
  * @author Christian
  */
 public class IdentifersOrgReader extends RdfBase {
+    
+    public static final String UNABLE_TO_CONNECT = "Unable to connect to miriam";
     
     private static final Logger logger = Logger.getLogger(IdentifersOrgReader.class);  
     
@@ -109,6 +111,8 @@ public class IdentifersOrgReader extends RdfBase {
             reader.doParseRdfInputStream(stream);
             stream.close();        
             initRun = true;
+        } catch (UnknownHostException ex) {
+            throw new BridgeDBException (UNABLE_TO_CONNECT, ex);
         } catch (MalformedURLException ex) {
             throw new BridgeDBException ("Error reading miriam registry.", ex);
         } catch (IOException ex) {
@@ -117,7 +121,7 @@ public class IdentifersOrgReader extends RdfBase {
     }
     
     public static void main(String[] args) throws Exception {
-        DataSourceTxtReader.init();
+        DataSourceTxt.init();
         UriPattern.registerUriPatterns();
         BridgeDBRdfHandler.init();
         init();
@@ -128,9 +132,9 @@ public class IdentifersOrgReader extends RdfBase {
         
         File textFile = new File("resources/IdentifiersOrgDataSource.txt");
         BufferedWriter writer = new BufferedWriter(new FileWriter(textFile));
-        DataSourceTxtReader.writeToBuffer(writer);
+        DataSourceTxt.writeToBuffer(writer);
         InputStream is = new FileInputStream(textFile);
-        DataSourceTxtReader.loadInputStream(is);
+        DataSourceTxt.loadInputStream(is);
     }
 
     private void loadData(RepositoryConnection repositoryConnection) throws Exception{
