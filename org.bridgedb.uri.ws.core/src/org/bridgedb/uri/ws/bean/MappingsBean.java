@@ -17,10 +17,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.ws.bean;
+package org.bridgedb.uri.ws.bean;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.bridgedb.uri.UriMapping;
+import org.bridgedb.uri.Mapping;
 
 /**
  * Contains the information held for a particular mapping.
@@ -32,54 +36,50 @@ import org.bridgedb.uri.UriMapping;
  * <li>UriSpace: 
  * @author Christian
  */
-@XmlRootElement(name="UriMapping")
-public class UriMappingBean {
- 
-    private String sourceUri;
-    private String targetUri;
+@XmlRootElement(name="mappings")
+public class MappingsBean {
+    
+    private Set<MappingBean> Mapping;
     
     /**
      * Default constructor for webService
      */
-    public UriMappingBean(){
+    public MappingsBean(){
+        Mapping = new HashSet<MappingBean>();
     }
     
-    public UriMappingBean(UriMapping mapping){
-        setSourceUri(mapping.getSourceUri());
-        setTargetUri(mapping.getTargetUri());
+    public MappingsBean (Set<Mapping> mappings){
+        Mapping = new HashSet<MappingBean>();
+        for (Mapping aMapping:mappings){
+            Mapping.add(MappingBean.asBean(aMapping));;
+        }
+     }
+
+    public Set<Mapping> asMappings (){
+        HashSet<Mapping> result = new HashSet<Mapping>();
+        for (MappingBean bean:Mapping){
+            result.add(MappingBean.asMapping(bean));
+        }
+        return result;
     }
 
-    public final UriMapping asUriMapping (){
-        return new UriMapping (getSourceUri(), getTargetUri());
+    public List<MappingBean> asMappingBeanList (){
+        return new ArrayList<MappingBean> (Mapping);
+    }
+
+   /**
+     * @return the mapping
+     */
+    public Set<MappingBean> getMapping() {
+        return Mapping;
     }
 
     /**
-     * @return the sourceUri
+     * @param mapping the mapping to set
      */
-    public final String getSourceUri() {
-        return sourceUri;
-    }
-
-    /**
-     * @param sourceUri the sourceUri to set
-     */
-    public final void setSourceUri(String sourceUri) {
-        this.sourceUri = sourceUri;
-    }
-
-    /**
-     * @return the targetUri
-     */
-    public final String getTargetUri() {
-        return targetUri;
-    }
-
-    /**
-     * @param targetUri the targetUri to set
-     */
-    public final void setTargetUri(String targetUri) {
-        this.targetUri = targetUri;
+    public void setMapping(Set<MappingBean> mapping) {
+        this.Mapping = mapping;
     }
     
- 
+  
  }

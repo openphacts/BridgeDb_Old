@@ -17,7 +17,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.ws.bean;
+package org.bridgedb.uri.ws.bean;
 
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;

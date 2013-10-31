@@ -17,24 +17,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.ws;
+package org.bridgedb.uri.ws;
 
 import java.util.List;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.ws.bean.DataSourceUriPatternBean;
-import org.bridgedb.ws.bean.LensBean;
-import org.bridgedb.ws.bean.LensesBean;
-import org.bridgedb.ws.bean.MappingBean;
-import org.bridgedb.ws.bean.MappingSetInfoBean;
-import org.bridgedb.ws.bean.MappingSetInfosBean;
-import org.bridgedb.ws.bean.MappingsBySetBean;
-import org.bridgedb.ws.bean.OverallStatisticsBean;
-import org.bridgedb.ws.bean.UriExistsBean;
-import org.bridgedb.ws.bean.UriMappings;
-import org.bridgedb.ws.bean.UriSearchBean;
-import org.bridgedb.ws.bean.XrefBean;
+import org.bridgedb.ws.WSCoreInterface;
 
 /**
  *

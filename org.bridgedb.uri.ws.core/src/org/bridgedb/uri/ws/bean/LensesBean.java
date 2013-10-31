@@ -17,61 +17,52 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.ws.bean;
+package org.bridgedb.uri.ws.bean;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.bridgedb.uri.Lens;
 
 /**
  *
- * @author Christian
+ * @author Alasdair
  */
-@XmlRootElement(name="UriExist")
-public class UriExistsBean {
+@XmlRootElement(name="Lenses")
+public class LensesBean {
+
+    private Set<LensBean> lenses;
     
-    protected Boolean exists;
-    protected  String Uri;
-    
-    public UriExistsBean(){
+    //Webservice constructor
+    public LensesBean(){
+        lenses = new HashSet<LensBean>();
     }
-    
-    public UriExistsBean(String Uri, boolean exists){
-        this.exists = exists;
-        this.Uri = Uri;
-    }
-    
-    /**
-     * @return the isSupported
-     */
-    public Boolean getExists() {
-        return exists;
+
+    public LensesBean(List<Lens> lenses, String contextPath) {
+        this();
+        for (Lens lens:lenses){
+            this.lenses.add(new LensBean(lens, contextPath));
+        }
     }
 
     /**
-     * @return the isSupported
+     * @return the lenses
      */
-    public boolean exists() {
-        return exists;
-    }
-    /**
-     * @param isSupported the isSupported to set
-     */
-    public void setExists(Boolean exists) {
-        this.exists = exists;
+    public Set<LensBean> getLenses() {
+        return lenses;
     }
 
     /**
-     * @return the Uri
+     * @param lenses the lenses to set
      */
-    public String getUri() {
-        return Uri;
+    public void setLenses(Set<LensBean> lenses) {
+        this.lenses = lenses;
     }
 
-    /**
-     * @param Uri the Uri to set
-     */
-    public void setUri(String Uri) {
-        this.Uri = Uri;
+    public boolean isEmpty() {
+        return lenses.isEmpty();
     }
-    
+
   
 }

@@ -17,9 +17,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.ws;
+package org.bridgedb.uri.ws;
 
 import org.bridgedb.uri.SetMappings;
+import org.bridgedb.ws.WsConstants;
 
 /**
  *

@@ -17,14 +17,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.ws.bean;
+package org.bridgedb.uri.ws.bean;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.bridgedb.uri.Mapping;
 
 /**
  * Contains the information held for a particular mapping.
@@ -36,50 +33,47 @@ import org.bridgedb.uri.Mapping;
  * <li>UriSpace: 
  * @author Christian
  */
-@XmlRootElement(name="mappings")
-public class MappingsBean {
-    
-    private Set<MappingBean> Mapping;
+@XmlRootElement(name="Mapping")
+public class UriMappings {
+ 
+    private Set<String> targetUri;
     
     /**
      * Default constructor for webService
      */
-    public MappingsBean(){
-        Mapping = new HashSet<MappingBean>();
+    public UriMappings(){
+        targetUri = new HashSet<String>();
     }
     
-    public MappingsBean (Set<Mapping> mappings){
-        Mapping = new HashSet<MappingBean>();
-        for (Mapping aMapping:mappings){
-            Mapping.add(MappingBean.asBean(aMapping));;
-        }
-     }
-
-    public Set<Mapping> asMappings (){
-        HashSet<Mapping> result = new HashSet<Mapping>();
-        for (MappingBean bean:Mapping){
-            result.add(MappingBean.asMapping(bean));
-        }
-        return result;
+    public UriMappings(Set<String> targetUri){
+        this.targetUri = targetUri;
     }
-
-    public List<MappingBean> asMappingBeanList (){
-        return new ArrayList<MappingBean> (Mapping);
-    }
-
-   /**
-     * @return the mapping
-     */
-    public Set<MappingBean> getMapping() {
-        return Mapping;
+    
+    public static UriMappings asBean(Set<String> targets){
+        UriMappings bean = new UriMappings();
+        bean.setTargetUri(targets);
+        return bean;
     }
 
     /**
-     * @param mapping the mapping to set
+     * @return the targetUri
      */
-    public void setMapping(Set<MappingBean> mapping) {
-        this.Mapping = mapping;
+    public Set<String> getTargetUri() {
+        return targetUri;
     }
-    
-  
+
+    /**
+     * @param targetUri the targetUri to set
+     */
+    public void setTargetUri(Set<String> targetUri) {
+        this.targetUri = targetUri;
+    }
+ 
+    public String toString(){
+        return targetUri.toString();
+    }
+
+    public boolean isEmpty() {
+        return targetUri.isEmpty();
+    }
  }

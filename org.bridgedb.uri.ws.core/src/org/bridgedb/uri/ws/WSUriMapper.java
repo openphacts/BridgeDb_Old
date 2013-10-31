@@ -17,7 +17,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.ws;
+package org.bridgedb.uri.ws;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,15 +36,16 @@ import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.MappingsBySysCodeId;
 import org.bridgedb.uri.RegexUriPattern;
 import org.bridgedb.uri.UriMapper;
+import org.bridgedb.uri.ws.bean.DataSourceUriPatternBean;
+import org.bridgedb.uri.ws.bean.MappingSetInfoBean;
+import org.bridgedb.uri.ws.bean.MappingSetInfosBean;
+import org.bridgedb.uri.ws.bean.MappingsBean;
+import org.bridgedb.uri.ws.bean.MappingsBySetBean;
+import org.bridgedb.uri.ws.bean.OverallStatisticsBean;
+import org.bridgedb.uri.ws.bean.UriExistsBean;
+import org.bridgedb.uri.ws.bean.UriSearchBean;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.ws.bean.DataSourceUriPatternBean;
-import org.bridgedb.ws.bean.MappingSetInfoBean;
-import org.bridgedb.ws.bean.MappingSetInfosBean;
-import org.bridgedb.ws.bean.MappingsBean;
-import org.bridgedb.ws.bean.MappingsBySetBean;
-import org.bridgedb.ws.bean.OverallStatisticsBean;
-import org.bridgedb.ws.bean.UriExistsBean;
-import org.bridgedb.ws.bean.UriSearchBean;
+import org.bridgedb.ws.WSCoreMapper;
 import org.bridgedb.ws.bean.XrefBean;
 
 /**

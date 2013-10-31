@@ -17,13 +17,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.ws.bean;
+package org.bridgedb.uri.ws.bean;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.bridgedb.uri.Mapping;
+import org.bridgedb.uri.UriMapping;
 
 /**
  * Contains the information held for a particular mapping.
@@ -35,47 +32,54 @@ import org.bridgedb.uri.Mapping;
  * <li>UriSpace: 
  * @author Christian
  */
-@XmlRootElement(name="Mapping")
-public class UriMappings {
+@XmlRootElement(name="UriMapping")
+public class UriMappingBean {
  
-    private Set<String> targetUri;
+    private String sourceUri;
+    private String targetUri;
     
     /**
      * Default constructor for webService
      */
-    public UriMappings(){
-        targetUri = new HashSet<String>();
+    public UriMappingBean(){
     }
     
-    public UriMappings(Set<String> targetUri){
-        this.targetUri = targetUri;
+    public UriMappingBean(UriMapping mapping){
+        setSourceUri(mapping.getSourceUri());
+        setTargetUri(mapping.getTargetUri());
     }
-    
-    public static UriMappings asBean(Set<String> targets){
-        UriMappings bean = new UriMappings();
-        bean.setTargetUri(targets);
-        return bean;
+
+    public final UriMapping asUriMapping (){
+        return new UriMapping (getSourceUri(), getTargetUri());
+    }
+
+    /**
+     * @return the sourceUri
+     */
+    public final String getSourceUri() {
+        return sourceUri;
+    }
+
+    /**
+     * @param sourceUri the sourceUri to set
+     */
+    public final void setSourceUri(String sourceUri) {
+        this.sourceUri = sourceUri;
     }
 
     /**
      * @return the targetUri
      */
-    public Set<String> getTargetUri() {
+    public final String getTargetUri() {
         return targetUri;
     }
 
     /**
      * @param targetUri the targetUri to set
      */
-    public void setTargetUri(Set<String> targetUri) {
+    public final void setTargetUri(String targetUri) {
         this.targetUri = targetUri;
     }
+    
  
-    public String toString(){
-        return targetUri.toString();
-    }
-
-    public boolean isEmpty() {
-        return targetUri.isEmpty();
-    }
  }
