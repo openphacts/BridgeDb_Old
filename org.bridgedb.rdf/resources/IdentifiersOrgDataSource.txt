@@ -12,6 +12,11 @@ Allergome	allergome		http://www.allergome.org/script/dettaglio.php?id_molecule=$
 AmoebaDB	amoebadb		http://amoebadb.org/amoeba/showRecord.do?name=GeneRecordClasses.GeneRecordClass&source_id=$id	EDI_244000	unknown		1	urn:miriam:amoebadb	^EDI_\d+$	
 Anatomical Therapeutic Chemical	atc		http://www.whocc.no/atc_ddd_index/?code=$id	A10BA02	unknown		1	urn:miriam:atc	^\w(\d+)?(\w{1,2})?(\d+)?$	
 Anatomical Therapeutic Chemical Vetinary	atcvet		http://www.whocc.no/atcvet/atcvet_index/?code=$id	QJ51RV02	unknown		1	urn:miriam:atcvet	^Q[A-Z0-9]+$	
+Animal Diversity Web	adw		http://animaldiversity.ummz.umich.edu/accounts/$id/	Lycalopex_vetulus	unknown		1	urn:miriam:adw	^[A-Z_a-z]+$	
+Animal Genome Cattle QTL	cattleqtldb		http://www.animalgenome.org/cgi-bin/QTLdb/BT/qdetails?QTL_ID=$id	4685	unknown		1	urn:miriam:cattleqtldb	^\d+$	
+Animal Genome Chicken QTL	chickenqtldb		http://www.animalgenome.org/cgi-bin/QTLdb/GG/qdetails?QTL_ID=$id	14362	unknown		1	urn:miriam:chickenqtldb	^\d+$	
+Animal Genome Pig QTL	pigqtldb		http://www.animalgenome.org/cgi-bin/QTLdb/SS/qdetails?QTL_ID=$id	14	unknown		1	urn:miriam:pigqtldb	^\d+$	
+Animal Genome Sheep QTL	sheepqtldb		http://www.animalgenome.org/cgi-bin/QTLdb/OA/qdetails?QTL_ID=$id	19803	unknown		1	urn:miriam:sheepqtldb	^\d+$	
 Animal TFDB Family	atfdb.family		http://www.bioguo.org/AnimalTFDB/family.php?fam=$id	CUT	unknown		1	urn:miriam:atfdb.family	^\w+$	
 AntWeb	antweb		http://www.antweb.org/specimen.do?name=$id	casent0106247	unknown		1	urn:miriam:antweb	^casent\d+(\-D\d+)?$	
 APD	apd		http://aps.unmc.edu/AP/database/query_output.php?ID=$id	01001	unknown		1	urn:miriam:apd	^\d{5}$	
@@ -80,7 +85,7 @@ Chembl 16 Molecule	Chembl16Molecule		http://rdf.ebi.ac.uk/resource/chembl/molecu
 ChEMBL compound	ChEMBLCompound	https://www.ebi.ac.uk/chembldb/	https://www.ebi.ac.uk/chembldb/index.php/compound/inspect/$id	CHEMBL308052	metabolite		1	urn:miriam:chembl.compound	^CHEMBL\d+$	
 Chembl Id	ChemblId		http://data.kasabi.com/dataset/chembl-rdf/chemblid/$id	CHEMBL6329	unknown		1			
 Chembl Molecule	ChemblMolecule		http://data.kasabi.com/dataset/chembl-rdf/molecule/m$id	1	unknown		1			
-ChEMBL target	chembl.target		https://www.ebi.ac.uk/chembldb/index.php/target/inspect/$id	CHEMBL3467	unknown		1	urn:miriam:chembl.target	^CHEMBL\d+$	
+ChEMBL target	chembl.target		https://www.ebi.ac.uk/chembl//target/inspect/$id	CHEMBL3467	unknown		1	urn:miriam:chembl.target	^CHEMBL\d+$	
 Chembl Target	ChemblTarget		http://data.kasabi.com/dataset/chembl-rdf/target/t$id	1	unknown		1			
 ChEMBL target component	Chembl16TargetComponent	https://www.ebi.ac.uk/chembldb/	http://rdf.ebi.ac.uk/resource/chembl/targetcomponent/$id	CHEMBL_TC_3597	unknown		1			
 ChemDB	chemdb		http://cdb.ics.uci.edu/cgibin/ChemicalDetailWeb.py?chemical_id=$id	3966782	unknown		1	urn:miriam:chemdb	^\d+$	
@@ -136,6 +141,7 @@ DragonDB Locus	dragondb.locus		http://antirrhinum.net/cgi-bin/ace/generic/tree/D
 DragonDB Protein	dragondb.protein		http://antirrhinum.net/cgi-bin/ace/generic/tree/DragonDB?name=$id%3Bclass%3DPeptide	AMDEFA	unknown		1	urn:miriam:dragondb.protein	^\w+$	
 DRSC	drsc		http://www.flyrnai.org/cgi-bin/RNAi_gene_lookup_public.pl?gname=$id	DRSC05221	unknown		1	urn:miriam:drsc	^DRSC\d+$	
 DrugBank	Dr	http://www.drugbank.ca/	http://www.drugbank.ca/drugs/$id	DB00001	metabolite		1	urn:miriam:drugbank	^DB\d{5}$	DrugBank
+Dugbank Enzymes	drugbankEnzymes	http://www.drugbank.ca/	http://www4.wiwiss.fu-berlin.de/drugbank/resource/enzymes/$id	1	unknown		1			
 Dugbank Target	drugbankTarget	http://www.drugbank.ca/	http://www.drugbank.ca/molecules/$id	6511	unknown		1	urn:miriam:drugbank.target	^\d+$	
 EchoBASE	echobase		http://www.york.ac.uk/res/thomas/Gene.cfm?recordID=$id	EB0170	unknown		1	urn:miriam:echobase	^EB\d+$	
 EcoCyc	Eco	http://ecocyc.org/	http://ecocyc.org/ECOLI/NEW-IMAGE?type=NIL&object=$id	325-BISPHOSPHATE-NUCLEOTIDASE-RXN	interaction	Escherichia coli	1			EcoCyc
@@ -145,7 +151,7 @@ EDAM Ontology	edam		http://purl.bioontology.org/ontology/EDAM/$id	1664	unknown		
 eggNOG	eggnog		http://eggnog.embl.de/version_3.0/cgi/search.py?search_term_0=$id	veNOG12876	unknown		1	urn:miriam:eggnog	^\w+$	
 ELM	elm		http://elm.eu.org/elms/elmPages/$id.html	CLV_MEL_PAP_1	unknown		1	urn:miriam:elm	^[A-Za-z_0-9]+$	
 EMBL	Em	http://www.ebi.ac.uk/embl/	http://www.ebi.ac.uk/ena/data/view/$id	X58356	gene		1	urn:miriam:ena.embl	^[A-Z]+[0-9]+$	European Nucleotide Archive
-Ensembl	En	http://www.ensembl.org/	http://www.ensembl.org/id/$id	ENSG00000139618	gene		1	urn:miriam:ensembl	^((ENS[A-Z]*[FPTG]\d{11}(\.\d+)?)|(FB\w{2}\d{7})|(Y[A-Z]{2}\d{3}[a-zA-Z]))$	Ensembl
+Ensembl	En	http://www.ensembl.org/	http://ensemblgenomes.org/id/$id	ENSG00000139618	gene		1	urn:miriam:ensembl	^((ENS[A-Z]*[FPTG]\d{11}(\.\d+)?)|(FB\w{2}\d{7})|(Y[A-Z]{2}\d{3}[a-zA-Z](\-[A-Z])?)|([A-Z_a-z0-9]+(\.)?(t)?(\d+)?([a-z])?))$	Ensembl
 Ensembl B. subtilis	EnBs	http://www.ensembl.org	http://bacteria.ensembl.org/Bacillus/B_subtilis/Gene/Summary?g=$id	EBBACG00000000013	gene	Bacillus subtilis	1		EBBACG\d{11}	Ensembl
 Ensembl Bacteria	ensembl.bacteria		http://bacteria.ensembl.org/id/$id	MU9_3181	unknown		1	urn:miriam:ensembl.bacteria	^((EB\w+)|([A-Z0-9]+\_[A-Z0-9]+))$	
 Ensembl C. elegans	EnCe	http://www.ensembl.org	http://www.ensembl.org/Caenorhabditis_elegans/Gene/Summary?g=$id	Y42H9B.1	gene	Caenorhabditis elegans	1			Ensembl
@@ -174,6 +180,7 @@ Enzyme Nomenclature	E	http://www.ebi.ac.uk/intenz/	http://www.ebi.ac.uk/intenz/q
 EPD	epd		http://epd.vital-it.ch/cgi-bin/query_result.pl?out_format=NICE&Entry_0=$id	TA_H3	unknown		1	urn:miriam:epd	^[A-Z-_0-9]+$	
 Evidence Code Ontology	eco		http://www.ebi.ac.uk/ontology-lookup/?termId=$id	ECO:0000006	unknown		1	urn:miriam:eco	ECO:\d{7}$	
 Experimental Factor Ontology	efo		http://www.ebi.ac.uk/ontology-lookup/?termId=EFO%3A$id	0004859	unknown		1	urn:miriam:efo	^\d{7}$	
+F-SNP	fsnp		http://compbio.cs.queensu.ca/cgi-bin/compbio/search/main.cgi?search_mode=id&amp%3Bid_type=snp_id&amp%3Bid_val=$id	rs17852708	unknown		1	urn:miriam:fsnp	^rs\d+$	
 FlyBase	F	http://flybase.org/	http://flybase.org/reports/$id.html	FBgn0011293	gene	Drosophila melanogaster	1	urn:miriam:flybase	^FB\w{2}\d{7}$	FlyBase
 Flystock	flystock		http://flystocks.bio.indiana.edu/Reports/$id.html	33159	unknown		1	urn:miriam:flystock	^\d+$	
 FMA	fma		http://www.ebi.ac.uk/ontology-lookup/?termId=$id	FMA:67112	unknown		1	urn:miriam:fma	^FMA:\d+$	
@@ -198,6 +205,8 @@ Genome Properties	genprop		http://cmr.jcvi.org/tigr-scripts/CMR/shared/GenomePro
 GenPept	genpept		http://www.ncbi.nlm.nih.gov/protein/$id?report=genpept	CAA71118.1	unknown		1	urn:miriam:genpept	^\w{3}\d{5}(\.\d+)?$	
 GEO	geo		http://www.ncbi.nlm.nih.gov/sites/GDSbrowser?acc=$id	GDS1234	unknown		1	urn:miriam:geo	^GDS\d+$	
 GiardiaDB	giardiadb		http://giardiadb.org/giardiadb/showRecord.do?name=GeneRecordClasses.GeneRecordClass&source_id=$id	GL50803_102438	unknown		1	urn:miriam:giardiadb	^\w+$	
+GLIDA GPCR	glida.gpcr		http://pharminfo.pharm.kyoto-u.ac.jp/services/glida/gpcr_information.php?id=$id	ACM1_HUMAN	unknown		1	urn:miriam:glida.gpcr	^[A-Z-_0-9]+$	
+GLIDA Ligand	glida.ligand		http://pharminfo.pharm.kyoto-u.ac.jp/services/glida/ligand_information.php?id=$id	L000001	unknown		1	urn:miriam:glida.ligand	^L\d+$	
 GlycoEpitope	glycoepitope		http://www.glyco.is.ritsumei.ac.jp/epitope-bin/epitope.cgi?mode=general&epitope_id=$id	EP0311	unknown		1	urn:miriam:glycoepitope	^EP\d{4}$	
 GlycomeDB	glycomedb		http://www.glycome-db.org/database/showStructure.action?glycomeId=$id	1	unknown		1	urn:miriam:glycomedb	^\d+$	
 GOA	goa	http://www.ebi.ac.uk/GOA/	http://www.ebi.ac.uk/QuickGO/GProtein?ac=$id	P12345	unknown		1	urn:miriam:goa	^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])$	
@@ -211,6 +220,7 @@ Golm Metabolome Database Reference Substance	gmd.ref		http://gmd.mpimp-golm.mpg.
 GPCRDB	gpcrdb		http://www.gpcr.org/7tm/proteins/$id	RL3R1_HUMAN	unknown		1	urn:miriam:gpcrdb	^\w+$	
 Gramene Arabidopsis	EnAt	http://www.gramene.org/	http://www.gramene.org/Arabidopsis_thaliana/Gene/Summary?g=$id	ATMG01360-TAIR-G	gene	Arabidopsis thaliana	1		AT[\dCM]G\d{5}\-TAIR\-G	Grameen Arabidopsis
 Gramene Genes DB	Gg	http://www.gramene.org/	http://www.gramene.org/db/genes/search_gene?acc=$id	GR:0060184	gene		1	urn:miriam:gramene.gene	^GR\:\d+$	Gramene Genes
+Gramene Growth Stage Ontology	gramene.growthstage		http://www.gramene.org/db/ontology/search?id=$id	GRO:0007133	unknown		1	urn:miriam:gramene.growthstage	^GRO\:\d+$	
 Gramene Literature	Gl	http://www.gramene.org/	http://www.gramene.org/db/literature/pub_search?ref_id=$id	6200	gene		0			Gramene Literature
 Gramene Maize	EnZm	http://www.ensembl.org	http://www.maizesequence.org/Zea_mays/Gene/Summary?g=$id	GRMZM2G174107	gene		1			Gramene Maize
 Gramene Pathway	Gp	http://www.gramene.org/pathway		AAH72400	pathway		0			Gramene Pathway
@@ -220,6 +230,7 @@ Gramene Rice	EnOj	http://www.gramene.org/	http://www.gramene.org/Oryza_sativa/Ge
 Gramene Taxonomy	gramene.taxonomy		http://www.gramene.org/db/ontology/search?id=$id	GR_tax:013681	unknown		1	urn:miriam:gramene.taxonomy	^GR\_tax\:\d+$	
 GreenGenes	greengenes		http://greengenes.lbl.gov/cgi-bin/show_one_record_v2.pl?prokMSA_id=$id	100000	unknown		1	urn:miriam:greengenes	^\d+$	
 GRIN Plant Taxonomy	grin.taxonomy		http://www.ars-grin.gov/cgi-bin/npgs/html/taxon.pl?$id	19333	unknown		1	urn:miriam:grin.taxonomy	^\d+$	
+GRSDB	grsdb		http://bioinformatics.ramapo.edu/GRSDB2/geneview.php?geneID=$id	10142	unknown		1	urn:miriam:grsdb	^\d+$	
 GXA Expt	gxa.expt		http://www.ebi.ac.uk/gxa/experiment/$id	E-MTAB-62	unknown		1	urn:miriam:gxa.expt	^[AEP]-\w{4}-\d+$	
 GXA Gene	gxa.gene		http://www.ebi.ac.uk/gxa/gene/$id	AT4G01080	unknown		1	urn:miriam:gxa.gene	^\w+$	
 H-InvDb Locus	hinv.locus		http://h-invitational.jp/hinv/spsoup/locus_view?hix_id=$id	HIX0004394	unknown		1	urn:miriam:hinv.locus	^HIX\d{7}(\.\d+)?$	
@@ -228,12 +239,13 @@ H-InvDb Transcript	hinv.transcript		http://h-invitational.jp/hinv/spsoup/transcr
 HAMAP	hamap		http://hamap.expasy.org/unirule/$id	MF_01400	unknown		1	urn:miriam:hamap	^MF_\d+$	
 HCVDB	hcvdb		http://euhcvdb.ibcp.fr/euHCVdb/do/displayHCVEntry?primaryAC=$id	M58335	unknown		1	urn:miriam:hcvdb	^M\d{5}$	
 HGMD	hgmd		http://www.hgmd.cf.ac.uk/ac/gene.php?gene=$id	CALM1	unknown		1	urn:miriam:hgmd	^[A-Z_0-9]+$	
-HGNC	H	http://www.genenames.org	http://www.genenames.org/data/hgnc_data.php?match=$id	DAPK1	gene	Homo sapiens	1	urn:miriam:hgnc.symbol	^[A-Za-z0-9]+	HGNC Symbol
+HGNC	H	http://www.genenames.org	http://www.genenames.org/data/hgnc_data.php?match=$id	DAPK1	gene	Homo sapiens	1	urn:miriam:hgnc.symbol	^[A-Za-z-0-9_]+(\@)?$	HGNC Symbol
 HGNC Accession number	Hac	http://www.genenames.org	http://www.genenames.org/data/hgnc_data.php?hgnc_id=$id	HGNC:2674	gene	Homo sapiens	1	urn:miriam:hgnc	^(HGNC:)?\d{1,5}$	HGNC
 HMDB	Ch	http://www.hmdb.ca/	http://www.hmdb.ca/metabolites/$id	HMDB00001	metabolite		1	urn:miriam:hmdb	^HMDB\d{5}$	HMDB
 HOGENOM	hogenom		http://pbil.univ-lyon1.fr/cgi-bin/view-tree.pl?db=HOGENOM5&query=$id	HBG284870	unknown		1	urn:miriam:hogenom	^\w+$	
 HOMD Sequence Metainformation	homd.seq		http://www.homd.org/modules.php?op=modload&name=GenomeList&file=index&link=detailinfo&seqid=$id	SEQF1003	unknown		1	urn:miriam:homd.seq	^SEQF\d+$	
 HOMD Taxonomy	homd.taxon		http://www.homd.org/modules.php?op=modload&name=HOMD&file=index&oraltaxonid=$id&view=dynamic	811	unknown		1	urn:miriam:homd.taxon	^\d+$	
+Homeodomain Research	hdr		http://research.nhgri.nih.gov/apps/homeodomain/web/index.cgi?mode=view&amp%3Bview=proteins&amp%3Bid=$id	63	unknown		1	urn:miriam:hdr	^\d+$	
 HomoloGene	Hg	http://www.ncbi.nlm.nih.gov/homologene/	http://www.ncbi.nlm.nih.gov/homologene/$id	1000	gene		1	urn:miriam:homologene	^\d+$	HomoloGene
 HOVERGEN	hovergen		http://pbil.univ-lyon1.fr/cgi-bin/view-tree.pl?query=$id&db=HOVERGEN	HBG004341	unknown		1	urn:miriam:hovergen	^HBG\d+$	
 HPA	hpa		http://www.proteinatlas.org/$id	ENSG00000026508	unknown		1	urn:miriam:hpa	^ENSG\d{11}$	
@@ -300,8 +312,9 @@ MassBank	massbank		http://msbi.ipb-halle.de/MassBank/jsp/Dispatcher.jsp?type=dis
 MatrixDB	Md	http://matrixdb.ibcp.fr/	http://matrixdb.ibcp.fr/cgi-bin/model/report/default?name=$id&class=Association	P00747_P07355	interaction		1	urn:miriam:matrixdb.association	^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])_.*|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9]_.*)|(GAG_.*)|(MULT_.*)|(PFRAG_.*)|(LIP_.*)|(CAT_.*)$	MatrixDB
 MedlinePlus	medlineplus		http://www.nlm.nih.gov/medlineplus/ency/article/$id.htm	002804	unknown		1	urn:miriam:medlineplus	^\d+$	
 Melanoma Molecular Map Project Biomaps	mmmp:biomaps		http://www.mmmp.org/MMMP/public/biomap/viewBiomap.mmmp?id=$id	37	unknown		1	urn:miriam:mmmp:biomaps	^\d+$	
-MEROPS	merops		http://merops.sanger.ac.uk/cgi-bin/pepsum?mid=$id	S01.001	unknown		1	urn:miriam:merops	^S\d{2}\.\d{3}$	
-MEROPS Family	merops.family		http://merops.sanger.ac.uk/cgi-bin/famsum?family=$id	S1	unknown		1	urn:miriam:merops.family	^\w+\d+$	
+MEROPS	merops		http://merops.sanger.ac.uk/cgi-bin/pepsum?mid=$id	S01.001	unknown		1	urn:miriam:merops	^[SCTAGMNU]\d{2}\.\d{3}$	
+MEROPS Family	merops.family		http://merops.sanger.ac.uk/cgi-bin/famsum?family=$id	S1	unknown		1	urn:miriam:merops.family	^[SCTAGMNU]\d+$	
+MEROPS Inhibitor	merops.inhibitor		http://merops.sanger.ac.uk/cgi-bin/pepsum?id=$id	I31.952	unknown		1	urn:miriam:merops.inhibitor	^I\d{2}\.\d{3}$	
 MeSH	mesh	http://bioportal.bioontology.org/	http://bioportal.bioontology.org/ontologies/1351?p=terms&conceptid=$id	D018377	unknown		1	urn:miriam:mesh		
 MeSH 2012	mesh.2012		http://www.nlm.nih.gov/cgi/mesh/2012/MB_cgi?mode=&index=$id&view=expanded	D018377	unknown		1	urn:miriam:mesh.2012	^[A-Za-z0-9]+$	
 MeSH 2013	mesh.2013		http://www.nlm.nih.gov/cgi/mesh/2013/MB_cgi?mode=&index=$id&view=expanded	17165	unknown		1	urn:miriam:mesh.2013	^[A-Za-z0-9]+$	
@@ -337,7 +350,8 @@ NASC code	nasc		http://arabidopsis.info/StockInfo?NASC_id=$id	N1899	unknown		1	u
 NASC Gene	N	http://arabidopsis.info/		ATMG00960-TAIR-G	gene	Arabidopsis thaliana	1		AT[\dCM]G\d{5}\-TAIR\-G	NASC Gene
 National Bibliography Number	nbn		http://nbn-resolving.org/resolver?identifier=$id&verb=full	urn:nbn:fi:tkk-004781	unknown		1	urn:miriam:nbn	^urn\:nbn\:[A-Za-z_0-9]+\:([A-Za-z_0-9]+\:)?[A-Za-z_0-9]+$	
 National Drug Code	ndc		http://www.hipaaspace.com/Medical_Billing/Coding/National.Drug.Codes/$id	0002-1975-61	unknown		1	urn:miriam:ndc	^\d+\-\d+\-\d+	
-NCBI Protein	Np	http://www.ncbi.nlm.nih.gov/protein	http://www.ncbi.nlm.nih.gov/protein/$id	CAA71118.1	protein		1	urn:miriam:ncbiprotein	^\w+\d+(\.\d+)?$	NCBI Protein
+NCBI Protein	Np	http://www.ncbi.nlm.nih.gov/protein	http://www.ncbi.nlm.nih.gov/protein/$id	CAA71118.1	protein		1	urn:miriam:ncbiprotein	^(\w+\d+(\.\d+)?)|(NP_\d+)$	NCBI Protein
+NCBI Taxonomy Database	Tn				unknown		1			
 NCI Pathway Interaction Database	Pid	http://pid.nci.nih.gov/	http://pid.nci.nih.gov/search/pathway_landing.shtml?what=graphic&jpg=on&pathway_id=$id	pi3kcipathway	pathway		1	urn:miriam:pid.pathway	^\w+$	NCI Pathway Interaction Database
 NCIm	ncim		http://ncim.nci.nih.gov/ncimbrowser/ConceptReport.jsp?dictionary=NCI+MetaThesaurus&code=$id	C0026339	unknown		1	urn:miriam:ncim	^C\d+$	
 NCIt	ncit		http://ncit.nci.nih.gov/ncitbrowser/ConceptReport.jsp?dictionary=NCI+Thesaurus&code=$id	C80519	unknown		1	urn:miriam:ncit	^C\d+$	
@@ -351,8 +365,11 @@ NITE Biological Research Center Catalogue	nbrc		http://www.nbrc.nite.go.jp/NBRC2
 NONCODE v3	noncodev3		http://www.noncode.org/NONCODERv3/ncrna.php?ncid=$id	377550	unknown		1	urn:miriam:noncodev3	^\d+$	
 NONCODE v4 Gene	noncodev4.gene		http://www.noncode.org/show_gene.php?id=$id	NONHSAG00001	unknown		1	urn:miriam:noncodev4.gene	^NONHSAG\d{5}$	
 NONCODE v4 Transcript	noncodev4.rna		http://www.noncode.org/show_rna.php?id=$id	NONHSAT000001	unknown		1	urn:miriam:noncodev4.rna	^NONHSAT\d{6}$	
+NORINE	norine		http://bioinfo.lifl.fr/norine/result.jsp?ID=$id	NOR00681	unknown		1	urn:miriam:norine	^NOR\d+$	
 NucleaRDB	nuclearbd		http://www.receptors.org/nucleardb/proteins/$id	prgr_human	unknown		1	urn:miriam:nuclearbd	^\w+\_\w+$	
 NuGO wiki	Nw	http://wiki.nugo.org	http://wiki.nugo.org/index.php/$id	HMDB00001	metabolite		0			NuGO wiki
+Odor Molecules DataBase	odor		http://senselab.med.yale.edu/OdorDB/eavData.aspx?o=$id	74	unknown		1	urn:miriam:odor	^\d+$	
+Olfactory Receptor Database	ordb		http://senselab.med.yale.edu/OrDB/eavData.aspx?o=$id	8497	unknown		1	urn:miriam:ordb	^\d+$	
 OMA Group	oma.grp		http://omabrowser.org/cgi-bin/gateway.pl?f=DisplayGroup&p1=$id	LCSCCPN	unknown		1	urn:miriam:oma.grp	^[A-Z]+$	
 OMA Protein	oma.protein		http://omabrowser.org/cgi-bin/gateway.pl?f=DisplayEntry&p1=$id	HUMAN16963	unknown		1	urn:miriam:oma.protein	^[A-Z0-9]{5}\d+$	
 OMIA	omia		http://omia.angis.org.au/$id/	1000	unknown		1	urn:miriam:omia	^\d+$	
@@ -361,7 +378,7 @@ Ontology for Biomedical Investigations	obi		http://purl.bioontology.org/ontology
 Ontology of Physics for Biology	opb		http://purl.bioontology.org/ontology/OPB/$id	OPB_00573	unknown		1	urn:miriam:opb	^OPB_\d+$	
 OPM	opm		http://opm.phar.umich.edu/protein.php?pdbid=$id	1h68	unknown		1	urn:miriam:opm	^[0-9][A-Za-z0-9]{3}$	
 OPS Chemical Registry Service	OPS-CRS	http://www.rsc.org/	http://ops.rsc.org/$id	OPS21009	unknown		1			
-ORCID	orcid		https://orcid.org/$id	0000-0002-6309-7327	unknown		1	urn:miriam:orcid	^\d{4}-\d{4}-\d{4}-\d{4}$	
+ORCID	orcid		https://orcid.org/$id	0000-0002-6309-7327	unknown		1	urn:miriam:orcid	^\d{4}-\d{4}-\d{4}-\d{3}(\d|X)$	
 OriDB Saccharomyces	oridb.sacch		http://cerevisiae.oridb.org/details.php?id=$id	1	unknown		1	urn:miriam:oridb.sacch	^\d+$	
 OriDB Schizosaccharomyces	oridb.schizo		http://pombe.oridb.org/details.php?id=$id	1	unknown		1	urn:miriam:oridb.schizo	^\d+$	
 Orphanet	orphanet		http://www.orpha.net/consor/cgi-bin/OC_Exp.php?Lng=EN&Expert=$id	85163	unknown		1	urn:miriam:orphanet	^\d+$	
@@ -373,6 +390,8 @@ Oryzabase Mutant	oryzabase.mutant		http://www.shigen.nig.ac.jp/rice/oryzabaseV4/
 Oryzabase Stage	oryzabase.stage		http://www.shigen.nig.ac.jp/rice/oryzabaseV4/devstageineachorgan/detail/$id	34	unknown		1	urn:miriam:oryzabase.stage	^\d+$	
 Oryzabase Strain	oryzabase.strain		http://www.shigen.nig.ac.jp/rice/oryzabaseV4/strain/wildCore/detail/$id	1	unknown		1	urn:miriam:oryzabase.strain	^\d+$	
 Other	O				gene		1			Other
+P3DB Protein	p3db.protein		http://www.p3db.org/protein.php?id=$id&amp%3Bref=0	70	unknown		1	urn:miriam:p3db.protein	^\d+$	
+P3DB Site	p3db.site		http://www.p3db.org/phosphosite.php?id=$id&ref=0	65	unknown		1	urn:miriam:p3db.site	^\d+$	
 PaleoDB	paleodb		http://paleodb.geology.wisc.edu/cgi-bin/bridge.pl?a=basicTaxonInfo&taxon_no=$id	83088	unknown		1	urn:miriam:paleodb	^\d+$	
 PANTHER Family	panther.family		http://www.pantherdb.org/panther/family.do?clsAccession=$id	PTHR12345	unknown		1	urn:miriam:panther.family	^PTHR\d{5}(\:SF\d{1,3})?$	
 PANTHER Node	panther.node		http://www.pantree.org/node/annotationNode.jsp?id=$id	PTN000000026	unknown		1	urn:miriam:panther.node	^PTN\d{9}$	
@@ -416,6 +435,7 @@ ProDom	prodom		http://prodom.prabi.fr/prodom/current/cgi-bin/request.pl?question
 ProGlycProt	proglyc		http://www.proglycprot.org/detail.aspx?ProId=$id	AC119	unknown		1	urn:miriam:proglyc	^[A-Z]C\d{1,3}$	
 PROSITE	prosite		http://prosite.expasy.org/$id	PS00001	unknown		1	urn:miriam:prosite	^PS\d{5}$	
 ProtClustDB	protclustdb		http://www.ncbi.nlm.nih.gov/sites/entrez?Db=proteinclusters&Cmd=DetailsSearch&Term=$id	O80725	unknown		1	urn:miriam:protclustdb	^\w+$	
+Protein Data Bank Ligand	pdb.ligand		http://www.rcsb.org/pdb/ligand/ligandsummary.do?hetId=$id	TRQ	unknown		1	urn:miriam:pdb.ligand	^[A-Za-z0-9]+$	
 Protein Model Database	pmdb		http://mi.caspur.it/PMDB/user/search.php?idsearch=$id	PM0012345	unknown		1	urn:miriam:pmdb	^PM\d{7}	
 Protein Modification Ontology	psimod		http://www.ebi.ac.uk/ontology-lookup/?termId=$id	MOD:00001	unknown		1	urn:miriam:psimod	^MOD:\d{5}	
 Protein Ontology	pr		http://pir.georgetown.edu/cgi-bin/pro/entry_pro?id=$id	PR:000000024	unknown		1	urn:miriam:pr	^PR\:\d+$	
@@ -454,7 +474,7 @@ Science Signaling Pathway-Independent Component	sciencesignaling.pic		http://stk
 SCOP	scop		http://scop.bic.nus.edu.sg/search.cgi?sunid=$id	47419	unknown		1	urn:miriam:scop	^\d+$	
 Sequence Ontology	so		http://purl.bioontology.org/ontology/SO/$id	SO:0000704	unknown		1	urn:miriam:so	^SO:\d{7}$	
 Sequence Read Archive	insdc.sra		http://www.ebi.ac.uk/ena/data/view/$id	SRX000007	unknown		1	urn:miriam:insdc.sra	^[SED]R\w\d{6}	
-SGD	D	http://www.yeastgenome.org/	http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=$id	S000028457	gene	Saccharomyces cerevisiae	1	urn:miriam:sgd	^S\d+$	SGD
+SGD	D	http://www.yeastgenome.org/	http://www.yeastgenome.org/cgi-bin/locus.fpl?dbid=$id	S000028457	gene	Saccharomyces cerevisiae	1	urn:miriam:sgd	^((S\d+$)|(Y[A-Z]{2}\d{3}[a-zA-Z](\-[A-Z])?))$	SGD
 SIDER Drug	sider.drug		http://sideeffects.embl.de/drugs/$id/	2244	unknown		1	urn:miriam:sider.drug	^\d+$	
 SIDER Side Effect	sider.effect		http://sideeffects.embl.de/se/$id/	C0017565	unknown		1	urn:miriam:sider.effect	^C\d+$	
 Signaling Gateway	signaling-gateway		http://www.signaling-gateway.org/molecule/query?afcsid=$id	A001094	unknown		1	urn:miriam:signaling-gateway	A\d{6}$	
@@ -487,6 +507,7 @@ Tetrahymena Genome Database	tgd		http://ciliate.org/index.php/feature/details/$i
 TIGR	Ti	http://www.jcvi.org/		12012.t00308	gene		1			TIGR
 TIGRFAMS	tigrfam		http://www.jcvi.org/cgi-bin/tigrfams/HmmReportPage.cgi?acc=$id	TIGR00010	unknown		1	urn:miriam:tigrfam	^TIGR\d+$	
 Tissue List	tissuelist		http://www.uniprot.org/tissues/$id	TS-0285	unknown		1	urn:miriam:tissuelist	^TS-\d{4}$	
+TOPDB	topdb		http://topdb.enzim.hu/?m=show&id=$id	AP00378	unknown		1	urn:miriam:topdb	^[A-Z0-9]+$	
 TopFind	topfind		http://clipserve.clip.ubc.ca/topfind/proteins/$id	Q9UKQ2	unknown		1	urn:miriam:topfind	^([A-N,R-Z][0-9][A-Z][A-Z, 0-9][A-Z, 0-9][0-9])|([O,P,Q][0-9][A-Z, 0-9][A-Z, 0-9][A-Z, 0-9][0-9])$	
 ToxoDB	toxoplasma		http://toxodb.org/toxo/showRecord.do?name=GeneRecordClasses.GeneRecordClass&source_id=$id	TGME49_053730	unknown		1	urn:miriam:toxoplasma	^\w+$	
 Transport Classification Database	tcdb		http://www.tcdb.org/search/result.php?tc=$id	5.A.1.1.1	unknown		1	urn:miriam:tcdb	^\d+\.[A-Z]\.\d+\.\d+\.\d+$	
@@ -532,9 +553,9 @@ Wheat gene names	Wn	http://wheat.pw.usda.gov/	http://wheat.pw.usda.gov/report?cl
 Wheat gene refs	Wr	http://wheat.pw.usda.gov/	http://wheat.pw.usda.gov/cgi-bin/graingenes/report.cgi?class=reference&name=$id	WGS-95-1333	probe	Triticum aestivum	0			Wheat gene refs
 WikiGenes	Wg	http://www.wikigenes.org/	http://www.wikigenes.org/e/gene/e/$id.html	7157	gene		0	urn:miriam:wikigenes	^\d+$	WikiGenes
 WikiPathways	Wp	http://www.wikipathways.org/	http://www.wikipathways.org/index.php/Pathway:$id	WP100	pathway		1	urn:miriam:wikipathways	WP\d{1,5}(\_r\d+)?$	WikiPathways
-Wikipedia	Wi	http://www.wikipedia.org	http://en.wikipedia.org/wiki/$id	Acetate	metabolite		1	urn:miriam:wikipedia.en	^[A-Za-z0-9_]+$	Wikipedia
+Wikipedia	Wi	http://www.wikipedia.org	http://en.wikipedia.org/wiki/$id	Acetate	metabolite		1	urn:miriam:wikipedia.en	^[A-Za-z-0-9_]+$	Wikipedia
 Worfdb	worfdb		http://worfdb.dfci.harvard.edu/index.php?search_type=name&page=showresultrc&race_query=$id	T01B6.1	unknown		1	urn:miriam:worfdb	^\w+(\.\d+)?	
-WormBase	W	http://www.wormbase.org/	http://www.wormbase.org/db/gene/gene?name=$id;class=Gene	WBGene00000001	gene	Caenorhabditis elegans	1	urn:miriam:wormbase	^WBGene\d{8}$	WormBase
+WormBase	W	http://www.wormbase.org/	http://www.wormbase.org/db/gene/gene?name=$id;class=Gene	WBGene00000001	gene	Caenorhabditis elegans	1	urn:miriam:wormbase	^(WBGene\d{8}|([A-Z_a-z0-9]+(\.)?(t)?(\d+)?([a-z])?))$	WormBase
 WormBase RNAi	wormbase.rnai		http://www.wormbase.org/species/c_elegans/rnai/$id	WBRNAi00086878	unknown		1	urn:miriam:wormbase.rnai	^WBRNAi\d{8}$	
 Wormpep	wormpep		http://wormbase.sanger.ac.uk/db/seq/protein?name=WP%3A$id	CE28239	unknown		1	urn:miriam:wormpep	^CE\d{5}$	
 Xenbase	xenbase		http://www.xenbase.org/gene/showgene.do?method=displayGeneSummary&geneId=$id	922462	unknown		1	urn:miriam:xenbase	^(XB-GENE-)?\d+$	
