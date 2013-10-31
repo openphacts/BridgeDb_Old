@@ -20,7 +20,7 @@
 package org.bridgedb.rdf;
 
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.TestUtils;
+import org.bridgedb.utils.Reporter;
 import static org.hamcrest.number.OrderingComparison.*;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -33,7 +33,7 @@ import org.junit.Test;
  *
  * @author Christian
  */
-public class UriPatternTest extends TestUtils{
+public class UriPatternTest {
     
     public UriPatternTest() {
     }
@@ -59,7 +59,7 @@ public class UriPatternTest extends TestUtils{
      */
     @Test 
     public void testCompareTo() throws BridgeDBException {
-        report("compareTo");
+        Reporter.println("compareTo");
         UriPattern pattern1 = UriPattern.register("http://www.example.com/UriPatternTest/testCompareTo/1$id", "UriPatternTest", UriPatternType.dataSourceUriPattern);
         UriPattern pattern1s = UriPattern.register("https://www.example.com/UriPatternTest/testCompareTo/1$id", "UriPatternTest", UriPatternType.dataSourceUriPattern);
         UriPattern pattern2 = UriPattern.register("http://www.example.com/UriPatternTest/testCompareTo/2$id", "UriPatternTest", UriPatternType.dataSourceUriPattern);
