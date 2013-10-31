@@ -17,15 +17,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.ws.server;
+package org.bridgedb.uri.ws.server;
 
 import java.util.Date;
 import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.sql.TestSqlFactory;
+import org.bridgedb.uri.ws.WSUriMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
-import org.bridgedb.ws.WSUriMapper;
-import org.bridgedb.ws.uri.WSUriInterfaceService;
+import org.bridgedb.uri.ws.server.WSUriInterfaceService;
 import org.junit.BeforeClass;
 
 /**
@@ -33,7 +33,7 @@ import org.junit.BeforeClass;
  * @author Christian
  */
 //@Ignore
-public class UriMapperAllProfileTest extends org.bridgedb.uri.UriMapperAllLensTest {
+public class UriMapperNullXrefTest extends org.bridgedb.uri.UriMapperNullXrefTest {
 
     private static final String CREATOR1 = "testCreator";
     private static final String PREDICATE1 = "testMapping";

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.bridgedb.ws.server;
+package org.bridgedb.uri.ws.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
