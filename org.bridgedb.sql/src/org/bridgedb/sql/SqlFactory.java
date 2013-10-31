@@ -19,7 +19,6 @@
 //
 package org.bridgedb.sql;
 
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.bridgedb.mysql.MySQLAccess;
 import org.bridgedb.utils.BridgeDBException;
@@ -42,7 +41,6 @@ public class SqlFactory extends ConfigReader{
     public static final String SQL_USER_PROPERTY = "SqlUser";
     public static final String SQL_PASSWORD_PROPERTY = "SqlPassword";
     public static final String SQL_DATABASE_PROPERTY = "SqlDatabase";
-    public static final String LOAD_SQL_DATABASE_PROPERTY = "LoadSqlDatabase";
     public static final String TEST_SQL_DATABASE_PROPERTY = "TestSqlDatabase";
     public static final String TEST_SQL_USER_PROPERTY = "TestSqlUser";
     public static final String TEST_SQL_PASSWORD_PROPERTY = "TestSqlPassword";
@@ -86,8 +84,10 @@ public class SqlFactory extends ConfigReader{
      */
     private static String sqlPort() throws BridgeDBException{
         String result;
-        result = getProperties().getProperty(SQL_PORT_PROPERTY).trim();
-        if (result != null) return result;
+        result = getProperties().getProperty(SQL_PORT_PROPERTY);
+        if (result != null) {
+            return result.trim();
+        }
         return "jdbc:mysql://localhost:3306";
     }
 
@@ -97,8 +97,10 @@ public class SqlFactory extends ConfigReader{
      */
     private static String sqlPassword() throws BridgeDBException{
         String result;
-        result = getProperties().getProperty(SQL_PASSWORD_PROPERTY).trim();
-        if (result != null) return result;
+        result = getProperties().getProperty(SQL_PASSWORD_PROPERTY);
+        if (result != null) {
+            return result.trim();
+        }
         return "ims";
     }
             
@@ -108,8 +110,10 @@ public class SqlFactory extends ConfigReader{
      */
     private static String sqlUser() throws BridgeDBException{
         String result;
-        result = getProperties().getProperty(SQL_USER_PROPERTY).trim();
-        if (result != null) return result;
+        result = getProperties().getProperty(SQL_USER_PROPERTY);
+        if (result != null) {
+            return result.trim();
+        }
         return "ims";
     }
 
@@ -119,20 +123,11 @@ public class SqlFactory extends ConfigReader{
      */
     private static String sqlDatabase() throws BridgeDBException{
         String result;
-        result = getProperties().getProperty(SQL_DATABASE_PROPERTY).trim();
-        if (result != null) return result;
+        result = getProperties().getProperty(SQL_DATABASE_PROPERTY);
+        if (result != null) {
+            return result.trim();
+        }
         return "ims";
-    }
-
-    /**
-     * Identifies the database name to use for the load database
-     * @return Database name specified. Otherwise defaults to the live database.
-     */
-    private static String sqlLoadDatabase() throws BridgeDBException{
-        String result;
-        result = getProperties().getProperty(LOAD_SQL_DATABASE_PROPERTY).trim();
-        if (result != null) return result;
-        return sqlDatabase();
     }
 
     /**
@@ -144,11 +139,13 @@ public class SqlFactory extends ConfigReader{
     private static String sqlTestDatabase(){
         String result;
         try {
-            result = getProperties().getProperty(TEST_SQL_DATABASE_PROPERTY).trim();
+            result = getProperties().getProperty(TEST_SQL_DATABASE_PROPERTY);
         } catch (BridgeDBException ex) {
             return ex.getMessage();
         }
-        if (result != null) return result;
+        if (result != null) {
+            return result.trim();
+        }
         return "imstest";
     }
 
@@ -159,11 +156,13 @@ public class SqlFactory extends ConfigReader{
     private static String testSqlPassword(){
         String result;
         try {
-            result = getProperties().getProperty(TEST_SQL_PASSWORD_PROPERTY).trim();
+            result = getProperties().getProperty(TEST_SQL_PASSWORD_PROPERTY);
         } catch (BridgeDBException ex) {
             return ex.getMessage();
         }
-        if (result != null) return result;
+        if (result != null) {
+            return result.trim();
+        }
         return "imstest";
        }
             
@@ -174,11 +173,13 @@ public class SqlFactory extends ConfigReader{
     private static String testSqlUser(){
         String result;
         try {
-            result = getProperties().getProperty(TEST_SQL_USER_PROPERTY).trim();
+            result = getProperties().getProperty(TEST_SQL_USER_PROPERTY);
         } catch (BridgeDBException ex) {
             return ex.getMessage();
         }
-        if (result != null) return result;
+        if (result != null) {
+            return result.trim();
+        }
             return "imstest";
     }
 
