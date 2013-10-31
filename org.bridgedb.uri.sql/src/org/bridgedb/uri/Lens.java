@@ -28,7 +28,6 @@ import java.util.Properties;
 import java.util.Set;
 import org.apache.log4j.Logger;
 import org.bridgedb.rdf.RdfBase;
-import org.bridgedb.sql.SQLUriMapper;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
 
@@ -295,7 +294,7 @@ public class Lens {
         }
      }
 
-    public static void init(SQLUriMapper mapper) throws BridgeDBException {
+  public static void init(UriMapper mapper) throws BridgeDBException {
         init();      
         Lens all = byId(Lens.getAllLens());
         //Code currently not used but allows lens per justifcation if turned back on
