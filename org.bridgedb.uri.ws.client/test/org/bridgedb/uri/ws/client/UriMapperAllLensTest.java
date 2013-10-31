@@ -17,11 +17,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.ws.uri.client;
+package org.bridgedb.uri.ws.client;
 
+import org.bridgedb.uri.ws.WSUriInterface;
+import org.bridgedb.uri.ws.WSUriMapper;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.ws.WSUriInterface;
-import org.bridgedb.ws.WSUriMapper;
 import org.junit.BeforeClass;
 
 /**
@@ -29,12 +29,13 @@ import org.junit.BeforeClass;
  * @author Christian
  */
 //@Ignore
-public class UriMapperSpecialTest extends org.bridgedb.uri.UriMapperSpecialTest {
+public class UriMapperAllLensTest extends org.bridgedb.uri.UriMapperAllLensTest {
 
     @BeforeClass
     public static void setupIDMapper() throws BridgeDBException{
         WSUriInterface webService = WsUriClientFactory.createTestWSClient();
         uriMapper = new WSUriMapper(webService);
+        org.junit.Assume.assumeTrue(WsUriClientFactory.LENS_DATA_LOADED);
     }
       
 }

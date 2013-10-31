@@ -17,14 +17,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.ws.uri.client;
+package org.bridgedb.uri.ws.client;
 
 import javax.ws.rs.core.Response;
 import org.bridgedb.IDMapperException;
+import org.bridgedb.uri.ws.WSUriInterface;
 import org.bridgedb.utils.BridgeDBException;
-import org.bridgedb.utils.ConfigReader;
-import org.bridgedb.ws.uri.client.WSUriClient;
-import org.bridgedb.ws.WSUriInterface;
 import org.bridgedb.ws.bean.MappingSupportedBean;
 
 /**
