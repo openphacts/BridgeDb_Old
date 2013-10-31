@@ -25,7 +25,6 @@ import org.bridgedb.DataSource;
 import org.bridgedb.bio.DataSourceComparator;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.Reporter;
-import org.bridgedb.utils.TestUtils;
 import static org.hamcrest.Matchers.*;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -40,11 +39,11 @@ import org.openrdf.model.impl.URIImpl;
  *
  * @author Christian
  */
-public class DataSourceUrisTest extends TestUtils{
+public class DataSourceComparatorTest {
     
     private static File file1 = new File("test-data/DataSourceMin.ttl");
     
-    public DataSourceUrisTest() {
+    public DataSourceComparatorTest() {
     }
     
     @BeforeClass
@@ -68,7 +67,7 @@ public class DataSourceUrisTest extends TestUtils{
      */
     @Test
     public void testGetResourceId() {
-        report("getResourceId");
+        Reporter.println("getResourceId");
         DataSource dataSource = DataSource.getByFullName("DataSourceUrisTest_testGetResourceId");
         Resource expResult = new URIImpl("http://openphacts.cs.man.ac.uk:9090/ontology/DataSource.owl#DataSource_DataSourceUrisTest_testGetResourceId");
         Resource result = BridgeDBRdfHandler.asResource(dataSource);
@@ -77,7 +76,7 @@ public class DataSourceUrisTest extends TestUtils{
 
     @Test
     public void testCompare() throws BridgeDBException{
-        report("compare");
+        Reporter.println("compare");
         DataSource dataSource1 = 
                 DataSource.register("DataSourceUrisTest_testCompare1", "DataSourceUrisTest_testCompare1").asDataSource();
         DataSource dataSource2 = 
