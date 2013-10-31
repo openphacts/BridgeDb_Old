@@ -22,9 +22,6 @@ package org.bridgedb.uri;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
 
 /**
