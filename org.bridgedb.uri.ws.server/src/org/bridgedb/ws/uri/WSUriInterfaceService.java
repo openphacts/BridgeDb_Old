@@ -17,10 +17,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.ws.uri;
+package org.bridgedb.uri.ws.server;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -54,22 +53,22 @@ import org.bridgedb.uri.RegexUriPattern;
 import org.bridgedb.uri.SetMappings;
 import org.bridgedb.uri.UriListener;
 import org.bridgedb.uri.UriMapper;
+import org.bridgedb.uri.ws.WSUriInterface;
+import org.bridgedb.uri.ws.WsUriConstants;
+import org.bridgedb.uri.ws.bean.DataSourceUriPatternBean;
+import org.bridgedb.uri.ws.bean.LensBean;
+import org.bridgedb.uri.ws.bean.LensesBean;
+import org.bridgedb.uri.ws.bean.MappingSetInfoBean;
+import org.bridgedb.uri.ws.bean.MappingSetInfosBean;
+import org.bridgedb.uri.ws.bean.MappingsBean;
+import org.bridgedb.uri.ws.bean.MappingsBySetBean;
+import org.bridgedb.uri.ws.bean.OverallStatisticsBean;
+import org.bridgedb.uri.ws.bean.UriExistsBean;
+import org.bridgedb.uri.ws.bean.UriMappings;
+import org.bridgedb.uri.ws.bean.UriSearchBean;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WSCoreService;
-import org.bridgedb.ws.WSUriInterface;
 import org.bridgedb.ws.WsConstants;
-import org.bridgedb.ws.WsUriConstants;
-import org.bridgedb.ws.bean.DataSourceUriPatternBean;
-import org.bridgedb.ws.bean.LensBean;
-import org.bridgedb.ws.bean.LensesBean;
-import org.bridgedb.ws.bean.MappingSetInfoBean;
-import org.bridgedb.ws.bean.MappingSetInfosBean;
-import org.bridgedb.ws.bean.MappingsBean;
-import org.bridgedb.ws.bean.MappingsBySetBean;
-import org.bridgedb.ws.bean.OverallStatisticsBean;
-import org.bridgedb.ws.bean.UriExistsBean;
-import org.bridgedb.ws.bean.UriMappings;
-import org.bridgedb.ws.bean.UriSearchBean;
 import org.bridgedb.ws.bean.XrefBean;
 import org.bridgedb.ws.templates.WebTemplates;
 

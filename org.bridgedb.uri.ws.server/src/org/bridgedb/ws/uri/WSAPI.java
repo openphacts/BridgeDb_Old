@@ -17,7 +17,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.ws.uri;
+package org.bridgedb.uri.ws.server;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -33,16 +33,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.bridgedb.Xref;
-import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.uri.GraphResolver;
 import org.bridgedb.uri.Lens;
 import org.bridgedb.uri.Mapping;
 import org.bridgedb.uri.MappingsBySet;
 import org.bridgedb.uri.RegexUriPattern;
 import org.bridgedb.uri.SetMappings;
+import org.bridgedb.uri.ws.WsUriConstants;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.ws.WsConstants;
-import org.bridgedb.ws.WsUriConstants;
 
 /**
  * This class provides the API documentation

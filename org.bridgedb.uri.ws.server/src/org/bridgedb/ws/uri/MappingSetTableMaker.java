@@ -17,7 +17,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-package org.bridgedb.ws.uri;
+package org.bridgedb.uri.ws.server;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
