@@ -36,11 +36,11 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
+import org.bridgedb.bio.DataSourceTxt;
 import org.bridgedb.pairs.CodeMapper;
 import org.bridgedb.pairs.IdSysCodePair;
 import org.bridgedb.rdf.BridgeDBRdfHandler;
 import org.bridgedb.rdf.DataSourceMetaDataProvidor;
-import org.bridgedb.rdf.DataSourceTxtReader;
 import org.bridgedb.rdf.UriPattern;
 import org.bridgedb.rdf.identifiers.org.IdentifersOrgReader;
 import org.bridgedb.rdf.pairs.RdfBasedCodeMapper;
@@ -140,7 +140,7 @@ public class SQLUriMapper extends SQLIdMapper implements UriMapper, UriListener 
      */
      private SQLUriMapper(boolean dropTables, CodeMapper codeMapper) throws BridgeDBException{
         super(dropTables, codeMapper);
-        DataSourceTxtReader.init();
+        DataSourceTxt.init();
         BridgeDBRdfHandler.init();
         UriPattern.registerUriPatterns();
         try{
