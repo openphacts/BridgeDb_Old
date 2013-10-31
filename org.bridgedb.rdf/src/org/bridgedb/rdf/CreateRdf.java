@@ -24,7 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.bridgedb.IDMapper;
-import org.bridgedb.bio.BioDataSource;
+import org.bridgedb.bio.DataSourceTxt;
 import org.bridgedb.utils.BridgeDBException;
 import org.bridgedb.utils.ConfigReader;
 import org.bridgedb.utils.Reporter;
@@ -48,17 +48,10 @@ public class CreateRdf {
         ConfigReader.logToConsole();
 
         //Load DataSources from BioDataSource and save that
-        DataSourceTxtReader.init();
+        DataSourceTxt.init();
         File biofile = new File("resources/BioDataSource.ttl");
         BridgeDBRdfHandler.writeRdfToFile(biofile);
         BridgeDBRdfHandler.parseRdfFile(biofile);        
-        
-        BridgeDBRdfHandler.init();
-        //Load the existing DataSource file 
-        File dsfile = new File("resources/DataSource.ttl");
-        BridgeDBRdfHandler.parseRdfFile(dsfile);             
-        Reporter.println("Parsing finished");
-                
      }
 
 }
