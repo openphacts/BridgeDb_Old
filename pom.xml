@@ -38,7 +38,6 @@
    	<module>org.bridgedb.uri.ws.client</module>
 
     <module>org.bridgedb.rdb</module>
-    <module>org.bridgedb.tools.importer</module>
        
     <!--The modules below this comment are not actively used by OPS but are part of BridgeDB-->
     <module>org.bridgedb.rdb.construct</module>
